@@ -1,0 +1,244 @@
+Basic Commands
+
+a=170
+
+str(a) //returns '170'
+
+len(str(a)) #=3
+
+len() can be used to return length of string, number of lements in lists and types (array-like data structure), and number of key-value pairs in a dictionary
+
+BUILT IN FUNCTIONS
+
+In Python3, map, reduce, and filter return iterators instead of lists (as in Python 2). To get a list for any of these in Python3, cast the return value to list using list().
+
+Also, in Python3 reduce is imported from functools
+
+MAP
+
+Function that takes two arguments: a function and a sequence iterable
+
+map(function, sequence)
+
+First argument is name of function. Function is applied to every element in sequence. List of results is returned. 
+
+Iterable of results is returned in Python3
+
+def fahrenheit(T):
+	return (9.0/5) * T + 32
+
+temp = [0, 22.5, 40, 100]
+
+map(fahrenheit, temp)
+
+Anonymous functions
+
+map(lambda T: (9.0/5) * T + 32, temp)
+
+returns [32.0, 72.5, 104.0, 212.0]
+
+Can pass more than one sequence
+
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = [7, 8, 9]
+
+map(lambda x, y, z: x+y+z, a, b)
+
+Applies function in order
+[12, 15, 18]
+
+REDUCE
+
+Continually applies function to a sequence
+
+If seq = [s1, s2, ..., sn], then calling reduce(function, sequence) works like:
+
+-Takes value of first two elements and aplies to function. func(s1, s2)
+-The list on which reduce works now looks like [ func(s1, s2), s3, ..., sn]
+-In the next step, the function will be applied on the previous result and the third element of the list, i.e. func(func(s1, s2), s3)
+-List now looks like [func(func(s1, s2), s3), ..., sn]
+-Continues like this until one lement is left and returns this element as result of reduce()
+
+lst = [47, 11, 42, 13]
+reduce(lambda x,y: x+y, lst)
+
+47+11 = 58
+58 + 42 = 100
+100 _ 13 = 113
+
+Find max with reduce
+
+lst = [34, 23, 24, 24, 100, 2333, 2, 11]
+
+max_find = lambda a, b: a if (a>b) else b
+reduce(max_find, lst)
+
+FILTER
+
+function offfers a convenient way to filter out all elements of iterable for which function returns true.
+
+filter(function, lst)
+
+Function returns true or false for every element in sequence. 
+
+def even_check(num):
+	if num % 2 == 0
+		return True
+	else:
+		return False
+
+lst = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+filter(even_check, lst)
+
+filter(lambda num: num%2 == 0, lst)
+
+ZIP
+
+Makes an iterator that aggregates elements from 2 or more iterables.
+
+So a list of tuples of elements from other lists.
+
+Can actually write yourself:
+
+def zip(*iterables):
+	# zip('ABCD', 'xy') --> Ax by
+	sentinel = object()
+	iterators = [iter(it) for it in iterables]
+	while iterators:
+		result = []
+		for it in iterators:
+			elem = next(it, sentinel)
+			if elem is sentinel:
+				return
+			result.append(elem)
+		yield tuple(result)
+
+Say you had two lists:
+
+x = [1, 2, 3]
+y = [4, 5, 6]
+
+zip(x, y)
+
+# return [(1, 4), (2, 5), (3, 6)]
+
+Can get the largests element for each tuple
+
+a = [1, 2, 3, 4, 5]
+b - [2, 2, 10, 1, 1]
+
+for pair in zip(a, b):
+	print max(pair)
+
+map(lambda pair: max(pair), zip(a, b))
+# [2, 2, 10, 4, 5]
+
+What if lists of different sizes?
+
+x = [1, 2, 3]
+y = [4, 5, 6, 7, 8]
+
+zip(x, y)
+
+#[(1, 4), (2, 5), (3, 6)]
+
+Zipping dictoinaries
+
+d1 = {'a':1, 'b':2}
+d2 = {'c':3, 'd':4}
+
+zip(d1, d2)
+
+#[('a', 'c'), ('b', 'd')]
+
+Because only get keys in dictionary by default
+
+zip, d2, d1.itervalues())
+
+#[('c', 1), ('d', 2)]
+
+ENUMERATE
+
+Allows you to keep a count as you iterate through an object
+
+Can build your own
+
+def enumerate(sequence, start=0):
+	n = start
+	for elem in sequence:
+		yield n, elem
+		n += 1
+
+l = ['a', 'b', 'c']
+
+for item in l:
+	print item
+
+What if wanted to print index?
+
+Could:
+
+count = 0
+for item in l:
+	print count
+	print item
+	cout += 1
+
+Instead:
+
+for (count, item) in enumerate(l):
+	print count
+	print item
+
+for (count, item) in enumerate(l):
+	if (count >= 2):
+		break
+	else:
+		print item
+
+ALL() AND ANY()
+
+all()
+
+Function that returns True if all elements in an iterable are True
+
+Can define your own
+
+def all(iterable):
+	for element in iterable:
+		if not element:
+			return False
+	return True
+
+any()
+
+Function that returns true if any are true
+
+def any(iterable)
+	for element in iterable:
+		if element:
+			return True
+	return False
+
+l = [True, True, False, False]
+
+all(l)
+# False
+any(l)
+# True
+
+COMPLEX
+
+Returns a complex number with the value real + imag*1j or converts a string or number to a complex number
+
+complex(2, 3)
+# (2+3j)
+
+complex(10, 1)
+# (10 + 1j)
+
+complex('10+2j')
+# (10+2j)
+
+

@@ -1,0 +1,173 @@
+PRIMITIVE TYPES
+
+Number of built in types. Rust is structured in such a way that the standard library also provides a number of useful types built on top of these ones, but these are most primitive.
+
+BOOLEANS
+
+bool type - true or false
+
+let x = true;
+
+let y: bool = false;
+
+CHAR
+
+char - represents a single Unicode scalar value. Can create chars with single quote '
+
+let x = 'x';
+let two_hearts = '💕';
+
+char is 4 bytes, not one. 
+
+NUMERIC TYPES
+
+Rust has variety of numeric types in few categories: signed and unsigned, fixed and variable, floating-point and integer.
+
+Types consist of two parts: ctegory and size. 
+
+u16 is unsigned type with sixteen bytes 
+
+If number literal has nothing to cause its type to be inferred, it defaults:
+
+let x = 42; // `x` has type `i32`.
+
+let y = 1.0; // `y` has type `f64`.
+
+List of Types:
+i8
+i16
+i32
+i64
+u8
+u16
+u32
+u64
+isize
+usize
+f32
+f64
+
+Signed and Unsigned - u and i
+u32
+i32
+
+Fixed-Size Types
+Hve specific number of bits in representation
+i32 - 32 bits
+i64 - 64 bits
+
+Floating Point Types
+f32 and f64 - correspond to IEEE-754
+
+ARRAYS
+
+Rust has list types to represnt sequence of things. 
+
+Array - basic sequence type, fixed size list of elements of same type. By default, are immutable.
+
+let a = [1, 2, 3]; // a: [i32; 3]
+let mut m = [1, 2, 3]; // m: [i32; 3]
+
+Arrays have type [T; N] - T is generic. N is compile-time constant for length of array
+
+Short hand for initializing each element to default value:
+
+let a = [0; 20]; // a: [i32; 20]
+
+Can get number of elements in array a with a.len():
+
+let a = [1, 2, 3];
+
+println!("a has {} elements", a.len());
+
+Can acccess particular element with subscript notation:
+
+let names = ["Graydon", "Brian", "Niko"]; // names: [&str; 3]
+
+println!("The second name is: {}", names[1]);
+
+SLICES
+
+Slice is reference or "view" into another data structure. Useful for allowing safe, efficient access to a portion of an array without copying. 
+
+Example, might want to reference only one line of a file read into memory. By nature, slice is not created directly but from an existing variable binding. Have defined length, and can be mutable or immutable. 
+
+Internally, slices represented as pointer to beginning of data and a length. 
+
+SLICING SYNTAX
+
+Can use combo of & and [] to create slice from various things.
+
+& indicates that slices are similar to *references*/ [] with a range let you define length of slice. 
+
+let a = [0, 1, 2, 3, 4];
+let complete = &a[..]; // A slice containing all of the elements in `a`.
+let middle = &a[1..4]; // A slice of `a`: only the elements `1`, `2`, and `3`.
+
+Have type &[T]
+
+STR
+
+The str type is most primitive string type. As an *unsized type*, it's not very useful by itself, but becomes useful when places behind a reference, like &str
+
+TUPLES
+
+A tuple is ordered list of fixed size. 
+
+let x = (1, "hello");
+
+Parentheses and commas form two-length tuple. 
+
+let x: (i32, &str) = (1, "hello");
+
+Tuples are heterogenous, can consist of multiple types. 
+
+In systems programming languages, strings are a bit more complex that in other languages. For now, read &str as a string slice. 
+
+Can assign one tuple into another, if they have same contained types and *arity*. Tuples have same arity when they have same length.
+
+let mut x = (1, 2); // x: (i32, i32)
+let y = (2, 3); // y: (i32, i32)
+
+x = y;
+
+You can access the fields in a tuple through a destructuring let. Here’s an example:
+
+let (x, y, z) = (1, 2, 3);
+
+println!("x is {}", x);
+
+Left hand side of let more powerful than assigning a binding. 
+
+Here can. Put a pattern on left hand size of let, and if it matches up to right hand side, we can assign multiple bindings at once. 
+
+let "destructures" the tuple and assignes the bits to three bindings. 
+
+You can disambiguate a single-element tuple from a value in parentheses with a comma:
+
+(0,); // A single-element tuple.
+(0); // A zero in parentheses.
+
+TUPLE INDEXING
+
+You can also access fields of a tuple with indexing syntax:
+
+let tuple = (1, 2, 3);
+
+let x = tuple.0;
+let y = tuple.1;
+let z = tuple.2;
+
+println!("x is {}", x);
+
+Like array indexing, it starts at zero, but unlike array indexing, it uses a ., rather than []s.
+
+FUNCTIONS
+
+Functions also have a type! They look like this:
+
+fn foo(x: i32) -> i32 { x }
+
+let x: fn(i32) -> i32 = foo;
+
+In this case, x is a ‘function pointer’ to a function that takes an i32 and returns an i32.

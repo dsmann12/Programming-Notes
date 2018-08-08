@@ -1,0 +1,303 @@
+Pointers
+
+Pointers are variables that contain memory addresses. 
+
+int fish = 5;
+int *pFish = &5;
+
+& -- address operator. Gets memory address of variable. 
+
+Can use pointers to pass an object by reference to a function.
+
+
+int betty = 13
+int sandy = 13;
+
+void passbyvalue(int x) {
+	x = 99;
+}
+
+void passbyreference(int *x) {
+	*x = 66;
+}
+
+Math with pointers just moves the pointers to a new memory location
+
+int *p = 0x0;
+p += 2; //p = 0x8 (location + (int * sizeof(pointertype))
+
+A pointer that holds the memory location of a refernce type (array, class, struct)
+must use -> to access instance variables
+
+Fish fishy;
+Fish *pFishy = &fishy;
+
+pFishy->species = "trout";
+pFishy->swim();
+
+-> is arrow member selection operator
+
+To convert and int to a point or to convert one pointer type to another use:
+ 
+reinterpret_cast
+
+sizeof - operator that tells user how much space a given type takes up
+
+sizeof(int) //4
+sizeof(char) //1
+sizeof(short( //2
+
+When a program is started, compiler sets aside memoery for code (code storage or text storage) and for global variables defined (static storage). Also sets aside memory to be used when functions called and they need space for arguments and local variables (stack storage or automatic storage). Rest of computer's memory is potentially available (free store or heap).
+
+heap is available through *new* operator. 
+
+*new* operator - returns a pointer to object it creates. If created several objects (array), it returns a pointer to first of those. If that object is of type X, pointer returned is of type X*. 
+
+
+Memory allocated by new is not initialized for built-in types. Can specify a value
+double * p5 = new double{5.5}
+
+Can specify an initialized list for an array of objects allocated by new:
+
+double * p4 = new double[5] {0, 1, 2, 3, 4};
+double * p5 = new double[] {0, 1, 2, 3, 4};
+
+**WARNING: A compiler may have a "debug mode" that initializes every value to a predictable value (often 0) that implies when turning off debug features, when running an optimizer, or simply when compiling on a different machine, a program with uninitialized variables may run differently. 
+
+Better control over initialization with defined types. Have default constructor.
+
+THE NULL POINTER
+
+Use nullptr if no other pointer to use for initialization. 
+
+double *p0 = nullptr;
+
+When assigned to a pointer, the value 0 is called the null pointer, and often test whether pointer is valud by checking whether it is null pointer. 
+
+if(p0) //
+
+Not a pefect test, because p0 may contain random value or an address of an object that has been deleted. 
+
+Need null pointer when have a pointer that sometimes points to an object and sometimes not. 
+
+In older code, people often use 0 or NULL instead. 
+
+FREE STORE DEALLOCATION
+
+new operator allocated (gets) memory from free store. Usually a good idea to return meomry to free store once finished using it. 
+
+Example:
+
+double* ca lc(int res_size, int ma x)
+// le aks me mory
+{
+double* p = new double[ma x];
+double* res = new double[res_size];
+// use p to calculate re sults to be put in re s
+return res;
+}
+double* r = ca lc(100,1000);
+
+Each call of calc() leaks the doubles allocated for p. 
+
+delete - operator for returning memory to free store. Apply delete to a pointer returned by new to make memory available to free sotre for future allocation. 
+
+double* ca lc(int res_size, int ma x)
+// the calle r is re sponsible for the me mory allocate d for re s
+{
+double* p = new double[ma x];
+double* res = new double[res_size];
+// use p to calculate re sults to be put in re s
+delete[] p;
+// we don’t ne e d that me mory anymore : fre e it
+return res;
+}
+double* r = ca lc(100,1000);
+// use r
+delete[] r;
+// we don’t ne e d that me mory anymore : fre e it
+
+Two forms:
+-delete p - frees memory for an individual object allocated by new
+-delete[] p - frees memory for an array of objects allocated by new
+
+DESTRUCTORS
+
+Basic idea is to have com[piler know about a function that does the opposite of a constructor, just as it knows about the constructor.
+
+Destructor - implicitly called when an object goes out of scope. Makes sure that an object is properly cleaned up before it is destroyed. 
+
+// a ve ry simplifie d ve ctor of double s
+cla ss vector {
+int sz;
+// the size
+double* elem;
+// a pointe r to the e le me nts
+public:
+vector(int s)
+// constructor
+:sz{s}, elem{new double[s]}
+// allocate me mory
+{
+for (int i=0; i<s; ++i) elem[i]=0; // initialize e le me nts
+}
+~vector()
+// de structor
+{ delete[] elem; }
+// fre e me mory
+// . . .
+};
+
+Destructors for class members called when object of that class goes out of scope. Implcitily called from a derived class destructor (whether user-defined or ggenerated. Called when going out of scope or when delete called. 
+
+virtual destructor - destructor that changes depending on type of object being destroyed
+
+General Rule* - If have a class with a virtual function, it needs a virtual destructor. 
+
+1. If a class has a virtual function, it is likely to be used as a base class
+2. If it is a bse class, its derived  class is likely allocated using new
+3. If a derived class object is allocated using new and manipulated througha pointer to its base
+4. It is likely to be deleted through a pointer to its base
+
+POINTERS TO CLASS OBJECTS
+
+Creating vector on key store, new operator:
+-First allocates memory for a vector
+-Then invokes the vector's constructor to initialize that vector; constructor allocates memory for the vector's elements and initializes those elements
+
+Deleting the vector, the delete operator
+-First invokes the vector's destructor; the destructor invokes the destructors for the elements (if they have destructors) and then deallocates the memory used for the vector's elements. 
+-Then deallocates memory used for the vector
+
+Works recursively. 
+
+VOID * and CASTS
+
+Very close to the hardware when using pointers. At this level, language offers only a bit of notational convenience and compile-time consistency offered by type system. 
+
+Sometimes need to ignore type safety.
+
+-When need to interact with another language that doesn't know C++'s types
+-Also when need to interface with old code that wasn't designed with static type safety in mind.
+
+For that, need two things:
+-A type of pointer that points to meomry without knowing what kinds of objects reside in that memory
+-An operation to tell the compiler what kind of type to assume (without proof) for ememory pointer to by one of those pointers. 
+
+void * - pointer to some memory that compiler doesn't know the type of. Examples are implementation of memory allocators (like new) or address arguments of a callback function. 
+
+No objects of type void, but functions can have void return type. 
+
+A pointer to any object type can be assigned to a void *. 
+
+void* pv1 = new int;
+void* pv2 = new double[10];
+// OK: int* conve rts to void*
+// OK: double * conve rts to void*
+
+Must cast to use void pointer. 
+
+int *pi = static_cast<int *>(pv);
+
+A static_cast can be used to explicitly convert between related pointer types such as void* and double*. 
+
+The name static_cast is a deliberately ugly name for an ugly and dangerous operation -- use it only when necessary. Called an *explicit type conversion* or colloquially a *cast*. 
+
+C++ offers two casts that may be even worse than static_cast:
+-reinterpret_cast - can cast between unrelated types, such as int and double*
+-const_cast can "cast away const"
+
+Register* in = reinterpret_ca st<Register*>(0xff);
+void f(const Buffer* p)
+{
+Buffer* b = const_ca st<Buffer*>(p);
+// . . .
+}
+
+First example is classical necessary and proper use of reinterpret_cast. Tell compiler that a certain part of memory (memory starting with location 0xFF) is to be considered a Register. Code is necessary when writing things like device drivers. 
+
+static_cast cannot mess with pointer/integer distinction or with const-ness so prefer static_cast. 
+
+If there is a way to avoid casts, avoid them. reinterpret_cast is especailly non-portable. 
+
+POINTERS AND REFERENCES
+
+Reference - can be thought of as automatically dereferenced immutable pointer or as an alternative name for an object. 
+
+Pointers and references differ:
+-Assignment to a pointer changes the poniter's value (not the pointed-to value)
+-To get a pointer you generally need to use new or &
+-To access an object pointed to by a pointer you use * or []
+-Assignment to a reference changes value of object referenced to (not the reference itself)
+-You cannot make a reference refer to a different object after initialization
+-Assignment of ereferences does deep copy (assigns to the referred-to object); assignment of pointers does not (assigns to the pointer object itself)
+-Beware of null pointers
+
+Reference and pointer both implemented by using a memory address, they just use that address differently to provide programmer slightly different facilities. 
+
+POINTER AND REFERENCE PARAMETERS
+
+Pass by value best for small objects. Leads to most obvious and least error-prone code. 
+
+Choosing between pointer and reference less clear cut. Both has attractions and problems. 
+
+Using a pointer alers that something might be changed. 
+
+On other hand, if use pointer as function argument, function has to beware someone might call it with nullptr.
+
+Can protect against this:
+
+void incr_p(int* p)
+{
+if (p==nullptr) error("null pointer a rgument to incr_p()");
+++*p;
+// de re fe re nce the pointe r and incre me nt the obje ct pointe d to
+}
+
+Choice depends on nature of cuntion:
+-For tiny objects prefer pass by value
+-For functions where "no object" is a valid argument, use a pointer 
+-Otherwise use a reference
+
+POINTERS, REFERENCES, and INHERITANCE
+
+A derived class pointer can be implicitly converted to its base class pointer. 
+
+void rota te(Sha pe* s, int n);
+// rotate *s n de gre e s
+Sha pe* p = new Circle{Point{100,100},40};
+Circle c {Point{200,200},50};
+rota te(p,35);
+rota te(&c,45);
+
+Similar for references:
+
+void rota te(Sha pe& s, int n);
+Sha pe& r = c;
+rota te(r,55);
+// rotate s n de gre e srota te(*p,65);
+rota te(c,75);
+
+Example: Lists
+
+struct Link {
+string va lue;
+Link* prev;
+Link* succ;
+Link(const string& v, Link* p = nullptr, Link* s = nullptr)
+: va lue{v}, prev{p}, succ{s} { }
+};
+
+Link* norse_gods = new Link{"T hor",nullptr,nullptr};
+norse_gods = new Link{"Odin",nullptr,norse_gods};
+norse_gods–>succ–>prev = norse_gods;
+norse_gods = new Link{"Freia ",nullptr,norse_gods};
+norse_gods–>succ–>prev = norse_gods;
+
+STL provides a list class. Hides all link implementation.
+
+THE this POINTER
+
+In every member function, the identifier this is a pointer that points to the object for which the member function was called. The implicit parameter. 
+
+this is immutable. 

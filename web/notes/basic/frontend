@@ -1,0 +1,37 @@
+FRONT END
+
+Objectives:
+1. Understand differenc between Front End and Back End code
+2. Understand roles of HTML, CSS, and JS
+
+Front End vs Back End
+
+1. Front End if stuff users sees and interacts with: HTML, CSS, and JS
+2. Back End is everything else: many choices - python, databases (postgresql, mysql), apache, etc
+3. Restaurant analogy - The backend is everything happening in kitchen; the front end is what is presented on a plate. 
+
+Static Webpage - always the same
+Dynamic webpage - changes depending on certain information. Usually deals with databases. 
+
+HTML:
+-HyperText Markup Language
+-Defines structure of webpage:
+	-Put image here
+	-Put a form here
+-The "nouns" of a webpage
+	-the skeleton of webpage
+-Must have HTML
+
+CSS:
+-Cascading Style Sheet
+-Defines style of HTML
+	-"Make all text purple"
+	-"Give first image a yellow border"
+-The "adjectives" of a web page
+
+JavaScript
+-Adds logic and interactivity to a page
+	-"Do some math"
+	-"Change color when user clicks"
+	-"Load new data from twitter"
+-The actions or "verbs" of a webpage

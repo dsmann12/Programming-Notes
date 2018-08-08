@@ -1,0 +1,127 @@
+BACKEND
+
+When go to URL, computer needs to figure out what IP  address to send a request to. 
+
+Query is submitted to your ISP.
+Within your ISP, the DNS takes the domain name and turns it into an IP address
+
+Once we have IP address, a new HTTP request is sent:
+
+-A request is sent to desired IP address via HTTP
+-Your request finds the fastest path possible to the srever with the specified IP
+-This is not a direct journey. Requires hoping from server to server until arrive
+
+Request - has bunch of information. Your own IP address, timestamp, type of request, and specific page asking for
+
+Server Responds
+
+-The requested server figures out exactly what you're asking for. What page exactly
+-The server builds us the right content, often pulling information from database
+-The server responds with any combination of HTML, CSS, and JS
+-And then..
+
+Static vs Dynamic
+
+Static web page - sites compiled on client side. 
+
+Dynamic Web Pages - sites that are compiled on the server-side. Different pieces (HTML, CSS, JS) sent back every time. 
+
+A Generic Stack:
+
+[ Backend Langauge/app 			Server 			Database ]
+	|
+	V
+[HTML JS ] -> Webpage
+[  CSS   ]
+
+Stack - term refers to all the technoligies that a particular web application uses. HTML, CSS, JS almost always part of stack. Backen there is more variance in backend. Ruby, Python, Scala, Java, PHP, JS. Many databases: PostgreSQL, MySQL, MongoDB, etc. 
+
+Reddit's Stack:
+
+[Python/Flask framework		nginx		PostgreSQL]
+	|
+	V
+[HTML JS ] -> Webpage
+[  CSS   ]
+
+Test Stack:
+
+[NodeJS			Express			MongoDB]
+	|
+	V
+[HTML	JS  ] -> webpage
+[	CSS 	]
+
+Backend - check if user logged in. Determines what HTML, CSS, JS to push out. 
+
+Full Stack Development -> Frontend and Backend
+
+[-Check if user logged in						   	]
+[-Figure out what HTML, CSS, and JS to send to User	]
+[-Sign Up A user									]
+[-Add new post to database (DB)						]
+[-Create new comment								]
+[-remove post from DB]								]
+[-Sort/Rank posts									]
+[-Create subreddit									]
+[-Add to newsletter									]
+
+				||||||||||||||||||
+				VVVVVVVVVVVVVVVVVV
+
+[HTML	JS	]	-> Webpage
+	CSS		]
+
+Request - Response Cycle. 
+
+HTTP Verbs - differnt types of requests you can make. GET, POST, PUT, PATCH, DELETE. Tell server what type of request is being made. 
+
+If just retrieving information, GET.
+If submitting or uploading, POST. Posting new information. 
+PUT and PATCH used to update. 
+DELETE, it expects to delete something. 
+
+All just a protocol. Doesn't meant sending those requests does anything. 
+
+Status - numbered associated with status of request. 404, file not found. 
+  
+Postman - app for issuing server commands. 
+
+
+reddit.com/search/?q=corgis
+
+Query string - From get requests. Sending information, search term. Still get because backend only retrieves, doesn't change. How we can send data with GET request. 
+
+reddit.com/search/?q=corgis&name=david
+
+If webpage was expecting a variable of same name, it would change accordingly. 
+
+Requests can be made from other things than browsers. Command line, applications, etc.
+
+Backend  Workflow:
+
+Server file - written in JS. When run, it will start a server. Code on Reddit's server that is listening for a request to Reddit.com/search. 
+
+Will start server up and in a specific port. 
+
+app.listen(3000, function() {
+	console.log("Serving dog demo on port 3000);
+});
+
+localhost:3000
+
+localhost:3000/dogs -get request for /dogs
+
+Text editor, browser, and terminal.a
+
+app.post("/createDog", function(req, res) {
+
+});
+
+post requests 90% come from forms. 
+
+<form action="/createDog" method="POST">
+	<input type="text" name="name" placeholder="name">
+	<input type="text" name="breed" placeholder="breed">
+</form>
+ 

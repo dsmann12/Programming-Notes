@@ -1,0 +1,136 @@
+NULLABLE TYPES
+
+Value types can never be assigned null. All numerical data types are value types. 
+
+null is used to establish an empty object reference. 
+
+nullable type - can represent all the values of its underlying type plus the value null. 
+
+A nullable bool can contain the set of values {true, false, null}. 
+
+Can be very helpful when working with relational databases, as it is quire common to encounter undefined columns in database
+tables. Without concept of nullable data type, there is no convenient manner in C# to represent a numerical data point with no value. 
+
+To define a nullable variable type, the question mark symbol (?) is suffixed to underlying data type. This syntax is only legal
+when applied to value types. Must be assigned an initial value befor you can use them, and cannot create a nullable reference type. 
+
+static void LocalNullableVariables()
+{
+// Define some local nullable variables.
+int? nullableInt = 10;
+double? nullableDouble = 3.14;
+bool? nullableBool = null;
+char? nullableChar = 'a';
+int?[] arrayOfNullableInts = new int?[10];
+ 
+// Error! Strings are reference types!
+// string? s = "oops";
+}
+
+In C#, the ? suffix notation is shorthand for creating an instance of generic System.Nullable<T> structure type. Provides a set of members
+all nullable types can make use of. 
+
+Example, can programmatically discover whether nullable variable indeed has been assigned a null value using the HasValue property or the
+!= operator. Assigned value of a nullable type may be obtained directly or via the Value peroperty. 
+
+Possble to implement the LocalNullableVariables() method as follows:
+static void LocalNullableVariablesUsingNullable()
+{
+// Define some local nullable types using Nullable<T>.
+Nullable<int> nullableInt = 10;
+Nullable<double> nullableDouble = 3.14;
+Nullable<bool> nullableBool = null;
+Nullable<char> nullableChar = 'a';
+Nullable<int>[] arrayOfNullableInts = new Nullable<int>[10];
+}
+
+class DatabaseReader
+{
+// Nullable data field.
+public int? numericValue = null;
+public bool? boolValue = true;
+ 
+// Note the nullable return type.
+public int? GetIntFromDatabase()
+{ return numericValue; }
+// Note the nullable return type.
+public bool? GetBoolFromDatabase()
+{ return boolValue; }
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Nullable Data *****\n");
+DatabaseReader dr = new DatabaseReader();
+ 
+// Get int from "database".
+int? i = dr.GetIntFromDatabase();
+if (i.HasValue)
+Console.WriteLine("Value of 'i' is: {0}", i.Value);
+else
+Console.WriteLine("Value of 'i' is undefined.");
+// Get bool from "database".
+bool? b = dr.GetBoolFromDatabase();
+if (b != null)
+Console.WriteLine("Value of 'b' is: {0}", b.Value);
+else
+Console.WriteLine("Value of 'b' is undefined.");
+Console.ReadLine();
+}
+
+THE NULL COALESCING OPERATOR
+
+Any variable that might have a null value (i.e. a reference type variable or a nullable value type variable) can make use of C# ?? operator. 
+
+null coalescing operator - ??. Allows you to assign a value to a nullable type if th retrieved value is in fact null. 
+
+Suppose you want to assign a local nullable integer to 100 if value returned from GetIntFromDatabase() is null
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Nullable Data *****\n");
+DatabaseReader dr = new DatabaseReader();
+...
+// If the value from GetIntFromDatabase() is null,
+// assign local variable to 100.
+int myData = dr.GetIntFromDatabase() ?? 100;
+Console.WriteLine("Value of myData: {0}", myData);
+Console.ReadLine();
+}
+
+Benefit of ?? operator is that it provides a more compact version of a traditional if/else condition. This is equivalent but more verbose:
+
+// Long-hand notation not using ?? syntax.
+int? moreData = dr.GetIntFromDatabase();
+if (!moreData.HasValue)
+moreData = 100;
+Console.WriteLine("Value of moreData: {0}", moreData);
+
+NULL CONDITIONAL OPERATOR
+
+Often want to check parameters for null:
+
+static void TesterMethod(string[] args)
+{
+// We should check for null before accessing the array data!
+if (args != null)
+{
+Console.WriteLine($"You sent me {args.Length} arguments.");
+}
+}
+
+Now possible to leverage the null conditoinal opreator token (question mark placed after a variable type but before an access operator) to simplify
+the previous error checking. Can now do this:
+
+static void TesterMethod(string[] args)
+{
+// We should check for null before accessing the array data!
+Console.WriteLine($"You sent me {args?.Length} arguments.");
+}
+
+Not using conditional statement. Rather, suffixing ? operator directly after string array variable. If thisis null, its call to Lnegth property will
+not throw a run time error. 
+
+To print an actual value, can leverage the null coalescing operator to assign a default value:
+
+Console.WriteLine($"You sent me {args?.Length ?? 0} arguments.");

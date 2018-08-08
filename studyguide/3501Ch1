@@ -1,0 +1,229 @@
+Q: What is x86? IA32? x86-64?
+A:
+
+Q: What is a computer system?
+A: A computer system consists of hardware (CPU, main memory, disk) and systems software (OS, compilers, etc) that work together to run application programs. All have similar hardware and software components that perform similar functions. 
+
+Q: What is a source program?
+A: AKA source file. Code programmer creates with an editor and saves in a text file called filename.c (.java, .cpp, .py). Sequence of bits (0 or 1) organized into 8 bit chunks called bytes. Each byte represents some text character in program. 
+
+Q: What is ASCII?
+A:
+
+Q: What are text files? Binary files?
+A:
+
+Q: How is information in a computer represented?
+A: All informatin in a system - including disk files, programs stored in meomry, usre data stored in memory, and data transferred across a netowkr - is represented as a bunch of bits. Only thin that distinguishes different data objects is context in which we view them (int, string, etc)
+
+Q: What is the lifecycle of a program?
+A: Program begins as high level language program readable by humans. Then must be translated into machine language instructions. Instructions are then packaged in an executable file (binary file). 
+
+Q: What is a compilation system?
+A: Translation of a source file into an object file
+
+Q: What are the four phases of a compilation system?
+A: Preprocessing, Compilation, Assembly, Linking
+
+Q: Descibe preprocessing?
+A: Preprocessor (cpp) modifies original C program according to directives that begin with # character. #include <stdio.h> tells cpp to raed contents of system file header file stdio.h and insert directly into program text. Result is c program with .i suffic
+
+Q: Desribe compilation?
+A: Compiler (cc1) translates text file hello.i ito text file hello.s, which contains assembly-language program. Each statement in assembly language exactly describes one low-level machine language instruction in a standard text form. Useful because it provides a common output language for different compilers for different high level languages. (x86 is assembly)
+
+Q: Describe assembly
+A: Assembler (as) translates hello.s (compiled file) into machine language instructions (assembly), packages them into a form known as relocatable object file and stores result in an object file hello.o. Object file is a binary file whose bytes encode machine language instructions rather than characters. Appears gibberish in text editor.
+
+Q: Describe linking?
+A: hello program calls printf, part of C standard lib. Rsides in separate precompiled object file called printf.o which must be merged with hello program. Linker ld handles merging. Result is hello file, which is an executable object file (executable) that is ready to be loaded into memory and executed by system.
+
+Q: Describe the full lifecycle of hello.c?
+A: hello.c (source program [text]) -> Pre-processor (cpp) -> hello.i (modified source program) -> compiler (cc1) -> hello.s (assembly program) -> Assembler (as) -> hello.o (relocatable object programs [binary]) & printf.o -> Linker (ld) -> hello (executable object program [binary])
+
+Q: Why understand compilation systems?
+A: 1. Helps optimize program performance. 2. Helps understanding link-time errors. 3. Avoiding security holes. 
+
+Q: What is a shell?
+A: Shell is a command line interpreter that prints a prompt, waits for user to type a command linem and then performs the command. If first word of command does not correspond iwth built in shell command, then shell assumes that it is name of an executable file that it should load and run. Shell loads program, runs program, and then terminates program. Then waits for its own termintion or continued input
+
+Q: What is the makeup of a typical hardware system?
+A: CPU (PC (program counter), Register files, bus interface, and ALU(arithmetic/Logic unit)), System bus, I/O bridge, Memory bus, main memory, USB controller (mouse, keyboard connected), Graphics adapter (display connected), Disk controller (disk connected), Exapnsion slots for other devices, I/O bus
+
+Q: What is a bus? What is a word?
+A: Buses are collection of electrical conduits that carry bytes of information back and forth between components. Typically designed to transfer fixed-size chunk of bytes known as words. Number of bytes in a word (wordsize) is fundamental parameter that varies across systems. Most have either size 4 bytes(32-bit) or 8 bytes(64 bit). System bus, memory bus, I/O bus.
+
+Q: What are I/O devices? A controller? An adapter?
+A: Input/Output devices. System's connection to the external world (keyboards, mice, display, storage, etc). Each device connected to I/O bus bu either a controller or an adapter. Controllers are chipsets in device itself or on system's main printed circuit board (motherboard). Adapter is a card that plugs into a slot on the motherboard. Purpose of both is to transfer info back and forth between I/O bus and I/O device. 
+
+Q: What is main memory?
+A: Main memory is temporary storage device that holds both a program and data it manipulates while the processor is executing the program. Consits of a collection of dynamic random access memory (DRAM) chips. Logically, memory is organized as a linear array of bytes, each with its own unique address (array index) starting at 0. Each of machine instructions that constitute a program can consist of a variable number of bytes. Sizes of data items that correspond to C program variables vary according to type
+
+Q: What is the processor? What is it made up of?
+A: The processor (CPU) is engine that interprets and executes instructions stored in main memory. Made up of wordsize sotrage devices called registers, including the program counter PC, and ALU (arithmetic/logic unit) and bus interface. 
+
+Q: What is program counter? How does it work?
+A: Program counter is a wordsize storage device (register) that points to next instruction to be executed. At any time, program counter points at (contains address of) some machine language instruction in main memory. From boot, machine repeatedly executes instruction pointed at by pc and updates pc to point to next instruction. 
+
+Q: Describe how CPUs operate?
+A: Operate according to a very simple instruction execution model, defined by its instruction set architecture. Instructions execute in strict sequence, and executing a single instruction involves performing a series of steps. CPU reads instruction from memory pointed at by pc, interprets bits in instruction, performs some simple operation dictated by instruction, and then updates PC to point to next instruction, which may or may not be contiguous in memory to instruction that was just executed.
+
+Q: What components do CPU operations deal with?
+A: Only a few simple operations performed by CPU, and they revolve around main memory, register file, and ALU.
+
+Q: What is a register file?
+A: Register file is a small storage device that consists of a collection of word-sized registers, each with its own unique name. 
+
+Q: What is the ALU?
+A: ALU is arithmetic/logic unit. Computes new data and address values. 
+
+Q: Give 4 examples of the simple operations CPU might carry out at request of an instruction.
+A: Load: copy a byte or a word from main memory into a register, overwriting previous contents of register. Store: copy a byte or a word from a register to a location in main memory, overwritnig previous contents of that location. Operate: copy contents of two registers to ALU, perform an arithmetic operation on two words, and store result in a register, overwriting previous contents of that register. Jump: Extract a word from the instruction itself and copy that word into the program counter, overwriting the prrevious value of pc. 
+
+Q: What is microarchitecture?
+A: Say that processor appears to be a simple implementation of its instruction set architecture, but modern processors use far more complex mechanisms to speed up program execution. Thus can distinguish the processor's instruction set architecture, describing effect of aech machine code instruction, from its microarchitecture, describing how process is actually implemented. 
+
+Q: What is the lifecycle of a program?
+A: Shell read characters from keyboard through I/O bus, through I/O bridge, through bus interface into register in register file. Then store it through bus interface, I/O bridge, memory bus into main memory. When enter is hit, shell knows command finished being typed. Shell then loads executable file by executing a sequence of instructions that copies code and data in hello object file from disk to main memory. Data include the string of characters that will eventually be printed out. Once code and adata in object file are loaded into memory, process begins executing the machine language instructions in program’s main routine. Instructions copy bytes in “hello world\n” string from memory to register file and from there to display device, where they are displayed on screen.
+
+Q: What is direct memory access?
+A: Direct memory accss allows data to travel directly from disk to main memory without passing through the processor
+
+Q: What is a cache?
+A: A cache (cache memories) serve as temporary staging areas for information that the CPU is likely to need in the near future. 
+
+Q: Why are caches useful?
+A: System spends a lot of time moving information from one place to another. Larger storage devices are slower than smaller ones, but faster ones are more expensive. Registers in CPUs are 100 times faster than memory. Caches help prevent those gaps from causing bottleneck
+
+Q: What is cpu-memory gap?
+A: As semiconductor technology progresses, speed of CPU will likely continue to pull away from the speed of memory. Cache is used to deal with cpu-memory gap.
+
+Q: What is the L1 cache?
+A: L1 cache is on processor chip andn holds tens of thousands of bytes and can be accessed nearly as fast as register file
+
+Q: What is the L2 cache?
+A: L2 cache is larger, with hundred of thousandds to millions of bytes and is connected to process by a special bus. It might take L2 5 times longer for process to be accessed than L1, but this is stil 5 ro 10 times faster than main memory. 
+
+Q: How are both L1 and L2 caches implemented?
+A: Both L1 and L2 implemented with static random access memory (SRAM) hardware technology
+
+Q: What is L3 cache?
+A: L3 cache is the next cache on newer systems. Holds cache lines retrieved from memory. 
+
+Q: What is locality and how does it relate to caching?
+A: Locality is the tendency for programs to access data and code in localized regions. Allows chaching to keep important memory addresses for quick access allowing system to get effect of both very large memory and fast memory
+
+Q: What is a memory hierarchy?
+A: Memory hierachy is a pyramid of memory management. As move from top, devices become slower, larger, and less costly per byte. Storage on one level serves as cache for next lower level. Registers are top (L0), Next are L caches (L1, L2, L3), then main memory (DRAM), then disk storage (local disks), and then remote secondary storage (distributed file systems, web servers)
+
+Q: What is an operating system?
+A: An operating system is a layer of software interposed between the application programs and the hardware. All attempts by an application program to manipulate hardware must go through OS.
+
+Q: What are the two primary purposes of an OS?
+A: 1. To protect the hardware from misuse by runaway applications. 2. To provide applications with simple and uniform mechanisms for manipulating complicated and often wildly different low level hardware devices
+
+Q: What are fundamental abstractions the layers of a computer system?
+A: Processes are an abstraction for cpu, main memory, and I/O devices, virtual memory is an abstraction for main memory and io, and files are abstraction for io devices.
+
+Q: What are processes?
+A: Processes are the OS's abstraction for a running program. Each process appears to have monopoly on hardware like memory, cpu, and io devices. Multiple processes can run concurrently on system (each appearing to have monopoly over hardware).
+
+Q: How does a single processor appear to execute multiple processes concurrently?
+A: CPU can appear to be executing multiple processes concurrently by having processor switch among them. OS performs this interleaving with mechanism known as context switching.
+
+Q: What is context switching? How does it work?
+A: Context switching is when cpu switches among different processes. OS keeps track of all state information that process needs in order to run. State is known as context, includes information such as current values of pc, register file, and contents of main memory. Uniprocessor systems can only execute code for single process. When uniprocessor OS decides to transfer control to a new process, it saves current context of current process restoring context of new process, and then passing control to new process, which picks up where it left off. 
+
+Q: Explain context switching in regard to kernel code, user code, and system calls.
+A: Two concurrent processes in example: shell process and hello process. Initially, shell process is running alone, waiting for input on command line. When ask it to run hello program, shell carries out request by invoking a special function known as a system call that passes control to the OS. OS saves shell’s context, creates a new hello process and its context, and then passes control to new hello process. After hello terminates, the os restores the context of shell process and passes control back to it, where it waits for next command line input. 
+
+Q: What is a thread?
+A: Threads are multiple execution units, each running in context of a process and sharing same code and global data
+
+Q: What is the importance of threads?
+A: Threads and important because requirement for concurrency in network servers, because it is easier to share data between multiple threads than between multiple processes, and because threads are typically more efficient than proceses. Multithreading is also one way to get programs to run faster on multicore processes.
+
+Q: What is virtual memory?
+A: Virtual memory is an abstraction that provides each process with illusion that it has exclusive use of main memory. Each process has same uniform view of memory, which is known as its virtual address space. In Linux, top most region is reserved for code and daata in the os that is common to all processes. Lower region holds code and data defined by user's process. 
+
+Q: What does vitual address space consist of?
+A: Virtual address space seen by each process consists of a number of well defined areas, each with a specific purpose. Program code and data, Heap, shared libraries, stack, and kernel virtual memory.
+
+Q: What is program code and data of virtual address space?
+A: Code begins at same fixed address for all processes, followe dby data location that correspond to global variables. Code and data areas are initialized directly from contents of an executable object file.
+
+Q: What is the heap of a virtual address space?
+A: Run time heap immediately follows code and data areas. Unlike code and data areas which are fixed in size once process begins running, the heap expands and contracts dynamically at run time as result of calls to C standard library routines such as malloc and free. 
+
+Q: What are shared libraries in virtual address space?
+A: Shared libraries are near middle of address space. Holds code and data for shared libraries such as C standard library and math library. Powerful but somewhat difficult concept.
+
+Q: What is the stack in virtual address space?
+A: Stack is at top of user's virtual address space. Compiler uses user stack Like heap, expands and contracts dynamically during execution of program. Each time call a function, it expands. Each time we return from a function, it contracts.   
+
+Q: What is kernel virtual memory in virtual address space?
+A: Kernel virtual memory is part of OS that always resides in memory. Top region of address space is reserved for kernel. App programs are not allowed to read or write contents o fthis area or to directly call functions defined in kernel code. 
+
+Q: What is needed for virtual memory to work?
+A: For virtual memory to work, a sophisticated interaction is required between the hardware and the os software, including a hardware translation of every address generated by processor. Basic idea is to stored contents of a process's virtual memory on disk, then use main memory as cache for disk. 
+
+Q: What is a file?
+A: A file is a sequence of bytes. Every IO device is modeles as a file. All input and output in system is performed by reading and writing files using a small set of system calls known as Unix I/O
+
+Q: Why is simple notin of a file powerful?
+A: Simple notion of files are powerful because it provides applications with a uniform view of all varied IO devices that might be contained in system. Allows developers to ignore specific disk technology and same program will run on different systems that use different disk technologies
+
+Q: How are modern systems linked to other systems?
+A: Modern systems are often linked to other systems by networks. From POV of individual system, network can be viewed as just another IO device. When system copies a sequence of bytes from main memory to network adapter, dat aflows across network to another machine. System can also read data sent from other machine and copy data to its main memory. 
+
+Q: What had advent of global networks such as Internet done to computer systems?
+A: With advent of Internet, copying information from one machine to another has become one of most important uses for computer systems. Apps such as email, instant messaging, the World Wide Web, FTP, and telnet are all based on ability to copy information over a network. 
+
+Q: Why is a system more than just hardware or software?
+A: System is a collection of intertwined hardware and systems software that must cooperate in order to achieve goal of running application programs.
+
+Q: What is concurrency?
+A: Concurrency refers to general concept of a system with multiple, simultaneous acitivities. 
+Q: What is parallelism?
+A: Parallelism refers to use of concurrency to make a system run faster. Can be exploited at multiple levels of abstraction in computer system. 
+
+Q: What is time sharing?
+A: Time sharing was a system of simulated concurrency invented in early 1960s. Single computer switched rapidly among its executing processes. Allowed multiple users to interact with system at same time. Also allows single user to engage in multiple tasks concurrently. 
+
+Q: What is a uniprocessor system?
+A: A uniprocessor system is a system that does computing with only one processor, even if processor had to switch among multiple tasks.
+
+Q: What is a multiprocessor system?
+A: A multiprocessor system is a system consisting of multiple processors all under the control of a single OS kernel. Become more commonplace with multicore processors and hyperthreading.
+
+Q: What is a multicore processor?
+A: A multicore processor has several CPUs integrated onto a single integrated circuit chip.
+
+Q: What is hyperthreading?
+A: Hyperthreading, sometimes called simultaneous multi-threading, is a technique that allows a single CPU to execute multiple flows of control. Involves having multiple copies of some of the CPU hardware, such as PCs and register files, whille having only single copies of other parts of hardware. Allows CPU to deide which thread to execute on a cycle by cycle basis, enabling cpu to make better advantage of its processing resources. 
+
+Q: How does multiprocessing improve system performance?
+A: 1. Reduces need to simulate concurrency. 2. Can run a single app program faster, but only if program is expressed in terms of multiple threads that can effectively execute in parallel.
+
+Q: What is instruction level parallelism?
+A: At lower level of abstraction, modern processors can execute multiple instructions at one time. Earlier processes required multiple cycles to run a single instruction. Modern CPUs can execute 2-4 instructions per cycle. 
+
+Q: What is pipelining?
+A: Pipelining is where actions required to execute an instruction are partitioned into different steps and processor hardware is organized as series of stages, each performing one of these steps. Stages can operate in parallel, working on different parts of different instructions.
+
+Q: What are superscalar processors?
+A: Superscalar processors are processors that can sustain execution rates faster than one instruction per cycle. Most moder processors support superscalar operation. 
+
+Q: What is Single-Instruction, Multiple Data Parallelism (SIMD)?
+A: At lowest level, many modern CPUs have special hardware that allows a single instruction to cause multiple operations to be performed in parallel. Mostly provided to speed up applications that process image, sound, and video data. 
+
+Q: Why are abstractions important in computer science?
+A: Use of abstraction one of the most important concepts in computer science. APIs allow programmer to code without having to delve into its inner workings
+
+Q: What is instruction set architecture?
+A: On processor side, instruction set architecture provides an abstraction of the actual processor hardware. With this abstraction, machine code program behaves as if it were executed on a processor that performs just one instruction at a time. Underlying hardware is far more elaborate, executing multiple instructions in parallel, but always in away that is consistent with simple sequential model. By keeping same execution model, different processor implementations can execute the same machine code, while offering a range of cost and performance.
+
+Q: What are the abstractions on OS side?
+A: Processes, virtual memory, files, and virtual machines?
+
+Q: What is a virtual machine? 
+A: Virtual machine provides abstraction of an entire computer, including os, cpu, and programs. Became prominent as way to manage computers tha must be able to run programs for multiple OSes. 

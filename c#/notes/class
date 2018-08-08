@@ -1,0 +1,282 @@
+CLASS
+
+// helper class
+class OutputClass 
+{
+    string myString;
+
+    // Constructor
+    public OutputClass(string inputString) 
+    {
+        myString = inputString;
+    }
+
+    // Instance Method
+    public void printString() 
+    {
+        Console.WriteLine("{0}", myString);
+    }
+
+    // Destructor
+    ~OutputClass() 
+    {
+        // Some resource cleanup routines
+    }
+}
+
+// Program start class
+class ExampleClass 
+{
+    // Main begins program execution.
+    public static void Main() 
+    {
+        // Instance of OutputClass
+        OutputClass outCl = new OutputClass("This is printed by the output class.");
+
+        // Call Output class' method
+        outCl.printString(); 
+    }
+}
+
+classes - have constructors and member variables and methods. Used to create an object, an instance of a class. Need a constructor to create an instance. 
+
+public OutputClass() : this("Default Constructor String") { }
+
+Can use initializer lists with constructors. 
+
+Members are either instance or static. 
+
+static members must be called with syntax:
+
+<class_name>.<member>
+
+Cannot call static members with instance prefix. There is only ever one copy of a static member. Not a different copy for each class. 
+
+A good use of static members is when there is a function to be performed and no intermediate state is required, such as math calculations.
+
+Another type of constructor is the static constructor. Use static constructor to initialize static fields in a class. You declare a staticconstructor by using the keyword static just in front of the constructor name. A static constructor is called before an instance of a class is created, before a static member is called, and before the static constructor of a derived class (covered in a later chapter). They are called only once.
+
+OutputClass also has a destructor. Destructors look just like constructors, except they have a tilde, “~”, in front of them. They don’t take any parameters and do not return a value. Destructors are places where you could put code to release any resources your class was holding during its lifetime. They are normally called when the C# garbage collector decides to clean your object from memory.
+
+Note: You’ve probably noticed the use of the public modifier (an access modifier), meaning that a class member can be accessed from other classes. When used on a class, it means that the class can be accessed by DLLs outside of the Assembly (which is commonly a *.exe or *.dll file). Lesson 19: Encapsulation discusses access modifiers in more depth.
+
+Complete List of What Can Be In Classes:
+-Constructors
+-Destructors
+-Fields
+-Methods
+-Properties
+-Indexers
+-Delegates
+-Events
+-Nested Classes
+
+CONSTRUCTOR CHAINING
+
+Can set a constructor to be a "master" constructor, typically the constructor that takes the greatest number
+of arguments and have its implementation perform the required validation logic. Remaining constructors can 
+use the this keyword to forward the incoming  arguments to the master constructor and provide any additional
+parameters when necessary. 
+
+class Motorcycle
+{
+public int driverIntensity;
+public string driverName;
+ 
+// Constructor chaining.
+public Motorcycle() {}
+public Motorcycle(int intensity)
+: this(intensity, "") {}
+public Motorcycle(string name)
+: this(0, name) {}
+ 
+// This is the 'master' constructor that does all the real work.
+public Motorcycle(int intensity, string name)
+{
+if (intensity > 10)
+{
+intensity = 10;
+}
+driverIntensity = intensity;
+driverName = name;
+}
+...
+}
+
+■ ■ Note Recall from Chapter 4 that C# supports optional parameters. If you use optional parameters in your
+class constructors, you can achieve the same benefits as constructor chaining, with considerably less code. You
+will see how to do so in just a moment.
+
+OPTIONAL ARGUMENTS
+
+class Motorcycle
+{
+// Single constructor using optional args.
+public Motorcycle(int intensity = 0, string name = "")
+{
+if (intensity > 10)
+{
+intensity = 10;
+}
+driverIntensity = intensity;
+driverName = name;
+}
+...
+}
+
+static void MakeSomeBikes()
+{
+// driverName = "", driverIntensity = 0
+Motorcycle m1 = new Motorcycle();
+Console.WriteLine("Name= {0}, Intensity= {1}",
+m1.driverName, m1.driverIntensity);
+ 
+// driverName = "Tiny", driverIntensity = 0
+Motorcycle m2 = new Motorcycle(name:"Tiny");
+Console.WriteLine("Name= {0}, Intensity= {1}",
+m2.driverName, m2.driverIntensity);
+ 
+// driverName = "", driverIntensity = 7
+Motorcycle m3 = new Motorcycle(7);
+Console.WriteLine("Name= {0}, Intensity= {1}",
+m3.driverName, m3.driverIntensity);
+}
+
+OBJECT INITIALIZATION SYNTAX
+
+Object initialization syntax - streamlines process of creating an object. Possible to create a new object variable and assign a slew of properties and/or
+public fields in a few lines of code. Syntactically, consists of a comma-delimited list of specified values enclosed by { aand } tokens. Each member in 
+initialization list maps to name of a public field or a public proprety of object being initialized. 
+
+class Point
+{
+public int X { get; set; }
+public int Y { get; set; }
+ 
+public Point(int xVal, int yVal)
+{
+X = xVal;
+Y = yVal;
+}
+public Point() { }
+ 
+public void DisplayStats()
+{
+Console.WriteLine("[{0}, {1}]", X, Y);
+}
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Object Init Syntax *****\n");
+ 
+// Make a Point by setting each property manually.
+Point firstPoint = new Point();
+firstPoint.X = 10;
+firstPoint.Y = 10;
+firstPoint.DisplayStats();
+ 
+// Or make a Point via a custom constructor.
+Point anotherPoint = new Point(20, 20);
+anotherPoint.DisplayStats();
+ 
+// Or make a Point using object init syntax.
+Point finalPoint = new Point { X = 30, Y = 30 };
+finalPoint.DisplayStats();
+Console.ReadLine();
+}
+
+Can be better to initalize data too
+
+class Rectangle
+{
+private Point topLeft = new Point();
+private Point bottomRight = new Point();
+ 
+public Point TopLeft
+{
+get { return topLeft; }
+set { topLeft = value; }
+}
+public Point BottomRight
+{
+get { return bottomRight; }
+set { bottomRight = value; }
+}
+ 
+public void DisplayStats()
+{
+Console.WriteLine("[TopLeft: {0}, {1}, {2} BottomRight: {3}, {4}, {5}]",
+topLeft.X, topLeft.Y, topLeft.Color,
+bottomRight.X, bottomRight.Y, bottomRight.Color);
+}
+}
+
+// Create and initialize a Rectangle.
+Rectangle myRect = new Rectangle
+{
+TopLeft = new Point { X = 10, Y = 10 },
+BottomRight = new Point { X = 200, Y = 200}
+};
+
+Instead of:
+
+// Old-school approach.
+Rectangle r = new Rectangle();
+Point p1 = new Point();
+p1.X = 10;
+p1.Y = 10;
+r.TopLeft = p1;
+Point p2 = new Point();
+p2.X = 200;
+p2.Y = 200;
+r.BottomRight = p2;
+
+PARTIAL CLASS
+
+Thousands of lines of code can be within a single *.cs file in a production level class. Much of biolerplate code can be basically ignored after it is 
+accounted for. Field data, properties, and constructors tend to remain as is, but methods tend to be modified a lot. 
+
+Can partition a single class across multiple code files to isolate the boilerplate code from more readily useful and complex members. 
+
+class Employee
+{
+//Field Data
+ 
+//Constructors
+ 
+//Methods
+ 
+//Properties
+}
+
+Can be partitioned using partial classes. 
+
+// Employee.cs
+partial class Employee
+{
+// Methods
+ 
+// Properties
+}
+
+// Employee.Core.cs
+partial class Employee
+{
+// Field data
+ 
+// Constructors
+}
+
+Only requirement is that type's name is identitical and defined within same .NET namespace. 
+
+NESTED CLASSES
+
+When to use a nested class:
+•	 Nested types allow you to gain complete control over the access level of the inner
+type because they may be declared privately (recall that non-nested classes cannot
+be declared using the private keyword).
+•	 Because a nested type is a member of the containing class, it can access private
+members of the containing class.
+•	 Often, a nested type is useful only as a helper for the outer class and is not intended
+for use by the outside world.

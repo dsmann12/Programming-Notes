@@ -1,0 +1,404 @@
+PART 2
+
+Remix only runs in browser. A constraint. 
+
+Custom project. Boilerplate  for Ethereum
+
+Design
+
+Issue																			
+1. Need to be able to write Solidity code in JS
+2. Need some way to rapidly test constracts without doing the manual testing like with Remix
+3. Need some way to deloy our contract to public networks
+
+Solution
+1. Set up the Solidty compiler to build our contracts
+2. Set up a custom Mocha tes trunner that can somehow test Solidity code
+3. Set up a deploy script to compile + deploy our contract
+
+1. So can write solidity code that can be accessed from JS side of project. Setting up Solidity compiler spits out ABI to use with JS and byte code to deploy to Ethereum network. Confirm 
+2. Remix testing was simple. But will need set of automated tests later. Mocha.
+3. Deploy byte code to public network (Main, Rinkeby, etc). Set up script to do this. Compile contract and deploy byte code to network. 
+
+Inbox
+
+npm init
+
+Default args
+
+Structure
+
+contracts -> directory to hold raw source code for contracts
+>Inbox.sol -> one contract of this project
+test -> directory to hold test codes. 
+>Inbox.test.js - interacting with solidity code
+package.json -> record dependencies and contain scripts
+compile.js -> sole purpose to look in contracts dir and compile .sol 
+deploy.js -> script file to take compiled code and deploy to a ethereum network
+
+COMPILING
+
+Deployment and testing process expects compiled contract ready
+
+Install a small node module
+
+npm install --save solc
+
+In compile.js
+
+Read file from disk. 
+
+const path = require('path');
+const fs = require('fs');
+
+Path helps build paths to files. Gets cross platform compatibility. 
+
+__dirname -> current working directory const set by node
+
+const inboxPath = path.resolve(__dirname, 'contracts', 'Inbox.sol');
+
+Read contents of file
+
+const source = fs.readFileSync(inboxPath, 'utf-8');
+
+solc.compile(sources, 1); // number is how many contracts to compile
+
+Can view data by doing console.log()
+
+object with contracts property that contains another object. Contract object contains all the contracts you will compile. Because solidity compiler assumers you may want to compile other contracts. Stored in key value pairs. This object for this project is Inbox. 
+
+Inside contract object is two properties: bytecode represents actual code that will be executed. Interface is the Contract ABI, the communication layer between Solidty and JS. Only really lists the functions that can be called on Contract as well as return values and paramters. Format is of inputs and outputs. 
+
+There are other objects as well. 
+
+Export this object with module.exports
+
+Allows us to require it. 
+
+Can also just return specific property or contract
+
+module.exports = solc.compile(source, 1).contracts[':Inbox'];
+
+node compile.js // compile
+
+SET UP TESTING
+
+mocha -> for testing
+
+npm install --save mocha
+
+Write tests that can call different functions that exist within contract. 
+
+We will deploy contract to a local test Ethereum network running on own PC. Generate a new local network solely for this. 
+
+Ganache/TestRPC - library for creating local Ethereum network. Previously called TestRPC. Ganache CLI. 
+
+Also will take JS ABI and feed it into Web3 to get programattic access to deployed contract on the block chain. Use Web3 a lot. 
+
+npm install --save mocha ganache-cli web3@1.0.0-beta.26
+
+In test directory 
+
+const assert = require('assert'); // in node js std lib
+const ganace = require('ganache-cli');
+const Web3 = require('web3'); // Constructor to create instances of Web3. 
+
+Constructors are always capital by convention
+
+WEB3
+
+Versioning issues
+
+Used as absolute end all solution for communicating between a JS app and Ethereum network. 
+
+How get programattic access to Ethereum network.
+
+2 versions
+
+v0.x.x -> Most. Primitive and only callbacks for async code
+v1.x.x -> recent release. Support for promises + async/await
+
+Callback functions are hard to keep organized. Easy to make code ugly.
+
+Other differences, but these are major. 
+
+Constructor makes instances of Web3 library. Purpose of each instance is to connect to a different ethereum network
+
+Must configure instance by setting up provider, a communication layer between web3 library and some specific Ethereum network. How you send and receive requests. 
+
+Web3 and Ganache are trying to communicate with each other. 
+
+Provider comes from Ganache. But it is exchangeable. Can switch to different provider. 
+
+In general, you only ever need to connect to one network at a time.
+
+// Can change provider at any time
+const web3 = new Web3(ganache.provider());
+
+TESTING WITH MOCHA
+
+Mocha for testing. Can test front-end or back-end. 
+
+Small set of functions to understand. 
+
+it-> run a ates tand make an assertion
+describe -> groups together 'it' functions
+beforeEach -> execute some general setup code
+
+Assertions -> two values. One value that code has produced, and another that think should be equal to result. 
+
+Describe just organizational in nature. So can know which parts of tests are related. 
+
+beforeEach really a utility function that is used to extract some amount of logic that is common to tests. So only have to write code once. 
+
+Make a car class
+
+class Car {
+	park() {
+		return 'stopped';
+	}
+
+	drive() {
+		return 'vroom';
+	}
+}
+
+describe('Car', () => { 		// string is a descriptor
+	it('can park', () => {
+		const car = new Car();
+		assert.equal(car.park(), 'stopped');
+	});
+)};
+
+Go into package.json
+
+Change "test" script in "scripts" to be "mocha"
+
+Then run npm run test
+
+Then it will run tests. 
+
+If duplicate code for setup then that could be costly. Use beforeEach. 
+
+Before describe statement write beforeEach().
+
+beforeEach(() => {
+	console.log('Before each it functions in a describe');
+});
+
+However, this can mess with scope. 
+
+Move varaible outside to be of global or highest scope needed. EEEWWWWWWWWWWWWW. 
+
+MOCHA STRUCTURE
+
+Mocha starts and automatically loads test.js files
+
+Deploy a new contract to network - beforeEach
+
+Maniuplate the contract with code - it. Tests will be slightly different. So it block for each test scenario
+
+Make an assertion about the contract. Value tied to it. it
+
+Contract is created through a transaction. Take external account that has been created to submit a transaction with to field blank. 
+
+Need some account to deploy it. 
+
+Ganache does this. Creates a test account unlocked for you to use. So no need for private or public keys. 
+
+Web3 will access list of unlocked accounts created by Ganache. Can freely send and receive ether on these accounts without public or private keys.
+
+Most Web3 code returns promises
+
+web3.eth.getAccounts()
+.then(fetchedAccounts => {
+	console.log(fetchedAccounts);
+});
+
+describe('Inbox', () => {
+	it('deploys a contract', () = {});
+});
+
+ASYNC/AWAIT
+
+Clean up code and make look more synchronous
+
+let accounts;
+
+beforeEach(async () => {
+	accounts = await web3.eth.getAccounts();
+});
+
+WEB3 DEPLOY
+
+Compiled .sol and put it into exports
+
+Has interface which is JS ABI and bytecode is raw instructions. 
+
+Can use bytecode in conjunction with web3 to deploy
+
+const { interface, bytecode } = require('../compile'); // properties from compiled solidity
+
+Have account to deploy from and and bytecode
+
+new web3.eth.Contract(JSON.parse(interface))
+	.deploy({ data: bytecode, arguments: ['Hi there!'] })
+	.send({ from: accounts[0], gas: '1000000000' }); // gas to be used to deploy contract. Limit. 
+
+Make global variable to hold contract that is created and deployed
+
+let inbox
+
+inbox = await new web3.eth.Contract()...
+
+DEPLOYED INBOX OVERVIEW
+
+Code tied to web3. 
+
+new web3.eth.Contract(JSON.parse(interface)) -> teaches web3 about what methods an Inbox contract has
+.deploy() -> tells web3 that we want to deploy a new copy of this contract
+.send() -> instructs web3 to send out a transaction that creates this contract
+
+web3 can be used with other types of web tech as well. In this case eth accesses Ethereum module. Contract allowes us to interact with existing Contracts on contract already or create a new one. First argument is the ABI. Use JSON.parse because interface is string in JSON format. Just tells web3 there is a type of contract out there with this interface
+
+deploy line tells web3 to deploy a new contract. Creates a transaction object that has a data property and an arguments property, which is list to pass to constructor function. Doesn't actually deploy. Just creates an object that can be deployed (transaction).
+
+send -> triggers communication from web3 to network. Takes from property which describes account to send to and gas property which describes gas limit. 
+
+Web3 is not only for use with deploying contracts. Can also access contracts already deployed to network. 
+
+Need differen amounts of info depending on what we're trying to do.
+
+Web3 With Contracts. (What is needed)
+
+Goal								ABI			BYTECODE			Address of Deployed Contract
+Interact with deployed contract		Yes			No					Yes
+Create a contract					Yes			Yes					No
+
+
+Deploying is an async operation. Value is a direct reference to Inbox contract. Basically a JS representation with the Contract object. Can call functions on it, etc.
+
+Properties on Contract (Inbox)
+
+Contract -> type of object constructed by Web3
+currentProvider -> communication layer with blockchain
+_requestManager -> tied to provider and helps facilitate communication with actual blockchain
+providers -> array of providers. 3 types of providers that can be designated. One that communicates over Web sockets, Http, or IPC (interprocess communication) and is used whenever running network on same machine as using test netowrk. 
+
+methods -> object that contains all methods that are tied to contract and can interact with. 
+
+options -> contains info about contract that was just deployed. Contains address (there is also _address property). Recording address is important when deploying contracts to main network. 
+
+TESTING DEPLOYMENT
+
+Check that contract has default message assigned
+Also check that message is updated when setMessage is called
+Also test to make sure beforeEach code worked and contract was successfully deployed. 
+
+
+Another assertion
+
+assert.ok(inbox.options.address); // checks if this is a defined value
+
+Accessing Contract properties and methods
+
+const message = await inbox.methods.message().call();
+
+methods contains public functions in the contract. Message() is one such function. Pass arguments into message() .call() is used to customize transaction we are trying to send over network. Maybe pass an object specifying who is paying for this transaction and how much gas want to use. 
+
+await inbox.methods.setMessage('bye there!').send({	from: accounts[0] })
+
+Returns transaction receipt.
+
+DEPLOYMENT WITH INFURA
+
+Script to take contract, compile it, and deploy it to test network (Rinkeby). Also cna deploy to main network.
+
+Do this by inserting provider into web3 instance.
+
+For deployment to public network.
+
+Big difference is that the provider must have an account that has some ether on the rinkeby network. As source for deployment.
+
+To do that we take our account mnemonic as standin for public key and private key. Essentially it can be used to unlock your account and use ethers within it to deploy a contract. 
+
+Previously used provider given directly by ganache. And it had accounts in provider. 
+
+Next big difference is that once try to deploy to Rinkeby need to make sure we have some node we connect to that can deploy our contract. One common solution is to run a local node on local machine. However, that process takes a lot of time and difficulty to set up.
+
+Infura -> service to connect to node. Public API can sign up to get access to a node that is hosted on Rinkeby network by Infura. Portal into Rinkeby network. Also has nodes available on other networks including main.
+
+Must sign up to Infura
+
+Install modules to help us create providers to connect to Infura
+
+npm install --save truffle-hdwallet-provider
+
+Allows us to connect to some outside node or API and simultaneously unlock an account. 
+
+Get access code from email
+
+Make deploy.js file
+
+Require truffle-hdwaller-provider
+
+Specifies which account we want to unlock and use as source of ether and also specify which outside API or node to connect to
+
+const provider = new HDWalletProvider(
+	'mneumonic',
+	'Infura-link-with-access code
+);
+
+const web3 = new Web3(provider);
+
+DEPLOYMENT TO RINKEBY
+
+code will look similar to code in beforeEach in test file
+
+To use async/await, wrap code in function. Cannot use async/await outside a function
+
+mneumonic contains both public and private key. Single mneumonic can be used to generate may accounts
+
+const deploy = async () => {
+	const accounts = await web3.eth.getAccounts();
+	...
+};
+
+OBSERVING DEPLOYMENT ON ETHERSCAN
+
+Could built HTML, JS, CSS app to interface with contract with address. Will learn this. 
+
+Two interesting things to see
+
+rinkeby.etherscan.io
+
+A website that read all transaction that flow into rinkeby network. main, koban, etc networks and records to see on easy to view web page.
+
+Can search. 
+
+Another tool to interact with Deployed Contract
+
+REMIX
+
+Can also be used to connect to actual Ethereum networks and interact with deployed contracts
+
+In run, change environment to Injected Web3. Web3 injected by metamask extension.
+
+Paste in transaction addrress into "AtAddress" field. 
+
+Will give us a handle of deployed instance of contractt and can interact with it same as before. 
+
+To send a transaction that will change data in contractwill cost money. 
+
+In real project, usually create contract very quickly and spend most time working on interface to work wtih contract. Also remix has no intergration with git, bitbucket, etc version control.
+
+: used in front contract name because may have multiple contracts with multiple files. Can use as a namespace. If inside InboxContract file then could do. Requiring folder?
+
+IndboxContract:Inbox
+
+call -> read only instantaneous operation
+send -> async operation, send data to contract. Must specify who is going to pay for transaction. 
+
+Geth -> like Infura but more difficult to configure. Host really expensive nodes on your machine
+
+

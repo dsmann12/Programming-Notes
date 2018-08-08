@@ -1,0 +1,595 @@
+ARGON ASSAULT
+
+Rails Shooter
+
+DESIGN
+
+Shoot
+Shield
+Pickups
+Rails Camera
+
+CREATE TERRAIN
+
+GameObject > Terrain
+
+Use tools to edit terrain. 
+
+Change resolution to make it bigger or smaller. 
+
+Can go to terrain set height and click flatten to put whole terrain t that height.
+
+Then can dig alleys. 
+
+Opacity is how quickly it raises or lowers. 
+
+Terrain will be shared with multiple levels. Therefore, editing it will change multiple levels.
+To get around this, make terrains or each level as needed.
+
+TEXTURE TERRAIN
+
+Go to asset store.
+
+Textures andmaterials.
+
+Rock textures. 
+
+24 PBR mats for Unity 5. 
+
+Go to terrain > paint textures
+
+Click edit textures.
+
+Albedo and Normal.
+
+Albedo is fox texture. Normal is for adding 3D quality. 
+
+Ensure texture type is normal map.
+
+Bump map : texture with information on ow light catches a shape. Tells where bumps are
+Height map: uses white to black scale to show height. Can export height map as raw. 
+Normal map: uses RGB values to indicate xyz facing direction. Where pixel is facing. 
+
+Can also change texture size to make details bigger or smaller.
+
+
+Change scale of texture to change how it looks. 
+
+Can change metallicness and smoothness in edit texture window
+
+SKYBOX
+
+Asset > Right Click > Create Material
+
+Tell it it is a skybox procedural shader. Procedural like default, has a ground plane and sky tint. Changing ccolor changes sky and can partially change lighting.
+
+Assets Store
+
+Skybox Vol 2
+
+Change skybox to six sided. So you put six sides of cube and they will blend together to loo spherical.
+
+Skubox have Front, Back, Left, Right, Up, and Down textures
+
+These are already created in the assets. 
+
+Drag this full texture onto scene to replace skybox.
+
+PERFORMANCE
+
+Can increase pixel error in terrain settings to increase performance. Lowers fidelity. 
+
+Can also change map distance render in base terrain settings
+
+
+ADD PLAYER SHIP
+
+Can mess with terrrain settings to increase performance.
+
+Modulat Spacesip 1" StarSparrow
+
+Put pivot point in central position and prefab it. 
+
+SPLASH SCREEN
+
+Just looks at sky box, music plays, then scene is loaded. 
+
+Make this a scene. 
+
+Make music play and then load scene
+
+PERSIST MUSIC
+
+DontDestroyOnLoad
+
+Execution ORder of Events
+
+Script Lifecycle Flowchart -> tells what happens
+
+Editor
+------
+Reset -> called when script is attached or reset
+
+	|
+	v
+
+Initialization
+--------------
+Awake
+OnEnable
+Start -> only ever called once for given script
+
+	|
+	v
+
+Pysics -> may happen more than once per frame if the fixed time step is less than actual frame update time
+------
+FixedUpdate
+INTERNAL PHYSICS UPDATE
+OnTriggerXXX
+OnCollisionXXX
+yield WaitForFixedUpdate
+
+	|
+	v
+Input Events
+------------
+OnMouseXXX
+
+	|
+	v
+
+Game Logic
+----------
+Update
+yield null
+yield WaitForSeconds -> if coroutine has yielded previously but is now due to resume then execution takes place during this part of the updates
+yield WWW
+yield StartCoroutine
+INTERNAL ANIMATION UPDATE
+LateUpdate
+
+	|
+	v
+Scene Rendering
+---------------
+OnWillRenderObject
+OnPreCull
+OnBecameVisisble
+OnBecameInvisible
+OnPreRender
+OnRenderObject
+OnPostRender
+OnRenderImage
+
+	|
+	v
+Gizmo Rendering
+---------------
+OnDrawGizmos -> OnDrawGizmos is only called while working in the editor
+
+	|
+	v
+GUI rendering
+-------------
+OnGUI
+
+
+So call DontDestroyOnLoad(gameObject); in Awake()
+
+UNITYS WAYPOINT UTILITY SCRIPTS
+
+For doing a camera fly through
+
+Exisitng asset pack from Unity 2017. 
+
+Import standard asset packages.
+
+
+Utility ->
+WaypointCircuit
+WaypointProgressTracker
+
+Click Y and then double click on terrain to get overhead view.
+
+Create new game object called Circuit.
+Then give it child objects (waypoints)
+
+On Circuit add a Waypoint Circuit script.
+Add object to it. 
+Then you can see them and smooth out the track. Can't change thickness of line at this point. 
+
+Using interface may not be best way to use them. Maybe better to 
+
+Add WayPointProgressTracker to camera
+Make main camera the target. Add circuit to ProgressTracker. 
+
+Put between 5-10 waypoints for path so it is not too jerky. 
+
+USING CROSS PLATFORM INPUT
+
+Acts as a middle layer between keyboard/gamepad/mouse and game. So that multiple inputs can be used and supported. 
+
+Move ship as child of camera and move it forward.
+
+Import CrossPlaytormInput package from standard assets
+
+using UnityStandardAssets.CrossPlatformInput;;
+
+CrossPlatformInpuManager refers to everything as axes. 
+
+float horizontalThrow = CrossPlatformInputManager.GexAxis("Horizontal");
+
+CrossPlatformInpuManager refers to everything as axes. Also has buttons instead of keys
+
+Editor > Project Settings > Input -> where you can change input amanager
+
+In this input manager, there is one Horizontal axis using a and b and left and right. But there is also another that uses  a joystick from a gamepad. 
+
+Unity uses gravity and sensitivity settings to move values from 0 to +/- 1 so that it performs similar to a joystick. A joystick determines if it is -1 or 1 itsel by how far it is moved. 
+
+Even can use this to use on screen joystick.
+
+INPUT SENSITIVITY AND GRAVITY
+
+Will calculate x offset depending on framerate to move a certain amount per frame. Isn't this bad?
+
+Sensitivity determines how long it takes to get throw to +/-1. Basically the slope in a graph where throw is y and time is x. 
+
+Drop down back to 0 according to gravity setting. 
+
+Get capped speed that ship will move left and right. Multiply this by throw to get speed it should move. 
+
+Get xOffset. 
+
+float xOffsetThisFrame = horizontalThrow * xSpeed * Time.deltaTime;
+
+Mathf.Clamp() TO RESTRICT MOVEMENT
+
+float rawNewXPos = transform.localPosition.x + xOffset;
+transform.localpositoin = new Vector3(rawNewXPos, transform.localposition.y, transform.localposition.z)
+
+Use Mathf.Clamp to keep object from moving too much.
+
+pos = Mathf.Clamp(rawPos, -10f, 10f);
+
+UNDERSTANDING ROLL, PITCH, AND YAW
+
+Ship is always aiming at center of screen which isn't fun so should rotate it. 
+
+Rotation in x > pitch
+rotation in y > yaw
+Rotation in z > roll
+
+Adjust pitch, yaw, roll so that as you move to four corners of box you aim at corners of screen. 
+
+HOW TO SET LOCAL ROTATION
+
+Order of transformations matters.
+
+Do Translation
+Then Do rotation
+
+Rotations use quaternions by default. Difficult subject. 
+
+Use transform.localRotation
+
+transform.localRotation = Quaternion.Euler(x, y, z);
+
+Have controlPitchFactor(-30) and positionPitchFactor(-5)
+positionYawFactor(5)
+
+controlPitch is to move nose up if on bottom and down if on top.
+
+float pitchDueToPosition = transform.localPosition.y * positionPitchFactor;
+float pitchDueToControlThrow = yThrow * controlPitchFactor;
+float pitch = pitchDueToPosition.x * positionYawFactor
+float yaw = transform.localPosition.x * positionYawFactor;
+float roll = xThrow * controlRollFactor;
+transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
+
+Translation:
+
+xThrow = CrossPlatormInputManager.GetAxis("Horizontal");
+yThrow = CrossPLayformInputManager.GetAxis("Vertical");
+
+float xOffset = xThrow * speed * Time.deltaTime;
+float yOffset = yThrow * speed * Time.deltaTime;
+
+float rawX = transform
+
+Movement		Position On Screen			Control Throw
+Pitch			Coupled						Coupled
+Yaw				Coupled						-
+Roll			-							Coupled
+
+TWEAK AND TUNE
+
+Change lookahead and camera FOV to fix things
+
+CREATE BULLET PARTICLES
+
+Use particle system for bullets
+
+Look at texture being applied to particles in Renderer tab. 
+
+Drag particle materials from asset pack.
+
+Select material for particles. Use the square
+
+Reduce angle down to 0.
+
+Reduce radius to 0.01
+
+Maybe change from code. 
+
+Can then see where player is pointing. 
+
+Duration is for how long particles are emitted for.
+
+Can make small duration so bullets are infrequent.
+
+In Emission, change rate. to 3.
+
+Change start lifetime and start speed to further range of shots
+
+Change Simulation space from local to world so bullets don't move with ship
+
+Can also add a trail. 
+
+Go to trails section. Go to renderer and check square material. 
+
+Change lifetime of trail. Width of trail. And maybe even size of particles at start so only trail is seen.
+
+EXPLOSION PARTLES AND SFX
+
+Create gameobject named explosion and give it particle system.
+Also get sound effect. 
+
+Make particle system a sphere shape and make length low. High start speed. Start lifetime like 0.2.
+
+Go to renderer and give it a material. 
+
+Can choose start color and if click on right most area in interface you can make a gradient.Can add colors for gradient. Add orange in red and yellow to look like explosion.
+
+Can click new to save gradient as preset. 
+
+Defaiult is blending. Can make them fixed so there is no blend.
+
+Can make number random of two constantsso you can add randomization to explosion.
+Can also randomize size.
+
+DODGE AND SHOOT
+
+Add obstacles and ships or player to shoot. 
+
+Can add obstacles to a game object. 
+
+TIDYING
+
+In Window > Lighting, if Auto Generate is clicked, then lighting will be baked again after terrain is changed which can be intensive. If unclicked, you need to regenerate lighting.
+
+Make checklist when tidying a project.  
+
+TRIGGERS AND COLLISIONS
+
+Look at project boost code to see how handled collision. 
+
+There's a table for collisoins. 
+
+Triggers don't process physics. 
+
+Rigidbody is needed for physics 
+
+**PREFAB - can reset prefab by dragging the one in the scene 
+
+Static doesn't move.
+
+Kinematic moves but not by physics engine. 
+
+Can also mark an object as static to denote that it doesn't move so Unity doesn't calculate physics with it. 
+
+SendMessage() BETWEEN COMPONENTS
+
+Make Component that control player. PlayerController.
+
+But to handle collisions make another component. 
+
+CollisionHandler()
+
+[Header("General"] -> gives bold header on interface
+
+Actor moel -> 
+
+SebdNessage("MethodName") - calls the methods called MethodName() on all other scripts on the same game object. 
+
+Also broadcastMessage and broadcast message upwards. 
+
+Have StartDeathSequence() called in OnTriggerEnter() in Collision Handler. 
+
+Then can have handler tell control to disable controls. 
+
+ENABLE A GAMEOBJECT FROM C#
+
+Ensure particles and audio play on awake. 
+
+Hava areference t othe gameObject
+Use deathFx.SetActive(true);
+
+SINGLETON PATTERN WITHOUT STATICS
+
+Singleton pattern used in MusicPlayer
+
+DETECTING PARTICLE COLLISIONS
+
+Go to particle systems.
+
+Check collisoins. Take type to world. 
+
+Turn minkill speed up to kill particles when they collide. Mode 3D. 
+
+Give enemies a script. 
+
+Handle collision. Destroy enemy. 
+
+OnParticleCollision() -> for handling collisions with particles. 
+
+MAKING SCRIPTS ADD COMPONENTS
+
+Add box colliders to enemies on runtime. 
+
+gameObject.AddComponent<TypeToAdd>();
+Collider col = gameObject.AddComponent<BoxCollider>();
+
+INSTANTIATING AT RUN TIME
+
+Use GameObject as a field. 
+
+Then Instantiate that gameobject in some function.
+
+UI
+
+Can move anchors to set where object is relative to. Move anchors to all four corners.
+
+INVOKE
+
+Invoke -> uses a string and actually uses coroutines under the hood
+
+Delegate -> for handling events
+
+GIT MANAGEMENT
+
+Stash - undo single staged changed. Doesn't delete files just changes them back. 
+
+Branch and Reset - create new branch for project. 
+
+ENEMY HEALTH SYSTEM
+
+Be careful with naming variables. 
+
+Enemy has hit points. Figure out time to kill. Number of hits it can take
+
+LEVEL DESIGN BEAT CHART
+
+For material to correctly scale. Find materials.
+
+Look at tiling in secondary map. 
+
+Can make things see through by making transparent and changing alpha. 
+
+Level should be a roller coaster. Not same pace all the time, but changes. Moments from 1 to 10. Progression. No 10 second moments should be the same. 
+
+Link story and player experience. 
+
+Intensity vs Time
+
+Have moments in a script that go up and down. 
+
+LEVEL DESIGN ITERATION
+
+Interesting dodging. 
+
+TIMELINE
+
+A tool to create cut-scenes, cinematics, and gameplay sequences by visually arranging tracks and clips linked to Game Objects in your scene. 
+
+Use Timeline to Animate An Enemeny
+-Add a Playable Director to an enemy
+-Animate that enemy using timeline
+-Shoot and destroy the enemy
+
+Window > Timeline
+
+Click on game onbject.
+
+Go to Timeline. Click on create.
+
+Choose where to save Playable Director 
+
+Add animation track.
+
+Also Activation Track, Audio Track, Control Track, Playable Track
+
+Playable Director and ANimator are added to game object. 
+
+Can change timeline by changing Playable in Playable Director.
+
+Go into record button in clip
+
+Click on Timeline, go to game object's transform, right click and choose Add key. 
+
+If you double click track in timeline, you willl be up animation window and can change animation there. 
+
+TIMELINE FOR PLAYER PATH
+
+Basically use key frames for player path. 
+
+Use curves in animations window in stead of dopesheet.
+
+CTRL, SHIFT, ALT and mouse wheel to move graph and zoom
+
+UNITY TIMELINE ENEMY WAVES
+
+Nested Timelines on Control Tracks
+
+Master Timeline -> Player Rig (Camera + Ship)
+
+Enemy Wave Timeline -> Animatiosns for different enemy groups
+
+Put Control Track on Master Timline. Have a Control Playable Asset that holds the enemy waves timelines. Can tell it when it will occur in overall master timeline by moving things around. 
+
+Go to master timeline. Add control track. Give it name. Right click and add ControlPlayableAsset. Cna move it around timeline or stretch it. 
+
+It has Source Game Object, give it the Timeline for those objects. 
+
+Can use second wave by making a new ControlPlayableAsset.
+
+Those objet will not exist until timeline reaches that ControlPlayableAssets
+
+ADDING FLAVOR WITH TIMELINE
+
+Can put timelnes int otheir own group.
+
+Add, remove animate, switch, transitoin and do anything 
+-Any game object
+-SFX, voice over, music
+-Cameras lights,
+-particle effects
+-UI elements
+-character animations
+-world animations
+
+Just drag audio onto timeline. 
+
+Can make image UI element for story dialog. 
+
+Drag image
+Add Control Track
+Add control playable track
+
+So image comes up when guy talks. 
+
+STOP PARTICLE EMISSIONS IN C#
+
+All lasers are deactivated when you stop firing because you are disabling whole particle system.
+
+Instead you should disable emissions in particle system. 
+
+var emissionModule = gun.GetComponent<ParticleSystem>().emission = false;
+emissionModule.enabled = IsActive;
+
+ADDING VISUAL POLISH
+
+Change texture for landing platform.
+
+Changed lighting to bluer. Also osftened skybox by changing Intensity Markup i think in ighting. 
+And put intensity around 1.5
+
+Also added fog. 
+Can change mode as well. 
+
+Softens up the background. 
+
+Can also add particle effects to player and rocket jet. 
+
+

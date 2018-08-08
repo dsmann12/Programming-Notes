@@ -1,0 +1,408 @@
+HARD DRIVES
+
+To PC, a new HDD is nothing but a huge pile of sectors. OS must organize those sectors so you can use drive to store data.
+
+HISTORICAL/CONCEPTUAL
+
+Partitioning - process of electronically subdividing the physical hard drive into smaller units called partitions. Drive must have at least one partition but can have more. 
+
+In Windows, these partitions are typically assigned a drive letter such as C: or D:. 
+
+Formatting - installs *file system* on drive that organizes each partition in such a way that OS can store files and folders on the drive. Several file systems used by Windows. 
+
+Paritional and formatting a drive is one of few areas remining on software side of PC assembly that requires you to perform a series of fairly complex manual steps. 
+
+Tests knowledge of what these processes do to make drive work as well as steps neede to do them. 
+
+Paritions are key to dual booting. Can store one OS on one partition. Store another OS on other paritions in drive. 
+
+Windows supports three different paritioning methods:
+1. Master Boot Record (MBR) paritioning scheme
+2. Windows' proprietary dynamic storage partitioning scheme. 
+3. GUID Partition Table (GPT)
+
+Microsoft calls a hard drive that uses eithe rthe MBR partitioning scheme or the GPT partitioning scheme a *basic disk* and calls a drive that uses the dyanmic storage partitioning scheme a "dyanmic disk".
+
+GUID - Global Unique Identifier 
+
+MASTER BOOT RECORD
+
+First sector of an MBR hard drive contains the *master boot record (MBR)*. 
+
+To clarify, hard drives that use MBR paritioning scheme havea tiny bit of data that is also called the "master boot record". 
+
+While computer boots up, BIOS looks at first sector of hard drive for instructions. Does't matter which OS you use or how many partitions you have. Without this bit of code, OS will never load. 
+
+MBR also contains the *partition table* which describes the number and size of paritions on the disk. MBR partition tables support up to 4 partitions - partition table is large enough to store entries for only four partitions. Instructions in MBR use this table to determine partition contains the active OS.
+
+After MBR locates the appropriate partitoin, the *partition boot sector* loads the OS on that partition. Partition boot sector stores information important to its partition such as location of OS boot files. 
+
+Only one MBR and one parition table within that MBR exist per MBR disk. Each partition has a partitoin boot sector. 
+
+MBR partition tables support two types of paritions:
+1. Primary partitions
+2. Extended partitions
+
+Primary partitions are designed to support bootable OSes.
+
+Extended partitions are not bootable.
+
+Single MBR disk may have up to 3 primary partitions or up to 3 primary partitions and 1 extended partition. 
+
+Primary Paritions And Multiple Operating Systems
+
+Primary partitions usually assigned drive letters and appear in Windows Explorer/File Explorer (once formatter). 
+
+First lettered primary partition in Windows is always C. After that, can be labeled D: through Z:/
+
+Partitions don't always get drive letters. Windows creats a small 100MB prmiary partition named "System Reserved" for essential Windows boot files. 
+
+First called C because early PCs had one or two floppy drives installed called A: or B:. 
+
+Only primary partitions can boot OSes. On MBR disk, can install 4 OSes on separate partitions. Can boot to choice each tim fire up computer. 
+
+Every primary partition on a single drive has a special setting stored in the partition table called *active* that determines the *active partition*. During boot, the BIOS/POST reads the MBR to find the active partition and boots the OS on that partition. Only one partitoin can be active a t a time because only run one OS at a time. 
+
+Grand Unified Bootloader (GRUB) - to control multiboot setups, people use this free Linux-based boot manager. 
+
+Partition Commander - Avanquest Software. 
+
+Boot manager software yanks control from MBR and asks which OS you want to boot. Once partition is set to active, the partition boot sector loads the OS. 
+Extended Partitions 
+
+Extended partition overcomes 4 drive limit on drive letters in drive. Can contain multiple *logical drives* each of which can get a drive letter. 
+
+Logical drive works like primary partitions but you can't boot an OS from it. Format it like you would primary partiion but only difference is that each logical drive is actually in same extended partition. Extended partitions do not receive drive letters, but the logical drives iwthin an extende partition do.
+
+Dynamic Disks
+
+Dynamic storage partitioning - With Windows 2000, type of partitioning better known as *dynamic disks*. 
+
+Microsoft calls a drive created with a dynamic disk a *volume*. There is no dynamic disk equivalent to primary versus extended partitions. Dynamic disk is still technically a partition, but it can do things a regular partition cannot do. 
+
+Volume and partition refer to same thing. Defined chunk of hard drive.
+
+First, when you turn a hard drive into a dynamic disk, you can create as many volumes on it as you want. Not limited to 4 partitions. Second, can creat, in software, new drive structurs that you can't do with MBR drives. Can implement RAID, span volumes over multiple drives, and extend volumnes on one or more drives. 
+
+Volume			Windows Visa Business/Ultimate/Enterprise			Windows 7 Pro/Ult/Ent			Windows 8/8.1/10			Windows Server
+Simple			X													X								X							X
+Spanned			X													X								X							X
+Striped			X													X								X							X
+Mirrored															X								X							X
+RAID 5																															X
+
+Simple volumes - work a lot like primary partitions. If have a HDD and you want to make half of it E: and other half F:, can craete two volumes on a dynamic disk. 
+
+Spanned volumes - Unallocated space on multiple drives to create a single volume. Spanned volumesa abit risky. Whole volume lost if single drive fails.
+
+Striped Volumes - RAID 0. 
+
+Mirrored volumes - RAID 1.
+
+RAID 5 volumes - RAID 5. 3 or more. 
+
+GUID PARTITION TABLE
+
+MBR very old. 
+
+Globally Unique Identifier Partition Table (GPT) Partitioning Scheme - partitioning scheme shares a lot with MBR partitioning scheme, but most of MBR scheme's limitations have been fixed:
+
+-GPT drive can have an almost unlimited number of primary partitions. Microsoft has limited Windows to 128 partitions
+-MBR partitions can be no larger than 2.2. TB but GPT partitions have no such restrictions. Max size limit is mesured in zettabyte, million TBs. 
+
+GPT drive looks a lot like MBR drive except its arranged by LBA instead of sectors. 
+
+LBA 0 - *protective MBR* A recreation on MBR from MBR drives so disk utilities know it is a GPT drive and don't mistakenly overwrite any partition data. 
+
+Instead of old master boot record and partition table, GPT drives use a GPT header and a partition entry array. Both located at beginning and end of drive so there is protected backup copy. Partitions on GPT drive go between primary and backup headers and arrays. 
+
+Can configure 64 bit version of Windows to boot from GPT only if use a UEFI mobo. Most Linux distros can boot from GPT with older BIOS or UEFI. 
+
+OTHER PARTITION TYPES
+
+Hidden partition - one of most common Really just a primary partition that is hidden from OS. Only special BIOS tools may access it. Used by some PC makers to hide a backup copy of istalled OS. 
+
+Swap partition - Found only on Linux and UNIX systems. Job is to act like RAM when system needs more RAM than installed. 
+
+Page file - Windows has similar to swap. Special file used instead of a apartition. 
+
+WHEN TO PARTITION
+
+Partitioning not a common task. 
+
+Likely when install an OS on new system and when add an additional drive to an existing system. 
+
+FDISK - More than 20 years, through days of DOS, we used command line program to partition drives. 
+
+Disk Management - modern versions of Windows use graphical partitioning program. Under Computer Management in Administrative Tools. 
+
+FDISK - also version on Linux. Rarely because better tools are available. 
+
+GParted - GUI tool for partitions. 
+
+FORMATTING
+
+Formatting - does two things. Creates a file system - like a library's card catalog - and makes the root directory in that file system. Must format every partition and volume you create so it can hold data that you can easily retrieve. 
+
+Various versions of windows can use several different file systems.
+
+Root directory - provides foundation upon which OS builds files and folders. 
+
+FILE SYSTEMS IN WINDOWS
+
+Windows comes with built-in formatting utility with which to create one or more file systems on a partition or volume. 
+
+Windows now supports 4 separate Microsoft file systems:
+1. FAT16
+2. FAT32
+3. NTFS
+4. exFAT/FAT64 (for  removable media)
+
+Simplest hard drive file system was FAT or FAT16. Providesw good introduction and more complex file systems fix many of its problms and add extra features. 
+
+Base storage area for hard drives is a sector Each sector stores up to 512 bytes of data. if OS stores a file smaller than 512 bytes in a sector, the rest of sector goes to waste. Accept waste because most files are larger than 512 bytes. When file is larger, OS needs method to fill one sector, fina another that's unused and fill it, continuing to fill sectors until the file is completely stored. Once OS stores a file, it must remember which sectors hold the file so it can be retrieved later. 
+
+File Allocation Table - MS DOS 2.1 first supported hard drives using a special data structure and indexing system to keep track of stored data on hard drive, and Microsoft called this structure FAT. Card catalogue that keeps track of which sectors store various parts of a file. More like a two-column spreadsheet with left column being sector in hex (2^16 total). FAT16. USB drives, floppy disks, can use FAT. Right column contains information on status of sctors. All HDD contains faulty secotrs that cannoot store data because of imperfections in construction of drives. OS must locate these sectors, mark them as unusable, and then prevent any files from writing to them. 
+
+High-level formatting - mapping of bad sectors. Creates the FAT and then creates a blank root directory. Known as *quick format*. Can cause format utility to test every sector to mark out the unusable ones in FAT. Called *full format*.
+
+After format program creates the FAT, it marches through every sector of the entire partition, writing and attempting to read from each sector sequentially. If finds a bad sector, it places a special status code (FFF7) in sector's FAT location, indicating that the sector is unabilable for use. Also marks good sectors with code 0000. 
+
+Low-level formatting - done at factor and doesn't concern techs. 
+
+Using FAT to track sectors creates a problem.
+
+16bit FAT addresses a max of 64K (2^16)locations. Therefore size of hard drivfe partition should be limited to 64K x 512 bytes per sector or 32MB. Didn't matter at time because most HDD werw 5 to 10 MB. Could use FDISk to break them into multiple partitions as sizes grew. But drives grew larger. 
+
+Clustering - improvement to FAT16 that enabled us to format partitoins larger than 32 MB. Appeared in DOS-4. Is combining a set of contiguous sectors and treating them as a single unit in the FAT. Units are called *file alloctoin units* or *clusters*. 
+
+Each row of FAT then addressed a cluster instead of a sector. Unlike sectors, size of a cluster is not fixed. 
+
+Still only supported 64K locations. So formatting program set number of sectors in each cluster according to size of partition. Larger the partition, the more sectors per cluster. Kept clustering compatible with old FAT16 formats. New FAT16 could support partitions up to 2GB. 
+
+If FDISK Makes partition this big							You get thid many sectors/clusters
+16 to 127.9MB												4
+128 to 255.9MB												8
+256 to 511.9MB												16
+512 to 1023.9MB												32
+1024 to 2048MB												64
+
+FAT16 IN ACTION
+
+Assume copy of Windows using FAT16. 
+
+When Microsoft Word tells OS to save a file. Windows starts at beginning of FAT, looking for first space marked "open for use" (0000) and begins to write to that cluster. If entire file fits within that one cluster, Windows placed code FFFF (last cluster) into the cluster's status area in the FAT. That's called the *end of file* marker. Windows then goes to folder storign file and adds the filename and cluster;s number to the folder list. If file requires more than one cluster, Windows searches for the next open cluster and places the number of the next cluster in the status area, filling and adding clusters until entire file is saved. LAst cluster then receives the EOF market (FFFF).
+
+Folders also stored on clusters but they get a different set of clusters somewhere else on disk. After saving file, Window's locates file's folder and records the filename, size, date/time, and starting cluster, like this:
+
+mom.txt 19234 05-19-09 2:04p 3ABB
+
+Processed is reversed when program requests a file. 
+
+FAT16 automaticaly makes two copies of FAT. One FAT backs up other to provide special utilities a way to recover a FAT that is corrupted. 
+
+Even when FAT works perfectly, parts of any file can get written to separate places on the disk in process called Fragmentation.
+
+FRAGMENTATION
+
+Suppose you erase file. Windows does not delete cluster entries for file when it erases. only alters information in folder, simply changing first letter of file to Green letter Sigma (E). Cause file to disappear for OS but still have data reside in disk. Because file is intact, could use some program to change Sigma back into another lette rand get document back. 
+
+Also, Windows typically moves files to the Recycle Bin. Bin must be emptied to delete files. 
+
+Fragmentation - when data is separated into pieces. Not in contiguous clusters. System easily negotiates tiny file split into two pieces, excess fragmentation however slows down the system during hard drive reads and writes. 
+
+Disk Defragmenter (Windows Vista/7) and Optimize Drives (8/8.1/10).
+
+FAT32
+
+Windows 95 OEM Service Release 2 (OSR2) - also unveilved file format FAT32. Supports partitions up to 2TB. Uses 32 bits to describe each cluster. Meaning clusters can drop to more reasonable sizes. 2GB partition of FAT16 would use 32KB clusters while same partition in FAT32 would use 4KB clusters. Far more efficient use of disk space. Still needs defragmentations.
+
+Drive Size			Cluster Size
+512 to 1023MB		4kb
+1024 to 2GB			4kb
+2GB to 8GB			4kb
+8GB to 16GB			8kb
+16GB to 32GB		16kb
+>32GB				32kb
+
+Mostly used for <32GB USB drives.
+
+NTFS
+
+New Technology File System (NTFS) - First version of Windows NT but still most popular with Windows. Modern version is NTFS 3.1 (AKA NTFS 5.0/5.1). Uses clustesr and file allocation tables but in much more complex and powerful way compared to FAT or FAT32. Offers siz major improvements and refinements:
+
+1. Redundancy
+2. Security
+3. Compression
+4. Encryption
+5. Disk quotas
+6. Cluster sizing
+
+NTFS STRUCTURE
+
+Master File Table (MFT) - NTFS utilizes enhanced file allocation table. NTFS partition keeps a backup copy of most critical parts of MFT in middle od disk, reducing change that a serious drive error can wipe out both MFT and copy. 
+
+Security 
+
+NTFS views individual files and folders as objects and provides security for those objects through a feature called *Access Control List (ACL)*. 
+
+Compression
+
+NTFS enables you to compress individual files and folders to save space on a hard drive. Compression makes access time to  data slower because OS has to uncompress files every time use them, but saves space. Windows Exploere/File Explorer displays fienames for compressed files in blue.
+
+Encryption
+
+File encryption - blak art of making files unreadable to anybody woh does not have the right key. Can encrypt a single file, a folder, or a folder full of files. 
+
+Encrypting File System (EFS) - NTFS encryption utility. Simple an aspect of NTFS. 
+
+Disk Quotas 
+
+Disk quotas - enabling administrators to set llimits on drive space usage for users. Must log in as an Administrator, right-click hard drive name, and select Properties. In Drive Properties dialog box, select the Quota tab and make changed. Prevents any individual user from monopolizing disk space.
+
+Cluster Sizes
+
+Can adjust cluster sizes in NTFS. Default sizes:
+
+Drive Size				Cluster Size			Number of Sectors
+512MB or less			512 bytes				1
+513MB to 1024mb (1GB)	1024 bytes (1kb)		2
+1025MB to 20148MB (2GB)	2048 bytes (2kb)		4
+2049MB and larger		4096 bytes (4kb)		8
+
+NTFS supports partitions up to ~16TB on dynamic disk (though only up to 2TB on basic disk). By tweaking cluster sizes, can get NTFS to support partitoins up to 16 exabytesot 18,446,744,073,709,551,616 bytes. 
+
+Internal hard  drives shold use most feature-rich system OS supports. Use NTFS for modern Windows. External hard drives and flash drives still often use fAT32 because NTFS features such as ACL and encryption can make access difficult when move drive between systems. 
+
+FAT64 - FAT32 does not work on drives larger than 2TB. Worse, FAT32 limits file size to 4GB. 
+
+exFAT or FAT64 - replacement for FAT32. reaks 4GB size barrier. Supporting files up to 16 exabytes and parition limit of 64 zettabytes. MS recommends partition size of up to 512TB. Extends FAT32 from 32bit cluster entries to 64bit cluster entries in file table. Still lacks NTFS's extra features such as permissions, compressions, and encryption. 
+
+MAC OS X FILE SYSTEMS
+
+Hierarchical File System Plus (HFS+) - by default, OS X. Can read and write to several different file systems with OS. latest version can read and write to FAT32 and exFAT, though only read NTFS. 
+
+LINUX FILE SYSTEMS
+
+Fourth Extended File System (ext4) - most distrs use ext4. Some older ones use one of its predecessors, ext2 or ext3. The ext4 file system supports volumes up to 1EB with file sizes up to 16TB. 
+
+Linux file system capabilties exceed those of Mac OS X, being able to read and write to NTFS, FAT32, exFAT, HFS+, and ext2, ext3, and ext4. 
+
+PARTITIONING, FORMATTING, AND POOLING PROCESS
+
+Bootable Media
+
+Need an optical disc or USB flash drive with a bootable OS installed. Any removable media that has a bootable OS is genericlly called a *boot device* or *boot disc*. System boots of boot device, which then loads some kind of OS that enables you to partition, format, and install an OS on your new hard drive. 
+
+Boot devices come in many medium. Windows OS installation media and Linus installation media are boot devices. May also be medium that has an image of an installation disc. Images usually stored as a file with name that has .iso extension. Images may be on traditional boot device such as a disc or flash drive, but can come from any place, such as on a network drive. 
+
+Every bbot device has some kind of partitioning tool and a way to format a new partition. Hard drive has to have a partitoin and has to be formatted to support an OS installation. 
+
+Windows Partitioning and Formatting
+
+Default values: single C: partition, making it active, formatting it as NTFS. Windows creates two partition, a 100MB System Reserved partition and C: partitoin. 
+
+Click on Drive options (advanced) to do any custom partitioning or delete existing partitions. 
+
+Extend - allows you to tack on unpartitioned space on a drive to an already partitioned drive. 
+
+Disk Management - primary tool for partitioning and formattingdrives after installation. 
+
+Disk Initialization - every hard drive in Windows system has special information placed on drive through this process. Initialization information incldues identifiers that say "this drive belong son this system" and other ifnromation that defines what hard drive does in system. If drive part of RAID array for example, its RAID informatino is stored in initialization.
+
+All new drives must be initialized before used. Whn install an extra hard drive into a Windows system and start Disk Management, it notices the new drive and starts the HArd Drive Initialization Wizard. If don't let the wizard run, the drive will be listed as unknown. 
+
+To initialzie a disk, right-click disk icon and select initialize. Will get option to seelct MBR or GPT as a partition style. Once disk initialized, you can see status of drive. 
+
+Disk Management enables you to to view *drive status* of every mass storage device in system. Should say Healthy. 
+
+Active - OS drive
+Unallocated - 
+Foreign Drive - See this when you move a dynamic disk from one computer to another
+Formatting - When formatting a drive
+Failed - Disk is damaged or corrupt and probably lost data
+Online - if disk is healthy and communicating propertly with computer
+Offline - Disk is either ocrrupted or having communication problems. 
+
+CREATING PARTITIONS AND VOLUMES IN DISK MAnAGEMENT
+
+To create partitoins or volumes, right-click unallocated part of drive and select New Simple Volume. Disk Management runs New Simple Volume Wizard. Go straight to sizing screen. Specify volume size and click Next. Assign a drive letter to volume, mount it as a folder to existing volume, or do neighter. 
+
+Current versions of Windows do not enable you to specify whether you want a primary or extended partition when create a volume. First three volumes will be primary partitions. Every one after will be logical drive in an extended partition. 
+
+Last screen will ask for type of format you want.
+
+If partitoin <=4GB, then can use FAT, FAT32, or NTFS. 
+If partition >4GB but <=32GB, can use FAT32 or NTFS
+If partition >32GB, must use NTFS. 
+
+Next, can add volume label if desired and can also choose the size of clusters (allocation unit size). Last, if using NTFS can enable file and folder compression if desired. 
+
+If enabled, to compress a file or folder, choose it, right-click, select Properties, click Advanced and turn compression on. 
+
+DYNAMIC DISKS
+
+Create Dynamic Disks from basic disks in Disk Management. Once convert a drive from a basic disk to a dynamic disk, primary and extended partitions no longer exist; dynamic disks are divided into valumes instead of partitions.
+
+When move a dynamic disk from one pc to another, shows up in Disk Management as Foreign Drive. Can import Foreign Drive into new system by right-clickingdisk icon and selecting Import Foreign Disks. 
+
+To convert basic disk to dynamic, just right-click drive icon and select Convert to Dynamic Disk. Process is very quick and safe. Reverse is not true. Conversion from dynamic disk to basic disk first requires you to delete all volumes off hard drive. 
+
+Once converted, can make one of five types of volumson a dynamic disk: simple, spannde, striped, mirrored, or RAID 5. 
+
+Simple Volumes - act like primary partition. If only one dynamic disk, can only have a simple volume. Simple valume like a primary partition but cannot install OS on it. 
+
+Rick click any unallocated space on dynamic diskand choose New Simple Volume to run New Simple Volume Wizard. Series of screens that prompt on size and file system and then finished. 
+
+Spanning Volumes - Can extend size of simple volume to any unallocated space on a dynamic disk. Can also extend volume to grab extra spece on completely different dynamic disks, creating a spanned volume. Right-click, click extend, choose size, etc. 
+
+Capability to extend and span dynamic disks is strong. 
+
+Windows has no problem skipping areas on a drive. 
+
+Extending Partitions and shrinking partitions. 
+
+Striped Volumes - Two or more dynamic disks in a PC, Disk Management enables combination into a striped volume. Spreads out hlocks of each file across multiple disks. Using two or more drives in a group called a *stripe set*, number of clusters on the next drive, and so on. Rigth click, choose new volume, select striped. All stripes must be same size on each drive. 
+
+Mirrored Volumes - Mirror set with two drives for data redundancy. Right clickm, etc.
+
+Other levels of RAID - Disk Management cannot do any nested RAID arrays. Can do RAID 5 in Disk Management. 
+
+MOUNTING PARTITIONS AS FOLDERS
+
+Paritions and volumes can also be mounted as a folder on another drive. Known as *mount point*. Enables you to use your existing folders to store more data than can fit on a single drive or partition/volume. Avoids having to copy folder over to other drive. Can mount primary partition of new drive into folder. Right click on unallocated section of disk and choose New Simple Volume. Second screen, can select a mount point rather than drive letter. Browser to blank folder on NTFS formatted drive or create a new folder and it's done. 
+
+Assigning/Changing Drive Letters and Paths 
+
+Disk Management enables modify drive letter, path, or mount poin on currently installed mass storage devices. Right click and select Change Drive Letter and Paths. 
+
+FORMATTING A PARTITION
+
+Can format any Windows partition/volume in Windows Explorer/File Explorer. Right click on drive name and choose Format. Dialog ox asks for type of ifle system you want to use, the cluster size, and a volume label. Can also do a quick format. Tells Windows not to test clusters. Can enable compression. 
+
+Disk Management the preferred formatting tool. 
+
+STORAGE SPACES
+
+Storage pool - with Windows 8 and later, can group one or more physical ddrives of any size into a signle *storage pool*. Drives can be internal HDD or SD or external storage connected via USB. 
+
+Storage spaces - functions like a RAID management tool, except it goes well beyond typical tool. First, to run tool, get to Start screen and type storage spaces. Wil show up in Search charm. Click on it to run program. Create new pool and storage space. 
+
+Storage spaces will show available installed and formatted physical drives and give warnring that proceeding will erase drives. Then Create pool. 
+
+Resiliency Mechanism - once create pool, need to select this. Providing one or more layers of redundancy so can lose a hard drive or two and not lose any data. Like raid.
+
+Two way mirror - storage layout. 
+
+Storage Spaces offers three diffferent types of storage spaces:
+1. Simple spaces - just pooled storage, like JBOD, that has multiple drives of whatever capacity added together to forma single virtual drive. Simples spaces provide no resiliency so if drive fails, data is gone. Good for temporary storage, scratch files, and like.
+2. Mirror spaces - keep more than one copy of data, like RAID 1. Can lose a drive and retain data. Number of drives in array determines which mirror options available. Two way mirror requires at least two drives. three way mirror requires 5 or more. 
+3. Parity spaces - add another layer of resiliency. Similar to how RAID 5 and RAID 6 provide redundancy. Added resiliency comes with both upside and downside. More space efficient than two way mirroring. Two way mirroring, for every 10GB of data stored, 20GB needed. For parity, only 15GB need ed for every 10GB stored. MS recommends using parity spaces for big files that don't change a lot, like movies. Downside is that performance overhead to manage parity spaces can have significant impact on overall performance. 
+
+When disk fails in a space, Storage Spaces sends warning through standard Windows Action Center. Can open it to reveal failed drive. 
+
+Storage pool - collection of physical drives that enables you to flexibly add and expand capacity. Storage spaces are virtual drives that are created from storage pool free space. Have resiliency and fixed provisioning.
+
+Thin provisioning - futureproof storage needs. Means can create a space with more capacity than current physical drives provide. When start to reach capacity of physical drives ni pool, Storage Spaces will tell you and enable you to add more physical capacity at time. Means don't have to redo an array or space when reach limits of current hardware. 
+
+SSDs work great with some space types and not others. Work fine with two or three way mirrors. Not so well with parity. 

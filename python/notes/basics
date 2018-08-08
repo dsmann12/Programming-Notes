@@ -1,0 +1,232 @@
+Python
+
+Python is a dynamic, interpreted (bytecode compiles) language. No type declarations of variables, parameters, functions, or methods in source code.
+
+Makes code short and flexible. 
+
+Python tracks types of all values at runtime and flags code that does not make sense as it runs. 
+
+Throws (or raises in Python parlance) runtime error if code tries to do something it is not allowed. 
+
+End of a line marks end of a statement, so no semicolons
+
+Comments begin with a #
+
+Source files use .py extension and are called modules. 
+
+Blocks of code ar eindented rather than bracketed. 
+
+Example 1---------------------------------------------------
+
+#!/usr/bin/python -tt 
+
+#import modules used here -- sys is standard
+import sys
+
+#define a main() function
+def main():
+	#get name from command line, using World as fallback
+	if len(sys.argv) >= 2:
+		name = sys.arv[1]
+	else:
+		name = 'World'
+	
+	print 'Hello', name
+
+#Standard boilerplate that calls main()
+if __name__ == '__main__':
+	main()
+
+Quick and light language. Good for quick tasks
+
+Scripting languge - like Perl, bash, etc
+
+Trying to use an undeclarade variable will cause a runtime error
+
+Python module can be run directly or can be imported and used by some other module. 
+
+When python file is run directly, special variable "__name__" is set "__main__".
+
+Common when module is run directly, but not when module is imported by some other module. Statement would be false is module imported by another module. 
+
+sys.argv is list containing command line args
+sys.argv[0] is program itself, argv[1] is first argument, etc
+
+len(sys.argv) can be used to find number of arguments (argc)
+
+Indentation defines blocks of code. Should use spaces over tabs. Python docs say 4 spaces but Google docs say 2. 
+
+Code Checked At Runtime
+
+Defers almost all type, ame, etc checks on each line until line runs. So errors not found unless code gets to those lines. 
+
+Variable Names
+
+Variables are not typed. Helpful to give meaninful names to variables to remember what they should hole. 
+
+Python prefers _ naming but allows camelCasing if that is the standard on a project
+
+Keywords cannot be used. 
+
+*Be careful not to use built-ins*
+
+Str and list are not keywords but system variables and are susceptible. 
+
+help() and dir()
+
+Inside Python interpreter, the help() function pulls up documentation strings for various modules, functions, and methods. Similar to Java's javadoc. 
+
+dir() -- tells what attributes of an object are. 
+
+help(len)
+help(sys) #import sys mandatory
+dir(sys) -- quick list of defined symmbols or "attributes"
+help(sys.exit)
+help('xyz'.split)
+help(str.split)
+help(list)
+dir(list)
+help(list.append)
+
+To do integer division, use //
+
+6//5 #=1
+
+if statements
+
+Comparison
+
+Can chain.
+
+1 < 2 < 3
+True
+
+Check is (1 < 2) and (2 < 3). 
+
+AND, OR use characters
+
+1 == 2 or 2 > 1
+(1 < 2) and (2 < 3)
+
+Not equal can be != or <>
+
+
+if condition:
+	action
+elif condition:
+	action
+else:
+	action
+
+FOR LOOPS
+
+for item in object:
+	some code
+
+for list in lists:
+	print(list)
+
+Can loop through strings
+
+for char in 'this is a test string':
+	print(char)
+
+tup = (1, 2.1, 'STRING')
+
+for obj in tup:
+	print(obj)
+
+Can also unpack tuples, objects, or lists in for loop. Access to elements inside tuple/obj. But must be uniform in structure with actual objects
+
+l = [(2, 4), (6, 8), (10, 12)]
+
+# cannot be (t1, t2, t3)
+for (t1, t2) in l:
+	print t1
+
+Iterate through dictionary
+
+d = {'k1':1, 'k2':2, 'k3':3}
+
+for item in d:
+	print(item)
+
+Only prints keys, and out of order. 
+
+If using python 2, use d.iteritems to iterate through a dictionary. Uses a generator
+
+Call this method returns a list of tuples (key-value pairs)
+
+for k, v in d.iteritems():
+	print k
+	print v
+
+k3
+3
+k2
+2
+k1
+1
+
+Python 3
+
+Use d.items()
+
+d.items() is simliar to d.iteritems(). Returns list of tuples
+
+WHILE LOOPS
+
+Can have else to execute when while loop fails
+
+while test:
+	code statement
+else:
+	final code statements
+
+BREAK, CONTINUE, and PASS
+
+break - breaks out of current closest enclosing loop
+continue - continues through loop
+pass - does nothing at all
+
+while test:
+	cost statement
+	if condition:
+		break
+	if condition:
+		continue
+else:
+	statement
+
+RANGE
+
+range(0, 10) - returns a list of all numbers from 0 up to but not including 10
+range(20) - returns list of numbers from 0 up to but not including 20
+range(start, stop, step) - returns list from start up to but not including stop in steps of step
+
+for x in range(0, 10):
+	print(x)
+
+What if want to do a huge range of numbers? Could pc hold that memory? Maybe just want to do a for loop through these but not store them
+
+Generator - allows the generation of "generated" objects that are provided at that isntance but does not store every instance generated into memory. 
+
+Means generator does not create a list of numbers like range but provides a one time generation of the numbers in that range. 
+
+Python 2 hasa built in range generator called xrange9). Recommed for use in for loops in Python 2. So range() outputs a list, xrange() only generate elements but not save them in memory. 
+
+Python 3 has range() as a generator. Don't use xrange().
+
+for num in xrange(1, 6):
+	print num
+
+x = xrange(1, 6)
+x2 = range(1, 6)
+
+type(x) -> xrange
+type(x2) -> list
+
+list(x) - returns a list of the generated values
+x2 == list(x) -> True
+
+

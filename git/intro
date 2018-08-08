@@ -1,0 +1,105 @@
+Git Commands
+
+git init - initialize a git repository in current folder. Craete .git hidden folder. Stores change sets, branches, etc. Not a backup. Unlike TFS and SVN where you usually checking into a repository on a remote server. Git uses local file base setup. Can delete folder to destroy repository. Need to backup manually. Zipping folder and giving it to someone gives access to repository if git is installed. 
+
+git status - tells status of git. Tells whether files are or are not tracked. Or if a file is staged. Will show which files were changed or untracked. 
+
+git add readme.txt - stages a file for a commit. 
+
+If change file, then git status will show that file in unstaged. Because git only staged the original version. Need to restage to get new version of file. Commit only includes staged files. 
+
+git add readme.txt - must use command again to store new information for staging. 
+
+git commit - ends up in vim like screen. To enter a commit message. Use vim commands. All text here is message. #commented out lines will not show up in git message.
+
+git commit -m 'Message of commit' - can send message for commit in command line. 
+
+git log - lists out commits and details. Tells author and date and commit messages. 
+
+git add . - stage current directory. 
+
+git add *.html - stage all html files
+
+.gitignore - file that specifies filenames and file patterns to ignore files in directory for git. Must add ignore file to git though. 
+
+BRANCHING AND MERGING
+
+Branching allows you to work on copy of code in main line without affecting the main line directly. Can work on your own branch with out affecting others. 
+
+git branch NameOfBranch - create a new git branch. Can switch to it. 
+
+git checkout NameOfBranch  - can switch to new branch
+
+Now changes staged and committed
+
+git checkout master - change to main branch. Will not have new changes and files from branch. 
+
+git status - tells what branch you are in. 
+
+git merge NameOfBranch - merge branch into master.
+
+git commit -a -m 'track any files that are changed and commit' - and files that are tracked and changed will be committed automatically. And new files that are untracked will not be saved though. 
+
+Merge Conflict 
+
+If a file is modified by two different branches cannot merge those branched. Merge conflict. 
+
+If examine file that was modified, git will add info to file. 
+
+HEAD - the part of the file that was changed by the current branch. 
+
+master - the part of the file changed by other branch. 
+
+<<<<<< HEAD
+change 7
+======
+change 6
+<<<<<< master
+
+Can change file content:
+
+change 6
+change 7
+
+Then must add resolved files and commit them
+
+git commit -a m 'merge from master'
+git status
+
+git mergetool - install or configure to help fix merge conflicts easier. tourtoisemerge, vimmerge. 
+
+Stash
+
+What if we make changes to a branch but don't commit them. Such as adding a new file to a branch but then needing to switch back to another branch without that file for bug fix. File will remain on computer. 
+
+stash commands takes dirty state of a branch including tracked modification and staged changed and saves it on stack of unfinished changes that can be reapplied at any time. 
+
+git stash - stashes changed. Remove untracked files. 
+
+git stash apply - will reapply changes to current branch. Files will be added. 
+
+REMOTE REPOSITORY
+
+Even though interacting with remote repository, everything is still happening locally. Must push changes and pull files from remote repository. 
+
+git remote - shows existing remote repositories. Any remote repositories we have will only apply to current local repository. 
+
+Get repo from github. Get clone URL. 
+
+git clone cloneurl - Pulls entire repo and its commit history. 
+
+Go into new folder and type git remote and will see origin. 
+
+git remote -v - show repo URLs. Origin is default alias for repo. Can use alias with git commands. 
+
+Fetching and Pulling
+
+git fetch origin - will go to server and get any changes made since last cloned or fetched. Will pull data into local repo but will not merge it into work.
+
+git pull origin - will automatically fetch and merge changes from remote branch into current branch. 
+
+Can commit when ready to send changes. 
+
+git push origin master - push changes to remote repository and commit to master branch. Must put in credentials. 
+
+git remote add MyRepo http://github.com/somerepo.git - add remote repo 

@@ -1,0 +1,189 @@
+CUSTOM TYPE CONVERSIONS
+
+Used when you have two class types in different hierarchies with no common parent that require conversions. 
+
+Two keywords:
+1. explicit
+2. implicit
+
+public struct Rectangle
+{
+public int Width {get; set;}
+public int Height {get; set;}
+ 
+public Rectangle(int w, int h) : this()
+{
+Width = w; Height = h;
+}
+ 
+public void Draw()
+{
+for (int i = 0; i < Height; i++)
+{
+for (int j = 0; j < Width; j++)
+{
+Console.Write("*");
+}
+Console.WriteLine();
+}
+}
+ 
+public override string ToString()
+{
+return string.Format("[Width = {0}; Height = {1}]",
+Width, Height);
+}
+}
+
+public struct Square
+{
+public int Length {get; set;}
+public Square(int l) : this()
+{
+Length = l;
+}
+ 
+public void Draw()
+{
+for (int i = 0; i < Length; i++)
+{
+for (int j = 0; j < Length; j++)
+{
+Console.Write("*");
+}
+Console.WriteLine();
+}
+}
+ 
+public override string ToString()
+{ return string.Format("[Length = {0}]", Length); }
+ 
+// Rectangles can be explicitly converted
+// into Squares.
+public static explicit operator Square(Rectangle r)
+{
+Square s = new Square();
+s.Length = r.Height;
+return s;
+}
+}
+
+Incoming parameter is entity you are converting from, while opreator type is entity you are converting to. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Conversions *****\n");
+// Make a Rectangle.
+Rectangle r = new Rectangle(15, 4);
+Console.WriteLine(r.ToString());
+r.Draw();
+ 
+Console.WriteLine();
+ 
+// Convert r into a Square,
+// based on the height of the Rectangle.
+Square s = (Square)r;
+Console.WriteLine(s.ToString());
+s.Draw();
+Console.ReadLine();
+}
+
+***** Fun with Conversions *****
+ 
+[Width = 15; Height = 4]
+ 
+***************
+***************
+***************
+***************
+ 
+[Length = 4]
+****
+****
+****
+****
+
+// This method requires a Square type.
+static void DrawSquare(Square sq)
+{
+Console.WriteLine(sq.ToString());
+sq.Draw();
+}
+
+static void Main(string[] args)
+{
+...
+// Convert Rectangle to Square to invoke method.
+Rectangle rect = new Rectangle(10, 5);
+DrawSquare((Square)rect);
+Console.ReadLine();
+}
+
+static void Main(string[] args)
+{
+...
+// Converting an int to a Square.
+Square sq2 = (Square)90;
+Console.WriteLine("sq2 = {0}", sq2);
+ 
+// Converting a Square to an int.
+int side = (int)sq2;
+Console.WriteLine("Side length of sq2 = {0}", side);
+Console.ReadLine();
+}
+
+public struct Square
+{
+...
+public static explicit operator Square(int sideLength)
+{
+Square newSq = new Square();
+newSq.Length = sideLength;
+return newSq;
+}
+ 
+public static explicit operator int (Square s)
+{return s.Length;}
+}
+
+IMPLICIT CONVERSION ROUTINES
+
+It is illegal to define explicit and implicit conversion functions on the same type i they do not differ by their return type or
+parameter set. Because when a type defines an implicit conversion routine, it is legal for caller to make use of the explicit 
+cast syntax. 
+
+public struct Rectangle
+{
+...
+public static implicit operator Rectangle(Square s)
+{
+Rectangle r = new Rectangle();
+r.Height = s.Length;
+ 
+// Assume the length of the new Rectangle with
+// (Length x 2).
+r.Width = s.Length * 2;
+return r;
+}
+}
+
+static void Main(string[] args)
+{
+...
+// Implicit cast OK!
+Square s3 = new Square();
+s3.Length= 7;
+ 
+Rectangle rect2 = s3;
+Console.WriteLine("rect2 = {0}", rect2);
+ 
+// Explicit cast syntax still OK!
+Square s4 = new Square();
+s4.Length = 3;
+Rectangle rect3 = (Rectangle)s4;
+ 
+Console.WriteLine("rect3 = {0}", rect3);
+Console.ReadLine();
+}
+
+

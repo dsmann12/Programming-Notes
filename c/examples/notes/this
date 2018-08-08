@@ -1,0 +1,10 @@
+This - keyword that points to implicit parameter. 
+
+Is a pointer. so this->h must be used to access
+fields and methods of this object. 
+
+Can dereference it to use dot operator
+
+(*this).h = 23;
+
+Is a pointer to the implicit parameter.  

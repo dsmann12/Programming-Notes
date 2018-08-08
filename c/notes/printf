@@ -1,0 +1,21 @@
+printf -- print formatted text to output
+
+"" -- indicates strings
+
+printf("String"); //prints string "String" but does print newline.
+printf("String\n"); // prints string "String" and newline. '\n' is an escape sequence. Special character.
+
+'\t' is tab special character 
+
+printf("%s is the best person ever!\n", "David");
+After comma, other arguments are variables to be substitued with placeholders in order
+
+printf("I am %d years old\n", 24);
+printf("pi is %f\n", 3.141592635) ; //3.141593
+printf("pi is %.2f\n, 3.141592635); //3.14
+
+% - signifies placehold for printf
+	%s 	-- string
+	%d 	-- decimal integer
+	%f 	-- floating point number. 6 decimal places by default
+	%.2 	-- specify decimal places for floating point

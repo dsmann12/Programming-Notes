@@ -1,0 +1,9 @@
+rand() function returns a pseudo-random integer in range 0 to RAND_MAX inclusive
+RAND_MAX is set to highest value of type by default
+
+srand(unsigned int) sets its argument as seed for a new sequence of pseudo-random ints
+to be returned by rand(). If no seed, rand automatically seeded with value of 1. 
+
+rand() % n //gives values [o, n-1]
+
+Since computes are deterministic machines, impossible for them to produce truly random numbers. Psuedo-rndom number generators fill this need by generating a stream of numbers that is psuedo-random. Can produce a seemingly random sequence of numbers started from a seed. All seeds generate same numbers, but can seem random if user does not know seed. 

@@ -1,0 +1,82 @@
+COMBAT
+
+Melee, ranged, hit points, damage, and many enemies
+
+Move player to enemy. 
+
+ATTACKING THE ENEMIES DESIGN
+
+1. Run to enemy; attack melee
+2. Run to distance from enemy; attack ranged
+3. Run past enemy even if attacked
+4. Run to enemy, avoid others
+5. Controller -> some aim assis, nearest/closest
+
+Place down enemies to organize level. Can make screen shot and add design requirements
+
+USING GIZMOS TO VISUALIZE CODE
+
+To visualize where you are moving to to visualize where you will start. Even can visualize attack range. 
+
+// Called every time gizmo is drawn.
+OnDrawGizmos()
+{
+	// make line black
+	Gizmos.color = Color.black;
+	// draw line from object to target
+	Giizmos.DrawLine(transform.position, currentClickTarget);
+	// shows where player is going to
+	Gizmos.DrawSphere(currentClickTarget, 0.1f);
+	// shows where player will stop
+	Gizmos.DrawSphere(clickPoint, 0.15f);
+
+	// draw attack sphere
+	Gizmos.color = new color(255f, 0f, 0, .5f);
+	Gizmos.DrawWireSphere(transform.position, attackMoveStopRadius);
+}
+
+With OnDrawGizmos implemented in code, that class will show up in Gizmos menu in the editor. 
+
+Red stuff are animator gizmos. 
+
+Store clickPoint as member variable and set it in code for getting currentClickTarget. 
+
+Shorten vector from one where we are to current click target. Make currentClickTarget/currentDestination the shorted distance between clickPoint and walkMoveStopRadius. Take vector from object to click point but shorten it by walkMoveStopRadius. 
+
+Vecot3 ShortDestination(Vector3 dest, float shortening)
+{
+	Vector3 reductionVector = (destination - transform.position).nomralized * shortening;
+	return destination - reductionVector;
+}
+
+Do same thing for attackMoveRadius. Do same thing except do this for enemies.
+
+PLAYER HEALTH BAR UI
+
+Use playerHealth images and a Health script to handle health bar. 
+
+Use a UI element to handle health bar. Will use canvas. 
+
+Use anchors and pivots to position it correctly. 
+
+Health bar is twice as long as it should fill, but it wraps around. Health bar mask is a transparent mask that sits on top. Can be used for art style to be flexible.
+
+Uses a raw image nad helath bar script. 
+
+Gets value for health and offset to figure out where it should be. 
+
+Grab the Use a UI element to handle health bar. Will use canvas. 
+
+Use anchors and pivots to position it correctly. 
+
+Health bar is twice as long as it should fill, but it wraps around. Health bar mask is a transparent mask that sits on top. Can be used for art style to be flexible.
+
+Uses a raw image nad helath bar script. 
+
+Gets value for health and offset to figure out where it should be. 
+
+Right click and select export package. Uncheck include dependencies and just click the things you select. Then decide how to save it. 
+
+Then can import package. 
+
+

@@ -1,0 +1,141 @@
+PIPES
+
+Pipes - feature built into Angular 2 designed to transform output in a template. 
+
+username = "Max"
+
+<p>{{ username }}</p>
+
+What if want it capitalized on some elements in a template? Use pipes
+
+<p>{{ username | uppercase }}</p>
+
+BUILT IN PIPES
+
+uppercase -> tranform text to uppercase
+date -> take date and make it common syntax: Month Day, Year: Jan. 23, 1992
+
+PARAMETRIZING PIPES
+
+Can add parameters to pipes using :
+
+{{ server.started | date:'fullDate' }} -> Changes to Monday, August 8, 1920
+
+For multiple parameters, simply separate them with additional colons:
+
+date:'fullDate':'anotherParameter'
+
+LEARN MORE ABOUT PIPES
+
+Check angular docs. 
+
+CHAINING MULTIPLE PIPES
+
+{{ server.started | date:'fullDate' | uppercase }}
+
+Generally, order matters. Left to right usually. 
+
+CREATING CUSTOM PIPES
+
+shorten.pipe.ts
+
+Should export a class.
+
+Must have one specific method. transform(). Should implement PipeTransform interface.
+
+Import PipeTransform from @angular/core
+
+Also must add it to declarations in app.module and import it. 
+
+Also must add @Pipe decorator. Import from @angular/core
+
+@Pipe({
+    name: 'shorten'
+})
+export class ShortenPipe implements PipeTransform{
+    transform(value: any) {
+        if(value.length > 10) {
+            return value.substr(0, 10) + ' ...';
+        }
+        else {
+            return value;
+        }
+    }
+}
+
+PARAMETERIZING A CUSTOM PIPE
+
+Can add argument to a pipe in tranform method.
+
+@Pipe({
+    name: 'shorten'
+})
+export class ShortenPipe implements PipeTransform{
+    transform(value: any, limit: number) {
+        if(value.length > limit) {
+            return value.substr(0, limit) + ' ...';
+        }
+        else {
+            return value;
+        }
+    }
+}
+
+CREATING A FILTER PIPE
+
+ng g p <name>
+ng g p filter
+
+HTML:
+
+Create input with two way binding for status
+
+      <input type="text" [(ngModel)]="filteredStatus">
+
+Then create new pipe, make sure added to app.module:
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'filter'
+})
+export class FilterPipe implements PipeTransform {
+
+  transform(value: any, filterString: string, propName: string): any {
+    if(value.length === 0) {
+      return value;
+    }
+    else {
+      const resultArray = [];
+      for(const item of value) {
+        if(item[propName] === filterString) {
+          resultArray.push(item);
+        }
+      }
+      return resultArray;
+    }
+  }
+
+}
+
+PURE AND IMPURE PIPES
+
+Updating arrays or object will not retrigger pipes. So adding new items or removing will not be updated in a pipe until that pipe is applied again.
+
+Following change will make sure that any data change will recalculate pipe so will have performance cost.
+
+Add second property to @Pipe decorator called pure. Set to false. 
+
+@Pipe({
+  name: 'filter',
+  pure: false
+})
+
+UNDERSTANDING ASYNC PIPES
+
+Know data will be give after a timeout. Use async pipe.
+
+      <h2>App Status: {{ appStatus | async }}</h2>
+
+async - works with Promise and Observable objects. 
+

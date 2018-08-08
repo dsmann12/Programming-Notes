@@ -1,0 +1,63 @@
+Dynamic Memory Allocation
+
+C++ supports three bsaic types of memory allocation:
+
+1. Static memory allocation - static and global variables. Memory for these types of variables is allocated once when program is run and persists throughout life of program. 
+
+2. Automatic Memory Allocation - function parameters and local variables. Memory for thes etypes of variables is allocated when relevant block is entered. Freed when block is exited, as many times as necessary.
+
+2 Things in Common:
+1. Size of variable/array must be known at compile time.
+2. Memory allocation and deallocation happens automatically (when variable is instantiated/ destroyed)
+
+Usually this is fine, but will come across situations where one or both constraints cause problems, usually when dealing with external (user or file) input. 
+
+Most normal variables are allocated in portion of memory called the stack. Amount of stack memory for a program is generally small (Visual Studio defautls stack size to 1MB). If exceeded, stackoverflow will result, and OS will likely close program.
+
+3. Dynamic Memory Allocation: - A way of running programs to request memory of OS when needed. Memory does not come from program's limited stack memory -- instead it is allocated from a much larger pool of memory managed by OS called heap. 
+
+To allocate single variable dynamically, use scalar (non-array) form of new operator
+
+new int; //dnamically allocate integer
+	// returns pointer containing address of memory that has been allocated
+
+Unlike static or automatic memory, program itself is responsible for requesting and disposing of dynamically allocated memory. 
+
+int *ptr = new int (5);
+int *ptr1 = new int {6};
+
+To delete single variables - scalar (non array) form of delete operator tells C++ to free memory for reuse. 
+
+delete ptr; //return memory pointer to by ptr to OS
+ptr = 0; //set ptr to be a null pointer (or use nullptr C++11)
+
+Note: deleting a pointer that is not pointing to dynamically allocated memory may cause errors
+
+Rule: To avoid dangling pointer, after deleting memory, set all pointers pointing to deleted memory to 0
+
+New Operator Can Fail:
+
+In rare circumstances, OS may not have any memory to grant request with. If fails, a bad_alloc exception is thrown. If not handled, program will terminate with an unhandled exception error. 
+
+Alternate form of new can be used to tell new to return a null pointer if memory can't be allocated. Done by adding constant std::nothrow between new keyword and allocation type:
+
+int *value = new (std::nothrow) int; //value will be set to a null pointer if integer allocation fails
+
+Note: attempt to dereference memory pointer to by null pointer will cause program to crash. Best practice is to check all memory requests to ensure they actually succeeded before using memory. 
+
+Memory Leaks:
+
+Dynamically allocated memory effectively has no scope. Stays allocated until it is explicitly deallocted or until program ends (and OS cleans it up, assuming OS does that). However, pointers used to hold dynamically allocated memory addresses follow scoping rules of normal variables. 
+
+Because pointer is only variable holding address of dynamically allocated object, then when pointer is destroyed there are no more reference to the dynamically allocated memory. 
+
+This is memory leak.
+
+As a result, dynamically allocated object cannot be deleted, and thus cannot be reallocated or reused when program is running. 
+
+Memory leaks eat up free memory available not only to this program, but to other programs as well. 
+
+Can also result is pointer holding address of dynamically allocated memory is reassigned to another value. 
+
+
+

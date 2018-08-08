@@ -1,0 +1,85 @@
+THE VISIBLE COMPUTER
+
+Coffee metaphor.
+
+Step 1 - Start with raw data. Usually sits on storage, usually hard drive but can be other media. CD-Rom, flash drive. Take raw data and load it into memory (RAM).
+
+Step 2 - provide input. Buttons such as keyboard and mouse. Control input to tell process how and what to process as data. 
+
+Step 3 - Data is processed. 
+
+Step 4 - Receive Output
+
+Step 5 - Return to storage. 
+
+Stored data is loaded into RAM so it can be worked on by processor. Users provide input that directs how data should be processed. The output is the processed data, usually viewed on a monitor. 
+
+Main Components
+
+CompTIA uses own terminology.
+
+System Unit - the case. Where storage and processing is. Motherboard, CPU, RAM, hard drives. i
+
+Peripherals - everything else. Monitors. Mouse. Keyboard. Speakers. Printer. Scanners.
+
+Peripherals provide input or output. 
+
+External Components:
+
+Ports - all kinds of different standardized ports found on PCs. 
+
+Universal Serial Bus (USB) - Systems often have lots of USB ports. 
+
+USB-A - the normal rectangular connection. 
+
+Ethernet - Internet connection. Used by wired networks. 8-pin ethernet connector. RJ-45. 
+
+External SATA (eSATA) - green. Designed almost exclusively for external harddrives. Very fast connection.
+
+Sony/Philips Digital Interface (S/PDIF) - fiber optic cables. Used for digital audio. High quality home theater sound. 
+
+Digital Visual Interface (DVI) - Primary video output for systems today. 
+
+High-Definition Multimedia Interface (HDMI) - Very common. HDMI connectors different from HDMI plugs. Carries both audio and video. 
+
+Mini Audio Jacks - 1/8 inch mini rca jack. Used as direct connection to microphones or speakers. Usually only used when have speakers that directly connect to computer itself. 
+
+Power - PSU. Power connection. Three pronged. PC Power Connector. 
+
+Front Panel Connections - front panels for convenient I/O. 
+
+FireWire - like USB. Losing popularity. 
+
+Legacy Ports:
+
+Mini DIN - round connection used to be comon with mice and keyboards.
+
+D-SUB Connections - connections for VGA in old monitors. Many different types. Male and female. 
+
+PS2 Connectors - the male version of Mini DIN that connectos mice and keyboards. 
+
+Serial Port - 9 Pin Male DB Connector. Used to be used for most things. Grand daddy. A type of D-Sub
+
+Parallel Port - Longer D-SUB. Were connections on first IBM computers. Used to be used for printers and peripherals. 
+
+VGA - 15 pin 3 rows of 5. For graphics. Displays. Monitors. Female. 
+
+If it isn't going in or coming out easily, it's probably wrong. 
+
+Internals:
+
+Power Supply Unit (PSU) - takes standard household current and converts it into 5V and 12V VC.
+
+Video Card (Graphics Card) - 
+
+Random Access Memory (RAM) - Individual parts are called sticks. 
+
+Central Processing Unit (CPU), Heatsink, Fan - Cooling
+
+Motherboard - everything connects to it. Everything that is the computer connects either directly or indirectly through motherboard. Video card and CPU connect directly. I/O devices like hard drives and optical disks connect through SATA cables. 
+
+Hard Drive - uses SATA connections. Also power connection.
+
+Internals are either connected to PSU or Motherboard somehow (or both). 
+
+Power and Reset Button connections.  

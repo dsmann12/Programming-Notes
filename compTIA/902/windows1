@@ -1,0 +1,59 @@
+WINDOWS (cont)
+
+Can define how service starts: Manual (go here to start it), Automatic (starts at beginning of boot), Disabled (prevents the service from starting in any fashion), or Automatic (delayed start), which starts the service at boot but only after pretty much everything else has started. 
+
+net start <service name> - can start any service from command line
+
+net stop <service name> - stop a running service. 
+
+Performance - Investigate how much RAM and CPU is being used. Handy screen showing CPU usage, available physical memory, size of the disk cache, and other details about memory and processes. Also tells what program is using those resources. Can see in Processes tab. 
+
+Networking and Users - Two tabs. Enable you to see networks use at a glance and which users's accounts are currently logged onto the local machine. Users tab enables you to log off other users if you have proper permissions. 
+
+Task Manager in Windows 8/8.1/10
+
+Fewer details view - simple interface for seeing and terminating running programs. Must click more details to get more advanced options. 
+
+CTRL-SHIFT-ESC or Right click start and select task management. 
+
+Opens on Processes tab. Performance, Services, and Users tab still exists but Networking tab has been marged into Performance Tab (along with new data). Also three new tabs: App history, Startyp, and Details. 
+
+Can right click on column deaders to select which columns are enabled, and Search online option any time you right-click on a process or service. 
+
+Processes - Applications tab can be thought to be merged with Processes. Three sections: Apps, background processes, and Windows processes. No longer lists exectuable, user, CPU/memory use, and description of process (have now been moved to Details tab). Now, lists a process descriptionm its status, and its resource use, including CPU, Memory, Disk I/O, and Network I/O. 
+
+Most advanced options of context menu (End Process Tree, UAC Virtualization, Set Priority, Set Affiinity, Go to Service[s]) have also moved to context menu of Details tab. Repaced by simpler opios for expanding the process group, specifying whether resource use is reported as percentage, going to the Details entry for this process and searching for information about process online. 
+
+Performance - Network tab has been merged into this and Disk I/O added as well. 
+
+App history - Collects recent statistics on CPU time and network usage. By default not showing history of all processes. Can click Options and select "Show history for all processes" to see a more comprehensive list. Above list is sentence stating when current dat abegins and change to clear current data by clicking Delete usage history. 
+
+Startup - In older Windows, use msconfig to specify programs you didn't want to load with Windows. Startup tab gives same functionality. Identify and disable rogue startup programs in same place. Even has Startup impact column that will help you identify which programs slow down boot the most. 
+
+Users - Allows most of same basic functionality as used to. Place to see ,disconnect, or log off connected users, but also shows programs under a user's account and clearly indicates the associated resource use. 
+
+Details - Inherits most of functionality removed from old Processes tab. Lists processes by executable name, and includes their PID, status, the user running them, CPU/memory use, and adescription. If right lick on any column header and choose Select columns, you can enable or disable an array of columns containing information about each running process. Context menu also introduces a debugging option called called Analyze wait chain for identifying cause of a frozen program
+
+Services - Virtually unchanged. Aside from the cosmetic update; the same columns Same columns appear in same order. If you right-click on a service, there are a few nice usability tweaks, including Search online option for investigating unknown services, and option to restart a service with a single click. 
+
+The tasklist and taskkill Commands 
+
+Command line utilities enable you to work with tasks, similarly to what you can do with Task Manager. 
+
+tasklist - enables you to view running processes on a local or remote system. Find notepad PID to kill and can kill it will taskkill command. 
+
+taskkill - Can kill process using either name or the PID. \f flag force flag to make sure Windows actually closes Notepad. 
+
+taskkill \f \pid 3932
+
+Performance Tools - Task manager good for monitoring current problems, but what about problems that already occurred. Windows comes with tools to log resource usage so can track metrics suc has CPU and RAM usage over time. 
+
+In Windows Vista, this was called "Reliability and Performance Monitor.  
+
+In Windows 7, there is just the "Performance Monitor" tool made tighter and smaller. You can find Reliability and Performance Monitor/Performance Monitor in the Adminstrative Tools applet in Control Panel. Can also open by going to Start | Search, typing perfmon.msc and pressing ENTER. 
+
+Reliability and Performance Monitor in Windows Vista opens to a Resource Overview screen. Think of Resource OVerview  as advanced Task Manager, giving details on CPU, hard drive, network, and memory usage. Can click on one of the four bars to get details on exactly which processes are using those resources. 
+
+Reliabilty Monitor - gives overview of how a system has behaved over time, showing important events such as app or OS crashe. Find tool in Windows 7 as part of Action Center Control Panel applet. 
+
+Performance Monitor - opens a more modest screen that displays some text about Performance Monitor and a System Summary. Can get to Overview screen by clicking the Open Resource Monitor link on main screen. 

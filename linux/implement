@@ -1,0 +1,21 @@
+Create Many Directories With Numbered Names
+Named test[0-15]
+In even numbered folders, create memo files up to 25
+In odd numbered folders, create code files up to 50
+
+
+Create a poem and save it into a file
+Then output each line of that poem with vowels capitalized
+
+
+#Organize folder based on file extension
+Create randomized and multiple .c, .py, .java, .cpp, .cs, and .sh files
+Create randomized and multiple .txt, .csv files
+Compile code
+Store code files in folders according to language
+Store binary files in /bin folder
+Store text files in documents folder
+
+#Lock terminal
+
+#do what python did with csv file using bash

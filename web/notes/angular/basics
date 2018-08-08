@@ -1,0 +1,171 @@
+BASICS
+
+ng serve -> development server and angular setup
+
+app.component.html -> html template for file
+
+index.html -> actual file served from server.
+
+<app-root> -> component of angular. The root component of the application.
+
+All default files with component in name are related to this component
+
+app.component.ts -> Typescript file relating to component
+
+Has @Component decorator with selector property holding value "app-root". Value angular needed to replace part in HTML file with component. 
+
+In index.html, angular injects script bundles and add them to index.html file. Can be seen in served html file from the server. 
+
+main.ts -> First code which gets executed. 
+
+platformBrowserDynamic().boostrapModule(AppModule); -> bootstraps angular application by passing AppModule
+
+AppModule - refers to app.module.ts
+
+Has NgModule decorator. Most importantly it contains an array called bootstrap which contains values of components which should be known to angular when it analyzes index.html file. Reference to AppComponent. 
+
+AppComponent refers to app.component.ts, app.component.html, app.component.css, etc. html is the html template.
+
+COMPONENTS
+
+Components - key feature of angular. Build whole app from compositing it from a few components you build on your own. 
+
+Root component -> holds entire app together. Component where nest or add other components to. 
+
+Header could be componet, buttons on header could be components. Main area could be component, sidebar could be another. Each has its own template, maybe own stylinh, and own business logic. Modularizes app. 
+
+app.component.ts -> root component. Selectors will be added to app.component.html file. 
+
+All related content usually put in app folder. Should have folder name equal component name.
+
+src/app/server
+src/app/server/server.component.ts
+
+In server.component.ts
+
+export class ServerComponent {
+
+}
+
+Must add a decorator, a TS feature allowing it to enhance classes and elements used in code. 
+
+@Component()
+
+TypeScript doesn't know about this decorator so must import a file
+
+import { Component } from '@angular/core';
+
+angulra/core -> package giving access to core functionality
+
+Must now pass JS object to decorator. Need to place important information there for configuration. Stored as metadata for class telling angular what to do with class. 
+
+selector: -> html tag to use component later in html templates. Must be unique. So 'app-' prefix is used.
+
+templateUrl: -> html template. server.component.html
+
+@Component( {
+	selector: 'app-server',
+	templateUrl: './server.component.html'
+})
+
+To use component, must change app module.
+
+app.module.ts
+
+AppModule - angular uses components to build webpages and uses modules to bundle different pieces of app into packages. Only large projects will need multiple modules typically. Set bundle of functionalities of app. Really just empty TypeScript class, like component, that is transformed with data given by a decorator. 
+
+@NgModule - decorator. Properties-> declarations, imports, providers, bootstrap. 
+
+New components must be registered in module. By default, angular will not scan all files. Must register it in NgModule. First must add ServerComponent to declarations:. Also must import ServerComponent from the file. 
+
+import { ServerComponent } from './server/server.component'; (no need for .ts because webpack knows)
+
+@NgModule({
+	declarations: [
+		AppComponent,
+		ServerComponent
+	],
+	imports: [
+		BrowserModule,
+		FormsModule,
+		HttpModule
+	],
+	providers: [],
+	bootstrap: [AppComponent]
+})
+
+Import just lets you add modules to module 
+
+BrowserModule -> base functionality to start app
+HttpModule -> 
+
+Cannot add new component to index.html, but can add it to the app.component.html template
+
+<app-server></app-server>
+
+Angular-CLI
+
+Create components automatically
+
+ng generate component servers
+ng g c servers
+ng g c servers --spec false //prevent creation of testing file
+
+Creates new folder in app directory called servers. Fills in with servers.component.css, servers.component.html, servers.component.ts, and servers.component.spec.ts (used for testing)
+
+CLI automatically udates app module. 
+
+If place two app-server components into app-servers template and then place app-servers template inside approot template, then you will have nested components. 
+
+app-root
+	app-servers
+		app-server
+		app-server
+
+INLINE TEMPLATING
+
+Can define template in TS code. 
+
+In @Component decorator, can have iether templateUrl or template. 
+
+If change to template: can add tempalte code as value to template. Cannot put newline as not supported in default TS string. 
+
+@Componen({
+	selector: 'app-servers',
+	template:'<app-server></app-server><app-server></app-server>
+	...
+})
+
+To use multiline strings, use backticks instead of quotes. 
+
+Better to use external file when template code is longer. 
+
+COMPONENT STYLES
+
+Each component has its own css file. Can add multiple stylesheets in styleUrls in component.ts. 
+
+styles -> another property for @Component that takes an array of strings where you can define styles in here. 
+
+Can't combine styleUrls and styles. 
+
+SELECTOR PROPERTY
+
+selector property of @Component in component.ts file. 
+
+selector: 'app-servers'
+
+Works like css selector. Therefore not limited to selecting by element. Can put in square brackets to use attribute selector. 
+
+selector: '[app-servers]'
+
+If use:
+
+<div app-server></div> -> then app-server is an attribute to tag
+
+Can also select by class:
+
+selector: '.app-servers'
+
+<div class="app-servers"></div>
+
+Selecting by ID does not work not does psuedo selectors like hover. 

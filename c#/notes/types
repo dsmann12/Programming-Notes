@@ -1,0 +1,78 @@
+TYPES
+
+Boolean
+Integral
+Floating Point
+Decimal
+String
+
+BOOLEAN
+
+bool truth = true;
+
+Values can be true or false. Printed True or False in string form. 
+
+INTEGRALS 
+
+Either whole numbers, signed or unsigned, or the char type. 
+
+char type is a Unicode character as defined by the Unicode Standard. 
+
+type			size(bits)				Range
+sbyte			8						-128-127
+byte			8						0-255
+short			16						-32768-32767
+ushort			16						0-65535
+int				32						-2,147,483,648-2,147,483,647
+uint			32						0-4,294,967,295
+long			64						-9223372036
+ulong			64
+char			16						0-65535
+
+FLOATING POINT AND DECIMAL
+
+C# floating point type is either a:
+
+float or double.
+
+Used any time need to represent a read number, as defined by IEEE 754. 
+
+Decimal types should be used when representing financial or money values. Decimal type can avoid rounding errors. 
+
+Type		Size(bits)				Precision				Range
+float		32						7 digits				1.5 x 10^-45 to 3.4 x 10^38
+double		64						15 digits				5.0 x 10^-324 to 1.7 x 10^308
+decimal		128						28-29 digits			1.0 x 10^-28 to 7.9 x 10^28
+
+THE string TYPE
+
+A string is a sequence of text characters. Typically create a string with a string literal
+
+Escape characters
+
+Can use @ as prefix to make the string a verbatim literal. Such as with path names
+
+@"c:\topdir\subdir\subdir\myapp.exe"
+
+C# OPERATORS
+
+Results are computed by building expressions. 
+
+Category (by precedence) 	Operator(s) 	Associativity
+Primary 	x.y  f(x)  a[x]  x++  x–  new  typeof  default  checked  unchecked delegate 	left
+Unary 	+  –  !  ~  ++x  –x  (T)x 	right
+Multiplicative 	*  /  % 	left
+Additive 	+  – 	left
+Shift 	<<  >> 	left
+Relational 	<  >  <=  >=  is as 	left
+Equality 	==  != 	right
+Logical AND 	& 	left
+Logical XOR 	^ 	left
+Logical OR 	| 	left
+Conditional AND 	&& 	left
+Conditional OR 	|| 	left
+Null Coalescing 	?? 	left
+Ternary 	?: 	right
+Assignment 	=  *=  /=  %=  +=  -=  <<=  >>=  &=  ^=  |=  => 	right
+
+Notice the expression (sbyte)(~bitNot). Any operation performed on types sbyte, byte, short, or ushort return int values. To assign the result into the bitNot variable we had to use a cast, (Type), operator, where Type is the type you wish to convert to (in this case – sbyte).

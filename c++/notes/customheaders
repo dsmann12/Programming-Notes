@@ -1,0 +1,15 @@
+//#ifndef <HEADERNAME>? //if not defined,  then define it //if you already included header file then don't include it
+//#define <HEADERNAME>?
+
+class myClass {
+
+}
+
+#endif
+
+:: - binary scope resolution operator. Specify class
+function is a member of
+
+std::cout
+
+Must then have .cpp of same name to instantiate methods and fields. 

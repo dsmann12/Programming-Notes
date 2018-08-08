@@ -1,0 +1,184 @@
+ADVANCED
+
+Mathematical Functions
+Timestamps and Extract functions
+String functions and operators
+SubQuery
+Self-Join
+
+TIMESTAMPS AND EXTRACTS
+
+Different SQL engines may use different syntax. 
+
+SQL allows us to use timestamp data type to retain type information. 
+
+Extract - allows us to extract parts from a date 
+
+extract(unit)
+
+Units:
+day (1-31)
+dow (day of week 0=Sunday, etc)
+doy(day of year 1=first day, 365/366=last day)
+epoch - number of seconds since 1970. Number of seconds in an interval if interval value
+hour (0-23)
+microseconds - seconds (and fractional seconds) multiplied by 1,000,000
+millenium - millennium value
+milliseconds - seconds (and fractional seconds) multiplied by 1000
+minute (0-59)
+month - (1-12), if date value. (0-11) if interval value
+quarter - (1-4)
+second - seconds (and fractional seconds)
+week (number of week of year based on ISO 8601 (where year begins on Monday of week that contains Jan 4.
+year - year as 4 digits
+
+Can also use mathematical operators on date data
+
+date '2001-09-28' + integer '7'  = date '2001-10-05'
+
+date '2001-09-28' + interval '1 hour' = date '2001-09=28 01:00:00'
+
+Other functions:
+
+age(timestamp, timestamp) - gives you the time between them. 
+
+age(timestamp '2001-04-10', timestamp '1957-06-13') = 43 years 9 mons 27 days
+
+age(timestamp) - age from timestamp parameter to current date
+
+Examples:
+
+SELECT function(unit from column) FROM table
+
+Get day for each payment
+
+
+SELECT extract(day from payment_date) FROM payment;
+
+SELECT extract(day from payment_date) AS day FROM payment;
+
+SELECT SUM(amount), extract(month from payment_date) AS month
+FROM payment
+GROUP BY month
+ORDER BY SUM(amount) DESC
+
+MATHEMATICAL FUNCTIONS
+
+Most are available in every SQLL engine.
+
+Mathematical operators and functions built in. 
+
+Basic operators:
++, *, -, /, %, ^ (exponentiation), 
+|/ (square root) - |/ 25.0 = 5, 
+||/(cube root) - ||/ 27.0 = 3, 
+! (factorial) - 5 ! = 120
+!! (prefix factorial) - !!5 = 120
+@ - absolute value
+bitwise
+
+Integer division by default.
+
+Functions:
+asb(x)
+ceil(x)
+floor(x)
+ln()
+log()
+pi()
+power()
+round()
+random()
+
+Trigonometric as well. 
+
+SELECT round(AVG(amount), 2)
+FROM payment;
+
+STRING FUNCTIONS AND OPERATORS
+
+|| - concatenation
+lower(string) - convert to lower case
+char_length(string) - number of characters
+substring()
+
+Also functions for converting to unicode. 
+
+See documentation.
+
+SELECT first_name || ' ' || last_name AS full_name
+FROM customer;
+
+Also can use regular expressions. 
+
+SUBQUERY
+
+SubQuery - Allows us to use multiple SELECT statements where we basically have a query within a query
+
+Suppose want to find films whose rental rate is higher than average rental rate. 
+
+Two steps:
+1. Find average rental rate by using the SELECT statement and average function (AVG)
+2. Use the result of the first query in the second select statement to find the films that we want. 
+
+Best to use subquery. 
+
+Put second in brackets and use it in WHERE clause as an expression. 
+
+SELECT film_id, title, rental_rate FROM film
+WHERE rental_rate > (SELECT AVG(rental_rate) FROM film);
+
+SELECT film_id, title
+FROM film
+WHERE film_id IN
+(SELECT inventory.film_id
+FROM retnal
+INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id
+WHERE return_date BETWEEN '2005-05-29' AND '2005-05-30');
+
+SELF-JOIN
+
+Special case for joining a table to itself. Use when want to combine rows with other rows in the same table. To perform, you must use a table alias to help SQL distinguish the left table fro mthe right table of the same table. 
+
+example table
+
+emplotee_name		employee_location
+Joe					New York
+Sunil				India
+Alex				Russia
+Albert				Canada
+Jack				New York
+
+Suppose we want to find out which employees are from same location. Let's hope we can't do a simple query. 
+
+Self joins are most efficient than subqueries in these situations. 
+
+SELECT e1.employee_name
+From employee AS e1, employee AS e2
+WHERE
+e1.employee_location = e2.employee_location AND e2.employee_name = "Joe";
+
+Retuns Joe and Jack. Generally, queries that refer to the same table can be simplified by reqriting the queries as self joins. Definite performance benefit for this. 
+
+All customers whose first name matches last name of another customer
+
+SELECT a.first_name, a.last_name, b.first_name, b.last_name
+FROM customer AS a, customer AS b
+WHERE a.first_name = b.last_name;
+
+Other syntax, can use JOIN
+
+SELECT a.first_name, a.last_name, b.first_name, b.last_name
+FROM customer AS a
+JOIN customer AS b
+ON a.first_name = b.last_name;
+
+Can also use LEFT/RIGHT JOIN.
+ 
+SELECT a.first_name, a.last_name, b.first_name, b.last_name
+FROM customer AS a
+LEFT JOIN customer AS b
+ON a.first_name = b.last_name
+ORDER BY a.customer_id;
+
+Check out manager, employee self join

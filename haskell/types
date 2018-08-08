@@ -1,0 +1,283 @@
+Static type system - type of every expression is known at compile time. Everything in Haskell has a type, so compiler can figure it out. 
+
+Haskell has *type inference*. Can infer what type is.
+
+Understanding type system 
+
+:t in GHCI followed by any valid expression gives its type
+
+    ghci> :t 'a'  
+    'a' :: Char  
+    ghci> :t True  
+    True :: Bool  
+    ghci> :t "HELLO!"  
+    "HELLO!" :: [Char]  
+    ghci> :t (True, 'a')  
+    (True, 'a') :: (Bool, Char)  
+    ghci> :t 4 == 5  
+    4 == 5 :: Bool  
+
+:: - read as "has type of" 
+
+Bool - boolean
+Char - character
+[Char] - string
+String - string. Same as [char] type
+
+Functions also have types. Can choose to give functions explicit type declaration. Generally considered good practice except when writing very short functions. 
+
+    removeNonUppercase :: [Char] -> [Char]  
+    removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]   
+
+Clearer to write:
+	removeNonUppercase :: String -> String
+
+But how do we write out the type of a function that takes several parameters? Here's a simple function that takes three integers and adds them together:
+
+    addThree :: Int -> Int -> Int -> Int  
+    addThree x y z = x + y + z  
+removeNonUppercase has a type of [Char] -> [Char], meaning that it maps from a string to a string. That's because it takes one string as a parameter and returns another as a result.
+
+The parameters are separated with -> and there's no special distinction between the parameters and the return type. 
+
+Can use :t to find out what type an expression should be declared with
+
+Common Types
+
+All types have capital case. 
+
+ Int stands for integer. It's used for whole numbers. 7 can be an Int but 7.2 cannot. Int is bounded, which means that it has a minimum and a maximum value. Usually on 32-bit machines the maximum possible Int is 2147483647 and the minimum is -2147483648.
+
+Integer stands for, er … also integer. The main difference is that it's not bounded so it can be used to represent really really big numbers. I mean like really big. Int, however, is more efficient.
+
+    factorial :: Integer -> Integer  
+    factorial n = product [1..n]  
+
+    ghci> factorial 50  
+    30414093201713378043612608166064768844377641568960512000000000000  
+
+Float is a real floating point with single precision.
+
+    circumference :: Float -> Float  
+    circumference r = 2 * pi * r  
+
+    ghci> circumference 4.0  
+    25.132742  
+
+Double is a real floating point with double the precision!
+
+    circumference' :: Double -> Double  
+    circumference' r = 2 * pi * r  
+
+    ghci> circumference' 4.0  
+    25.132741228718345  
+
+Bool is a boolean type. It can have only two values: True and False.
+
+Char represents a character. It's denoted by single quotes. A list of characters is a string.
+
+Tuples are types but they are dependent on their length as well as the types of their components, so there is theoretically an infinite number of tuple types, which is too many to cover in this tutorial. Note that the empty tuple () is also a type which can only have a single value: ()
+
+TYPE VARIABLES
+
+A way to have a generic return type. 
+
+head function returns first element of a list of any type. 
+
+    ghci> :t head  
+    head :: [a] -> a  
+
+No capital case so not a real type. Actually a type variable, meaning it can be any type. 
+
+Functions that have type variables are called *polymorphic functions*. 
+
+Although type variables can have names longer than one character, we usually give them names of a, b, c, d …
+
+TYPECLASSES 101
+
+A *typeclass* is a sort of interface that defines some behavior. If type is part of a typeclass, that means it supports and implements behavior typeclass describes. 
+
+NOT LIKE OO CLASSES. More like Java interfaces. 
+
+What's the type signature of the == function?
+
+    ghci> :t (==)  
+    (==) :: (Eq a) => a -> a -> Bool  
+
+Note: the equality operator, == is a function. So are +, *, -, / and pretty much all operators. If a function is comprised only of special characters, it's considered an infix function by default. If we want to examine its type, pass it to another function or call it as a prefix function, we have to surround it in parentheses.
+
+=> syntax. Everything before => symbol is called a *class constraint*. Can read the previous type declaration like this: the equality function takes any two values that are of the same type and returns a Bool. Type of those two values must be a member of Eq class (this was class constraint). 
+
+The Eq typeclass provides an interface for testing for equality. Any type where it makes sense to test for equality between two values of that type should be a member of the Eq class. 
+
+All standard Haskell types except for IO (type for dealing with input and output) and functions are a part of the Eq typeclass. 
+
+The elem function has a type of (Eq a) => a -> [a] -> Bool because it uses == over a list to check whetehr some value wer're looking for is in it. 
+
+Basic Typeclasses:
+
+Eq - used for types that support equality testing. The functions its memebers implement are == and /=. 
+
+If there's an Eq class constraint for a type variable in a function, it uses == or =/ somewhere inside its definition. All types mentioned previously except functions are part of Eq. 
+
+    ghci> 5 == 5  
+    True  
+    ghci> 5 /= 5  
+    False  
+    ghci> 'a' == 'a'  
+    True  
+    ghci> "Ho Ho" == "Ho Ho"  
+    True  
+    ghci> 3.432 == 3.432  
+    True  
+
+Ord - for types that have an ordering
+
+    ghci> :t (>)  
+    (>) :: (Ord a) => a -> a -> Bool  
+
+All types covered so far except functions are part of Ord. 
+
+Ord covers all standard comparing functions such as >, <, >=, <=. The *compare* function tkes two Ord members of same type and returns an ordering . 
+
+Ordering - is a type that can be GT, LT, or EQ. 
+
+To be member of Ord, a type must first be a member of Eq. 
+
+    ghci> "Abrakadabra" < "Zebra"  
+    True  
+    ghci> "Abrakadabra" `compare` "Zebra"  
+    LT  
+    ghci> 5 >= 2  
+    True  
+    ghci> 5 `compare` 3  
+    GT  
+
+Show - members can be presented as strings. 
+
+All types covered so far except functions are part of Show. 
+
+Most used function that deals with Show typeclass is *show*. Takes a value whose type is a member of Shoe and presents it to us as a string. 
+
+Read - i ssort of oposite of Shoe. The *read* function takes a string and returns a type which is a member of Read. 
+
+What if happens if try just:
+
+read "4"
+
+    ghci> read "4"  
+    <interactive>:1:0:  
+        Ambiguous type variable `a' in the constraint:  
+          `Read a' arising from a use of `read' at <interactive>:1:0-7  
+        Probable fix: add a type signature that fixes these type variable(s)  
+
+What GHCI is telling us here is that it doesn't know what we want in return. Notice that in the previous uses of read we did something with the result afterwards. That way, GHCI could infer what kind of result we wanted out of our read. If we used it as a boolean, it knew it had to return a Bool. But now, it knows we want some type that is part of the Read class, it just doesn't know which one. Let's take a look at the type signature of read.
+
+    ghci> :t read  
+    read :: (Read a) => String -> a  
+
+read returns a type that's part of Read but if don't try to use what it returns in some way, it has no way of knowing which type. 
+
+So can use *type annotations.* - are a way of explicitly saying what the type of an expression should be. Can do that by adding :: at end of the expressions and then specifying a type
+
+    ghci> read "5" :: Int  
+    5  
+    ghci> read "5" :: Float  
+    5.0  
+    ghci> (read "5" :: Float) * 4  
+    20.0  
+    ghci> read "[1,2,3,4]" :: [Int]  
+    [1,2,3,4]  
+    ghci> read "(3, 'a')" :: (Int, Char)  
+    (3, 'a')  
+
+Most of the time, compiler ca ninfer type itself, but sometimes it cannot. 
+
+Enum - members are sequentially ordered types - can be enumerated. Main advantage of Enum typeclass is that can use its types in list ranges. Also have defined successors and predecesors, which user can get with succ and pred functions. 
+
+Types in this class:
+(), Bool, Char, Ordering, Int, Integer, Float, Double
+
+    ghci> ['a'..'e']  
+    "abcde"  
+    ghci> [LT .. GT]  
+    [LT,EQ,GT]  
+    ghci> [3 .. 5]  
+    [3,4,5]  
+    ghci> succ 'B'  
+    'C' 
+
+Bounded - members have an upper and a lower bound
+
+    ghci> minBound :: Int  
+    -2147483648  
+    ghci> maxBound :: Char  
+    '\1114111'  
+    ghci> maxBound :: Bool  
+    True  
+    ghci> minBound :: Bool  
+    False  
+
+minBound and maxBound are interesting because they ahve a type of (Bounded a) => a. In a sense, they are polymorphic constants. 
+
+All tuples are part of Bounded if the components are also in it. 
+
+    ghci> maxBound :: (Bool, Int, Char)  
+    (True,2147483647,'\1114111')  
+
+Num - numeric typeclass. Members have the property of being able to act like numbers.
+
+ghci> :t 20  
+20 :: (Num t) => t 
+
+Appears whole numbers are also polymorphic constants. They can cat like any type that's amember of the Num typeclass. 
+
+    ghci> 20 :: Int  
+    20  
+    ghci> 20 :: Integer  
+    20  
+    ghci> 20 :: Float  
+    20.0  
+    ghci> 20 :: Double  
+    20.0  
+
+That are types that are in the Num typeclass. If examine type of *, see that it accepts all numbers.
+
+    ghci> :t (*)  
+    (*) :: (Num a) => a -> a -> a  
+
+Takes two numbers of same type and returns a number of that type. 
+
+ It takes two numbers of the same type and returns a number of that type. That's why (5 :: Int) * (6 :: Integer) will result in a type error whereas 5 * (6 :: Integer) will work just fine and produce an Integer because 5 can act like an Integer or an Int.
+
+To join Num, a type must already be friends with Show and Eq.
+
+Integral - also numeric typeclass. Num includes all numbers, including real numbres and integeral number. Integral includes only integral (whole) numbers. In this typeclass are Int and Integer. 
+
+Floating - includes only floating point numbers, so Float and Double. 
+
+Very useful function for dealing with numbers is *fromIntegral*. 
+
+Has type declaration of:
+
+fromIntegral :: (Num b, Integral a) => a -> b. 
+
+From type signature, can see that it takes an intgral number and turns it into a more general number. 
+
+Useful when awnt integral and floating point types to work together. 
+
+Example:
+
+The *length* function has a type declaration of:
+
+length :: [a] -> Int 
+
+instead of more general type:
+
+(Num b) => length :: [a] -> b.
+
+Historical reasons. 
+
+Anyway, if we try to get a length of a list and then add it to 3.2, we'll get an error because we tried to add together an Int and a floating point number. So to get around this, we do fromIntegral (length [1,2,3,4]) + 3.2 and it all works out.
+
+nyway, if we try to get a length of a list and then add it to 3.2, we'll get an error because we tried to add together an Int and a floating point number. So to get around this, we do fromIntegral (length [1,2,3,4]) + 3.2 and it all works out. 

@@ -1,0 +1,103 @@
+LINQ
+
+Language Integrated Query (LINQ) - technology set introduced in .NET 3.5. Provides a concise, symmetrical, and strongly
+typed manner to access a wide variety of data stores. 
+
+Implicitly typed variables, object initialization syntax, lambda expressions, extension methods, and anonymous types will
+be useful.
+
+LINQ can be understood as a strongly typed query language, embedded directly into the grammar of C#. Using LINQ, can build
+any number of expressions that have a look and feel similar to that of a database SQL query. However, LINQ query can be 
+applied to any number of data stores, inlcuding stores that have nothing to do with a relational database. 
+
+LINQ
+
+Say you have an array or generic List<T> containing 300 integers and want to obtain a subset that meets a given criterion. 
+
+Ways to Manipulate Data Other Than LINQ
+The Data You Want 				How to Obtain It
+Relational data 				System.Data.dll, System.Data.SqlClient.dll, and so on
+XML document data 				System.Xml.dll
+Metadata tables 				The System.Reflection namespace
+Collections of objects 			System.Array and the System.Collections/System.Collections.Generic
+								es
+
+LINQ API - attempt to provide a consistent, symmetrical manner in which programmers can obtain and manipulate data in the
+broad sense of the term.
+
+Using LINQ, you are able to create directly within C# programming language constructs called *query expressions*. Based on
+numerous query operators that have been intentionally designed to look and feel similar to a SQL expression. 
+
+Query expression can be used to interact with numerous types of data -- even data that has nothing to do with relational
+database. LINQ is term used to describe overall approach to data access. 
+
+•	 LINQ to Objects: This term refers to the act of applying LINQ queries to arrays and
+	 collections.
+
+•	 LINQ to XML: This term refers to the act of using LINQ to manipulate and query
+	 XML documents.
+
+•	 LINQ to DataSet: This term refers to the act of applying LINQ queries to ADO.NET
+	 DataSet objects.
+
+•	 LINQ to Entities: This aspect of LINQ allows you to make use of LINQ queries within
+	 the ADO.NET Entity Framework (EF) API.
+
+•	 Parallel LINQ (aka PLINQ): This allows for parallel processing of data returned from
+	 a LINQ query.
+
+CORE LINQ ASSEMBLIES
+
+Assembly 								Meaning in Life
+System.Core.dll 						Defines the types that represent the core LINQ API. This is the
+										one assembly you must have access to if you want to use any
+										LINQ API, including LINQ to Objects.
+
+System.Data.DataSetExtensions.dll 		Defines a handful of types to integrate ADO.NET types into the
+										LINQ programming paradigm (LINQ to DataSet).
+
+System.Xml.Linq.dll 					Provides functionality for using LINQ with XML document data
+										(LINQ to XML).
+
+To work with LINQ to Objects, must make sure every C# code file that contains LINQ queries imports the System.Linq namespace.
+It is primarily defined witin System.Core.dll. 
+
+APPLYING LINQ QUERIES TO PRIMITIVE ARRAYS
+
+When have an array of data, it is common to extract a subset of items based on a given requirement. 
+
+To obtain from array only items that contain an embeded blank space and want these items in alphabetical order. 
+
+static void QueryOverStrings()
+{
+// Assume we have an array of strings.
+string[] currentVideoGames = {"Morrowind", "Uncharted 2",
+"Fallout 3", "Daxter", "System Shock 2"};
+ 
+// Build a query expression to find the items in the array
+// that have an embedded space.
+IEnumerable<string> subset = from g in currentVideoGames
+where g.Contains(" ") orderby g select g;
+ 
+// Print out the results.
+foreach (string s in subset)
+Console.WriteLine("Item: {0}", s);
+}
+
+Notice: Query expression created here makes us of from, in, where, orderby, and select LINQ query opreators. 
+
+IEnumerable<string> subset = from game in currentVideoGames
+where game.Contains(" ") orderby
+game select game;
+
+*****
+Item:
+Item:
+Item:
+446
+Fun with LINQ to Objects *****
+Fallout 3
+System Shock 2
+Uncharted 2
+
+

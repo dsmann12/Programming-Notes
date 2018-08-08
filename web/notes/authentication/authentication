@@ -1,0 +1,24 @@
+AUTHENTICATION
+
+Pretty complicated. A lot of things that have to work. 
+
+Lots of tools. 
+
+passport.js - used to implement authentication for node.js
+
+Can do local authnetication or use facebook, twitter, google authentication. 
+Multiple "strategies". 
+
+Passport Local - strategy for local authentication
+
+Passport Local Mongoose - made to work with mongoose. Makes things faster and simpler.
+
+HTTP - stateless protocol. Requests are one time things and don't contain information
+about history and states. 
+
+Sessions - provide state for requests. Passport sees it on server and unlocks it to
+figure out state. 
+
+Express-Sessions - used to implement sessions in Express
+
+Stores a salt and a hash in a user object

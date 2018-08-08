@@ -1,0 +1,4 @@
+Friend - keyword friend of class is separate from class but can 
+have access to variables and methods inside class.
+
+Class has to give away its friendship. 

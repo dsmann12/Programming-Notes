@@ -1,0 +1,87 @@
+FONTS
+
+Fonts must be in browser. Can't know whether this is the case.
+
+cssfontstack.com
+
+font-family: Arial;
+font-size: 85px;
+
+ems - for picking font size. Relative font size. Dynamic size. Equal to size of font that defines of parent of element in question. 
+
+Top level value of em changes depending on browser. Mostly around 16px. Most people therefore set font-size on body. 
+
+font-weight - how bold or light weight text is. How thick font is. 
+
+font-weight: bold; 
+
+Certain fonts have weights: 100-800 (100, 200, 300, etc, 800)
+
+Line-spacing - spacing between lines
+
+line-height: 2;
+
+text-align - controls how text of given element is aligned
+
+text-align: center;
+
+text-decoration - give text underline, strike through, or overline effect
+
+text-decoration: underline;
+text-decoration: line-through;
+
+CUSTOM FONTS
+
+Use other fonts than system fonts that might not be available anyway. 
+
+Can be font owned (purchased or owned by company) or use other resource.
+
+Google-Fonts - hundreds of fonts that can be included
+
+google.com/fonts
+
+Every font and weight included will slow down page.
+
+Can get link or download fonts. Add to html and css. 
+
+The Box Model
+
+Padding, margin, border, and more.
+
+In a document, each element is represented as a rectangular box. In CSS, each of these rectangular boxes is described using standard box model. 
+
+Each box has four edges:
+1. margin edge
+2. border edge
+3. padding edge
+4. content edge
+
+Can style different properties in box. 
+
+Margin - from edge of window to padding. Border separates margin and padding. Padding surrounds element, between element and border, margin.
+
+border: 2px solid blue;
+border-top: 5px;
+
+width: 50%;
+
+padding:  10px;
+padding-left:40px;
+
+margin: 100px; space outside border
+margin-top: 500px;
+
+margin: top right bottom left
+margin: 20px 40px 500px 100px
+
+margin auto -> centers element
+
+margin: 0 auto 0 auto;
+
+margin: 50px 20px; //adds 50 to top and bottom, 20 to left and right
+
+rem - like em but is relative to the root size
+
+letter-spacing: 2.0rem;
+
+<hr> - line separator element in html

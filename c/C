@@ -1,0 +1,640 @@
+Programming - creating software. Software controls hardware, which is physical part of an electronic device. 
+
+C was developed in 1970s and is considered to be the Latin of programming languages. Unlike Latin, C isn't dead.
+
+Created by Dennis Ritchie at Bell Labs in 1972. C was developed as a successor to language called B developed by Ken Thompson, Ritchie's colleague. Developed for computer programmers specifically. Designed as a tool for programming in UNIX. Designed as a practical tool not necessarily academic (Pascal) or simple (Basic). 
+
+Hybrid language. Has features of high level languages and low level languages (assembly). Procedural programming as opposed to object-oriented programming. 
+
+C11 standard - new standard of C. Some changes with other versions like C99 or C98. Most significant changes in concurrency, threads, security, etc. Standards ensure portability. Better compatibility with C++, object oriented version of C. 
+
+Source Code - the code you write that makes up a program. Plaint text file that contains programming language, all formatted and properly written. File is saved with .c extension. Use text editor to create code. 
+
+Object Code - source code is compiled into Object code. Traditional nade of C compiler is CC, which means C Compiler. Compiler reads the source code file and generates object code file. Have .o extension. Use same file name. 
+
+Linking - Often forgotten because modern compilers both compile and link. Takes object code file and combines it with C language libraries. 
+
+Libraries contain routines, functions that control whatever device you're programming. 
+
+End result is program file. Can fun file. 
+
+All tools -- editor, compiler, linker -- originated at command prompt of terminal. More common is to use an IDE. 
+
+Standard output is the terminal. 
+
+C as a language has its parts of speech, structure and syntax.
+
+All C source code must have main function. This is where the program execution starts and the contents of the main function are enclosed in curly brackets. Having an empty main is the least a C program needs. 
+
+Has several parts:
+Keywords
+Functions
+Operators
+Values and Variables
+Structure
+
+Keywords - accomplish very basic tasts. Language part of C. Only 44 in C.
+
+Functions - True workhorses of the language. Held in C libraries. Linkers combine library with program's object code. Must incorporate a header file to use function. 
+
+Operators - symbols used to manipulate data. Mathematical operators, comparison operators, Assignment, bitwise
+
+Values and Variables - characters and numeric values. Integer or floating point values. Variables are a container of a value. Contents can change. Variables must be declared before use, can be instantiated at declaration or before use. 
+
+Structure - all pieces must be used in a specific order or syntax. Uses preprocessor directives to control program flow. Main function is first function executed. Curly brackets enclose a function's content. Statements are like sentences in C language. Comments are notes to self. 
+
+Expressions - contain variables, constants, and opreators. 25 + 12. x^2. length * width. 
+
+Statements - code elements that execute an action. age = 12; if (age > 17) canDrive = true;
+
+Data Types:
+
+Data Type - mechanism for declaring variables or functions of different categories of data (text, numbers, etc). Type determines the amount of memory (bytes) a variable requires. 
+
+char
+unsigned char
+signed char
+int
+unsigned int
+short
+unsigned short
+long
+unsigned long
+
+float
+double
+long double
+
+Integer Types:
+char - 1 byte - -128 - 127::0 - 255
+unsigned char - 1 byte - 0 - 255
+signed char - 1 byte - -128 - 127
+int - 2 or 4 bytes - -32,768 - 32,767:: -2,147,483,648 - 2,147,483,647
+unsigned int - 2 or 4 bytes - 0 - 65,535::0 - 4,294,967,295
+short - 2 bytes - -32,768 - 32,767
+unsigned short - 2 bytes - 0 - 65,535
+long - 4 bytes - -2,147,483,648 - 2,147,483,648
+unsigned long - 4 bytes - 0 - 4,294,967,295
+
+Floating Point Types:
+
+float - 4 bytes - 1.2e^-38 to 3.4e^38 - 6 decimals
+double - 8 bytes - 2.3e^-308 to 1.7e^308 - 15 decimals
+long double - 16 bytes - 3.4e^-4932 - 1.1e^4932 - 19 decimals
+
+Void - empty data. Doesn't return data and doesn't need data. May be doing something internally but doesn't require any data and doesn't return data. The type for pointers. 
+
+Boolean - Anytime you switch a value from 0 to 1, this is a boolean variable. George Boole invented boolean algebra, boolean logic, etc. Denote of value of true or false. Computers are built off them. Boolean types are not defined in C. Use 1 and 0.
+
+typedef int Bool
+
+#define True 1
+#define False 0
+
+defining a new type Bool which is really an int. 
+
+Bool aBooleanValue;
+aBooleanValue = true; //=1
+
+Main:
+
+Main is an integer function. Must return an int. 
+
+#<stdio.h> is a preprocessor directive that includes definition of functions. Points to a library. 
+
+Preprocessor Commands - enables programmers to create or work on projects that are very large in scope distribute damong multiple locations and multiple people. Use #include command.
+
+#include <stdio.h>
+
+#include <file> - used for system header files located in the standard list of system directories
+
+#include "file.h" - used for header files of your own program. Need .h file which has linking program for code in .c file. Functions are defined in .h file. They are implemented in .c file. 
+
+#define name - used to define a macro. Constants. 
+
+I/O:
+
+C Program takes an an input and generates output. I/O is input/output. 
+
+Input consists of bytes of data that are entered via screen, keyboard, or network, and stored in memory. Computer, compiler, and language are what process the data you enter. 
+
+Output consists of bytes of data from memory to a device like screen, printer, disk.
+
+The <stdio.h> library includes the standard functionality that enables screen based I/O. 
+
+Most popular output functions. Each is designed to send one or more characters to standard output device which is the screen or terminal window:
+
+printf()
+putchar()
+puts()
+
+puts() - puts or sends a string of text to standard output. Puts is put string. A string is a collection of characters enclosed in double quotes. Defined in <stdio.h>. Type string and it will output. 
+
+/* */ - for comments. 
+// - for comments at one line only
+
+printf() - Powerful and popular function for text output. Sends a string of characters to standard output. Defined in STDIO. Does not add new line after string.  
+
+printf("Sample string.");
+
+\n - New line character. Ends line. 
+
+printf("Sample string.\n");
+
+Escape characters - a string is a group of characters between two quotes. Cannot put Enter key in string. \n is used to do a new line. Use these characters by starting with a backslash. About a dozen escape characters 
+
+\n - new line
+\t - tab
+\' - single quote
+\" - double quote
+\\ - backslash character
+\0 - null character
+
+%d - placeholder for printf(). Placeholder for integer value. 
+
+printf("Here is the value %d\n", 27);
+printf("Here is the value %d\n", 29);
+printf("And here are the values %d, %d, %d\n", 29, 30, 31);
+
+%d - Integer (whole number) values
+%s - Strings
+%f - Floating point values
+%c - Characters
+%% - Percent sign
+%x - Hexadecimal
+
+%2d - width is two characters wid, right justified.
+%.1f - only one digit after decimal in float.
+%20s - Right justirfies the string by 20 characters. 
+%-20s - left justifies the string by 20 characters.  
+
+Variables - oftentime you don't know what a value is. User inputs it, values is grabbed from external data, etc. Variables contain data. Must be declared as a specific type and it is given a name. Type matches type of values being stored. 
+
+int
+float
+char
+long
+short
+signed - negative
+unsigned - only positive
+
+
+int x = 12;
+int y = x + 1;
+x += 1; x = x + 1
+
+Two most common C character I/O functions are:
+
+getchar() - fetches a character from standard input
+putchar() - sends a character to standard output. 
+
+In stdio.h. Work with int values. Are stream oriented.
+
+Stream - entire stream of characters are entered but only a set amount are got. Characters are sent to output as they are typed so they can be read at once.  
+
+Strings are arrays of characters in C. 
+
+scanf() - uses printf() placeholders to read a specific value into a variable. Declared in stdio.h header file. Uses '&' operator someitmes. 
+
+scanf("%s", &variable); - format is text formatting string, determines the type of input requested. Use placeholders %d, %c, etc. Variable is a variable name. Variable type must match placeholder. & prefixeed on variable name. & is not prefixed to string or array. Only reads one word long
+ 
+
+fgets(string/array variable (buffer), size of buffer, stdin (standard input) ) - better for strings. Reads text. 
+
+Math:
++
+-
+*
+/
+++
+--
+
+var = 8 * 7;
+
+Integer division. PEMDAS is order of operations. 
+
+Math sometimes needs functions. 
+
+sqrt(float); - math.h header file is necessary. Returns sqrt of floating point value. 
+
+pow(float base, float exp); - power function. 
+
+math.h header file. Should use double variables. Should really only be used when a degree of precision is needed. 
+
+Psuedo Random Numbers:
+
+rand() - Randome number generator. Can be predicted but good enough to be random in general sense. Needs stdlib.h header file. Generates a random integer value. 
+
+srand(int) - sets seeder for random number generator. 
+
+time(NULL) - time function. Cast unsigned. 
+
+srand((unsigned) time(NULL)); - 
+
+Can use modulus operator to limit the range of random numbers.
+
+r = rand()
+printf(r % 100) - numbers between 0 and 100. 
+
+Design Flow:
+
+if - If a condition is true, execute a command. 
+
+Comparitor Operators used to test boolean logic. 
+
+> 
+<
+>=
+<=
+==
+!=
+
+Comparitors return 0(false) or 1(true).
+
+x = 3, y = 12;
+
+(x == y); = 0
+(x < y); = 1
+
+!x; = 0
+x || y; = 1
+x && y; = 0
+
+
+else - If if condition fails, run commands in else block. 
+
+else if() - else block that has an if condition. 
+
+Switch-Case - how to handle mutiple decision blocks. 
+
+switch(a) {
+
+	case '1':
+		printf("This is 1");
+		break;
+	case '2':
+		printf("This is 2");
+		break;
+	default:
+		printf("No case picked!");
+		break;
+}
+
+Switch handles single value, not a comparison. Value is compared to values for each case statement. If comparison is true, then statements in that case statement are executed. Default condition is executed when none of the conditions match. Can be used to create a menu. Comparisons can be case sensitive. 
+
+switch(a) {
+	case 'a':
+	case 'A':
+		printf("Now the letter case doesn't matter!");
+		break;
+}
+
+Loops:
+
+Loops - allow a block of code to be executed more than once. 
+
+Useful:
+-Work on different data sets
+-Same data sets but with different parameters
+-Repeat execution until some condition is met
+
+While loops - while a statement is true, execute code. 
+
+while (x < 10) {
+	x++;
+}
+
+Do While - execute code then test condition. While condition is true, loop. 
+
+break - statement that breaks a loop. 
+
+For loop - set up on single line, used for iterative loops with specific structure. 
+
+for (x = 0, x < 10; x++) {
+	printf("%d\n", x);
+}
+
+Nested Loops - loops within a loop. 
+
+Functions - you can create your own function. Has a type, a name, and arguments. void means function has no variable type and returns no value. Arguments are data passed into the function. Blocks of code that perform specific tasks. 
+
+-Enables reusability of portions of code
+-Enables breaking complx solutions into simpler steps
+-Simplfies the debugging process
+-Eases the processes of updating and improving code
+
+type name (arguments)
+int count(int x) {}
+void alpha(void) 
+
+Function must be prototyped or introduced before use. Funcions are called by name. Program flow passes to function and returns when function returns or ends. FUNCTION CAN RETURN ONLY ONE VALUE.
+
+Prototype - allows a function to be used before it is defined. Do not need to be used if they are being defined in the order that they're being used. Function has no need to use it before it's defined. 
+
+main function is int function and return statement is necessary. Has two arguments but arguments are invisible if not used. 
+
+Intermediate C Language Concepts
+
+Manipulating Characters: Can manipulate individual characters or in string
+
+ctype.h header - prortypes character testing and manipulation functions. Testing functions used to evaluate type of character, whether it's a letter, number, etc. 
+
+toupper(int ch) - generates uppercase versions of each character
+tolower(int ch) - genreates lowercase version of each character
+
+To use on string, must dissect string in a loop. 
+
+isalpha(character) - returns true if character is alpha letter. Otherwise, false. 
+
+islower(char)
+isnumber(char)
+isblank(char)
+
+Logical Operators - evaluates two conditional expressions. 
+
+&& - and - both must be true
+|| - or - either must be true
+! - not - must be false.
+
+Strings not really a C language variable though used that way. Strings are char arrays that ends with null character. Must tell input streams about null character. string.h header file has all string functions.
+
+char string[] = "This is a string.";
+
+strlen(string) = how many characters are in the string. Doesn't count null terminating character. 
+
+Concatenation - needs a buffer for concatenation. Combine new string in buffer.
+
+char first[] = "I would like to go ";
+char second[] = "from here to there\n";
+
+char storage[64];
+
+strcpy(storage, first);
+strcat(storage, second);
+printf("Here is your string:\n%s", storage);
+
+
+strcpy(string, string2) - copy second string into other string. Must use this to assign a string into an empty array.
+strcat(string, string2) - concatenate second string into end of first
+strcmp(string, string2) - compares two strings. 0 when equal. 
+strstr(source_string, find_me) - used to find one string inside another. Returns a pointer. Location of string find_me in source string. If no match, NULL is returned. 
+memcpy(dest, src, n) = copy n chars from src to dest
+
+Constants:
+
+Constant - a universal value that doesn't change throughout the code. Created by preprocessor define directive. Usually written in ALL CAPS. Converts word into value throughout code. Don't put semicolon. 
+
+#define VALUE 3
+#define ROWS 20
+
+Arrays:
+
+Array - a collection of more than one of the same type of variable. Strings are arrays of char variables. Removes repetition and gives efficiency. Declared like any other variable, type is specified, square brackets contain the number of elements or can be blank if elements are specified. First element is at index 0. 
+
+int totals[15];
+int total[] = { 5, 13, 6 };
+
+Can be multidimensional. 
+
+int grid[ROWS][COLUMNS];
+
+Two dimensional char array - array must be dimensioned to handle the longest string. All characters plus null character. 
+
+Structures:
+
+Structure - a combination of existing variable types all tied together into a single unit. Has many parts. By itself, declaration merely creates a type of structure. To use it, you need to declare a variable of the structure type. Combination of multipple types of variables into a single one. Enable the definition of complex types. Enables the creation of complex variables. 
+
+struct record {
+	int account;
+	float balance;
+}
+
+struct record my_bank;
+
+my_bank.account = 123456;
+my_bank.balance = 1234.34
+
+struct record your_bank;
+your_bank.account = 789012
+your_bank.balance = 0.24
+
+struct record this_bank = { 756329, 1000000.00 };
+
+Unions:
+
+Union - similar to structures but enable the storage of different data types in the same location. Saves space and enables low level memory management. 
+
+union symbol {
+	int number;
+	char letter;
+};
+
+union symbol value;
+value.number = 25;
+value.letter = 'm';
+union symbol *ptr = &value;
+char myLetter = ptr->letter;
+
+letter is stored in same place as number. letter has replaced number. Useful when have variable that changes types. 
+
+Time Functions: Need time.h
+
+time(Null) - gets time. Returns %ld - long integer. Uses Unix Epic time or number of seonds which have elapsed since Jan 1, 1970. 
+
+time_t - variable type. 
+
+time_t now;
+
+time(&now);
+ctime(&now) - returns a string. So %s. Generates a string to figue out human readable date and time. 
+
+localtime function uses a structure to get time. 
+
+time_t now;
+struct tm *right_now;
+
+time(&now);
+right_now = localtime(&now);
+printf("Today is %d/%d at %d:%d\n",
+	right_now->tm_mon,
+	right_now->tm_mday,
+	right_now->tm_hour,
+	right_now->tm_min );
+
+-> is member operator for pointer variables. 
+
+Bitlevel Operators:
+
+Group1:
+& - AND 
+! - OR
+^ - XOR
+
+Group2:
+~ - one's complement (0->1, 1->0)
+>> - right shift
+<< - left shift
+
+Complex Statements - those that involve the use of multiple expressions. 
+
+int result = initValue + flag * weight * k++;
+
+Recursion - when a program calls itself. Creates a looping feedback mechanism. Beased on recurrence relationships in mathematics. Initial conditions are required. Creates copy of itself in computer memory, can cause program to crash if recursion loop occurs. 
+
+Pointer - a type of variable use to store an address in memory. Reminder that C has low level characteristics. Can only point to the address that was used when it was defined. 
+
+int *pointerInt; //can store address of an int
+char *letter;
+
+int size = 15;
+
+pointerInt = &size; //assign address of variable to pointer.
+
+pointerInt - is the address stored in pointer variable.
+*pointerInt - is the value stored in that address
+
+Pointer Arithmetic - Pointers are closely related to arrays. Array is a collection of elements of the same data type. Grouping a set of memory locations under the name of the array with each element pointing to a certain location in that range. 
+
+int sizes[] = { 15, 20, 30 };
+int *ptr = sizes; //ptr points to start of array
+
+ptr++; //point to second value in array
+ptr--; // decrement
+
+Calculate length of array
+
+int numElem = sizeof(data) / sizeof(int);
+
+Pointers and Arrays:
+
+Dynamic Arrays - save memory by using a pointer. 
+
+int *array = malloc (20 * sizeOf(int)); 
+free(array);
+
+malloc(int) - memory allocation. Sets aside memory of a set size. 
+free(array) - frees unused memory of array to be returned to memory heap. 
+
+File - a named portion of a storage area (hard drive). Random access and sequential. 
+
+Sequential File - To read the 20th char, you must first read all first 19 characters. Have to open file in one of several modes: reading, writing, etc. Can close file. Can read from file until desired location is reached. Can write to file when arrived at desired location. 
+
+void readEntireFile(){
+	int ch;
+	FILE *fp;  // pointer to a file type
+	fp = fopen("/Users/isacartzi/Documents/workspace/13_01/
+	src/message1301", "r"); // Change to match your path
+	ch = getc(fp);
+	while (ch != EOF){  // keep looping until End Of File
+		putchar(ch);    // print the characters read
+		ch = getc(fp);
+	}
+	fclose(fp);
+}
+
+void readUntilMarker(char marker){
+	int ch;
+	FILE *fp;  // pointer to a file type
+	fp = fopen("/Users/isacartzi/Documents/workspace/13_01/
+	src/message1301", "r"); // Change to match your path
+	ch = getc(fp);
+	while (ch != marker){  // keep looping until End Of File
+		putchar(ch);       // print the characters read
+		ch = getc(fp);
+	}
+	fclose(fp);
+}
+
+void writeToFile(){
+	FILE *fp;  // pointer to a file type
+	fp = fopen("/Users/isacartzi/Documents/workspace/13_01/
+	src/message2", "w"); // Change to match your path
+	char name[10] = "Roger";
+	fprintf(fp,"This message is for %s\n",name);
+	fclose(fp);
+}
+
+fopen("pathname", "r") - Opens a file for read only. 
+getc(fp) - function that gets characters from memory location. 
+EOF - End of File is a predefined CONSTANT. 
+fclose(fp) - closes file. 
+fprintf(fp, "string %s", name) - print to file. fp is file location. 
+
+Random Access File - only allow access to the data at the point at which it should be read or written. Open file in one of several modes (reading, writing, both). Close file. Advance to specific location and read from file or write to file.
+
+void readAndVerify(){
+	int ch;
+	FILE *fp;  // pointer to a file type
+	char messageToWrite[] = "This message will be written to a file";
+
+	// this array will store up tp 30 characters read from the file
+	char textBuffer[30];
+
+	// open the file for read/write using the w+ directive
+	fp = fopen("/Users/isacartzi/Documents/workspace/13_02/src/message", "w+");
+
+	  // Change to match your path
+	fwrite(messageToWrite, strlen(messageToWrite)+1, 1, fp);
+
+	// Go back to the beginning of the file using fseek
+	fseek(fp, SEEK_SET, 0);
+
+	// Verify that the message has been written by reading the file
+	// Read the same number of characters as the ones written above
+	fread(textBuffer, strlen(messageToWrite)+1, 1, fp);
+
+	printf("%s\n", textBuffer);
+	fclose(fp);
+}
+
+void addTextToLocation(){
+	FILE *fp;
+
+	fp = fopen("/Users/isacartzi/Documents/workspace/13_02/src/message", "w+"); // Change to match your path
+	fputs("Not much to say today", fp);
+
+	fseek(fp, 8, SEEK_SET);
+	fputs(" to talk about", fp);
+
+	fclose(fp);
+}
+
+fwrite(messageToWrite, lengthOfMessage, 1, fp) - fp is to what file. 
+fseek(fp, SEEK_SET, 0) - tell pointer to go to location 0. 
+ 
+
+The C Preprocessor:
+
+Macros - A code fragment that has a label or a name. Two main types. One looks like an object. 
+
+#define NUMBERS 1, 2, 3
+int x[] = NUMBERS;
+
+Functoin-like Macro
+
+#define max(X, Y) ((X) > (Y) ? (X) : (Y)) //if x > y, return x. Else return y.
+x = max(p, q); //x = ((p) > (q) ? (p) : (q));
+y = max(12, 5);
+z = max(n+5, *p);
+
+Conditional directives:
+
+#ifdef MACRO
+	controlled text
+#endif
+
+#if expression
+	text if true
+#else
+	text if false
+#endif
+
+#undef - undefine. Allows you to redefine CONSTANT.
+#ifndef - if not defined.
+
+__FILE__ - file name
+__DATE__ - date
+__TIME__ - time
+__LINE__ - line of code
+__STDC__ - ANSI Standard. 
+	

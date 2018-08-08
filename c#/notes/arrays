@@ -1,0 +1,161 @@
+ARRAYS
+
+int[] myInts = {5, 10, 3};
+bool[][] myBools = new bool[2][];
+myBools[0] = new bool[2];
+myBools[1] = new bool[1];
+double[,] myDoubles = new double[2, 2]
+
+Jagged arrays and multi dimensional arrays\
+
+Rectangular arrays - an array of multiple dimensions where each row is of the same length. 
+static void RectMultidimensionalArray()
+{
+Console.WriteLine("=> Rectangular multidimensional array.");
+// A rectangular MD array.
+int[,] myMatrix;
+myMatrix = new int[3,4];
+ 
+// Populate (3 * 4) array.
+for(int i = 0; i < 3; i++)
+for(int j = 0; j < 4; j++)
+myMatrix[i, j] = i * j;
+ 
+// Print (3 * 4) array.
+for(int i = 0; i < 3; i++)
+{
+ 
+for(int j = 0; j < 4; j++)
+Console.Write(myMatrix[i, j] + "\t");
+Console.WriteLine();
+}
+Console.WriteLine();
+}
+
+Jagged arrays - contain some number of inner arrays each of which may have a different upper limit. 
+
+tatic void JaggedMultidimensionalArray()
+{
+Console.WriteLine("=> Jagged multidimensional array.");
+// A jagged MD array (i.e., an array of arrays).
+// Here we have an array of 5 different arrays.
+int[][] myJagArray = new int[5][];
+ 
+// Create the jagged array.
+for (int i = 0; i < myJagArray.Length; i++)
+myJagArray[i] = new int[i + 7];
+ 
+// Print each row (remember, each element is defaulted to zero!).
+for(int i = 0; i < 5; i++)
+{
+for(int j = 0; j < myJagArray[i].Length; j++)
+Console.Write(myJagArray[i][j] + " ");
+Console.WriteLine();
+}
+Console.WriteLine();
+}
+
+Implcitly types arrays - use var keyword. 
+
+static void DeclareImplicitArrays()
+{
+Console.WriteLine("=> Implicit Array Initialization.");
+ 
+// a is really int[].
+var a = new[] { 1, 10, 100, 1000 };
+Console.WriteLine("a is a: {0}", a.ToString());
+ 
+// b is really double[].
+var b = new[] { 1, 1.5, 2, 2.5 };
+Console.WriteLine("b is a: {0}", b.ToString());
+ 
+// c is really string[].
+var c = new[] { "hello", null, "world" };
+Console.WriteLine("c is a: {0}", c.ToString());
+Console.WriteLine();
+}
+
+ARRAYs as arguments or return values
+
+static void JaggedMultidimensionalArray()
+{
+Console.WriteLine("=> Jagged multidimensional array.");
+// A jagged MD array (i.e., an array of arrays).
+// Here we have an array of 5 different arrays.
+int[][] myJagArray = new int[5][];
+ 
+// Create the jagged array.
+for (int i = 0; i < myJagArray.Length; i++)
+myJagArray[i] = new int[i + 7];
+ 
+// Print each row (remember, each element is defaulted to zero!).
+for(int i = 0; i < 5; i++)
+{
+for(int j = 0; j < myJagArray[i].Length; j++)
+Console.Write(myJagArray[i][j] + " ");
+Console.WriteLine();
+}
+Console.WriteLine();
+}
+
+Systems.Array() base class : common members
+
+Member of Array Class Meaning in Life
+Clear() This static method sets a range of elements in the array to empty values (0 for
+numbers, null for object references, false for Booleans).
+CopyTo() This method is used to copy elements from the source array into the destination
+array.
+Length This property returns the number of items within the array.
+Rank This property returns the number of dimensions of the current array.
+Reverse() This static method reverses the contents of a one-dimensional array.
+Sort() This static method sorts a one-dimensional array of intrinsic types. If the
+elements in the array implement the IComparer interface, you can also sort your
+custom types (see Chapter 9).
+
+static void SystemArrayFunctionality()
+{
+Console.WriteLine("=> Working with System.Array.");
+// Initialize items at startup.
+string[] gothicBands = {"Tones on Tail", "Bauhaus", "Sisters of Mercy"};
+ 
+// Print out names in declared order.
+Console.WriteLine("-> Here is the array:");
+for (int i = 0; i < gothicBands.Length; i++)
+{
+// Print a name.
+Console.Write(gothicBands[i] + ", ");
+}
+Console.WriteLine("\n");
+ 
+// Reverse them...
+Array.Reverse(gothicBands);
+Console.WriteLine("-> The reversed array");
+// ... and print them.
+for (int i = 0; i < gothicBands.Length; i++)
+{
+// Print a name.
+Console.Write(gothicBands[i] + ", ");
+}
+Console.WriteLine("\n");
+ 
+// Clear out all but the first member.
+Console.WriteLine("-> Cleared out all but one...");
+Array.Clear(gothicBands, 1, 2);
+ 
+for (int i = 0; i < gothicBands.Length; i++)
+{
+// Print a name.
+Console.Write(gothicBands[i] + ", ");
+}
+Console.WriteLine();
+}
+
+=> Working with System.Array.
+-> Here is the array:
+Tones on Tail, Bauhaus, Sisters of Mercy,
+ 
+-> The reversed array
+Sisters of Mercy, Bauhaus, Tones on Tail,
+ 
+-> Cleared out all but one...
+Sisters of Mercy, , ,

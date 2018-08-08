@@ -1,0 +1,54 @@
+MODULES
+
+A Haskell module is a collection of related functions, types, and typeclasses. Haskell program is a collection of modules where the main modules loads up the other modules and then uses the functions defined in them to do something. 
+
+If module is generic enough, functions it exports can be used in a multitude of different programs. 
+
+Loosely coupled - code is separated into self-contained modules which don't rely on each other too much, so can be reused later. Makes writing code more manageable. 
+
+Haskell standard library is split into modules, each of them containing functions and types that are somehow related and serve some common purpose. 
+
+Modules for manipulating lists, concurrent programming, dealing with complex numbers, etc. 
+
+Basic is Prelude module. 
+
+Importing modues:
+
+import <module name>
+
+Must be done before defining any functions. Usually at top of file. 
+
+    import Data.List  
+      
+    numUniques :: (Eq a) => [a] -> Int  
+    numUniques = length . nub  
+
+When you do import Data.List, all the functions that Data.List exports become available in the global namespace, meaning that you can call them from wherever in the script. nub is a function defined in Data.List that takes a list and weeds out duplicate elements. Composing length and nub by doing length . nub produces a function that's the equivalent of \xs -> length (nub xs).
+
+You can also put the functions of modules into the global namespace when using GHCI. If you're in GHCI and you want to be able to call the functions exported by Data.List, do this:
+
+    ghci> :m + Data.List  
+
+If we want to load up the names from several modules inside GHCI, we don't have to do :m + several times, we can just load up several modules at once.
+
+    ghci> :m + Data.List Data.Map Data.Set 
+
+If you just need a couple of functions from a module, you can selectively import just those functions. If we wanted to import only the nub and sort functions from Data.List, we'd do this:
+
+    import Data.List (nub, sort)  
+
+You can also choose to import all of the functions of a module except a few select ones. That's often useful when several modules export functions with the same name and you want to get rid of the offending ones. Say we already have our own function that's called nub and we want to import all the functions from Data.List except the nub function:
+
+    import Data.List hiding (nub)  
+
+The Data.Map module, which offers a data structure for looking up values by key, exports a bunch of functions with the same name as Prelude functions, like filter or null. So when we import Data.Map and then call filter, Haskell won't know which function to use. Here's how we solve this:
+
+    import qualified Data.Map  
+
+This makes it so that if we want to reference Data.Map's filter function, we have to do Data.Map.filter, whereas just filter still refers to the normal filter we all know and love. But typing out Data.Map in front of every function from that module is kind of tedious. That's why we can rename the qualified import to something shorter:
+
+    import qualified Data.Map as M  
+
+Now, to reference Data.Map's filter function, we just use M.filter.
+
+

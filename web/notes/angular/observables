@@ -1,0 +1,226 @@
+OBSERVABLES
+
+Observable - data source. Observable basically just is an object we import from third party package (rxjs). Follows the Observable pattern. Have observable and observer. Have a stream (timeline). On timeline, have mutiple events emitted by the observable or data packages emitted by observable depending on data source. Could emit data because you trigger it programmatically, could be connected to button so event in data package is emitted on click, or as Angular HTTP does it, it is connected to HTTP request so when response returns, the response is emitted as a data package. 
+
+Observer - your code. Subscribe function. Can handle data, handle errors, or handle completion of observable. Your code gets executed. Determine what should happen if receive data, or error, or if obserable completes. 
+
+Used to handle asynchronous tasks. Don't know when they happen or how long they take. Don't want to wait for these events or for completion. Therefore, needs methods to handle asynchronous tasks. Historically, replaces callbacks and promises. 
+
+Angular doesn't re-render components just because parameter changes. Uses observables to react to updated data.
+
+ngOnInit() {
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          this.id = +params['id'];
+        }
+      );
+  }
+
+Subscribe to observable which wraps data source, which emits parameter whenever link is clicked. Click is triggering event. Subscriber is the observer. 
+
+BUILDING A SIMPLE OBSERVABLE
+
+Need to import rxjs/Rx to use observables
+
+import 'rxjs/Rx';
+
+Can pass three callback arguments to subscribe method of Observable:
+1. callback for handling data
+2. callback for handling errors
+3. callback for handling completion
+
+ngOnInit() {
+	const myNumbers = Observable.interval(1000); //every second, emit data
+	myNumbers.subscribe(
+		(number: number) => {
+			console.log(number);
+		}
+	);
+}
+
+Emits new number each second to console. Data source is normal timer from utility function from rxjs package.
+
+Setting up custom observable is cumbersome progress. 
+
+const myObservable = Observable.create(); -> takes function as argument and should hold your async code. 
+
+const myObservable = Observable.create((observer: Observer) => { 
+	
+});
+
+Must import Observer from 'rxjs/Observer'
+
+import { Observer } from 'rxjs/Observer';
+
+Observer passed to create function is final observer passed to anonymous function that will make up observable. Not like subscriber function. Tell Observer when it will receive which data. When then subscribe to it and use observer to react to data, observer will know when to react because observable tells it. 
+
+The function we use as parameter in the "create" function will be called when we call the "subscribe" function with "this" (the current instance of HomeComponent) as the "observer" parameter.
+
+If built from scratch you must build this link from observable to observer. Already done when using a built in observable and subscribing to it. 
+
+observer.next() -> emits normal data package. Pushes next data package. 
+observer.error() -> emits error
+
+Must tell Observer what kind of data will be emitted. Observer<string> -> emits strings. 
+
+const myObservable = Observable.create(
+      (observer: Observer<string>) => {
+          setTimeout(() => {
+            observer.next('first package');
+          }, 2000);
+          setTimeout(() => {
+            observer.next('second package');
+          }, 4000);
+          setTimeout(() => {
+            observer.error('this does not work');
+          }, 5000);
+      }
+    );
+
+    myObservable.subscribe(
+      (data: string) => {
+        console.log(data);
+      },
+      (error: string) => {
+        console.log(error);
+      },
+      () => { console.log('completed'); }
+    );
+
+After 1 second, runs first function, then second, then error. 
+
+observer.complete() -> sets observable to completed status. 
+
+const myObservable = Observable.create(
+      (observer: Observer<string>) => {
+          setTimeout(() => {
+            observer.next('first package');
+          }, 2000);
+          setTimeout(() => {
+            observer.next('second package');
+          }, 4000);
+          setTimeout(() => {
+            // observer.error('this does not work');
+            observer.complete();
+          }, 5000);
+          setTimeout(() => {
+            observer.next('third package');
+          }, 6000);
+      }
+    );
+
+Third package never runs because observable is then complete. 
+
+What if inifinte observable is running and you switch pages (and therefore components)? 
+
+Will still keep running infinitely (like myNumbers). Creating memory link.
+
+Just need to unsubscribe from them when component destroyed. ngOnDestroy. 
+
+Observables built into angular typically clean themselves up. 
+
+WHERE TO LEARN MORE
+
+RxJS - see Observable documentation
+
+USING SUBJECTS TO PASS AND LISTEN TO DATA
+
+Subject - like observable. Allows you to conveniently push it to emit new data. Is observable and observer at same time. 
+
+Must import from 'rxjs/Subject'
+
+Service can hold Subject and different components can implement subscribe and next methods.
+
+Like EventEmitter, in fact EventEmitter is based off Subject. 
+
+Don't forget to ubsubscribe.a
+
+users.service.ts
+
+import { Subject } from 'rxjs/Subject';
+
+export class UsersService {
+    userActivated = new Subject();
+}
+
+user.component.ts
+
+import { UsersService } from './../users.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css']
+})
+export class UserComponent implements OnInit {
+  id: number;
+
+  constructor(private route: ActivatedRoute,
+              private usersService: UsersService) { }
+
+  ngOnInit() {
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          this.id = +params['id'];
+        }
+      );
+  }
+
+  onActivate() {
+    this.usersService.userActivated.next(this.id);
+  }
+
+}
+
+app.component.ts
+
+import { UsersService } from './users.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  user1Activated = false;
+  user2Activated = false;
+
+  constructor(private usersService: UsersService) {}
+
+  ngOnInit() {
+    this.usersService.userActivated.subscribe(
+      (id: number) {
+        if(id === 1) {
+          this.user1Activated = true;
+        }
+        else if(id === 2) {
+          this.user2Activated = true;
+        }
+      }
+    );
+  }
+}
+
+UNDERSTANDING OBSERVABLE OPERATORS
+
+Can find list in rxjs docs. 
+
+Operators allow you to transform data you receive into something else while maintaining observable. 
+
+Can be used on any observable. Muts import 'rxjs/Rx'
+
+map -> maps data received into new observable with any transformation of your choice
+
+const myNumbers = Observable.interval(1000)
+	.map(
+		(data: number) => {
+			return (data * 2);
+		}
+	);
+
+Now this is stored in myNumbrs. RxJS behind the scenes will turn this into new observable. 

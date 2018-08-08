@@ -1,0 +1,560 @@
+CONTENT PROVIDERS
+
+To grad or write data to user's contacts, documents, calendar, etc with only a few lines of code. 
+
+Such as app to take picture of business card and create contact.
+
+Need to store new contact information in same data source user is using to store phone's contact data. This is where phone's contact app looks for information to display.
+
+Usually app data sources are private to app which created them.
+
+Content Provider is a class that sits between an application and its data source. Its job is to provide easily managed access to underlined data source
+
+ADVANTAGES
+
+1. Extra level of abstraction. Allow change underevel data source without needing to change any code in apps that access content provider
+
+2. Some important Android classes such as Loaders and Cursor Adapters  use content providers. To use them, must make data accessible through content provider
+
+3. Allow many apps to access, use, and modify a single data source securely. Instead of limited to just one app. 
+
+GENERAL STEPS
+
+General Steps for using a ContentProvider
+
+1. Get permission to use the ContentProvider
+2. Get the ContentResolver
+3. Pick one of four basic actions on the data: query, insert, update, delete
+4. Identify the data you are reading or manipulating to create a URI
+5. In the case of reading from the ContentProider, display the information in the UI
+
+CONTENT PROVIDER PERMISSIONS
+
+In AndroidManifest.xml
+
+Add permission to read from database
+
+<uses-permission android:name="com.example.udacity.droidtermsexample.TERMS_READ" />
+
+CONTENT RESOLVER
+
+ContentResolver resolver = getContentResolver();
+Cursor cursor = resolver.query(DroidTermsExampleContract.CONTENT_URI, null, null, null, null);
+
+Content resolver -> sits between app and content provider. Handles interprocess communication and keeps everything in sync and running smoothly. Even if many processes are trying to access same data.
+
+FOUR BASIC OPERATIONS
+
+Operations of content resolver
+
+query() - read from data
+insert() - ad a row or rows to the data
+update() - update the data
+delete() - delte a row or rows from the data
+
+UNIFORM RESOURCE IDENTIFIER
+
+URI. URLs are subset for network locations. URI is meant to identify or give location of some data, in this case on a phone.
+
+content://com.example.udacity.droidtermsexample/terms
+
+content:// - standard way to start URIs in an android app. 
+
+com.exmaple.udacity.droidtermsexample - content authority of uri
+
+/terms - path. Specific data
+
+Should provide URI in contract class. Standard practice. CONTENT_URI
+
+WHERE TO PUT THE CODE
+
+Should make database operations in background thread. 
+
+AsyncTask for starters. 
+
+1. Create an ASyncTask with following generic types <Void, Void, Cursor>
+2. In the doInBackground method, write the code to access the content provider and return the Cursor object
+3. Create an instance variable Cursor mData
+4. In the onPostExecute method, store the Cursor object in mData.
+5. Create and execute the AsyncTask in onCreate
+
+STRUCTURE OF THE DATA
+
+Returns a Cursor. 
+
+Can be costly if there ar ehundreds of rows and many columns
+
+Projection, Selection, Selection arguments, SortOrder
+
+projections - filter columns
+selection = statement for how to filter rows
+selection arguments - what to filer
+sort order - order you get data back
+
+Cursor has a position, the row it is pointing to. When first get cursor, its position is -1. 
+
+moveToNext() - moves to next row, returns true or false depending on if move was successful
+
+moveToFirst() - moves cursor to first row
+
+getColumnIndex(String heading) - give a heading of a column, returns index
+
+get<Type>(int Column index) - methods to get acutal value (getString, getInt, etc)
+
+getCount() - get number of rows in cursor
+
+close() - should be called when done interacting with cursor. Prevents memory leaks. 
+
+CREATING CONTENT PROVIDERS
+
+Steps
+
+1. First step is create a new provider class that extends from the abstract content provider class that's part of the SDK. Override necessary methods for manipulating data. Implement onCreate()
+2. Register content provider in Android Manifest. So app knows provider exists and knows how to refer to it by name and authority. 
+3. Define URIs that identify task content provider and different data types it can return. So content resolver can find provider and specific data you want basde on given URI.
+4. Update Contract class to add these URIs and string constants that will help you refer to most commonly used URIs.
+5. Build a URIMatcher to match URI patters to integers. Class that helps contant provider recognize and respond correctly to different types of URIs. Often useful to use this to distinguish between URIs that point to a large data set and URIs that point to a subset of that data. 
+6. Implement the requied CRUD methods like query, insert, and delete in content provider class
+
+public class TaskContentProvider extends ContentProvider {
+
+}
+
+Will have onCreate, insert, delete, etc
+
+public boolean onCreate() {
+	// should initialize anything needed to set up and access underlying data source
+	Context context = getContext();
+	mTaskDbHelper = new TaskDbHelper(context);
+	
+	return true;
+}
+
+REGISTEROMG CONTENT PROVIDER
+
+Need to register this content provider in android manifest
+
+<provider
+	android:name="com.example.android.todolist.data.TaskContentPRovider"
+	android:authorities="com.example.android.todolist"
+	android:exported="false" />
+
+name is full package name and class
+authority is jus tpackage name of app
+exported - determines whether or not content provider can be accessed by other applications
+
+DEFINE URI STRUCTURE
+
+URIs tell content resolvers two things:
+1. which provider they want to talk to
+2. Identify different type of data that provider can work with
+
+In example, want to get a directory of tasks and individual tasks
+
+<scheme>//<authority>/<path>
+
+path should likely have same name as database table
+
+If want specific column or data, can append to the path
+
+content://com.udacity.example.todolist/tasks/priority
+
+Includes all information to select the singular column from table
+
+content://com.udacity.example.todolist/tasks/2
+
+Can get a single row from table
+
+Can define a URI for a single task using a wildcare character 
+
+content://com.udacity.example.todolist/tasks/# -> any integer number
+
+WILDCARD CHARACTERS
+
+URIMAtcher only recognizes * or #
+
+"path" - matches "path" exactly
+"path/#" - matches "path" followed by a number
+"path/*" - matches "path" followed by a string
+"path/*/other/#" - matches "path" followed by a string followed by "other" followed by a number
+
+CHANGE CONTRACT
+
+Good idea to store any URI components that you commonly use as constants in Contract class
+
+Base content uri = scheme + authority
+
+Scheme = "content://"
+content authority = reference to provider. "com.example.android.todolist"
+base content = URI scheme + authority
+path = to specific data
+content uri = base content uri + path
+
+BUILD URI MATCHER
+
+One way to recognize specific URIs.
+
+Look at URI that passed to data whenver data is accessed, parse it as a string, and see if that string matches format for a specific request
+
+if (UriString.equals("content://com.example.android.todolist/tasks")) {
+	deleteAllTasks();
+} else if (UriString.equals("content://com.example.android.todolist/tasks" + "some_ID?")) {
+	deleteOneTask();
+}
+
+But this becomes tricky if want to check if URI has an id at the end. Also they can become long and hard to read. 
+
+UriMatcher - determines what kind of URI the provider receives and match it to an integer constant. So you can easily make a switch statement. 
+
+In Content Provider, build UriMatcher
+
+Create integer constants that these URIs match to.
+
+It's convention to use 100, 200, 300 etc for directories and related ints (101, 102, ..) for items in that directory
+
+public static final int TASKS = 100;
+public static final int TASKS_WITH_ID = 101;
+
+Can write helper function to build UriMatcher
+
+Want to declare uriMatcher as static variable
+private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+public static UriMatcher buildUriMatcher() {
+	UriMatcher uriMatcher = UriMatcher(UriMatcher.NO_MATCH); // construct empty matcher
+
+	// add matches you want
+	// just means telling it want URIs to recgnoze and integer constants that match them
+	// use addURI(String authority, String path, int code)
+	uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_TASKS, TASKS);
+	uriMatcher.addURI(TaskContract.AUTHORITY, TaskContract.PATH_TASKS + "/#", TASK_WITH_ID);
+
+	return uriMatcher;
+}
+
+Can return to matcher to deal with different URIs
+
+int match = sUriMatcher.match(uri); // returns int value that is associated with URI structure
+
+Can then use in switch statemment
+
+switch (match) {
+	case TASKS: 
+		...
+		break;
+	CASE TASKS_WITH_ID:
+		...
+		break;
+}
+
+RESOLVER TO DATABASE FLOW
+
+UI will get Content Resolver and call a query with a URI for provider and data you want. Resolver finds correct Content Provider based on authority of URI. Providers query function then uses URIMatcher to determine how to react to URI and get data needed. Based on match, query function will translate into correct SQL code. This retrieve correct data from underyling database. And this returns data back to UI
+
+OVERVIEW OF PROVIDER FUNCTIONS
+
+6 functions that every content provider is required to have
+
+1. void onCreate(Context context)
+2. Uri insert(Uri uri, ContentValues values)
+3. Cursor query (Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) - returns cursor to data
+4. int update(Uri uri, ContentValues value, String selection, String[] selectionArgs); - returns number of entries updated
+5. int delete(Uri uri, String selection, String[] selectionArgs) - returns number of things deleted
+6. getType(Uri uri) which returns a String and takes in a Uri - returns mime type of content being returned
+
+INSERT
+
+End goal is to hook this up to UI
+
+So we can write new data to database, should call getWritableDatabase()
+
+ContentUris is Android class that contains helper methods for constructing URIs. 
+
+@Override
+public Uri insert(@Nonnull Uri uri, ContentValues values) {
+	final SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
+
+	int match = sUriMatcher.match(uri);
+
+	Uri returnUri;
+
+	switch (match) {
+		case TASKS:
+			long id = db.insert(TABLE_NAME, null, values);
+			if (id > 0) {
+				returnUri = ContentUris.withAppendedId(TaskContract.TaskEntry.CONTENT_URI, id);
+			} else {
+				throw new android.database.SQLException("Failed to insert row into " + uri);
+			}
+			break;
+		default:
+			throw new UnsupportedOperationException("Unknown uri: " + uri);
+	}
+
+	// notify resolver if uri has been changed
+	getContext().getContentREsoler().notifyChange(uri, null); // so resolver knows something has changed and can update database and any associated URI accordingly.
+
+	return returnUri;
+}
+
+HOOK INSERT FROM UI
+
+Link it to a button or such. 
+
+Get data from views and ui elements. 
+
+Can use ContentValues
+
+ContentValues cv = new ContentValues();
+cv.put(TaskContract.TaskEntry.COLUMN_DESCRIPTION, input);
+
+Can insert data via a content resolver
+
+Uri uri = getContentResolver().insert(TaskContract.TaskEntry.CONTENT_URI, cv);
+
+Maybe display URI that's returned with a toast
+if (uri != null) {
+	Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+}
+
+Call finish() to tell app that this activity is over and return to previous activity
+
+finish(); ->
+
+QUERY
+
+To get rows of data to display them in UI. 
+
+@Override
+public Cursor query(@Nonnull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	final SQLiteDatabase db = mTaskDbHelper.getReadableDatabase();
+	
+	int match = sUriMatcher.match(uri);
+
+	Cursor retCursor;
+	
+	switch (match) {
+		case TASKS:
+			retCursor = db.query(TABLE_NAME,
+						projection,
+						selection,
+						selectionArgs,
+						null,
+						null,
+						sortOrder);
+			break;
+		default:
+			throw new UnsupportedOperationException("Unknown uri: " + uri);
+	}
+
+	// set a notification uri on cursor so if anything changes in uri, content resolver will know
+	retCursor.setNotificationUri(getcontext().getContentResolver(), uri);
+
+	return retCursor;
+}
+
+Custom Cursor Adapter
+
+CustomerCursorAdapter will inflate views using the xml layout file task_layout and create ViewHolders that will fill the main Recyclerview.
+
+Each ViewHolder includes data about a single task: it's text description and priority level. The priorityView will acutally be a small colored circle that indicated the priority level 1-3 (1 is high and 3 is low)
+
+The priority circle is a drawable resource and its color is assigned to red, yellow, or green based on the priority level. 
+
+Use AsyncTaskLoader to handle queries. 
+
+Can tell loader to restart onResume
+
+getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, this);
+
+public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
+	return new AsyncTaskLoader<Cursor>(this) {
+		// initialize cursor. this will hold all task data
+		Cursor mTaskData = null;
+	
+		// onStartLoading() is called when a loader first starts loading data
+		@Override
+		protected void onStartLoading() {
+			if (mTaskData != null) {
+				// delivers any previously loaded data immediately
+				deliverResult(mTaskData);
+			} else {
+				// force a new load
+				forceLoad();
+			}
+		}
+
+		// loadInBackground() performs async loading of data
+		@Override
+		public Cursor loadInBackground() {
+			// will implement to load data
+			try {	
+				return getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI, null, null, null, TaskContract.TaskEntry.COLUMN_PRIORITY);
+			} catch (Exception e) {
+				Log.e(TAG, "Failed to asynchronously load data.");
+				e.printStackTrace();
+				return null;
+			}
+		}	
+
+		// deliverResult sends result of the load, a Cursor, to the registered listener
+		public void deliverResult(Cursor data) {
+			mTaskData = data;
+			super.deliverResult(data);
+		}
+	}
+}
+
+QUERY FOR ONE ITEM
+
+SQL WHERE clause to limit data. Use id to get one row of data
+
+How to do the same with provider? Use selection and selectionArgs
+
+In provider query code add a case for query with id
+
+case TASK_WITH_ID:
+	// using selection and selectionArgs
+	// URI: content://<authority>/tasks/#
+	String id = uri.getPathSegments().get(1); // 0 would be "tasks" path
+	
+	// Selection is the _ID column = ? and the Selection args = the row ID from the URI
+	String mSelection = "_id=?;; // ? indicates that this is acting for value from selectionArgs
+	String[] mSelectionArgs = new String[]{id};
+	
+
+	retCursor = db.query(TABLE_NAME, projection, mSelection, mSelectionArgs, null, null, sortOrder);
+	break;
+
+DELETE
+
+1. Gain access to the database and write URI matching code
+2. Use selection and selectionArgs to delete on row of data
+3. Notify content resolver of any change after deletion
+4. return number of items deleted
+
+Can use ItemTouchHelper and attach it to view to delete with a swipe
+
+public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+	int id = (int) viewHolder.itemView.getTag();
+	
+	String stringId = Integer.toString(id);
+	Uri uri = TaskContract.TaskEntry.CONTENT_URI;
+	uri = uri.buildUpon().appendPath(stringId).build();
+	
+	getContentResolver().delete(uri, null, null);
+	getSupportLoaderManager().restartLoader(TASK_LOADER_ID, null, MainActivity.this);
+}
+
+UPDATE
+
+int update(Uri uri, ContentValues value, String selection, String[] selectionArgs)
+
+GETTYPE
+
+getType - returns String that tells mime type of data that is being accessed. 
+
+Only becomes useful when mime types are used to organize data or to validate data. 
+
+BULK INSERT
+
+bulkInsert - insert an array of content values into a database
+
+@Override
+public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+	final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+	
+	switch (sUriMatcher.match(uri)) {
+		case CODE_WEATHER:
+			db.beginTransaction(); // transaction is way to mark the start and end of a large data transfer
+			int rowsInserted = 0;
+
+			// mark beginning of transaction, then try to insert, then mark end
+			try {
+				for (ContentValues value : values) {
+					long weatherDate = value.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
+
+					if (!SunshineDateUtils.isDateNormalized(weatherDate)) {
+						throw new IllegalArgumentException("Date must be nomralized to insert");
+					}
+
+					long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, value);
+					if (_id != -1) {
+						rowsInserted++;
+					}
+				}
+
+				db.setTransactionSuccessful();
+			} finally {
+				db.endTransaction();
+			}
+
+			// notify content resolver change has been made to uri
+			if (rowsInserted > 0) {
+				getContext().getContentResolver().notifyChange(uri, null);
+			}
+			return rowsInserted;
+		// if the URI does not match CODE_WEATHER return the super implementation of bulkInsert, implementation in ContentProvider class from android framework
+		default:
+			return super.bulkInsert(uri, values);
+	}
+}
+
+CURSOR LOADER
+
+Before, example weather app used an AsyncTaskLoader to load waether data on a background thread, but this loads weather data directly from a JSON response, and not from the data source just build: The WeatherProvider.
+
+The best way to asynchronously load data from any ContentProvider is with a CursorLoader
+
+CursorLoader - subclass of AsyncTaskLoader that queries a ContentProvider via a ContentResolver and specific URI and returns a Cursor of desired data. Runs query in background thread so that is doesn't block the UI. When a CursorLoader is active, it is tied to a URI and you can choose to have it monitor this URI for any changes in data; this means that the CursorLoader can deliver new results whenever the contents of our weather database change, and we can automatically update the UI to reflect any weather change. 
+
+
+First must modify adapter so that it creates views based on data in a Cursor (and not an array of Strings). 
+
+private Cursor mCursor
+
+Then change onBindViewHolder so that it takes all data from a cursor and uses that to populate views. To read data from a Cursor, you must read data from correct position with a call to:
+
+mCursor.moveToPosition(position);
+
+Then extract all relevant values from the cursor and finally set the text to display the correct weather summary. To read in data from a Cursor, you can use methods like getInt or getString on that Cursor:
+
+double highInCelsius = mCursor.getDouble(MainActivity.INDEX_WEATHER_MAX_TEMP);
+
+Then create string to summarize weather and display it
+
+String weatherSummary = dateString + " - " + description + " - " + highAndLowTemperature 
+
+Will also want to update the getItemCount method to reflect number of items in Cursor, which can be gotten wth:
+
+mCursor.getCount()
+
+And replace setWeatherData method with new method called swapCursor, which should take in a new cursor and update the value of the old Cursor. 
+
+void swapCursor(Cursor newCursor) {
+	mCursor = newCursor;
+	notifyDataSetChanged();
+}
+
+Next update code in MainActivity to replace AsyncTaskLoader with a CursorLoader
+
+First, want to change the loader callbacks so that the loader manager knows that it is returning a Cursor: 
+
+LoaderManager.LoaderCallbacks<Cursor>
+
+You'll also change the method sfor 1) onCreateLoader, 2 onLoadFinished and 3 onLoaderReset to reflect this change in data structure
+
+To change the initialization of the loader, create and return a CurosrLoader in the onCreateLoader method.
+
+A CursorLoader is created similar to how you create query - by passing in a URI that points to our data source, with a sortOrder and selection. Also a Context(this) as first argument.
+
+return new CursorLoader(this, forecastQueryUri, MAIN_FORECAST_PROJECTION, selection, null, sortOrder);
+
+Next change onLoadFinished method and swap the Cursor so that the UI reflects the latest data. Can do this with a call to swapCursor
+
+mForecastAdapter.swapCursor(data) where data is name of a passed in Cursor
+
+Finally, in onLoaderReset, should clear out the adapter that is displaying  data with another call to swapCursor that clears data
+
+mForecastAdapter.swapCursor(null);

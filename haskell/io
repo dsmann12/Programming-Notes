@@ -1,0 +1,63 @@
+INPUT/OUTPUT
+
+So, for starters, punch in the following in your favorite text editor:
+
+    main = putStrLn "hello, world"  
+
+We just defined a name called main and in it we call a function called putStrLn with the parameter "hello, world". Looks pretty much run of the mill, but it isn't, as we'll see in just a few moments. Save that file as helloworld.hs.
+
+And now, we're going to do something we've never done before. We're actually going to compile our program! I'm so excited! Open up your terminal and navigate to the directory where helloworld.hs is located and do the following:
+
+    $ ghc --make helloworld  
+    [1 of 1] Compiling Main             ( helloworld.hs, helloworld.o )  
+    Linking helloworld ...  
+
+Okay! With any luck, you got something like this and now you can run your program by doing ./helloworld.
+
+    $ ./helloworld  
+    hello, world  
+
+First, let's look at the type of the function putStrLn.
+
+    ghci> :t putStrLn  
+    putStrLn :: String -> IO ()  
+    ghci> :t putStrLn "hello, world"  
+    putStrLn "hello, world" :: IO ()
+
+Takes a string and returns an I/O action that has a result type of () (i.e. empty tuple, knnown as unit). An I/O action is something that, when performed, will carry out an action with a side-effect (usually either reading from input or printing to screen) and will also contain some kind of return value inside it. Dummy value () is used because printing to screen does not have a meaningful return value. 
+
+NOTE: Empty tuple is a value of () and also has a type of () 
+
+An I/O action will be performed when give it a name of main and then run program. 
+
+Must use *do* syntax to glue together several IO actions into one. 
+
+main = do  
+    putStrLn "Hello, what's your name?"  
+    name <- getLine  
+    putStrLn ("Hey " ++ name ++ ", you rock!") 
+
+Reads like an imperative program. 
+
+Each step is an I/O action, by putting them in do syntax, they are combined into one I/O action. 
+
+Well, let's examine the type of getLine.
+
+    ghci> :t getLine  
+    getLine :: IO String  
+
+So what's up with name <- getLine then? You can read that piece of code like this: perform the I/O action getLine and then bind its result value to name.
+
+You can think of an I/O action as a box with little feet that will go out into the real world and do something there (like write some graffiti on a wall) and maybe bring back some data. Once it's fetched that data for you, the only way to open the box and get the data inside it is to use the <- construct. And if we're taking data out of an I/O action, we can only take it out when we're inside another I/O action. This is how Haskell manages to neatly separate the pure and impure parts of our code. getLine is in a sense impure because its result value is not guaranteed to be the same when performed twice. That's why it's sort of tainted with the IO type constructor and we can only get that data out in I/O code. And because I/O code is tainted too, any computation that depends on tainted I/O data will have a tainted result.
+
+Take a look at this piece of code. Is it valid?
+
+    nameTag = "Hello, my name is " ++ getLine  
+
+If you said no, go eat a cookie. If you said yes, drink a bowl of molten lava. Just kidding, don't! The reason that this doesn't work is that ++ requires both its parameters to be lists over the same type. The left parameter has a type of String (or [Char] if you will), whilst getLine has a type of IO String. You can't concatenate a string and an I/O action. We first have to get the result out of the I/O action to get a value of type String and the only way to do that is to say something like name <- getLine inside some other I/O action.
+
+That's because in a do block, the last action cannot be bound to a name like the first two were. We'll see exactly why that is so a bit later when we venture off into the world of monads. For now, you can think of it in the way that the do block automatically extracts the value from the last action and binds it to its own result.
+
+Except for the last line, every line in a do block that doesn't bind can also be written with a bind. So putStrLn "BLAH" can be written as _ <- putStrLn "BLAH". But that's useless, so we leave out the <- for I/O actions that don't contain an important result, like putStrLn something.
+
+

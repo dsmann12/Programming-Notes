@@ -1,0 +1,49 @@
+Objects are created one after another. 
+
+string s;
+string notletters; 
+
+s created before notletters.
+
+Objects are destroyed in reverse order. notletters before s. Stack!
+
+Created and destroyed according to scope. 
+
+Shoud avoid complicated expressions: if change the alue of a variable in
+an expression, don't read or write it twice in same expression. 
+
+Examples:
+v[i] = ++i;
+v[++i]=i;
+int x = ++i + ++i;
+
+Global variables in single translation unit are initialized in order in which they appear:
+file f1.cpp
+int x1 = 1;
+int y1 = x1 + 2; //y1 becomes 3
+
+Using global variables in anything but most limited circumstances is ususally not a good idea. No way of knowing which parts of large program read and/or write a global variable. Another problem is order of initialization of global variables in different translation units is not defined.
+
+Example:
+
+//file f2.cpp
+extern int y1; //??extern
+int y2 = y1+2; //y2 becomes 
+
+Code to be avoided. uses global variables, it gives global variables short names, and it uses complicated initialization of global variables. If globals in f1.cpp are initialzed before globals in f2.cpp, y2 will be initialzed to 5. However, if globals in f2.cpp are initialized before globals in f1.cpp, y2 will be initialized to 2.
+
+Avoid such code and consider any global variables with nontrivial initializer; consider any initializer that isn't a constant expression complicated. 
+
+What if we need global variable (or constant) with complicated initializer?
+
+const Date default_date(1970, 1, 1); 
+
+How would know that default_date was never used before it was initialized? Can't. Technique that we use most often is to call a function that returns the value:
+
+Constructs DEFAULTdATE ONLY ONCE. 
+const Date & default_date() {
+	static const Date dd(1970, 1, 1);
+	return dd;
+}
+
+static local variable is initialized (constructed) only first time its function is called. Returned a reference to eliminate any uneccessary copying and returned a const reference to prevent the calling function from accidentally changing the value. 

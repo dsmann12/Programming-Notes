@@ -1,0 +1,13 @@
+Sorting
+
+Bubble Sort - Worst algorithm
+
+Infinite array. Use break statement to 
+
+Variable swapped = 0 (false);
+
+for loop. Loop through size of array. Take every number and 
+compare number after it. 
+
+If object i is less than object i+1, swap them. Use temp
+variable to swap. 

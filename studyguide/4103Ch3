@@ -1,0 +1,185 @@
+Q: What is a process?
+A: A process is a program in execution. Process execution must progress in sequantial fashion. 
+
+Q: What is the relationship between processes and programs?
+A: Program is a passive entity stored on disk (executable file). Process is active. Program becomes process when executable file is loaded into memory. Execution started via GUI click or command line entry. One program can also be several processes, consider multiple users executing same program. 
+
+Q: What are the multiple parts of a program code?
+A: The text section - the program code. Current activity including program counter, processor registers. 2. Data section - contains global variables. 3. Stack - contains temporary data: function parameters, return addresses, local variables. 4. Heap - containing dynamically allocated memory.
+
+Q: Describe process states and the different kinds.
+A: As a process executes, it changes states. 1. new - the process is being created. 2. running - instructions are being executed. 3. Waiting - the process is waiting for some event to occur. 4. ready - the process is waiting to be assigned to a processor. 5. terminated - the process has finished execution. 
+
+Q: How many processes can be run by a processor?
+A: Only one process can be run at a processsor, but many can be "ready", "waiting"
+
+Q: What is a process control block?
+A: A process control block (pcb) contains information associated with each process: 1. Process number - PID. 2. Process state - running, waiting, etc. 3. Program counter - location of instruction to next execute (bookmark). 4. CPU registers - contents of all process-centric registers (accumulators, stack pointer, ..). 5. Memory-mangement information - memory allocated to the process (base, limit, PT, ...) 6. Accounting information - CPU used, clock time elapsed since start, time limits. 7. I/O status information - I/O device sallocated to process, list of open files
+
+Q: Check process representation in linux
+A: Check
+
+Q: What is the importance of a pcb?
+A: PCB serves as repository for any information that may vary from process to process. State information must be saved when an interrupt occurs, to allow proces sto be continues correctly afterward.
+
+Q: What is a context switch?
+A: When CPU switches to another process, the system must save the state of the old process and load the saved data for the new process via a context switch. Context of a process is represented in the PCB.
+
+Q: What is the disadvantage of a context switch?
+A: Context switch time is overhead. No useful work done while switching. More complex the OS/PCB, longer context switch takes. 
+
+Q: What hardware resources determine context switching time?
+A: 1. Some hardware provides multiple sets of registers per CPU so multiple contexts loaded at once. 2. Switching speed depends on memory speed, number of registers that ust be copied, and special instructions (such as single instruction to load or store all registers). 3. typical speeds range from 1 to 1000 microsceconds.  4. Switching may be bottleneck for complex OS
+
+Q: What is process scheduling?
+A: If more than one process exists, rest must wait until CPU is greed by running process. Scheduling required in multiprogramming to have some process running at all times. 2. Time sharing to switch CPU among processes by users. 
+
+Q: What is a process scheduler?
+A: A process scheduler selects among available processes for next execution on CPU. Maximizes CPU use, quickly switch processes onto CPU for time sharing
+
+Q: Describe the many scheduling queues.
+A: 1. Job queue - set of all processes in system. 2. Ready queue - set of all processes residing in main memory, ready, and waiting to execute. 3. Device queue - set of processes waiting for an I/O device. Processes migrate among various queues
+
+Q: What data structure is used for a ready queue?
+A: Linked list - queue header contains pointers to first and final PCBs in list. Each PCB is extended to include a pointer field that points to next PCB in queue. 
+
+Q: Study a queueing diagram?
+A: Study
+
+Q: What is a short-term scheduler?
+A: Short-term scheduler (CPU scheduler) selects which process in the memory should be executed next and allocated CPU: 1. Sometimes only sceduler in system. 2. Short term scheduler invoked frequently (milisceonds) so must be fast
+
+Q: What is a long term scheduler?
+A: Long-term scheduler (Job scheduler) - selects which processes should be brought into the ready queue: 1. Long term scheduler invoked infrequently (seconds, minutes) -> may be slow. 2. The long-term scheduler controls the degree of multiprogramming
+
+Q: what can bound a process?
+A: 1. I/O bound process spends more time doing I/O than computations, many short CPU bursts. 2. CPU bound process spends more time doing computations, very few CPU bursts. 
+
+Q: What is medium-term scheduling?
+A: Medium-term scheduler also called swapping swaps processes out of memory and later swaps them into meomry. Reduces degree of multiprogramming. 
+
+Q: Describe process creation
+A: Parent process creates children processes, which turn create other processes, forming a tree of processes. Process identified and manged via a PID (process Identifier)
+
+Q: What are the different resource sharing policies between parent and children processes?
+A: 1. Parent and children share all processes. 2. Children share subset of parent's resources. 3. Parent and child share no resources. 
+
+Q: How is initialization data shared between parent and children processes?
+A: Initialization data is passed along from parent to child. Anything above fork() call. 
+
+Q: What are two possibilities for execution of parent and children processes?
+A: 1. Parent and children execute concurrently. 2. Parent waits until children terminated. 
+
+Q: What are the two possibilities for address space between parent and children processes?
+A: 1. Child duplicate of parent (same program and data). 2. Child has a new program loaded into it. 
+
+Q: Describe how fork works?
+A: Fork
+
+Q: Describe how exec works?
+A: Exec
+
+Q: Describe normal termination of a process?
+A: Process executes last statment and asks OS to delete it using exit() syscall. 1. Returns output status data from child to parent via wait() syscall. 2. Process's resource sare deallocated by OS.
+
+Q: Describe abnormal termination of a process?
+A: Parent may terminate execution of children processes using abort() syscall. E.g. when cihld has exceeded allocated resources, task assigned to child is no longer needed, or parent is exiting, and OS does no tallow child to continue if parent terminates. 
+
+Q: What is cascading termination?
+A: If OS does not allow cihld to exist if parent terminated, then all children must terminate when a parent terminates. Children and grandchildren are terminated.
+
+Q: Describe the wait() syscall.
+A: Wait(). Parent process awaits for termination of child process by using wait() sysytem call. Returns status information and PID of terminated process
+
+Q: What is a zombie process?
+A: A zombie process is a dead child process that has no parent waiting (invoking wait()). Process that finishes and is waiting to be reaped.
+
+Q: What is an orphan process?
+A: An oprhan process is a process whose parent terminated without invoking wait(). Process that loses its parent. May be adopted by init. 
+
+Q: What is an independent process?
+A: An independent process cannot affect or be affected by execution of another process. Such processes do not share any data.
+
+Q: What is a cooperating process?
+A: A cooperating process can affect or be affected by the execution of another process. 1. Such processes share data. Such processes need to be synchronized. 
+
+Q: What is interprocess communication?
+A: Interprocess communication mechanisms allow cooperating processes to exchange data and information. 
+
+Q: What are the advantages of process cooperation?
+A: 1. Information sharing. 2. Computation speed-up. 3. Modularity. 4. Convenience
+
+Q: What are two interprocess communication models
+A: 1. Message PAssing and 2. Shared memory
+
+Q: What is message passing?
+A: Message passing is useful for exchanging smaller amounts of data. Easier to implement through system calls but slower.
+
+Q: What is shared memory?
+A: Shared memory allows maximum speed and convenience of communication. Faster accesses. Shared memory is an area of memory shared among the processses that wish to communicate. Communication is under the control of the user processes NOT the OS. Major issue is that processes must be synchronized.
+
+Q: What is a shared memory system?
+A: A shared memory system is a in which communication processes establish a region of shared memory. Can exchange information by reading and writing data in the shared areas. 
+
+Q: What is a producer-consumer problem?
+A: A producer-consumer problem is a paradigm for cooperating processes. The producer process produces information that is consumed by the consumer process. E.g. print program produces characters that are consumed by the printer driver
+
+Q: How can buffers be used for producer-consumer problems?
+A: A buffer of items that can be filled by producer and emptied by consumer. Buffer will reside in region of memory that is shared by both processes. 
+
+Q: What is an unbounded buffer?
+A: An unbounded buffer places no practical limit on buffer size
+
+Q: What is a bounded buffer?
+A: A bounded buffer assumes a fixed buffer size. 
+
+Q: Implement a bounded buffer shared memory solution. Producer and consumer.
+A: Uses a circular array with two logical pointers in (next free position) and out(first full position). Can only use BUFFER_SIZE - 1 elements. 
+
+Q: What is message passing?
+A: Message passing is a mechanism for processes to communicate and to synchronize their actions. Uses message system, so processes communicate with each other without resortng to shared variables. Useful in distributed systems via network. 
+
+Q: What two operations make up message passing?
+A: Send(messge) - message size fixed or variable. Receive(message)
+
+Q: How to two processes set up communication for message passing?
+A: If P and Q withs to communicate they need to: 1. establish a communication link between them and exchange messages via send/receive. Implementation of communication link is either physical (shared memory, hardware bus, networked) or logical (direct vs. indirect, synced vs async, auto vs explicit buffering)
+
+Q: What is direct communication in message passing?
+A: In direct communication, processes must name each other explicity. send(P, message). receive(Q, message).
+
+Q: What are the properties of a communication link in direct communication in message passing?
+A: 1. Links are established automatically. 2. A link is assoicated with exactly one pair of communicating processes. 3. Between each pair exists exactly one link. 4. Link may be unidirectional, but usually bi-directional.
+
+Q: What is assymetry in addressing with direct communication in message passing?
+A: Only sender names the recipient. Recipient not required to name sender: send(P, message). reaceive(id, message) - id set to sender. 
+
+Q: What is the disadvantage of direct communication in message passing?
+A: Direct communication gives limited modularity of the resulting process definitions. Changing process ID requires update all references (like changing phone numbers)
+
+Q: What is indirect communication in message passing?
+A: In indirect communication with message passing, messages are directed and received from mailboxes (or ports). Each mailbox has a unique ID. Processes can communicate only if they share a mailbox
+
+Q: What are the properties of a communication link in indirect communcation in message passing?
+A: 1. Link established only if processes share a common mailbox. 2. A link may be assoicated with many processes. 3. Each pair of processes may share several mailboxes if desired. 4. Link may be unidirectional or bidirectional. 
+
+Q: Assuming mailbox sharing in indirect communication with message passing, how to determine who gets the message?
+A: Solutions depend on mechanism we chose: 1. allow a link to be associated with at most two processes. 2. Allow only one process at a time to execute a receive operation. 3. Allow system to select arbitrarily the receiver. Sender is notified who receiver was. 
+
+Q: Describe mailbox ownership under indirect communication in message passing?
+A: 1. Mailbox may be owned by a particular process or OS. Ownder process can only recieve message through the mailbox. User process can only send message through the mailbox. Mailbox disappears when owner process terminates. 2. A mailbox can be owned by OS and independent from any process. Creates a new mailbox. Send and receive messages through mailbox. Thne destroy mailbox. 
+
+Q: What are the primitive operations of message passing with indirect communication?
+A: send(A, message). receive(A, message) - A is a mailbox
+
+Q: What is blocking?
+A: Blocking is considered synchronous. Blocking send - the send is blocked until the message is received. Blocking receive - receiver is blocked until a message is available.
+
+Q: What is non-blocking?
+A: Non-blocking is considered asycnhronous. Non-blocking send - the sender sends the messages and continues. Non-blocking receive - the receiver receives. Valid message or null message. 
+
+Q: What is a rendezvous in message passing?
+A: A rendezvous is a situation where both send and receive are blocking. Sender sends message and waits until it is delivered. Receiver blocks until a message is available. 
+
+Q: What is buffering important to interprocess communication?
+A: Message exchanged by processes reside in a temporary queue during communication. Queue of messages attached to the link. Implemented in one of three ways: 1. zero capacity - 0 messages. Sender must wait for receiver (rendezvous). 2. Bounded capacity - finite length of n messages. Sender must wait if link is full. 3. Unbounded capactiy - infinite length. Sender never waits. 

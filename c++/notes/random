@@ -1,0 +1,9 @@
+Random
+
+#include <cstdlib>
+
+rand() -- returns pseudo-random number
+rand() % 6 -- gives numbers 0-5
+
+srand(100) -- set seed for rand() function. seed initially 1
+srand(time(0)) -- set seed to seconds since 1970. Epoch time

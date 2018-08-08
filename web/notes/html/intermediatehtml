@@ -1,0 +1,164 @@
+TABLES
+
+<table>
+<tr> - row
+<td> - column
+
+HTML5 wants descriptive elements
+
+<thead> - move all heading in this
+
+<tbody> - move body into this
+
+Bad idea professionally to set border attribute to 1. Use css for borders
+
+width attribute for image
+
+FORMS
+
+HTML Forms - Getting User Input
+
+<form></form> tag
+<input></input> tag
+<label></label> tag
+
+The <form> tag
+
+<form action="/my-form-submitting-page" method="post">
+	<!-- All inputs go here -->
+</form>
+
+action = the URL to send form data to
+method = the type of HTTP request
+
+Until cover Back End Js, forms won't do anything. 
+
+Container that allows developer to put inputs inside it. 
+
+Make a "get" request when trying to retrieve data (searching).
+Make a "post" request when sending data. 
+
+The <input> Tag
+
+Creates interactive controls.
+
+The "type" attribute determined type of input.
+
+<input type="text"> 		-text box
+<input type="date">			-date box
+<input type="color">		-color picker
+<input type="flie">			-file picker
+<input type="checkbox">		-checkbox
+
+Look on MDN for different types:
+
+date, button, submit, color, date, hidden, email, etc
+
+A Basic Form:
+
+basicform.html
+
+Form adds block. 
+
+forms.html
+
+Default action is same URL, default method is post
+
+When data typed into form, data taken out of form and sent somwhere. 
+
+If give name to input, then value submitted can be seen after submit. Query string. 
+
+Labels
+
+<form action="/sign-in-url" method="post">
+	<label>Username: <input type="text"></label>
+	<label>Password: <input type="password"></label>
+	<button>Login</button>
+</form>
+
+Alternate syntax, using "for" and "id" attributes
+
+
+<form action="/sign-in-url" method="post">
+	<label for="username">Username:</label>
+	<input id="username" type="text">
+	<label for="password>Password:</label>
+	<input id="password" type="password">
+	<button>Login</button>
+</form>
+
+Label tags useful for accessibility options. 
+
+Can put input inside label. Or can make them separate with "for" and "id". As long as "for" and "id" match. 
+
+FORM VALIDATIONS
+
+Simple Validations
+
+-The 'required' attribut validates that an input is not empty
+-Also type validations. Try changing type from text to email
+
+<form action="sign-in-url" method="post">
+	<label for="email">Email:</label>
+	<input id="email" type="email" required>
+	<label for="password">Password:</label>
+	<input id="password" type="password" required>
+	<button>Login</button>
+</form>
+
+Validation gives ability to enforce rules on input. Can do validation on backend too. 
+
+Required - Boolean attribute. Presence equals true. Makes sure data is entered.
+
+Can validate type. 
+
+email - makes sure @something.com format is uesd.
+
+DROPDOWNS AND RADIO BUTONS
+
+Radio button - just another type of input tag
+Select tag - get dropdown menus
+Textarea tag - how create text inputs multiple lines long
+
+Radio buttons - for when have to pick one option and just one
+Checkbox - multiple options
+
+Must put radio buttons in form and give them all same name to make sure only one option can be selected.
+
+If button is last thing in form, it will submit form.
+
+Selected button has value of "on". 
+
+Must use "value" to get value for element.
+
+SELECT
+
+<select></select> tag. Makes empty dropdown menu. 
+
+<option></option> tag sets options for a select tag.
+
+TEXTAREA
+
+<textarea></textarea> Useful for multiline input
+
+Can set size with "rows" and "columns"
+
+<textarea rows="10" cols="10"
+
+inputs2.html
+
+FORMS EXERCISE
+
+Create a Registration Form:
+
+Register headline
+First name [text box] Last Name: [text box]
+Male o Female o Other o
+Email [text box] Password[textbox]
+Birthday [dropdown months][dropdown[days]dropdown[years]
+I agree to terms and conditions o
+Submit button
+
+BONUS: Password between 5 and 10 charars. NO JS. Use HTML5   
+
+<hr> - horizontal rule. A separator line. Many styles can be found online

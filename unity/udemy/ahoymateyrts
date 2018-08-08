@@ -1,0 +1,197 @@
+AHOY MATEY RTS
+
+Pirate networked multiplayer game
+
+Local networking only.
+
+Make a game development document
+
+
+Concept 
+
+Point and click ship game
+Isometric, multiplayer including across platform
+
+Rules
+
+Start with 100 health
+Getting shot reduced health
+Move in range of other ships to shoot
+Score for killing enemy. Lose score for getting killed.
+Guns can only fire 90 degree arc from sihp.
+No win condition?
+
+Requirements
+
+Splash screen image
+An animated ship
+A terrain with scattered islands, mainly water
+SFX: gun, hit, sinking
+Background muisc
+
+Monetization
+
+Free game
+
+TESTING NETWORK GAMES LOCALLY
+
+If have 1 PC can play in editor and in a build. 
+
+Not very convincing because not really oing through network. Also use the same inputs. 
+
+2 PCs are best. One is host other is client. Host is server and client. 
+
+DEPLOYING GAME LOCALLY
+
+Same version of game to two machines. 
+
+INTRODUCING NETWORK MANAGER
+
+Can look at unity networking documentation
+
+Network Manager and High Level API are for new users making multiplayer gams.
+
+Network stack is stack of tech used to enable networking.
+
+Low Level API
+Messaging and Serialization
+Connection Management
+
+Add an empty game object.
+Add a Network Manager component.
+Add a network manager HUD component.
+Take a look around.
+
+A Network Manager Hud and it will add Network Manager it self.
+
+HUD shows buttons with a imple way to start networked game.
+
+If try to click LAN Host you get errors.
+PlayerPrefab empty on NetworkManager.
+
+Player needs to be a prefab. 
+
+In Network Manager object, 
+
+Say don't destroy on load. Run in background,
+set network address and port.
+Drag player prefab into this. Won't work.
+
+PlayerPrefab needs a network identity. This is a component.
+NetworkIdentity is a component for network work in Unity.
+
+Will make a new player spawned at beginning on server. 
+
+If launch as just server, then player won't spawn. Because server is not a client. 
+
+Can use the APIs these HUD buttons use youtself.
+
+REPLACING NETWORK MANAGER HUD
+
+Add a UI button.
+
+NetworkManager.StartHost() -> starts host. 
+
+Cannot call StartHost from NetworkManager object because it is not public in Unity version. So must create your own script to call these API.
+
+Must import UnityEngine.Networking;
+
+override void OnStartHost() -> function that runs when host is started. When StartHost() is called. 
+
+Must override the function to work. 
+
+Inhertiance in Unity
+
+Object
+	Component
+		Behavior
+			MonoBehavior
+				MyHUD
+				NetworkManager
+					MyNetworkManager
+
+So we should be inheriting rom NetworkManager not MonoBehavior
+
+Then you can override its virtual methods.
+
+So that it actually works. 
+
+LOGGING CLIENT START REQUESTS
+
+In NetworkManager there is another virtual method called OnStartClient()
+
+OntStartClient - hook called when client is started. 
+
+OnClientConnect - hook called when client is connected to server
+
+Log when things are happening. 
+
+USING NETWORK TRANSFORM
+
+Allows us to send movement of cube from host to client. 
+
+Make movement pass over network. 
+
+Add Network Transform component. Automatically adds Network Identity. 
+
+Network Identity allows system at etiher end of game to access particular asset by an ID. 
+
+Can adjust rate for how many times per second to send transorm to client. 
+
+Seems to sync movement automatically.
+
+NETWORKED PLAYER MOVEMENT
+
+Have input filtered betwen client and host. 
+
+Can have translation issues with multiple clients. 
+
+Use transform.Translate()
+
+Must make sure the movement controls only happen on the client player. The local player.
+
+NetworkBehavior.isLocalPlayer -> returns true if it is local player.
+
+Inherits from NetworkBehavior
+
+Doesn't work with other machine. His windows virtyal machine. 
+
+MULTIPLE PLAYERS WITH LOCAL AUTHORITY
+
+When client and host do not see each other's movement.
+
+Use NetworkTransform component. 
+
+Read about Local Player Authority. Clicked in Network Identity component. 
+
+I would guess that it means transform changes come from client and are transmitted. Otherwise, transform changes would be coming from server. From host. 
+
+If you move client player in host in scene view then it won't show in client and when client moves next with controls then the client will snap back to the correct location. The host does not control client when local player authority.
+
+MULTIPLAYER CAMERAS
+
+Add camera as child of player to move around. 
+
+Fix camera conflict problem. 
+
+Get rid of main camera. Add camera to child of player.
+
+Must make sure only have one camera in scene. 
+
+Use OnStartLocalPlayer() method. 
+
+Disable camera component of camera object.
+
+In Player.cs that inherits from NetworkBehavior, call OnStartLocalPlayer(). 
+
+Get camera. Enable it. 
+
+NETWORK CONCEPTS
+
+Can read Network Concepts in documentation.
+
+Basically, clients handle player movements and server/host handles enemy movements.
+
+For complicated games with animation, need other components like NEtworkAnimation, etc. 
+
+

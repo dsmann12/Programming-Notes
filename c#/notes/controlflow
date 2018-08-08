@@ -1,0 +1,106 @@
+CONTROL FLOW
+
+Typically if statement
+
+if (i < 10) {
+
+}
+else if (i > 10 && (i % 2) > 0) {
+
+}
+else {
+
+}
+
+Booleans must be true or false. Int values (0 or 1) will not suffice in C#
+
+SWITCH
+
+int condition;
+switch(condition) {
+	case 2:
+		Console.WriteLine("Number is 2!");
+		break;
+	case 1:
+		Console.WriteLine("Number is 1");
+		break;
+	default:
+		Console.WriteLine("This is default!");
+		break;
+		
+}
+
+GOTO:
+
+begin:
+int condition = 0;
+condition = int32.parse(Console.ReadLine());
+
+switch(condition) {
+	case 1:
+		Console.WriteLine("Number is 1!");
+		break;
+	default:
+		Console.WriteLine("That's not the magic number!");
+		goto begin;
+}
+
+goto loops are considered bad programming style. Use other loops. 
+
+BRANCHING STATEMENT
+
+Branching statement 	Description
+break 	Leaves the switch block
+continue 	Leaves the switch block, skips remaining logic in enclosing loop, and goes back to loop condition to determine if loop should be executed again from the beginning. Works only if switch statement is in a loop as described in Lesson 04: Control Statements – Loops.
+goto 	Leaves the switch block and jumps directly to a label of the form “<labelname>:”
+return 	Leaves the current method. Methods are described in more detail in Lesson 05: Methods.
+throw 	Throws an exception, as discussed in Lesson 15: Introduction to Exception Handling.
+
+Each case statement must end in  branching statement.
+
+Exceptions: agjacent cases or using goto
+
+Adjacent cases - cases with those matches (multiple) will fall through to a case that has code. 
+
+ switch (myInt)
+        {
+            case 1:
+            case 2:
+            case 3:
+                Console.WriteLine("Your number is {0}.", myInt);
+                break;
+            default:
+                Console.WriteLine("Your number {0} is not between 1 and 3.", myInt);
+                break;
+        }
+
+Case statement can only be an exact match. No conditionals` 
+
+LOOPS
+
+WHILE
+
+while(conditoinal) {
+
+}
+
+DO
+
+do {
+
+} while (conditional)
+
+FOR
+
+for(int i = 0; i < 10; i++) {
+
+}
+
+FOREACH
+
+int[] a = {1, 2, 3, 4, 5};
+foreach(int num in a) {
+	Console.WriteLine(num);
+}
+
+

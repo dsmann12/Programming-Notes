@@ -1,0 +1,448 @@
+JAVASCRIPT
+
+Developer Console in browser where "stdout" prints to.  
+
+Useful for interacting with css and such. Can write code in console. 
+
+alert("Hello everyone!"); //popup show up with message
+
+PRIMITIVES
+
+5 Primitive Data Types:i
+
+//Numbers
+4
+9.3
+-10
+
+Can do math:
+4+10
+1/5
+10 % 3 // 1
+24 % 2 //0
+15 % 11 // 4
+
+Follows order of operations.
+
+Treated as just numbers. No int, float, double, etc. 
+
+//Strings
+"Hello World"
+"43"
+
+Can be single or double quotes
+
+-Concatenation - combintation of two strings
+
+"charlie" + " brown";
+'I can't stop' //error. 2ND quote causes early termination
+"she said,\"goodbye\""
+
+
+Every string has length property. 
+
+"hello".length = 5
+
+"hello"[0]; //'h'
+"hello".length
+
+//Booleans
+true
+false
+
+//null and undefined
+null
+undefined
+
+Actually values. Only one for each. 
+
+VARIABLES
+
+var variablename = yourValue;
+
+var name = "Rusty";
+var secretNumber = 83;
+var isAdorable = true;
+
+"hello there " + name; //hello there Rusty
+
+var num = 37;
+num + 3 + 10; //50
+
+num = "50"; //can change types.
+
+Dynamic typing - variables can change type
+
+Use camel_casing;
+
+NULL AND UNDEFINED
+
+Variable declared but not initialize are undefined
+
+//undefined
+var name;
+var age; 
+
+null is explicitly nothing
+
+//null
+var currentPlayer = "charlie"
+currentPlayer = null;
+
+USEFUL BUILTINS
+
+//alert
+Pops up message that alerts user with a message string.
+
+//prompt
+Prompt user with message, having prompt text, and text box
+
+//console.log
+Must view console to see it print. Useful for printing things for programmer
+
+//clear() -> method to clear consolea
+
+Can include javascript file in web page.
+
+CONTROL FLOW
+
+Boolean Logic - value of an expression is either true or false.
+
+>, <=, >=, <, ==, !=, ===, !==
+
+=== -> equal value and type
+!== -> not equal to value and type
+
+var x = 99;
+x == "99" //true
+x === "99" //false
+
+var y = null;
+y == undefined; //true
+y === undefined; //false
+
+Nan == Nan; //false
+
+Logical Operators:
+
+&& - And
+|| - or
+! - Not
+
+Every value if truthy or falsy. Every value has truthiness or falthiness assigned by js. 
+
+Falsy:
+
+false
+null
+undefined
+NaN
+-1
+0
+""
+
+CONDITIONALS
+
+How add decisions and logic to a program. 
+
+if
+else if
+else
+
+typeof var -> gives type of variable
+
+Casting:
+var guess = "4";
+Number(guess) === 4; //true converts string to number
+
+LOOPS
+
+-repeating code
+
+DRY code - don't repeat yourself
+
+While loop - loop while condition holds
+
+while(someCondition) {
+	//code
+}
+
+Infinite loops - occur when terminating condition in a loop is neer true. Takes up memory. Modern browsers would usually stop code. 
+
+var str = "hello world";
+str.indexOf("w"); 6
+str.indexOf("world");
+
+FOR LOOPS
+
+for(init; condition; step) {
+	//code
+}
+
+for(var i = 0; i < str.length; i++) {
+}
+
+count variable can be initialied in for loop's scope whereas no variable can be initialized in a while loop's condition. 
+
+For Loops Problems same as while loops. 
+
+FUNCTIONS - a group of code statement that may or may not return a value. May contain parameters. Lets programmer wrap bits of code into reusable packages. 
+
+Declare:
+function doSomething() {
+	console.log("Hello World");
+}
+
+Call:
+doSomething();
+
+Arguments/Parametesr are data inputs that a function takes in to calculate outputs. 
+
+function square(num) {
+	console.log(num * num);
+}
+
+Now must pass a value when calling function.
+
+square(4);
+
+May have as many arguments as needed.
+
+Return keyword used to return a value. 
+
+function square(x) {
+	return x*x;
+}
+
+function capitalize(str) {
+	if(typeof str === "number") {
+		return "that's not a string!";
+	}
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+//Function Declaration -- the usual 
+
+function capitalize(str) {
+	if(typeof str === "number") {
+		return "that's not a string!";
+	}
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+//Function expression - storing function in a var
+
+var capitalize = function(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+str.replace(/-/g, "_");
+
+Scope - jurisdiction of variables or functions. 
+
+HIGHER ORDER FUNCTIONS - functions that either take a function as argument or return another function. 
+
+function sing() {
+	console.log("Twinkle twinkle");
+	console.log("How I wonder..");
+}
+
+setInterval(sing, 1000);
+
+clearInterval(2);
+
+Anonymous function:
+
+setInterval(function() {
+	console.log("I am an anonymous function!");
+	console.log("this is awesome");
+	}, 2000);
+
+ARRAYS 
+
+Arrys - data structure that can hold a fixed number of sequentially ordered elements of the same time.
+
+var friends = ["Charlie", "Liz", "David", "Mattias"];
+
+friends[0]; //Charlie
+friends[2]; //David
+friends.length; //4
+
+friends[4] = "Amelie"; //adds a new element to array
+friends[10]; //undefined elements between 4 and 9
+
+var friends = [];
+var friends = new Array(); //uncommon. heap?
+
+Can hold any type of data:
+var random = [49, true, "Hermione", null];
+random.length; //4
+
+ARRAY METHODS
+
+friends.push("Michael");
+friends.pop();
+var f = friends.pop(); //Amelie
+
+pop removes last element of array. push adds to end of array
+
+unshift - use unshift to add to front of an array
+var colors ["red", "orange", "yellow"];
+colors.unshift("infrared")'
+
+shift - remove first item
+
+colors.shift(); //orange, yellow
+
+IndexOf - takes argument like string or number and tries to find it in array.
+
+colors.indexOf("orange"); //0
+colors.indexOf("yellow"); //1
+colors.indexOf("green"); //-1
+
+Slice - copy parts of an array
+
+var fruits = ["banana", "orange", "lemon", "apple", "mango"];
+var citrus = fruits.slice(1, 3);
+fruits.slice(); //entire array 
+
+splice - makes a cut and removes a number of elements from array. First argument is first index
+of region want to cut. Second number is how many items from that index to delete. 
+
+todos.splice(index, 1); //remove one element at index
+todos.splice(0, 4) //removes at index 0, 1, 2, 3
+
+ARRAY ITERATION
+
+for loop. 
+
+for(var i = 0; i < colors.length; i++) {
+
+}
+
+forEach loop - for each element in array
+
+arr.forEach(someFunction);
+
+//DO NOT use () after function name unless using anonymous function
+
+colors.forEach(function(color) {
+	console.log(color);
+});
+
+color holds value of element in colors for each loop.
+
+todo = [];
+todo.forEach(function(element, i) {
+	console.log(i + ": " + element);
+};
+
+Adding i has forEach grap the index. 
+
+create own for each
+
+function myForEach(arr, func) {
+	for(var i = 0; i < arr.length; i++) {
+		func(arr[i]);
+	}
+}
+
+OBJECTS
+
+Array.prototype.myForEach = function(func) {
+	for(var i = 0; i < this.length; i++) {
+		func(this[i]);
+	}
+};
+
+prototypes??????
+
+How to model a person: name, age, and city
+
+var person = ["Cindy", 32, "Missoula"];
+
+person[2]; //not very meaningful.
+
+Breaks if order not same. 
+
+Object
+
+var person = {
+	name: Cindy,
+	age: 32,
+	city: "Missoula"
+};
+
+Can use bracket or dot nottion to retrieve data
+
+console.log(person["name"]);
+console.log(person.name);
+
+Differences:
+
+Cannot use dot notation if peroperty starts with a number:
+someObject.1blah //invalid
+someObject["1blah"]; //valid
+
+Can lookup using a variable with bracket notation
+var str = "name";
+someObject.str //does not look for "name" field
+someObject[str]; //does evaluate str and look for "name" field
+
+Cannot use dot nottion for property names with spaces"
+someObject.fav color //invalid
+someObject["fav color"]; //valid
+
+Objects can hold any type of data, even other objects. 
+
+Can update data
+
+person.city = "London";
+person.age += 1;
+
+make empty object
+var person = {}
+person.name = "Travis";
+person.age = 21;
+person.city = "LA"
+
+var person = new Object();
+person.age = 24;
+
+Can hold any kind of data. 
+
+Can add new key value pairs. 
+
+Nested Objects and Arrays
+
+var posts [
+	{
+		title: "Cats are mediocre",
+		author: "Colt"
+		comments: ["Awesome post", "terrible post"]
+	},
+	{
+		title: "Cats are actually awesome",
+		author: "Cat Luvr"
+		comments: ["<3", "go to hell you suck"]
+	}
+]
+
+JS Methods:
+
+Addming methods to an object
+
+Variables held by object are properties.
+Functions held by an object are called methods. 
+
+Helps keep code organied. 
+
+Namespace collision - two things with same name. 
+
+Populat JavaScript library called underscore.js. 
+_.find()
+_.reduce()
+
+Keyword "this"
+
+Accesses implicit parameter. The object being modified. 

@@ -1,0 +1,4 @@
+RANDOM ACCESS FILE
+
+fseek(fp, 3, SEEK_SET); //fp pointer, 3 number of characters to seek,
+SEEK_SET means start at beginning of file. Other options (SEEK_END, SEEK_CUR)

@@ -1,0 +1,197 @@
+DATABINDING
+ 
+Databinding - communicaton between TS code (business logic) and template html. Output data into html
+ 
+Can use:
+ 
+String Interpolation -> {{ data }}
+ 
+Property Binding -> [property]="data"
+ 
+To get user events:
+ 
+Event Binding -> (event)="expression"
+
+Two-Way-Binding -> [(ngModel)]="data"
+
+STRING INTERPOLATION
+
+Maybe have server with data id and status. 
+
+Want to print id and status in html. 
+
+Go to ServerComponent in server.component.ts
+
+export class ServerComponent {
+	serverId = number = 10;
+	serverStatus: string = 'offline';
+}
+
+<p>Server with ID {{ serverId }} is {{ serverStatus }}</p>
+
+String Interpolation can contain any type of TS expression. So can include a static string or a data field. 
+Cannot have multi-block expressions. Has to resolve to string in the end. 
+
+Can define method in TS
+
+export class ServerComponent {
+	serverId = number = 10;
+	serverStatus: string = 'offline';
+
+	getServerStatus() {
+		return this.serverStatus;
+	}
+}
+
+PROPERTY BINDING
+
+Often can either use property binding or string interpolation. 
+
+export class ServersComponent {
+	allowNewServer = false;
+	
+	constructor() {
+		setTimeout(() => {
+			this.allowNewServer = true;
+		}, 2000);
+	}
+
+	ngOnInit() {
+
+	}
+}
+
+<button
+	class="btn btn-primary"
+	[disabled]='!allowNewServer'>Add Server</button>
+<app-server></app-server>
+<app-server></app-server>
+
+[] -> tells angular that using property binding. Want to dynamically bind some property native to HTML element. Has property type (boolean, etc). Since disabled either true or false, use the boolean value from the class.
+
+InnerText - property for the text inside a tag. Can be used with property binding instead of string interpolation.
+
+Genrealy, use string interpolation to display string data and property binding to dynamically edit properties of html elements, components, etc. 
+
+Don't mix them in each other!
+
+NO [disabled]="{{ !allowNewServer }}"
+
+EVENT BINDING
+
+React to events. Do something on button click. 
+
+export class ServersComponent {
+	allowNewServer = false;
+	serverCreationStatus = 'No server was created!';	
+	constructor() {
+		setTimeout(() => {
+			this.allowNewServer = true;
+		}, 2000);
+	}
+
+	ngOnInit() {
+
+	}
+
+	onCreateServer() {
+		this.serverCreationStatus = 'Server was created!';
+	}
+}
+
+<button
+	class="btn btn-primary"
+	[disabled]='!allowNewServer'
+	(click)="onCreateServer()">Add Server</button>
+<app-server></app-server>
+<app-server></app-server>
+
+
+Can also put code in quotes instead of calling a function. 
+
+Can console.log() elements to see which properties and events it offers. For events, don't bind to onclick but only to click (=> (click)). Can also search MDN.
+
+Can listen for input and for other events
+
+<label>Server Name</label>
+<input
+	type="text"
+	class="form-control"
+	(input)="onUpdateServerName($event)">
+<button
+	class="btn btn-primary"
+	[disabled]='!allowNewServer'
+	(click)="onCreateServer()">Add Server</button>
+<p>{{ serverName }}</p>
+<app-server></app-server>
+<app-server></app-server>
+
+$event -> reserved variable name for data sent with event. 
+
+export class ServersComponent {
+	allowNewServer = false;
+	serverCreationStatus = 'No server was created!';	
+	serverName = '';
+	constructor() {
+		setTimeout(() => {
+			this.allowNewServer = true;
+		}, 2000);
+	}
+
+	ngOnInit() {
+
+	}
+
+	onCreateServer() {
+		this.serverCreationStatus = 'Server was created!';
+	}
+	
+	onUpdateServerName(event: any) {
+		this.serverName = (<HTMLInputElement>event.target).value;
+	}
+}
+
+TWO WAY BINDING
+
+Use a [()] syntax. [(ngModel)]="serverName". 
+
+!Important - in order ot use 'ngModel', the FormsModule (from @angular/forms) needs to be added to imports[] array in the AppModule (should be there by default in CLI project). Also need to import @angular/forms in app.module.ts file. 
+
+Will trigger on input event and update serverName in component automatically. Also will update value of the input element if serverName changed somewhere else. 
+
+<label>Server Name</label>
+<input
+	type="text"
+	class="form-control"
+	[(ngModel)]="serverName">
+<button
+	class="btn btn-primary"
+	[disabled]='!allowNewServer'
+	(click)="onCreateServer()">Add Server</button>
+<p>{{ serverName }}</p>
+<app-server></app-server>
+<app-server></app-server>
+
+export class ServersComponent {
+	allowNewServer = false;
+	serverCreationStatus = 'No server was created!';	
+	serverName = '';
+	constructor() {
+		setTimeout(() => {
+			this.allowNewServer = true;
+		}, 2000);
+	}
+
+	ngOnInit() {
+
+	}
+
+	onCreateServer() {
+		this.serverCreationStatus = 'Server was created!';
+	}
+	
+	onUpdateServerName(event: any) {
+		this.serverName = (<HTMLInputElement>event.target).value;
+	}
+}
+

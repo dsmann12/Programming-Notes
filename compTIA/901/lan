@@ -1,0 +1,804 @@
+LOCAL AREA NETWORKING
+
+Primary hardware tech used on networks today is standard called Ethernet. Great for getting frames from one device to the next. But doesn't provide netowrk, doesn't share resources. 
+
+network capabilities of system to share resources, to access shared resource, and communicate over this plumbing to get things done.
+
+Olives, tomatoes, and stakes. 
+
+Idea behind networking was to connect small groups of computers that were near eachother physically together to get work done.
+
+Local Area Network - Microft and Novell Netwware (MS predeccessor). Number of computers physically connected to each other via switch and are all part of same broadcast domain.
+
+Sharing folders and sharing printers. If computers physically close, then email and IM don't make sense. 
+
+Computers only have MAC addresses so must have naming system to share folders and printers. Could give PCs names. MS used NetBIOS/NetGUI? to do this. As each pc booted, it would boradcast its name and mac address so other computers knew. a
+
+How interconnect millions of networks. 
+
+NetBIOS/NetGUI didn't cut it cause broadcast. Can also link switches. More broadcasts means networks would be busy reading broadcasts all the time. Work wiould never get done.
+
+Nededed something that would separate LANs from each other and create an ID for different LANs. 
+
+Protocols needed to break up data one one end and reassemble chunks on other. Also, if NIC changed in machine, then MAC address is changed. So there needs to be an identifier above MAC addresses, the device name. 
+
+Network Protocol - software takes the incoming data received by the network card, keeps it organized, sends it to the app that needs it, and then takes outgoing data from app and hands it to the NIC to be sent over the network. 
+
+Protocol stacks - combingation of multiple simple protcols. 
+
+TCP/IP Trnasmission Control Protocol/Internet Protocol - not actually one protocol. Actually a bunch. Need OS software to name devices on networks. Primary protocol of most modern networks, including the Internet. For device to access Internet, it must have TCP/IP loaded and configured properly.
+
+Switches don't know how to read logical addresses (a name). 
+
+Router - box that does not care about MAC addresses. Only care about logical addresses. Plug routers into switches. Now router acts as intermediary between two LANs. Device that has at least two IP addresses: one that connects to a LAN switch and one that connects to the "next network" whether an ISP or another router. 
+
+If PC B.1 wants to send data to computer in A.1. Uses logical addresses. 
+
+Packet - data still in there. Uses logical adddresses instead of MAC addresses. Device encapsulates its data into Ethernet frame. Transmits to MAC Address of router. When in Router, Router has table that defines where all networks are. So router, unpacks frame, throws Ethernet stuff away, and writes MAC addresses for proper computer to frame and send sit to proper device. Packet never changes. Data inside and addressing never changes. 
+
+NETWORK ADDRESSING WITH IPv4
+
+Network address must:
+1. Uniquely identify the machine
+2. Locate that machine within the larger network. 
+
+IP Address - identifies the node and the network on which it resides. Unique ID number for your system on the network. 
+
+Most systems rely on IPv4 addressing. Consists of 4 sets of eight binary numbers, each separated by a period. Dotted decimal notation. 
+
+TCP/IP Address 192.165.1.1
+
+NEeded granularity because it predicted millions o fdevices. Idea was routers spread about country would be connected by high speed opticla lines. Routers in turn connect multiple LANs. Backbone of Internet. Original concept was these were top routers of Internet. Each router assigned number. Could use any number between 0 and 255 not including those numbers. 1-254. Other routers would want to connect to major router, not to backbone but to a backbone router. Idea was one would be 14.10, 14.11, 14.12 for major router 14. Etc. Then other routers will be 14.11.22, etc and next numbers would be for individual computers. 14.11.22.5 for PC 5. 
+
+Reason TCP/IP has 3 dots is because they originally thought you would never be more than 3 routers away from backbone of Internet. Already working on replacements. But TCP/IP will always be 4 values from 1-254 with three dots in between. 
+
+
+NETWORK IDs and SUBNET MASK
+
+Every device on LAN has to have TCP/IP address. 
+
+How do you organize that?
+
+Nodes - individual devices on a network. 
+
+Nodes cabled to a switch. Other connection on switch goes to Router. One side of router is Ethernet and other is connected to cable modem. 
+
+Lots of devices today are switches and routers and even may have wireless access points. 
+
+Lots of traffic on network. Still need to acces Internet. 
+
+So needa  way to tell network that one conncetion is LAN connection and other an Ethernet connection looking for Internet.
+
+ipconfig - command line command for Windows. Tells Ethernet card settigns. 
+
+Shows UP address. Notice IPv4 or IPv6. Also show subnet mask often 255.255.255.0 and a default gateway often 192.168.4.1.
+
+When setup Network, you can decide that some values on Network are the same. That all computers are 192.168.4.x. The 4th value is optional one. 
+
+*Routers also get IP addresses. Can be 192.168.4.1*
+
+Network ID - defines network. 192.168.4 is Network ID. 
+
+How do we tell individual computers this?
+
+Subnet mask - When computer sees 255 it reads that these have to match and last digit (0) can be optional.
+
+192.168.4.10 wants to talk to 192.168.4.11. When it gets ready to send out packet, it will look at Subnet Mask and see that first 3 values match. That tells device that it can send packet directly to other computer. 
+
+What if wants to send it to 27.13.14.6. 
+
+Computer taks a look at subnet mask and sees first three numbers don't match its own. When sees that it knows to send packet to Router or Default Gateway.
+
+Default gateway - must have default gateway punched into system in order to connect to Internet. Default gateway is IP address of Router itself. Port on router that connects to your LAN. Address devices use to send data to anything outside your network ID. 
+
+Subnet Masks lets device know where network ID is and when to send things out to Internet. Disinguishes which part of IP address identifies the network ID and which identifies the host. It masks the network portion of IP address.
+
+255.255.255.0 - 255 shows parts that make up network ID. 0 shows part that is host ID. 
+
+IP Conflict - two devices with same IP address cannot talk to each other and other PCs don't know where to send data.
+
+Classless Inter Domain Routing (CIDR) - works easily in binary but a little less prettily when show number in octets. 
+
+255.255.255.0 = 11111111.11111111.111111111.00000000
+
+Called a /24 (whack twenty-four). Offers up to 254 IDs. 
+
+If want more hosts, use a subnet mask with fewer ones. 
+
+11111111.11111111.11110000.00000000
+
+2^12 so 4094 unique addresses in a /20 network ID. 
+
+255.255.240.0
+
+Network Administrator basically decide swhat network ID is going to be. Job as tech is to go into Windows systems and est things up. 
+
+Control Panel - Network and Sharing Center. Change Adapter Settings. Click on regular Ethernet card, right click and select properties. Go down to Internet Protocol Version 4 and select properties.Two ways to set up IP address, Subnet mark, and default gateway. Statically (not done much) or dynamiccaly (DHCP). 
+
+Set A Static IP Address - provide IP addresses, subnet mask, and default gateway. 
+
+By convention, router is usually .1 of network ID. 
+
+Within Network ID, all computers have same Subnet Mask.
+
+DYNAMIC ADDRESSING
+
+Part of reason can just buy router and plug things in, it all just works.
+
+Dynamic Host Configuration Protocol (DHCP) - Somewhere on network you have a DHCP server. DHCP server has to be configured, does not configure itself automatically. Set it up to say will give out 192.188.4.50 to 192.168.4.100. Computers boot and broadcast out that they need IP address. DHCP server will respond and give them IP address, Subnet Mask, Default Gateway, and other things. 
+
+How set up systems for DHCP. Pretty much every version of Windows now is configured for DHCP.
+
+Option "obtain IP address automatically" enables DHCP.
+
+When DHCP fails. 
+
+If DHCP server goes down, you may lose IP address. 
+
+APIPA Address - Automatic Private Internet Protocol Addressing. 169.254.86.149.169.254 address with two random last numbers. If DHCP server goes down, don't automatically lose IP address but if restart computer or network cable unplugged, PC will try to access DHCP server again to get IP addresses. Windows designed to go to these APIPA addresses if cannot access DHCP. Mean on a DHCP client and not connected to DHCP server. 
+
+Internet Assigned NUmbers Authority (IANA) nonprofit organization responsible for assigning IP addresses and managing root servers. Set aside 169.254.0.1 to 169.254.255.254 for this purpose. 
+
+If copmuter system cannot contact DHCP server, computer randomly hooses an address in form of 169.2544.x.y(where x.y is the computer's identifier) and a 16bit submask (255.255.0.0) and broadcasts it on the network segment (subnet). If no other computer responds to address, system assigns this address to itself. When using APIPA, system can communicate only with other computers on same subnet that also use the 169.254.x.y range with a 16bit submask. 
+
+Must reestablish DHCP server connection. 
+
+ipconfig /renew - causes IPIP address to reset. 
+
+ipconfig /release - causes machine to forget its IP address
+
+Weird scenarios where no one can get on Internte but can still send files and such. Using APIPA. Means problem with DHCP server. 
+
+Rogue DHCP Server - hands out unauthorized IP addresses.Will mess network up. If see another Network ID that is not yours. 
+
+Must be plugged in for APIPA to work. If unplug network, it thinks its disconnected. 
+
+Where APIPA comes from
+
+Control Panel - Netowrk and Sharing center - Change Adapter Settings = Internet Protocol Version 4 - Alternate Configuration
+
+-Sets failover behaavior if no DHCP server available. Way to say I want PC to do this if DHCP server fails. Options are Use APIPA or Static IP address settings. 
+
+Security: No DHCP and each computer uses statically assigned addressed. 
+
+Common with laptops, if on network with DHCP, it will get a DHCP address, but at home, no DHCP sever, so it will fallback to set address instead. 
+
+IPv6 - replacing IPv4. 128bit. So 2^128 which is 3.4 x 10^38. Uses 8 hextets or fieldsm consisting of 16 bits. Separated by semicolons. 
+
+2001:0000:0000:3210:0800:200C:00CF:1234
+
+Can be shortend. Leading 0s can be removed and 0 hextets can be combines using ::. Only one use of :: allowed.
+
+2001::3210:800:200C:CF:1234
+
+FEDC:0000:0000:0000:00CF:0000:BA98:1234
+FEDC::CF:0:BA98:1234
+
+0000:0000:0000:0000:0000:0000:0000:0001
+::1
+
+IPv6 uses subnet and /x CIDR nomenclature where /x refers to number of bits in subnet mask. 
+
+FEDC::CF:0:BA98:1234/64
+
+IPv6 Sim
+
+IPv6 works differently than IPv5. 
+
+When computer running IPv6 boots up, it gives itself a link-local address, IPv6's equivalent of IPv4 APIPA. First 64 bits of link local address are FE80::. So FE80:0000:0000:0000. 
+
+IPv6 gives OS choice on how to make last 64 bits of IPv6 address.
+
+1, Uses a random value. Windows does this. When activate a NIC, Windows simply makes a random value for last 64 bits. Once created, this unique value will never change. 
+
+2. Build them from MAC address of the NIC (called Extended Unique Identifier, 64 bit, or EUI-64). Linux/MAC. 
+
+To foce windwows to use MAC address:
+
+netsh interface ipv6 set global randomizeidentifiers=disabled
+
+IPv6 Subnet Masks - function same as IPv4 subnets, but two new rules:
+1. Last 64 bits of IPv6 address are generated randomly or using the MAC address, leaving a max of 64 bits for the network ID. So no subnet is longer than /64. 
+2. The IANA passes out /32 subnets to big ISPs and end users who need large allotments. ISPs and others may pass out /48 and /64 subnets to end users. 
+
+So vast majority of IPv6 subnets are between /48 and /64. 
+
+Global Addresses - to get on Internet, a system needs a second IPv6 address called global address. Most common way to get one is to request it from default gateway router, which must be ocnfigured to pass out global UPv6. When plug a computer into a network, it sends out a very special packet called a *router solicitation (RS)* messsage looking for a router. Router hears htis message and responds with a *router advertisement (RA)*. RA tells computer its network ID and subnet (together called the prefix) and DNS server (if configured). Once computer gets prefix, it genreates the rest of the addres jus tlike with link-local address. 
+
+NOTE: Most Windows machines have three IPv6 addresses: 1. Link local address and two global addresses. One global address stays the same whie second is temporary address used to make it harder for system to be tracked by IP
+
+Global address is true Internte address. If another pc is running IPv6 and also has a global address, it can access your system unless you have some sort of firewall. 
+
+Process:
+1. An IPv6 pc boots up and sends out a RS message (FF02::2)
+
+2. An IPv6 router hears request and then sends to copmuter a router advertisement containing the prefix and DNS. Exmaple: 2001:470:ABCD:1/64
+
+3. Computer takes prefix and adds the EUI-64 or a random value. If MAC address is 00-0C-29-53-45-CA then address is 20C:29FF:FE53:45CA
+
+4. Putting prefix with last half gives following global address: 2001:470:ABCD:1:20C:29FF:FE53:45CA
+
+NAT
+
+Internet was starting to run out of IP addresses about 10 or 20 years ago. 
+
+Found way to have routers share common IP addres among many computers. 
+
+Network Address Translation (NAT) - most common way to do this. Presents an entire LAn of computers to Internet as a single machine. People on Internet only see public IP address, the one ISP gives you. Acts as a firewall. 
+
+Gateway Router - named because usually only have two connections. An Internet connection and a switch that connects to other computers. WAN - IP address given by ISP. LAN address is punched by me when configuring router. 
+
+Packet comes from computer on LAN and sent to other address. FROM address is private and should not be sent out on Internet. NAT software in router looks inside packet, grabs unique information, adn writes this info into a NAT table. Then rewrites individual computer's address with its public IP address. 
+
+When packet comes back it, NAT function uses reference table with information and rewrite's original device's private IP and sends packet to LAN network. 
+
+Dynamic NAT (DNAT - many computesr can share a smaller pool of routable IP addresses. LAN traffic uses the internal private IP addresses. When computer requests iformation beond the network, the NAT doles outa routable IP address from its pool for the communication. 
+
+SPECIAL IP ADDRESSES
+
+Broadcast = 255.255.255.255 (FFFFFFFF)
+
+Access another computer:
+
+pint 192.158.4.2
+
+Loopback - to ping yourself. 127.0.0.1.. AKA localhost. Can do ping localhost. 
+
+Automatic Private IP Addresses - always 169.254.x.x
+
+Private IP Addresses - These addresses are not to be used on Internet itself. Can be used inside NAT networks but cannot make server with these addresses.
+
+10.x.x.x - private 
+
+172.16.x.x - 172.31.x.x - private
+
+192.168.x.y - You pick third value. Most famous type of private IP addresses. 
+
+PING AND IPCONFIG
+
+90% of problems with networks can be handled with two tools built into OSes:
+
+ping - checks to see if a node is reachable. Can perform IP address to name translation. Sends packet to device and see if device responds back. Can see if device is connected, if on same network ID, if working together in tCP/IP level. 
+
+Windows - gets 4 responses back. 
+
+-t cause continuous pinging. Works this way be default in other OSes. Hit CTRL-C to stop. 
+
+ping 127.0.0.1 pings local network. Normally pinging LAN. ping has problems connecting to devices far far away. 
+
+ipconfig - check if have problem connecting. Shows basic IP configuration. Can verify IP address, default gateway, subnet mask, etc. If worried about self. 
+
+Can't get internet? ping router (default gateway). If getting router, then must mean some other issue involved. 
+
+ipconfig /all - shows more IP congurations including MAC address and information
+
+Generally don't like trying to ping things far away. Lots of devices have firewalls that prevent pings from being responded to. Common for web servers and routers. 
+
+ping 8.8.8.8 - DNS
+
+ping hub.totalsem.com - can get IP address this way
+
+ipconfig /flushdns - clears DNS
+
+TCP, UDP, and ICMP
+
+Not just one protocol called TCP/IP. 
+
+IP just has to do with numbering system, how to give devices IP addresses
+
+TCP runs over IP. Tells how to communiate. IP just gives addresses.
+
+TCP (Transmission Control Protocol) - most common protocol that's used with IP.
+
+TCP has number of features that make it popular. All browsers use TCP.
+1. Connection oriented - when two devices decide to talk over TCP protocol, TCP negotiates a connection between client and server. Have to go through process basically saying hello are you ready. Once connction is made, they do what they do, then say bye.
+
+UDP Uesr Datagram Protocol - Datagram means unacknowledged. Not connection oriented. Connectionles. Just starts sending data assuming device is ready. UDP has a lot less overhead and is much faster than TCP. DHCP uses UDP because its faster and can count on DHCP devices to be out there.
+
+ICMP Internet Control Message Protocol - used for tiny utilities. Run automatically by network cards. Seen on ping. Connectionless but only one packet. With TCP and UDP can send as many packets as want. 1 packet only for ICMP. 
+
+TCP/IP - different type of protocol. Supports File and Printer Sharing and adds a number of unique sharing functions lumped together under term TCP/IP services. Such as Hypertext Transfer Protocol (HTTP). SSH, etc. Goal of TCP/IP is to link any two hosts whether the two computers are on the same LAN or on some other network within the WAN. 
+
+Has number of unique settings you must configure correctly to ensure proper network functionality. 
+
+Common TCP/IP Tools
+
+Ping - tool to check if can talk to another system. 
+
+-t - continuous ping until stopped in Windows. Default behavior in linux
+
+-l - specify size of packet to send. Good for diagnosing specific problems with routers
+
+ipconfig/ifconfig - provides quick glance at network settings
+
+/all - shows all TCP/IP settings
+
+If using DHCP, can renew or release IP address
+
+ipconfig /renew
+ipconfig /release
+ipconfig /flushdns
+
+nslookup - enables you to determine exactly what information the DNS server is giving you about a specific hostname. 
+
+tracert/traceroute - shows the different IPs a packet hops through to get to destination
+
+netstat - show TCP/IP info for ports on device
+
+net - enables you to view a network quickly in Windows. 
+
+net view <computer name> - shows any shares on that machine and whether they are mapped drives. 
+
+net view server1
+
+If want to map Research share to the X: drive, type:
+
+net use x: \\server1\research
+
+nbstat - netbios. Can help troubleshoot naming issues
+
+nbstat -n -> shows netbios info for local computer
+
+nbstat -A - can query a remote machine by IP to find out its NetBios name. 
+
+nbstat -c - can see all names that NetBIOS has in its local cache
+
+PORT NUMBERS
+
+Every computer has unique IP address. 
+
+One computer must be client and other must be resource. 
+
+IP address allows us to talk to computer, but how do we talk to server software. 
+
+Web server and email server in same machine. Web packets must go to web servers and email packets must go to email server.
+
+Port Number - value from 0-65535 part of every TCP or UDP packet. Each has two port numbers. First is used by receiving system to determine program that needs this data. Second is like a return address. Receiving system uses this when it responds. 
+
+All serving software programs designed to listen on one or more port numbers.
+
+Web servers - port 80
+Email servers - differernt servers depending on function, 25,110.
+
+Computer can also be a file server, email server, etc. 
+
+Computer A wants webserver from computer B. Sends data with port 80 and ethereal port number. Computer B sees port 80 to determine which program gets data. Saves etherial port number so computer A knows which browser window or tab gets the data.
+
+Etheral Port Number - always quite large and generated arbitrarily by client device itself. 
+
+Every web server designed to listn on port 80. 
+
+First 1024 port numbers are well known. 
+
+21 - FTP
+22 - SSH
+23 - TELNET
+25 - SMTP
+53 - DNS
+80 - HTTP
+110 - POP3
+143 - IMAP
+443 = HTTPS
+3389 - RDP
+137-139 - NETBIOS/NETBT
+445 - SMB/CIFS
+427 - SLP
+548 - AFP
+
+WORKING WITH CONNECTIONS/SESSIONS
+
+Know what computer is talking to at any moment. 
+
+netstat - command line tool show connections to and from computer.
+netstate -n - gives IP addresses. TIME_WAIT - after web page is handed to client. 
+
+netstat -a - shows all network statistics. Wants to see every connection whether it is active or just listening or whatever.
+
+Resource Monitor - new tool in Windows. 
+
+TCPVIEW - GUI program. Free. Shows network connection information in graphical format in real time. 
+
+UNDERSTANDING DNS
+
+Phone contact list. Don't remember cell numbers so use name IDs. 
+
+Browser wants to talk to web server. Can only talk to it with IP address. But hard to memorize IP addresses.
+
+Want contact list for servers on Internet. 
+
+Domain Name System (DNS) - just one thing. Zillions of computers over world whose only job is to resolve IP addresses based on Fully Qualified Domain Name (FQDN) ftp.microsoft.com, http://www.google.com. Give IP addresses to your computer. 
+
+DNS Servers - keep databases of IP addresses and their corresponding names. 
+
+www.totalsem.com -> webserver. 
+
+
+Number of fully qualified top level domain names.
+.com - general business
+.org - nonprofit organization
+.gov - government organizations
+.edu - educational organizations
+.mil - military organizations
+.net - Internet organizations
+.int - International 
+
+Now also .uk, .biz, .tv, etc
+
+Must be established if want computer to be part of DNS system. 
+
+hostname -
+www. - name of one individual computer within totalsem domain. Used by convention. Could easily be timmy.totalsem.com but not convention and people won't know. 
+ftp - for ftp server. 
+mail - for mail server
+
+Name of host can be anything but there are conventions. 
+
+Secondary domain - millions. Can have many dots but not typical. 
+
+DNS servers - create and respond to DNS queries
+
+Authoritative server - for certain domain. dell.com. If something queries this DNS server, it has info we need to get information.
+
+Probably controlledby ISP. Built into network. ipconfig /all will show DNS settings. 
+
+Computer sends out query to your DNS server. Then DNS server puts you on hold (web broswer shows waiting ....com). Waiting for DNS resolution process to take place. Your computer has built into it the DNS settings for local DNS serer. Local DNS server has *root hints*. 13 different IP addresses that basically never change. Are root DNS servers that are set up all over world. Will randomly or round-robin, pick one of these and go to root server ("."). Root server job is to get connection to closest .com server. .com server is for anything associated with .com/.edu/.org etc. Your DNS server asks .com server what IP for authoritative server for website is. It responds back with IP address of website. Then goes to authoritative server. Authoritative server will give it specific IP for website. Now browser can talk to coputer. 
+
+Once PC has IP address, it can save IP address of website into DNS cache in case needed again. Also basically any DNS server caches that information as well. 
+
+DNS servers go up and down all the time. Can set up popular DNS server names. 
+
+google DNS server - 8.8.8.8. Very powerful, works for about anybody. Often faster than ISP server. 
+
+If have own in house DNS server, if try replace it with Google one, your DNS server might help you resolve for local computer in network which is BAD. 
+
+DEALING WITH DNS
+
+Sometimes DNS can give trouble. How to configure DNS and deal with it when there is trouble.
+
+Go to Control Panel - Network and Sharing Settings - Ethernet - Properties - Internet Protocol Version 4 - 
+
+Obtain DNS Server Automatically -> DHCP will send out DNS information too if properly configured
+
+Use Following DNS Server Address - set manual address. Goes down enough that you set a preferred and an alternate. 
+
+Popular DNS
+
+8.8.8.8
+8.8.4.4
+4.4.2.2
+
+Can setup custom DNS server at home or office. 
+
+If try this and it doesn't work, its because a lot of DNS servers that are local are set up in such a way that you can't talk to other computers in network without talking directly to that DNS server. More of a home trick or for laptop. 
+
+ipconfig /all - to see DNS information
+
+DNS problems? - no internet.
+
+Use ping to test. Like ping google.com. If DNS server not working, it won't be able to find server without IP Addres.
+
+Security Issues 
+
+NSLOOKUP - rarely used anymore. CMD utility. Designed to talk to DNS server. Can query it. Ask it all computers it is connected to. Hackers could use that information so now DNS servers may not respond to nslookup. Tests DNS server funtionality. Use for name to address translation. 
+
+nslookup 8.8.8.8 - basically said to change server to that computer. If used with non-DNS server it will give error. 
+
+WINDOWS NAMING
+
+How do computers know the names of other computers on network. 
+
+Not using DNS. 
+
+SHARING
+
+Every OS uses specific network sharing permissions to allow or restrict access to shared resources. 
+
+On a non-NTFS volume like optical media disc or flash USB, only have three levels of permissions: 
+Read, Read/Write, Owner. MS uses NTFS for uathoerization iwth both local users and network users. So you use network share to actually share reasource, but use NtFS to say what folks can do with that resource.
+
+If share a folder in a NTFS drive, you must set both the network permissions and the NTFS permissions to let others access shared resources. Usually set network permission to give Full Control while setting more specific NTFS permissions.Open security tab to set NTFS permissions. 
+
+NETWORK ORGANIZATION
+
+MS designed Windows netowkrs to work in one of three categories:
+1. Workgroups
+2. Domains
+3. Homegroups
+
+Differ in control, number of macines needed, cmpatibility, and security.  
+
+Workgroup vs Domain
+
+When initially install windows, give it a domain and give it a type of network. Either a workgroup or a domain.
+
+Workgroup - simplest form of networking within windows. Computers connected all called peers. When boot, they broadcast their names and other computers take note of their names and other addresses. Default for Windows. 
+
+By default, all computers on network are assigned t oa workgroup called WORKGROUP.Every computer on network needs the same workgourp name to share resources. Lack centralized control over the network; all systems connected to network are equals.
+
+System -> Advanced System Settings -> Computer Name
+
+Workgroup typically defaults to WORKGROUP. When in workgroup, computers start broadcasting out and computers listen. 
+
+User Names and Passwords
+
+User names and passwords are stored in an encrypted format on computer. Work well when access own computer, but these sam e user names and paswords are used to access shared resources on other computers in the network. 
+
+
+Sharing A Folder
+
+All PCs can share folders and printers out the box. 
+
+Right-click folder and select Share With | specific people to get to File Sharing dialog box. 
+
+By default, you would see every user account that's on this system. May give an account Read or Read/Write permissions wihle the person who created the folder is assigned as Owner. 
+
+Read - Can open files
+Read/Write - can save files and open files
+Owner - same as read/write but can set the permissions of others on the folder. 
+
+When log onto your PC, you are accessing a user name and database on that computer. <computer name>\<user name>. If log into Computer A as David, you are logged onto CommputerA\David. But will need to be logged as ComputerA\David always to access files in shared folder. 
+
+Three choices:
+1. Can make people log on to shares as just shown
+2. Can create the same accounts (user names and passwords) on all the computers and give sharing permissions to all the users for all the shares
+3. Can use one account on all computers. Everyone logs on with same account, and then all shares are by default asssigned to same account.
+
+Domain 
+
+Domains - require specific server to control access to the network's resources. Means tracking each user, each resource, and what each user can do to each resource. Must have a computer running Windows Server. 
+
+Administrator creates a domain on the Windows Server system, which makes that system the *domain controller (DC)*. Administrator also creates new user accounts on the domain controller. 
+
+Once network is set up as a domain, each PC on network needs to join the domain (which kicks you off the workgroup). When log on computer that's a member of a domain, Windows will prompt you for a user name. 
+
+Can manage a domain from command line with the netdom command. 
+
+If join domain, must have an account on the domain. You log directly on the domain, not log onto your computer.
+
+Domain accounts - Network administrator has already created a domain name for you that allows you to log entire domain. 
+
+Can log into any computer within domain, and desktop and personal stuff will log in with you. 
+
+Say you have workgroup and then add domain controller. Moment added and have devices join domain, these computers will no longer broadcast. They will ask domain controller to log them into domain. 
+
+Lot of domains have names that look like web addresses. Also use nomenclature <domain>\<domain username>''
+
+totalhome.local\Mike
+
+Can log onto any comoputer on domain using the same domain account. Don't have to set up local accounts on each computer. Call this feature single sign-on. 
+
+If domain controller also a DNS server (and always are), then why put DNS information on individual systems. If not member of domain, then will go to other DNS. 
+
+Apple and Linux - SAMBA - give them features that allow them to act as windows systems. So linux or apple devices can join domain. 
+Installing another computer. Computer is not like regular computer, instead it is running Windows Server. To talk to it, use Remote Desktop. 
+
+Remote Desktop Protocol - Have remote conncetion to server. Not to be confused with regular versions of windows. Home editions cannot use Domain networks. 
+
+have built in DHCP and DNS servers. 
+
+Server Manager - software to manage Windows Server. 
+
+Active Directory Domain Services - server. Big kahuna of domain. Can see name of domain. Not have .com or .org. For little in house network. 
+
+Next is to get individual systems to join domain. 
+
+System -> Advanced system Settings -> Computer Name
+
+Click change. 
+
+Homegroup
+
+Workgroups provide almost no security and require lots of signing on to acceess resources. Domains provide single-sign on but require special servers and lots of administration. 
+
+Homegroup - introduced in Windows 7. Connects a group of computers using a common password. Shares Windows libraries. Each computer can be a member of only one homegroup. 
+
+Open HomeGroup Control Panel applet. Click the Create a homegroup button. Five options: Pixtures, Music, Videos, Documents, and Printers. Click next to see password. 
+
+Sharing Printers 
+
+Go to Printers. Right click on printer, select Sharing, and click Share this printer and give it a name. 
+
+ROUTERS
+
+Routers - interconnect broadcast domains. 
+
+Example: three network cards connected to three different broadcast domains. Each card has IP addres. 
+
+Router on far left connected to internet so called Wide Area Network (WAN). Other two are connected to plain LANs. 
+
+WAN					LAN					LAN
+12.14.75.3			173.15.44.1			192.168.15.1
+
+Most important to remember that routers don't care where packets come from, only where to they go to. Packets come in from different connections, must be sent to right place.
+
+Do this using Routing Table:
+
+IP (IP Address)				SUBNET MASK (SM)			INTERFACE - instructoins router uses to send packets out
+0.0.0.0						0.0.0.0						12.14.75.3
+192.168.15.x				255.255.255.0				192.168.15.1
+173.16.x.x					255.255.255.0				173.16.44.1
+
+First is default route (0.0.0.0), send through 12.4.75.3 unless addressed to one of other two IP addresses (192.168.15.0, 173.16.0.0).
+
+Packet:
+
+From: 173.16.22.6
+To: 8.8.8.8
+
+From: 12.14.75.16
+to: 173.16.49.201
+
+From: 192.168.15.4
+To: 255.255.255.255
+
+What router does when broadcasts come in? Devices on router still hear broadcast, but Routers eliminate them. 
+
+CONFIGURING ROUTERS
+
+SOHO Routers - Small Office/Home Office - support a few users. Typically are routers, and 4 port switches, and even wireless.
+
+Enterprise Routers - designed to support hundreds of users
+
+SOHO router always separates little network from Internet. Must plug into ISP. May have cable modem or DSL modem. Internet cable (WAN connection) is where you connect ISP. All other connections is where connect network to. If bigger network, could connect router with bigger switch. 
+
+INTALLING AND CONFIGURING A NETWORK
+
+To have network connectivity, need three things:
+1. A connected NIC - physical hardware that connecs the computer system to the network media
+2. Properly configured TCP/IP - Device needs correct settings for network
+3. Network client - interface that allows the computer system to speak to the protocol
+
+Full-Duplex - All modern NICs run in this mode. Meaning they can send and receive data at the same time. 
+
+Half-duplex - means that device can send and receive but not at the same time. Walkie-talkies
+
+Link lights - status indicators. NICs and switches have them and give clue to status of network. Usually a steady light means a proper connection and and off or flickering light means a connection problem
+
+Activity light - Turns on when card detects network traffic. Flickering when operating properly.  
+
+Wake-On-LAN - Turn on or wake up powered down PC. Can be handy to wake up PCs when not near them. Use a second PC to send eiher a special pattern or a *magic packet* - a broadcast paket that essentially repeats the edsstination MAC address many times. 
+
+Go to Control Panel and open Network and Sharing Center, click Manage network connections or Change Adapter Settings on left. Right click on the adapter and select Properties. Click the Configure button in the Properties dialog box and select Power Management. To enable Wake-On-LAN, make sure checkbox next to  Allow this device to wake the computer is checked. Optionally, can select Only allow a magic packet to wake the computer. 
+
+Vast majority of NICs and switches use a feature called *autosensing* to accommodate very old devices that might attach to the network and need to run in half-duplex mode. 
+
+Setting Up The Router
+
+First want to connect to SOHO router. But usually best to connect Ethernet port to router via a LAN port. 
+
+Pretty much all will get you on Internet without doing any configuration at all. Not a good thing. Provide no security. 
+
+Must start talking to router and get into. 
+
+Most common way to talk to router is via its own little built in web server. 
+
+Router is automatically a DHCP server. 
+
+All routers come with default IP address from factory. 
+
+192.168.1.1 or 192.168.0.1
+
+ipconfig -> then look at default gateway. It is the router. Type ip address into web browser.
+
+Every router has default username and password. 
+
+First, change from default password and username. Websites dedicated to telling people what these are. 
+
+Also, can change network ID. By default, it passed 192.168.1.x address. Nothing inherently bad about that except that hackers usually know this. So can change default ID to something non-standard. 
+
+Considered good ettiquette that router has .1 address. 
+Subnet Mask - 255.255.255.0 - means can support up to 244 computers. 
+
+When update router, PC won't know what IP address of router is. 
+
+Need to start documenting. Must know that. 
+
+Now, must make sure everyone can connect to router.
+
+Must st up DHCP and DNS.
+
+In LAN set up DHCP server. Set starting pool address and ending addres. Can limit amount of devices by messing with these numbers.
+
+Really nothing to set up for DNS. Router will connect to ISP and get DNS server setting and will automatically pass that server out as part of DHCP. 
+
+If need to connect to particular DNS server, could go into settings and type specific one in. 
+
+Universal Plug and Play (UPnP) - used by networking devices designed for residential space to seek out and connect to other UPnP devices. Enables seamless interconnectivity at cost of somewhat lowered security. 
+
+WAN
+
+Automatic IP - means router is a DHCP client on WAN side (DHCP server on LAN side). When fires up, will ask for IP address for next router up at ISP. 
+
+Static IP - have to pay extra. Regular internet accounts don't have them. Have static IP because maybe has servers or something. They will give you an email saying IP address, SM, and DNS etc is this. Must enter static IP address from ISP.
+
+PPoE - toolset that allows ISP to make you log in before they give you Internet. Then type in user name and password so you can get on. 
+
+Firewall - set up at least a little but of firewall. Can usually just enable them. 
+
+ADVANED ROUTER CONFIGURATION
+
+3 Very Specific Things:
+1. Port Forwarding
+2. Port Triggering
+3. Quality of Service (QoS)
+
+Port Forwarding
+
+Very important feature. 
+
+Internet connected camera. Want to be able to look at cmera from anywhere. Must use port forwarding.
+
+Camera is on network and trivial to access camera over this network. FireWall will prevent outside device from accessing to network addresses. FireWall blocks incoming connections on SOHO routers. Need to open it a little bit to allow this. 
+
+Must be careful. 
+
+Remember Router has WAN address. 
+
+Port Forwarding - opens one or more ports to internet requests. 
+
+Under WAN. If someone wants to come in at port 80, let them, but point them straight to camera. 
+
+Service Name - Custome name for device
+Port Range - Port being requested
+Local IP - Device to send requests to
+Local Port - port on device to take requests from
+Protocol - TCP. 
+
+Don't use port 80. Everybody is poking on port 80 on system looking for stuff. 
+
+Port Range - 8181. Non common port. To look at camera, would have to type WAN IP Address and then click :8181. Keeps most people out. 
+
+DMZ - demilitarized zone. Says anything that comes into internet, send it to one particular system. Let's anyone in. Not great. 
+
+Other scenario:
+
+FTP. Have laptop, want to access FTP server on Internet. FTP strange. Has certain modes. Router, if sees device going out on port, it will let data back in on same port. FTP on other hand listens on port 21 but takes data in on port 20. Router will block this instantly. 
+
+Must tell Router that if someone starts talking on FTP, allow incoming questions on 20 until done communicating.
+
+Port Triggering - similar to port forwarding but not permanent and must be started by device on LAN. 
+
+Description
+Trigger Port 
+Protocol
+Incoming Port
+Protocol
+
+Quality of Service (QoS)
+
+Routers can be made to work hard if there are many demands on LAN. Want to tell router that some type of traffic is more important than other types of trtraffic. That's what QoS is. 
+
+Systems play an important roe by tagging their frames, enabling network hardware to treat them according to rules defined by network administrator. 
+
+Been around a long time, however, some questions may be dated. 
+
+Want one type of connection (bittorrent) to throttle down if it uses too much data. 
+
+Smart QoS - built in that will figure it out on its own (game servers, VOIP, etc get priority). 
+
+Must type in upload and download bandwidth to set up Smart QoS.    
+
+Old Fashioned versoin.
+
+Service Name - may have service built in. 
+Source IP or MAC - optional to throttle specific source. 
+Destination Port - destination ports for service. 
+Protocol
+Transferred - how big of chunks have been transferred before QoS should turn on.
+Priority - 
+
+TROUBLESHOOTING
+
+No connectivity and intermittent connectivity. 
+
+Loopback test - tests Ethernet port. Needs a true loopback plug. 
+
+Time-domain relectometer - measures impedance in network cabling. If tester measures any impedance, something wrong with cable. 
+
+Can't connect to a shared resource?:
+-Don't have right share name.
+-Don't have required username/password. 
+-Don't have permission to use/access/connect to the shared resource
+-You're not on the right homegroup/domain/workgroup
+-Folder or printer isn't shared
+-Folder or printer doesn't exist

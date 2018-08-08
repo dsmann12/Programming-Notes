@@ -1,0 +1,258 @@
+REGULAR EXPRESSIONS
+
+Regular expressions are a powerful langauge for matching text patterns. 
+
+Python re module provides regular expression support. 
+
+Python regular expressoin search typically written as:
+
+match = re.search(pat, str)
+
+re.search() method takes a regular expression patter nand a string and searches for that pattern within the string. 
+
+If search is successful, search() returns a match object or None otherwise. 
+
+Therefore search is usually immedaitely followed by an if statement to test if search succeeded. 
+
+str = 'an example word:cat!!'
+match = re.search(r'word:\w\w\w', str)
+# If-statement after search() tests if it succeeded
+  if match:                      
+    print 'found', match.group() ## 'found word:cat'
+  else:
+    print 'did not find'
+
+'r' at start of pattern string designates a python "raw" string which passes through backslashes without change which is very handly for regular expressions. 
+
+Should always write pattern strings with 'r'
+
+BASIC PATTERNS
+
+Power of regular expressions is that they can specify patterns, not just fixed characters
+
+-a, X, 9 <-- ordinary characters just match themselves exactly. Meta-characters which do not match themselves because they have special meanings are:
+	.^$*+?{[]\|() (details below)
+
+-.(a period) -- matches any single character except newline \n
+
+-\w -- (lowercase w) matches a "word" character: a letter or digit or underbar [a-zA-z0-9_]. Not that although "word" is mnemonic for this, it only matches a single word char, not a whole word. \W (upper case W) matches any non-word character (anything but a word)
+
+-\b -- boundary between word and non-word. Space between words.
+
+-\s-- (lowercase s) matches a single whitespace character -- space, newline, return, tab, form [\n\r\t\f]. \S (upper case S) mataches any non-whitespace character
+
+-\t, \n, \r -- tab, newline, return
+
+-\d -- decimal digit [0-9] (some older regex utilities do not support \d, but they all support \w and \s
+
+-^ = start, $ = end -- match start or end of string
+
+-\ -- inhibit the "specialness" of a character. So for example, use \. to match a period or \\to match a slash. I funsure if character has special meaning, such as '@', can put a slash it front \@ to make sure it is treated as just a character
+
+BASIC EXAMPLES
+
+Regular expressions are dense and can require lots of thought
+
+Basic rule of regular expression search for pattern within a string are:
+1. Search proceeeds through the string from start to end, stoppin gat first match found
+2. All of pattern must be matched, but not all of string
+3. If match = re.search(pat, str) is successful, match is not None and in particular match.group() is matching text
+
+  ## Search for pattern 'iii' in string 'piiig'.
+  ## All of the pattern must match, but it may appear anywhere.
+  ## On success, match.group() is matched text.
+  match = re.search(r'iii', 'piiig') =>  found, match.group() == "iii"
+  match = re.search(r'igs', 'piiig') =>  not found, match == None
+
+  ## . = any char but \n
+  match = re.search(r'..g', 'piiig') =>  found, match.group() == "iig"
+
+  ## \d = digit char, \w = word char
+  match = re.search(r'\d\d\d', 'p123g') =>  found, match.group() == "123"
+  match = re.search(r'\w\w\w', '@@abcd!!') =>  found, match.group() == "abc"
+
+REPETITION
+
++ and * specify repetition in pattern
+-+ -- 1 or more occurences o fpattern to its left E.g. 'i+' = one or more i's
+-* -- 0 ore more occurrence of pattern to its left
+? - match 0 or 1 occurences of pattern to its left
+
+LEFTMOST AND LARGEST
+
+Search finds leftmost match for patern and second it tries to use up as much of string as possible
+
+#0, '', none count as false
+
+  ## i+ = one or more i's, as many as possible.
+  match = re.search(r'pi+', 'piiig') =>  found, match.group() == "piii"
+
+  ## Finds the first/leftmost solution, and within it drives the +
+  ## as far as possible (aka 'leftmost and largest').
+  ## In this example, note that it does not get to the second set of i's.
+  match = re.search(r'i+', 'piigiiii') =>  found, match.group() == "ii"
+
+  ## \s* = zero or more whitespace chars
+  ## Here look for 3 digits, possibly separated by whitespace.
+  match = re.search(r'\d\s*\d\s*\d', 'xx1 2   3xx') =>  found, match.group() == "1 2   3"
+  match = re.search(r'\d\s*\d\s*\d', 'xx12  3xx') =>  found, match.group() == "12  3"
+  match = re.search(r'\d\s*\d\s*\d', 'xx123xx') =>  found, match.group() == "123"
+
+  ## ^ = matches the start of string, so this fails:
+  match = re.search(r'^b\w+', 'foobar') =>  not found, match == None
+  ## but without the ^ it succeeds:
+  match = re.search(r'b\w+', 'foobar') =>  found, match.group() == "bar"
+
+Emails Example:
+Suppose want to find email address inside string 'xyz alice-b@google.com purple monkey'
+
+Attempt using r'\w+@\w+':
+  str = 'purple alice-b@google.com monkey dishwasher'
+  match = re.search(r'\w+@\w+', str)
+  if match:
+    print match.group()  ## 'b@google'
+
+Search does not get whole email address in this case because \w does not match the '-' or '.' in the address. Fix this using regular expressions features:
+
+SQUARE BRACKETS
+
+Square brackets can be used to indicate a set of chars so [abc] matches 'a' or 'b' or 'c'. Code \w, \s etc work inside square brackets too but with one exception that dot (.) just means a literal dot. 
+
+For emails problem, square brackets are easy way toi add . and - to set of chars which can appear around the @ with the pattern:
+r'[\w.-]+@[\w.-]+
+
+  match = re.search(r'[\w.-]+@[\w.-]+', str)
+  if match:
+    print match.group()  ## 'alice-b@google.com'
+
+Can also used a ash to indicate a range so [a-z] mataches all lowercase letters. To use a dash without indicating a range put dash last [abc-]. 
+
+An uphat ^ at start of square bracket set inverts it so:
+[^ab] - any char except 'a' or 'b'
+
+GROUP EXTRACTION
+
+The "group" feature of a regular expression allows you to pick out parts of the matching 
+
+Suppose want to extract the username and host separately. 
+
+To do this, add parentheses () around username and host in pattern, like this:
+r'([\w.-]+)@(\w.-]+)'
+
+Parentheses do not change what pattern will match, instead establish logical "groups" inside of match text. 
+
+On successful search, match.group(1) is match text corresponding to first left parenthesis. And match.group(2) is text corresponding to 2nd left parenthesis. 
+
+match.group() is whole match text as usual. 
+
+  str = 'purple alice-b@google.com monkey dishwasher'
+  match = re.search('([\w.-]+)@([\w.-]+)', str)
+  if match:
+    print match.group()   ## 'alice-b@google.com' (the whole match)
+    print match.group(1)  ## 'alice-b' (the username, group 1)
+    print match.group(2)  ## 'google.com' (the host, group 2)
+
+Common workflow is to write pattern for thing looking for, adding parenthesis groups to eract parts you want.
+
+FINDALL
+
+findall() is probably the single most powerful function in the re module. 
+
+findall() - finds *all* matches and returns them as list of strings, with each string representing one match. 
+
+  ## Suppose we have a text with many email addresses
+  str = 'purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+
+  ## Here re.findall() returns a list of all the found email strings
+  emails = re.findall(r'[\w\.-]+@[\w\.-]+', str) ## ['alice@google.com', 'bob@abc.com']
+  for email in emails:
+    # do something with each found email string
+    print email
+
+FINDALL WITH FILES
+
+For files, may be in habit of writing a loop to iterate over lines of file, and can then call findall() on each line. 
+
+Instead, let findall() do iteraction for you!
+
+Just feed whole file test into findall() and let it return a list of all the matches in a single step. (recall f.read() returns whole text file as a single string)
+
+FINDALL AND GROUPS
+
+() group mechanism can be combined with findall(). If pattern includes 2 or more parenthesis groups, then instead of returning a list of strings, findall() returns a list of *tuples*
+
+Each tuple represents one match of pattern and inside typle is group(1), group(2)...data. So if 2 parenthesis groups are added to email pattern then findall() returns a list of tuples each length 2 containing username and host
+
+  str = 'purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+  tuples = re.findall(r'([\w\.-]+)@([\w\.-]+)', str)
+  print tuples  ## [('alice', 'google.com'), ('bob', 'abc.com')]
+  for tuple in tuples:
+    print tuple[0]  ## username
+    print tuple[1]  ## host
+
+Can loop over list of typles to do some computation for each tuple. 
+
+If pattern includes no parenthesis, then findall() returns a list of string scorresponding to that single group. 
+
+(Obscure optional feature: Sometimes you have paren() groupings in the pattern, but which you do not want to extract. In that case, write the parens with a ?: at the start, e.g (?:) and that left paren will not count as a group result.)
+
+RE WORKFLOW AND DEBUG
+
+Can spend a lot of time debugging your own patterns because they are are so dense. 
+
+Set up run time so you can run a pattern and print what it matches easily. for example by running it on small test text and printing the result of findall(). If pattern matches nothgin, try weakening the pattern, removing parts of it so you can get too many matches. Then can work on tightening it up incrementally to hit just what you want.
+
+OPTIONS
+
+The re functions take options to modify the behavior of the pattern match. The option flag is added as an extra argument to the search() or findall() etc., e.g. re.search(pat, str, re.IGNORECASE). 
+
+-IGNORECASE -- ignore upper/lowercase difference for matching, so 'a' matches both 'a' and 'A'
+
+-DOTALL -- allow dot (.) to match newline -- normall matches anything but newline. If want to match a run of whitespace that may include a newline, you can just use \s*
+
+-MULTILINE -- within a string made of many lines, allow ^ and $ to match the start and end of each line. Normally ^/$ would just match start and end of whole string
+
+GREEDY vs. NON-GREEDY
+
+More advanced regular expression technique. 
+
+Suppose have text iwth tags in it:
+<b>foo<\b> and <i>so on<\i>
+
+Suppose trying to match each tag with pattern '(<.*>) -- what does it math first. 
+
+Greedy nature of .* causes it to match the whole '<b>foo<\b> and <i>so on<\i>' as one big match. 
+
+* goes as far as it can instead of stopping at first > (aka it's greedy)
+
+Extension of regular expression where add ? at the end such as:
+.*? or .+?
+
+Makes them non-greedy. 
+
+So pattern (<.*?>) will get just <b> and <\b> as second match and so on getting each <...> pair. 
+
+Style typically to use a .*? and then immediately its right look for some concrete marker (> in this case) that forces end of .*? run.
+
+Extension originated in Perl.
+
+Regular expression sthat include Perl's extenions are known as Perl Compatible Regular Expressions -- prce. 
+
+Python includes prce support. Many command line utils etc. have a flag where they accept pcre patterns. 
+
+Older but widely used technique to code this idea of "all of htese chars except stopping at X" uses square bracket style []. 
+
+Could write:
+[^>]*, which skups over all chars not >
+
+SUBSTITUTION
+
+re.sub(pat, replacement, str)
+
+Searches for all the instances of pattern in given string and replaces them. Replacement string can include '\1', '\2' wihch refer to group(1), group(2) and so on from original matching text.
+
+  str = 'purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+  ## re.sub(pat, replacement, str) -- returns new string with all replacements,
+  ## \1 is group(1), \2 group(2) in the replacement
+  print re.sub(r'([\w\.-]+)@([\w\.-]+)', r'\1@yo-yo-dyne.com', str)
+  ## purple alice@yo-yo-dyne.com, blah monkey bob@yo-yo-dyne.com blah dishwasher

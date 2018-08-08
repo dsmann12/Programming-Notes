@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What is a motherboard?</Question>
+					<Answer xml:space="preserve">Motherboard - provides foundation for PC. Each piece of hardware from CPU to exapnsion cards directly or indirectly plug into motherboard
+
+Contain wires -- called *traces* -- that make up buses of the system. Holds vast majority of ports used by peripherals, and it distributes the power from the power supply. 
+
+Modern motherboards are layererd *printed circuit boards (PCBs)*, copper etched onto a nonconductive material and then coated with some sort of epoxy for strength. Layers mark some of their comkplexity. Can see some traces on board, but every mobo about four or more layers thick. Layers contain a veritable highway of wires, carrying data and commands back and forth between CPU, RAM, and peripherals. Layered structure enables multiple wires to send data without their signals interfereing with each other. Also allows manufacturers to add complexity and additional components to board without extending overall length and width of board. Shorter traces also alow signals to travel faster than  if wires were longer. Also add strength to board itself.
+
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What are the three main variables and interrelated characteristics that define modern motherboards?</Question>
+					<Answer>1. Form Factor - determines physical size of mobo as well as general location of components and ports
+2. Chipset - defines types of processor and RAM mobo rfequires and detmerines to a degree the bubilt-in devices the mobo supports, including expansion slots.
+3. Components - built in components determine core functionality of system.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+		<value2>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483651</id>
+				<data>
+					<Question>What is form factor?</Question>
+					<Answer>Form Factor - case has nothing to do with manufacturers of other hardware. Motherboard screws in at correct, fitting place. Video cards, etc. Industry standardized shaped and layouts that enable mobos to work with cases and PSUs. Single form factor applies to all three components. PSU and mobo need matching connectors and different form factors determine conncetinos. Also defines how air moves around in case</Answer>
+				</data>
+			</ptr_wrapper>
+		</value2>
+		<value3>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483652</id>
+				<data>
+					<Question>Describe the AT form factor?</Question>
+					<Answer>AT - successor to XP Computer. IBM. Standardized holes for about everything. Slots, fan for power supply. Famous. Basically said, if you copy this we won&apos;t sue you. Dell, Gateway, Hitachi, Toshiba, etc copied the AT form factor. AT form factor became dominant. Air flow wasn&apos;t great. Low-profile computing was a weakness. Didn&apos;t specify where CPU should be. Riser cards. Lack of external ports. When PCs first invented, only devices plugged into PC were monitor and keyboard. Only dedicated connector was keyboard port. 
+
+NLX, LPX - tried to beat AT. Not very important.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value3>
+		<value4>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483653</id>
+				<data>
+					<Question>Describe the ATX form factor? What are its different variations?</Question>
+					<Answer xml:space="preserve">ATX - Mid 1990s. Intel. Been dominant ever since. Dominant for close to 20 years. Free. Intel pushed standard. 1995. By 1998, ATX overtook AT. ATX lack of anAT keyboard port, replaced witha rear panel that has all necessary ports built in. Not mini-DIN(PS/2) keyboard and mouse ports. Many improvements over AT. Position of PSU creates better air movement. CPU and RAM are placed to provide easier access and rearrangement of components prevents long expansion cards from colliding with CPU or Northbridge. Also placing RAM closer to Northbridge adn CPU offers enhanced performance. Shorter the wires, the easier to shield them and make them capable of handling double or quadruple the clock speed of mobo. 
+
+Full Size ATX - 12 x 9.6 inches. Came up with I/O area. Faceplates are same size and fit to motherboards. 
+
+Micro ATX - a little shorter but about aswide. Screw holes and I/O area are same size as full. Not just motherboard sizes, but PSU sizes as well.
+9.6 x 9.6 inches. Uses standard ATX connections. Fits into standard ATX case or microATX case. 
+
+Stanrdad ATX, Mini ATX, Micro ATX, Flex ATX. Flex ATX - 1999 by Intel - have max dimensions of 9 * 7.5 inches. 
+
+ATX Power Supplies - have very fixed dimensions. 
+
+Small Form Factors - Flex ATX. Low power, small systems. Point of Sale or Home Theater systems. 
+
+ITX - Via Technologies? Not standard ITX. 3 sizes are subforms of full ITX that never really came out.
+
+Mini-ITX - 170 x 170mm 
+
+Mini ITX - 6.7 x 6.7 inches. 
+Nano ITX - 4.7 x 4.7 inches
+Pico ITX - 3.8 x 2.8 inches
+
+Tiny mobos are commonly used for embedded systems and highly specialized devices such as routers. 
+
+One great benefit of SFF mobos is tiny amount of power needed to support them. 
+
+Are standard of low power PSU.
+
+Flex ATX or ITX Power Supply - small but long. Designed to fit in small form factor systems. Lower power produces less heat, enabling passive cooling, making less noise. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value4>
+		<value5>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483654</id>
+				<data>
+					<Question>What are proprietary form factors?</Question>
+					<Answer xml:space="preserve">Proprietary Form Factors - several PC makers make mobos that work only with their cases. Enable these companies to create systems that stand out from generic ones and push you to get service and upgrades from their authorized dealers. Some features are *riser cards* - part of mobo separate from main one but connected by a cable of some sort - and unique powe connections. Repalcement parts tend to cost more and are not readily available. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value5>
+		<value6>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483655</id>
+				<data>
+					<Question>How did old motherboards connect to devices before cihpsets?</Question>
+					<Answer>Old motherboard - all kinds of chips covering it. Have all kinds of functions. Mostly device controllers. Made motherboards expensive. 
+
+VLSA (Very Large Scale Integration Techologies) that started to take all these different functions and consolidate them. 
+
+Old mobos used to require techs to set jumpers to determine the bus speed for the mobo. Settings these jumpers incorrectly resulted in failure-to-boot errors and overheated CPUs. Modern mobos autodetect CPU and RAM settings and adjust accordingly. So errors only happen when you intentionally overclock or underclock a CPUI through the CMOS setup utility.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value6>
+		<value7>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483656</id>
+				<data>
+					<Question>What was the Intel 440BX chipset?</Question>
+					<Answer xml:space="preserve">Intel 440BX chipset - less chips. Integrated a lot of functions into a two chip group. Defined concept of chipset. Not first, but put them on map. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value7>
+		<value8>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483657</id>
+				<data>
+					<Question>What is the northbridge?</Question>
+					<Answer>Northbridge - handles memory controlling. Faster. Acts a primary bridge between CPU and rest of computer. Deals with high speed interfaces such as connection to your video card and RAM.
+
+Newer tech usually was put in northbridge first, and older tech would be demoted to south bridge.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value8>
+		<value9>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483658</id>
+				<data>
+					<Question>What is the southbridge?</Question>
+					<Answer>Southbridge - dumped with slower things. More basic I/O. Such as USB controller and hard drive controllers. Some mobos added third chip called the *super I/O chip* to handle I/O chores.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value9>
+		<value10>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483659</id>
+				<data>
+					<Question>What is usually put on the northbridge first?</Question>
+					<Answer>Newer tech usually was put in northbridge first, and older tech would be demoted to south bridge.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value10>
+		<value11>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483660</id>
+				<data>
+					<Question>What is a chipset?</Question>
+					<Answer xml:space="preserve">Chipset - set of Northbridge and Southbridge. Chip maker
+s design matched sets of particular models of Northbridg
+e and Southbridge to work together. 
+
+Every mobo has a chipset, one or more discrete integrate
+d circuit chips  that support the CPU&apos;s interfacing to a
+ll the other devices on the mobo. Chipset determines typ
+e of processor the mobo accepts, the type and capacity o
+f RAM, the sort of internal and external devices the mob
+o supports. As laerned in earlier chapters, chips in a P
+C&apos;s chipst serve as electronic interfaces through which 
+CPU, RAM, and I/O devices interact. They vary in feature
+s, performance, and stability
+
+Because chipset feacilitates communication between CPU and other devices in system, its component chips are relatively centrally located on mobo.
+
+Chipset extends data bus to every device on PC. CPU uses data bus to move data to and from all devices of PC. Data constantly flows on EDB among the CPU, chipset, RAM, and other devices on PC.
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value11>
+		<value12>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483661</id>
+				<data>
+					<Question>How are modern chipsets organized? What is ICH and PCH?</Question>
+					<Answer xml:space="preserve">Memory controlling functions have been brought to CPU, recently. And now whole idea of two chip system is fading. Today, single chip scenario with some form of support chip. Support chips handle RAID controllers and other niche things.
+
+Modern processors include functions of Northbridge direc
+tly on CPU. Southbridge is called the *Input/Output Cont
+roller Hub (ICH)* on Intel systems and *Fusion Controlle
+r Hub* on AMB systems. Current systems move Southbridge 
+featrues to the *Platform Controller Hub (PCH)*, connect
+ed directly to the CPU. 901 exam still refers to them as
+ distinct chips. 
+
+Chipset extends data bus to every device on PC. CPU uses data bus to move data to and from all devices of PC. Data constantly flows on EDB among the CPU, chipset, RAM, and other devices on PC. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value12>
+		<value13>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483662</id>
+				<data>
+					<Question>What is connection of the CPU with the chipset and data?</Question>
+					<Answer>Chipset extends data bus to every device on PC. CPU uses data bus to move data to and from all devices of PC. Data constantly flows on EDB among the CPU, chipset, RAM, and other devices on PC. 
+
+First use of address bus is for CPU to tell chipset to send or store data in memory and to tell chipset which section of memory to access or use. Just as with EDB, chipset extends address bus to all of the devices. That way CPU can use address bus to send commands to devices just as its sends commands to chipset.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value13>
+		<value14>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483663</id>
+				<data>
+					<Question>Is chipset functionality included with System ROM BIOS?</Question>
+					<Answer xml:space="preserve">System ROM chip provides part of BIOS for chipset but only at barebones, generic level. Software drivers allow chipset to support rest of things it can do like expansion devices. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value14>
+		<value15>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483664</id>
+				<data>
+					<Question>Check semantics on pg 238</Question>
+					<Answer>semanttics</Answer>
+				</data>
+			</ptr_wrapper>
+		</value15>
+		<value16>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483665</id>
+				<data>
+					<Question>Does the chipset determine the connections and capabilities of a motherboard?</Question>
+					<Answer xml:space="preserve">Connections and capabilities of a mobo differ from those of chipset mobo uses. Because:
+1. A particular chipset may support 8 USB ports, but to keep costs down, manufacturer might includes only 4 ports. 
+2. Motherboard maker may choose to install extra features -- ones not supported by chipst -- by adding additional chips. Common example is mobo that supports FireWire. Other tech may be built-in sound, hard drive RAID controllers, network cards, and more. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value16>
+		<value17>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483666</id>
+				<data>
+					<Question>Describe mobo support for USB/Firewire, Sound, RAID, and case fans.</Question>
+					<Answer xml:space="preserve">
+USB/FireWire - Dongle connectors (standardized) to add supported ports not included in mobo. 
+
+Sound - Most come with onboard sound chips. As with USB, a lot of mobos have port for connecting to audio jacks on front of case. Enable headphones and microphones. in front of case. 
+
+RAID - Redudant Array of Independent (or Inexpensive) Disks - very common on mobos. Many types of RAID such as *mirroring* (process of using two drives to hold the same data, which is good for safety, becaues if one drive dies, the other still has all of the data) or *striping* (making two drives act as one drive by spearding data across them, which is good for speed). Cool but complex. 
+
+Case Fan Support - Every mobo has CPU fan connector. Some offer one or more fan power connectors for case fans.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value17>
+		<value18>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483667</id>
+				<data>
+					<Question>What are expansion slots? Expansion bus?</Question>
+					<Answer xml:space="preserve">Expansion slots - IBM came up with idea that people would need more and specialzied hardware for differnt PCs depending on what they needed. People cad add video card, sound card, WIFI card, etc. 
+
+Now the expansion bus - slots and accompanying wires and support chips. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value18>
+		<value19>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483668</id>
+				<data>
+					<Question>What is the difference between expansion devices and other devices in pc?</Question>
+					<Answer>Every device in computer - whether soldered to mobo or snapped into a socket -- connects to the external data bus and the address bus. Expansion slots connect to rest of PC through the chipset. On some, expansion slots connect to Southbridge, and on others they connect to Northbridge. Some have more than one type of expansion bus , with slots on one connecting to Northbridge and slots on other to Southbridge. Chipset provides an extension of address bus and data bus to the expansion slots, and thuis to any expansion cards in these slots.
+
+Cards function as if part of mother board, except in speed. System crystal provides a critical function for entire PC, setting pace for activity in PC. Every device soldered to mobo designed to run at speed of mobo</Answer>
+				</data>
+			</ptr_wrapper>
+		</value19>
+		<value20>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483669</id>
+				<data>
+					<Question>What is the relationship of the system crystal, motherboard, and hardware?</Question>
+					<Answer xml:space="preserve">Cards function as if part of mother board, except in speed. System crystal provides a critical function for entire PC, setting pace for activity in PC. Every device soldered to mobo designed to run at speed of mobo. 
+
+Clock crystals not just for CPUs and Chipset. Every chip in computer has CLK wire and needs to be pushed by a clock chip, including those on expansion cards. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value20>
+		<value21>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483670</id>
+				<data>
+					<Question>How do expansion cards work with system crystal?</Question>
+					<Answer>Cards cannot be made for every mobo speed. So IBM made an extension to EDB that ran at its own standardized spseed. Use this part of EDB to snap new devices into PC. Added a different crystal called the *expansion bus crystal* which controlled the part of EDB connected to expansions slots. 
+
+Expansion slots run at much slower speed than frontside bus. Chipset acts as divider between two buese, compensating for speed difference with wait states and special buffering (storage) areas.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value21>
+		<value22>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483671</id>
+				<data>
+					<Question>Describe PCI</Question>
+					<Answer xml:space="preserve">PCI (Peripheral Component Interconnect) - Early 1990s. Developed by Intel. 32 bit wide BUS and ran at either 33 or 66 MHz. King for decade. Released to public domain to make PCI more attractive. Provided wider, faster, more flexible alternative than any previous expansion bus. Able to coexist with other expansion buses. Users could keep their old cards and slowly migrate over. Also PCI devices were self-configuring. Plug and Play (PnP). Powerful busrst mode feature that enabled very efficient data transfers. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value22>
+		<value23>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483672</id>
+				<data>
+					<Question>What is AGP?</Question>
+					<Answer xml:space="preserve">AGP - Accelerated Graphics Port (AGP) specialized, video only version of PCI. Slot was a pCI slow but one with a direct connectoin to Northbridge. Only for video cards. Good because current buses were too slow and graphics poor before. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value23>
+		<value24>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483673</id>
+				<data>
+					<Question>Describe PCI-X</Question>
+					<Answer xml:space="preserve">PCI-X - 64bit BUS running up to 133MHz. Later versions ran faster. Supported 32 bit PCI cards for backward compatibility. PCI-X 2.0 standard feattured 4 speed grades in MHz: PCI-X 66, 133, 266, 533
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value24>
+		<value25>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483674</id>
+				<data>
+					<Question>Describe Mini PCI</Question>
+					<Answer xml:space="preserve">PCI designed for desktops so a little big. 
+
+Mini PCI - 32 bit wide BUS running at 33 MHz. Connector made it unique. Made for laptops/
+
+Mini PCI-E - Designed for laptops. 52 pin connector supporting up to two lanes. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value25>
+		<value26>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483675</id>
+				<data>
+					<Question>Describe serialized vs parallelized communication</Question>
+					<Answer>1 32bit wide bus can be faster than 32 1bit wide bus. This as wires. Signal leaves and is split into 32 parts. Device must wait until gets all 32 bits. Latency. Send it on 1 wire that goes fast. That is what PCI-E did.
+
+With serial communication, you almost get a 1-to-1 correlation between transfer rate and binary data rate. The effective data rate drops a little bit because of the *encoding scheme* - the wy data is broken down and reassembled - but full duplex data throughput can go up to 16GBps on a x16 connection.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value26>
+		<value27>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483676</id>
+				<data>
+					<Question>Describe PCI-E</Question>
+					<Answer>PCI-E (PCI-Express) - Uses a serial communication. One wire. Based on concept of lanes. Each lane is serial communication. Runs 2Gbps or 4 Gbps. If need more data, just need to add more lanes. Latest, fastest, and most popular expasion bus today. 
+
+PCI-E device doesn&apos;t share bus. Has its own direct connection (point-to-point) to Northbridge, so it does not wait for other devices. With large data and parallel connection, would take a long time to look at all that data and verify. Linear complexity. Serial connection doesn&apos;t have this problem.
+
+PCI-E uses one wire for sending and one for receiving. Each of these pairs of wires between a PCIe controller and a device is called a *lane*. Each direction of a lane runs at 2.5 gigatransfers per second (GTps) with PCIe 1.x, 5 GTps with PCIe 2.x and 8 GTps with PCIe 3.x. Even better, each point-to-point connection can use 1, 2, 4, 8, 12, or 16 lanes to achieve a maximum theoretical bandwidth of 128 GTps. The *transfer rates* describes the number of operations happening per second</Answer>
+				</data>
+			</ptr_wrapper>
+		</value27>
+		<value28>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483677</id>
+				<data>
+					<Question>What is a x1 PCI-E Slot</Question>
+					<Answer xml:space="preserve">x1 PCI-E Slot (By 1 or Single LAne) </Answer>
+				</data>
+			</ptr_wrapper>
+		</value28>
+		<value29>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483678</id>
+				<data>
+					<Question>What is a x16 PCI-E Slot</Question>
+					<Answer>x16 PCI-E Slot - 16 lanes running 1 bit wide connections. Most common slot used mostly for video cards. Bandwidth generated by this slot far more than anything other than a video card would need. So most PCIe mobos also contain slots with fewer lanes. Currently x1 is most common general-purpose PCIe slot.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value29>
+		<value30>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483679</id>
+				<data>
+					<Question>Where to check if hardware device is properly installed with proper drivers?</Question>
+					<Answer>Device manager
+
+If Device Manager does not show new device, verify it is isntalled properly and device has power. Run the Add Hardware Wizard and see if Windows recognizes device. Find wizard as Control Panel applet in Vista. In 7/8/8.1, run program by clicking Start and typing name of executable in Search bar: hdwwiz.exe.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value30>
+		<value31>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483680</id>
+				<data>
+					<Question>What is computer still does not recognize device after basic checking?</Question>
+					<Answer>If Device Manager still does not recognize device, two options:
+1. Device is physically damanged and must be replaced
+2. Device is an onboard device and is turned off in CMOS</Answer>
+				</data>
+			</ptr_wrapper>
+		</value31>
+		<value32>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483681</id>
+				<data>
+					<Question>What are the error icons on device manager?</Question>
+					<Answer xml:space="preserve">-A black &quot;!&quot; on a triangle indicated a device is missing. That dinwos does not recogfnize device, or that there&apos;s a device driver problem. May still work while producing this error
+-A black downward-pointing arrow on a white field indicates a disabled device. Usually points to device that has been manually turned off, or a dmanaged device. Device will not work. 
+
+The ! the most common and easiest to fix. First, double check connection. Then try reinstalling driver with Update Driver. Rick click desired device and select Properties. In Properities, select Driver tab. Click Update Drivers button.
+
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value32>
+		<value33>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483682</id>
+				<data>
+					<Question>What is the VRM?</Question>
+					<Answer>Voltage Regulator Modules (VRM) - run from chipset. Chipsets covered with big heat sink.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value33>
+		<value34>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483683</id>
+				<data>
+					<Question>What are support chips in motherboards?</Question>
+					<Answer>Support Chips:
+
+Super I/O and Built-In Audio and Network chips. 
+
+Battery - keeps real time clock and settings alive witho
+ut power. 
+
+System BIOS (UEFI) ROM chip. Little box.
+
+Front-panel connections. CMOS clear jumper.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value34>
+		<value35>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483684</id>
+				<data>
+					<Question>What are connectors for motherboards?</Question>
+					<Answer xml:space="preserve">CONNECTIONS
+
+Internal USB Connections - 
+
+Internal Serial Connector
+
+Fan Connectors
+
+8 Pin 12V Power for CPU
+
+Switches
+
+Main 24-pin Power Connector
+
+SATA COnnectors for media drives.
+
+Front-Panel Audio Connections
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value35>
+		<value36>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483685</id>
+				<data>
+					<Question>What are standouts?</Question>
+					<Answer>Standouts - small connectors that allow mobo to mount to case. Plac ethem properly before isntalling. Screws go into standouts.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value36>
+		<value37>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483686</id>
+				<data>
+					<Question>How can motherboards be damaged?</Question>
+					<Answer>Mobos can die from many causes: time, dust, cat hair, or slightt manugacturing defects made worse by millions of amps of current sluicing through mobo traces. 
+
+Installing caes, electrostatic discharge, flexing mobo, etc. can cause mobo to fail.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value37>
+		<value38>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483687</id>
+				<data>
+					<Question>What are three major kinds of damage for motherboards?</Question>
+					<Answer>Symptoms:
+1. Catastophic
+2. Component
+3. Ethereal</Answer>
+				</data>
+			</ptr_wrapper>
+		</value38>
+		<value39>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483688</id>
+				<data>
+					<Question>What are catastrophic probems?</Question>
+					<Answer xml:space="preserve">Catastrophic - pc won&apos;t boot. Power and hard drive activity indicator lights on front of PC. Having them not work if worked before means PSU or mobo failure usually. 
+
+Distended capacitors - For several years in mid 2000s, suppliers of capacitors - devices that store and release energy, essentially smoothing power on mobos and other PCBs - released some seriously bad ones. Millions of these incorrectly forumlated capacitors made it into computers and failed at high rates. Culprit of dead PCs was obviously bulging capacitors. 
+
+Burn-in failure - manufacturing defects that cause problems to brand new systems and to any system that gets a shock of ESD. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value39>
+		<value40>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483689</id>
+				<data>
+					<Question>What are component probems?</Question>
+					<Answer xml:space="preserve">Component failure - happens rarely and appears as flaky connections between a device and mobo or as intermittent problems. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value40>
+		<value41>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483690</id>
+				<data>
+					<Question>What are ethereal probems?</Question>
+					<Answer>Ethereal failure - stuff doesn&apos;t work all the time. PC reboots itself. BSoD. What can be problem
+-Faulty component
+-Buggy device driver
+-Buggy app softare
+-Slight corruption of OS
+-Power supply problems</Answer>
+				</data>
+			</ptr_wrapper>
+		</value41>
+		<value42>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483691</id>
+				<data>
+					<Question>How troubleshoot motherboard problems?</Question>
+					<Answer>Catastrophic failures - swap mobo. 
+
+Component failure - replace with addon card. Maybe try upgrading BIOS on mobo.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value42>
+	</value0>
+</cereal>
+

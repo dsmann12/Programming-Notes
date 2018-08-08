@@ -1,0 +1,678 @@
+INTERFACES
+
+interface - looks like a class but has no implementation. Contains declarations of:
+events
+indexers
+methods
+properties.
+
+Inherited by classes and structs which must provide implementation for members of interface. 
+
+Good for putting together plug-and-play like architectures where components can be interchanged at will. All interchangeable components implement the same interface so they can be used without extra programming.
+
+Because interfaces must be implemented by derived classes and structs, they define a contract. For instance, if class foo implements theIDisposable interface, it is making a statement that it guarantees it has the Dispose() method, which is the only member of the IDisposableinterface. Any code that wishes to use class foo may check to see if class foo implements IDisposable. When the answer is true, then the code knows that it can call foo.Dispose(). Listing 13-1 shows how to define an interface:
+
+Defining An Interface:
+
+interface IMyInterface
+{
+    void MethodToImplement();
+}
+
+A common naming convention is to prefix all interface names with a capital “I”. Thisinterface has a single method named MethodToImplement(). This could have been any type of method declaration with different parameters and return types. I just chose to declare this method with no parameters and a void return type to make the example easy. Notice that this method does not have an implementation (instructions between curly braces – {}), but instead ends with a semi-colon, “;“. This is because the interface only specifies the signature of methods that an inheriting class or struct must implement.
+
+class InterfaceImplementer : IMyInterface
+{
+    static void Main()
+    {
+        InterfaceImplementer iImp = new InterfaceImplementer();
+        iImp.MethodToImplement();
+    }
+
+    public void MethodToImplement()
+    {
+        Console.WriteLine("MethodToImplement() called.");
+    }
+} 
+
+Interfaces may also inherit other interfaces. Listing 13-3 shows how inherited interfaces are implemented.
+
+using System;
+
+interface IParentInterface
+{
+    void ParentInterfaceMethod();
+}
+
+interface IMyInterface : IParentInterface
+{
+    void MethodToImplement();
+}
+
+class InterfaceImplementer : IMyInterface
+{
+    static void Main()
+    {
+        InterfaceImplementer iImp = new InterfaceImplementer();
+        iImp.MethodToImplement();
+        iImp.ParentInterfaceMethod();
+    }
+
+    public void MethodToImplement()
+    {
+        Console.WriteLine("MethodToImplement() called.");
+    }
+
+    public void ParentInterfaceMethod()
+    {
+        Console.WriteLine("ParentInterfaceMethod() called.");
+    }
+}
+
+Interfaces can be used polymorphically:
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** A First Look at Interfaces *****\n");
+ 
+// All of these classes support the ICloneable interface.
+string myStr = "Hello";
+OperatingSystem unixOS = new OperatingSystem(PlatformID.Unix, new Version());
+System.Data.SqlClient.SqlConnection sqlCnn =
+new System.Data.SqlClient.SqlConnection();
+ 
+// Therefore, they can all be passed into a method taking ICloneable.
+CloneMe(myStr);
+CloneMe(unixOS);
+CloneMe(sqlCnn);
+Console.ReadLine();
+}
+
+private static void CloneMe(ICloneable c)
+{
+// Clone whatever we get and print out the name.
+object theClone = c.Clone();
+Console.WriteLine("Your clone is a: {0}",
+theClone.GetType().Name);
+}
+}
+
+***** A First
+ 
+Your clone is
+Your clone is
+Your clone is
+Look at Interfaces *****
+a: String
+a: OperatingSystem
+a: SqlConnection
+
+Interfaces can never specify a base class but can specify base interfaces. 
+
+.NET interface types are also able to define any number of peroperty prototypes. 
+
+// The pointy behavior as a read-only property.
+public interface IPointy
+{
+// A read-write property in an interface would look like:
+// retType PropName { get; set; }
+//
+// while a write-only property in an interface would be:
+// retType PropName { set; }
+ 
+byte Points { get; }
+}
+
+// This class derives from System.Object and
+// implements a single interface.
+public class Pencil : IPointy
+{...}
+ 
+// This class also derives from System.Object
+// and implements a single interface.
+public class SwitchBlade : object, IPointy
+{...}
+ 
+// This class derives from a custom base class
+// and implements a single interface.
+public class Fork : Utensil, IPointy
+{...}
+ 
+// This struct implicitly derives from System.ValueType and
+// implements two interfaces.
+public struct PitchFork : ICloneable, IPointy
+{...}
+
+THE as KEYWORD
+
+Can determine whether a given type supports an interface by using the as keyword. 
+
+If the object can be treated as the specified interface, you are returned a reference to the
+interface in question. If not, you receive a null reference. Therefore, be sure to check against a null value
+before proceeding.
+
+static void Main(string[] args)
+{
+...
+// Can we treat hex2 as IPointy?
+Hexagon hex2 = new Hexagon("Peter");
+IPointy itfPt2 = hex2 as IPointy;
+ 
+if(itfPt2 != null)
+Console.WriteLine("Points: {0}", itfPt2.Points);
+else
+Console.WriteLine("OOPS! Not pointy...");
+Console.ReadLine();
+}
+
+THE is KEYWORD
+
+If object is not copitabile with specified interface, you are returned value false. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Interfaces *****\n");
+ 
+// Make an array of Shapes.
+Shape[] myShapes = { new Hexagon(), new Circle(),
+new Triangle("Joe"), new Circle("JoJo")} ;
+ 
+for(int i = 0; i < myShapes.Length; i++)
+{
+// Recall the Shape base class defines an abstract Draw()
+// member, so all shapes know how to draw themselves.
+myShapes[i].Draw();
+// Who's pointy?
+if(myShapes[i] is IPointy)
+Console.WriteLine("-> Points: {0}", ((IPointy) myShapes[i]).Points);
+else
+Console.WriteLine("-> {0}\'s not pointy!", myShapes[i].PetName);
+Console.WriteLine();
+}
+Console.ReadLine();
+}
+
+***** Fun with Interfaces *****
+ 
+Drawing NoName the Hexagon
+-> Points: 6
+ 
+Drawing NoName the Circle
+-> NoName's not pointy!
+ 
+Drawing Joe the Triangle
+-> Points: 3
+ 
+Drawing JoJo the Circle
+-> JoJo's not pointy!
+
+INTERFACES AS PARAMETERS
+
+interfaces can be used with polymorphisms as parameters:
+
+// Models the ability to render a type in stunning 3D.
+public interface IDraw3D
+{
+void Draw3D();
+}
+Next, assume that two of your three shapes (ThreeDCircle and Hexagon) have been configured to
+support this new behavior.
+// Circle supports IDraw3D.
+class ThreeDCircle : Circle, IDraw3D
+{
+...
+public void Draw3D()
+{ Console.WriteLine("Drawing Circle in 3D!"); }
+}
+
+// Hexagon supports IPointy and IDraw3D.
+class Hexagon : Shape, IPointy, IDraw3D
+{
+...
+public void Draw3D()
+{ Console.WriteLine("Drawing Hexagon in 3D!"); }
+}
+
+// I'll draw anyone supporting IDraw3D.
+static void DrawIn3D(IDraw3D itf3d)
+{
+Console.WriteLine("-> Drawing IDraw3D compatible type");
+itf3d.Draw3D();
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Interfaces *****\n");
+Shape[] myShapes = { new Hexagon(), new Circle(),
+new Triangle("Joe"), new Circle("JoJo") } ;
+for(int i = 0; i < myShapes.Length; i++)
+{
+...
+// Can I draw you in 3D?
+if(myShapes[i] is IDraw3D)
+DrawIn3D((IDraw3D)myShapes[i]);
+}
+}
+
+***** Fun with Interfaces *****
+ 
+Drawing NoName the Hexagon
+-> Points: 6
+-> Drawing IDraw3D compatible type
+Drawing Hexagon in 3D!
+ 
+Drawing NoName the Circle
+-> NoName's not pointy!
+ 
+Drawing Joe the Triangle
+-> Points: 3
+ 
+Drawing JoJo the Circle
+-> JoJo's not pointy!
+
+INTERFACES AS RETURN VALUES
+
+// This method returns the first object in the
+// array that implements IPointy.
+static IPointy FindFirstPointyShape(Shape[] shapes)
+{
+foreach (Shape s in shapes)
+{
+if (s is IPointy)
+return s as IPointy;
+}
+return null;
+}
+
+ARRAYS AS INTERFACE TYPES
+
+static void Main(string[] args)
+{
+...
+// This array can only contain types that
+// implement the IPointy interface.
+IPointy[] myPointyObjects = {new Hexagon(), new Knife(),
+new Triangle(), new Fork(), new PitchFork()};
+ 
+foreach(IPointy i in myPointyObjects)
+Console.WriteLine("Object has {0} points.", i.Points);
+Console.ReadLine();
+}
+
+IENUMERABLE AND IENUMERATOR INTERFACES
+
+C# supports a foreach function that allows iteration over contents of collection. Any type supporting a method named GetEnumerator() can be evaluated by 
+the foreach construct. 
+
+IEnumerable - interface in System.Collections namespace. Contains GetEnumerator()
+
+// This interface informs the caller
+// that the object's items can be enumerated.
+public interface IEnumerable
+{
+IEnumerator GetEnumerator();
+}
+
+GetEnumerator() returns a reference to interface System.Collections.IEnumerator. 
+
+IEnumerator - interface in System.Collections namespace. Interface provides infrastructure to allow the caller to traverse the internal objects contained
+by the IEnumerable-compatible container. 
+
+// This interface allows the caller to
+// obtain a container's items.
+public interface IEnumerato
+{
+bool MoveNext ();
+object Current { get;}
+void Reset ();
+// Advance the internal position of the cursor.
+// Get the current item (read-only property).
+// Reset the cursor before the first member.
+}
+
+Can take logn approach and implement each method manually for class. But can also delegate request to a collection that class that already implemented 
+these interfaces. System.Array type implements them. 
+
+using System.Collections;
+...
+public class Garage : IEnumerable
+{
+// System.Array already implements IEnumerator!
+private Car[] carArray = new Car[4];
+ 
+public Garage()
+{
+carArray[0] = new Car("FeeFee", 200);
+carArray[1] = new Car("Clunker", 90);
+carArray[2] = new Car("Zippy", 30);
+carArray[3] = new Car("Fred", 30);
+}
+ 
+public IEnumerator GetEnumerator()
+{
+// Return the array object's IEnumerator.
+return carArray.GetEnumerator();
+}
+}
+
+Allows type to use foreach construct as well as interact with IEnumerator type. 
+
+// Manually work with IEnumerator.
+IEnumerator i = carLot.GetEnumerator();
+i.MoveNext();
+Car myCar = (Car)i.Current;
+Console.WriteLine("{0} is going {1} MPH", myCar.PetName, myCar.CurrentSpeed);
+
+If you prefer to hide functionality of IEnumerable from object level, can use explicit interface implementation:
+
+IEnumerator IEnumerable.GetEnumerator()
+{
+// Return the array object's IEnumerator.
+return carArray.GetEnumerator();
+}
+
+THE yield KEYWORD
+
+iterators - alternative way to built types that work with foreach loop. A member that specifies how a container's internal items should be returned when 
+processed by foreach. 
+
+public class Garage : IEnumerable
+{
+private Car[] carArray = new Car[4];
+...
+// Iterator method.
+ 
+public IEnumerator GetEnumerator()
+{
+foreach (Car c in carArray)
+{
+yield return c;
+}
+}
+}
+
+yield - used to specify the value (or values) to be returned to the caller's foreach construct. When yield return statement is reached, the current 
+location in the container is stored and execution is restarted from this location the next time the iterator is called. 
+
+Iterator methods not required to use the foreach keyword to return its contents. Can define as follows: 
+
+public IEnumerator GetEnumerator()
+{
+yield return carArray[0];
+yield return carArray[1];
+yield return carArray[2];
+yield return carArray[3];
+}
+
+yield can be used within any method, regardless of its name. These are technically called named iterators and are unique in that they can take any number
+of arguments. When building a named iterator, be aware that method will return the IEnumerable interface rather than expected IEnumerator type. 
+
+public IEnumerable GetTheCars(bool ReturnRevesed)
+{
+// Return the items in reverse.
+if (ReturnRevesed)
+{
+for (int i = carArray.Length; i != 0; i--)
+{
+yield return carArray[i-1];
+}
+}
+else
+{
+// Return the items as placed in the array.
+foreach (Car c in carArray)
+{
+yield return c;
+}
+}
+}
+
+ICLONEABLE
+
+When want to give a custom type the ability to return an identifical copy of itself tothe caller, you may implement ICloneable interface. 
+
+Define a single method: clone(). 
+
+public interface ICloneable
+{
+object Clone();
+}
+
+Clone() - basic function tends to be to copy values of member variables into a new object isntance of the same type and return it to the use. 
+
+// The Point now supports "clone-ability."
+public class Point : ICloneable
+{
+public int X { get; set; }
+public int Y { get; set; }
+ 
+public Point(int xPos, int yPos) { X = xPos; Y = yPos; }
+public Point() { }
+ 
+// Override Object.ToString().
+public override string ToString()
+{ return string.Format("X = {0}; Y = {1}", X, Y); }
+ 
+// Return a copy of the current object.
+public object Clone()
+{ return new Point(this.X, this.Y); }
+}
+
+Also System.Object defines method named MemberwiseCLone() used to obtain a shallow copy of current object. 
+
+Can simplify Clone()
+
+public object Clone()
+{
+// Copy each field of the Point member by member.
+return this.MemberwiseClone();
+}
+
+If a type holds a reference value, then MemberwiseClone() will not work because shallow copy will copy the same reference. 
+
+public class Point : ICloneable
+{
+public int X { get; set; }
+public int Y { get; set; }
+public PointDescription desc = new PointDescription();
+ 
+public Point(int xPos, int yPos, string petName)
+{
+X = xPos; Y = yPos;
+desc.PetName = petName;
+}
+c Point(int xPos, int yPos)
+{
+X = xPos; Y = yPos;
+}
+public Point() { }
+ 
+// Override Object.ToString().
+public override string ToString()
+{
+return string.Format("X = {0}; Y = {1}; Name = {2};\nID = {3}\n",
+X, Y, desc.PetName, desc.PointID);
+}
+ 
+// Return a copy of the current object.
+public object Clone()
+{ return this.MemberwiseClone(); }
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Object Cloning *****\n");
+Console.WriteLine("Cloned p3 and stored new Point in p4");
+Point p3 = new Point(100, 100, "Jane");
+Point p4 = (Point)p3.Clone();
+ 
+Console.WriteLine("Before modification:");
+Console.WriteLine("p3: {0}", p3);
+Console.WriteLine("p4: {0}", p4);
+p4.desc.PetName = "My new Point";
+p4.X = 9;
+ 
+Console.WriteLine("\nChanged p4.desc.petName and p4.X");
+Console.WriteLine("After modification:");
+Console.WriteLine("p3: {0}", p3);
+Console.WriteLine("p4: {0}", p4);
+Console.ReadLine();
+}
+
+
+***** Fun with Object Cloning *****
+ 
+Cloned p3 and stored new Point in p4
+Before modification:
+p3: X = 100; Y = 100; Name = Jane;
+ID = 133d66a7-0837-4bd7-95c6-b22ab0434509
+ 
+p4: X = 100; Y = 100; Name = Jane;
+ID = 133d66a7-0837-4bd7-95c6-b22ab0434509
+ 
+Changed p4.desc.petName and p4.X
+After modification:
+p3: X = 100; Y = 100; Name = My new Point;
+ID = 133d66a7-0837-4bd7-95c6-b22ab0434509
+ 
+p4: X = 9; Y = 100; Name = My new Point;
+ID = 133d66a7-0837-4bd7-95c6-b22ab0434509
+
+One possible fix is to fill in gaps after MemberwiseClone():
+
+// Now we need to adjust for the PointDescription member.
+public object Clone()
+{
+// First get a shallow copy.
+Point newPoint = (Point)this.MemberwiseClone();
+ 
+// Then fill in the gaps.
+PointDescription currentDesc = new PointDescription();
+currentDesc.PetName = this.desc.PetName;
+newPoint.desc = currentDesc;
+return newPoint;
+}
+
+***** Fun with Object Cloning *****
+ 
+Cloned p3 and stored new Point in p4
+Before modification:
+p3: X = 100; Y = 100; Name = Jane;
+ID = 51f64f25-4b0e-47ac-ba35-37d263496406
+p4: X = 100; Y = 100; Name = Jane;
+ID = 0d3776b3-b159-490d-b022-7f3f60788e8a
+ 
+Changed p4.desc.petName and p4.X
+After modification:
+p3: X = 100; Y = 100; Name = Jane;
+ID = 51f64f25-4b0e-47ac-ba35-37d263496406
+ 
+p4: X = 9; Y = 100; Name = My new Point;
+ID = 0d3776b3-b159-490d-b022-7f3f60788e8a
+
+THE ICOMPARABLE INTERFACE
+
+System.IComparable - specifies a bahavior that allows an object to be sorted based on some specified key. 
+
+// This interface allows an object to specify its
+// relationship between other like objects.
+public interface IComparable
+{
+int CompareTo(object o);
+}
+
+System.Array class defines a static method named Sort() allowing you to sort items in array in numeric/alphabetic order. 
+
+CompareTo() lets you choose how objects of same type will be compared to each other. 
+
+// The iteration of the Car can be ordered
+// based on the CarID.
+public class Car : IComparable
+{
+...
+// IComparable implementation.
+int IComparable.CompareTo(object obj)
+{
+Car temp = obj as Car;
+if (temp != null)
+{
+if (this.CarID > temp.CarID)
+return 1;
+if (this.CarID < temp.CarID)
+return -1;
+else
+return 0;
+}
+else
+throw new ArgumentException("Parameter is not a Car!");
+}
+}
+
+CompareTo( ) Return Value
+Description
+Any number less than zero This instance comes before the specified object in the sort order.
+Zero This instance is equal to the specified object.
+Any number greater than zero This instance comes after the specified object in the sort order.
+
+MULTIPLE SORT ORDERS
+
+IComparer - defined within System.Collections namespace. 
+
+// A general way to compare two objects.
+interface IComparer
+{
+int Compare(object o1, object o2);
+}
+
+Unlike IComparable, IComparaer is typically not implemented on the type you are trying to sort. Rather, you implement this interface on any number of 
+helper classses, one for each sort order (pet name, car ID, etc). 
+
+/ This helper class is used to sort an array of Cars by pet name.
+public class PetNameComparer : IComparer
+{
+// Test the pet name of each object.
+int IComparer.Compare(object o1, object o2)
+{
+ 
+Car t1 = o1 as Car;
+Car t2 = o2 as Car;
+if(t1 != null && t2 != null)
+return String.Compare(t1.PetName, t2.PetName);
+else
+throw new ArgumentException("Parameter is not a Car!");
+}
+}
+
+System.Array has number of overloaded Sort() methods, one takes an object implementing IComparer:
+
+static void Main(string[] args)
+{
+...
+// Now sort by pet name.
+Array.Sort(myAutos, new PetNameComparer());
+ 
+// Dump sorted array.
+Console.WriteLine("Ordering by pet name:");
+foreach(Car c in myAutos)
+Console.WriteLine("{0} {1}", c.CarID, c.PetName);
+...
+}
+
+CUSTOM PROPERTIES AND CUSTOM SORT TYPES
+
+Can have a custom static read-only property that returns an instance of an object implementing the IComparer interface:
+
+// We now support a custom property to return
+// the correct IComparer interface.
+public class Car : IComparable
+{
+...
+// Property to return the PetNameComparer.
+public static IComparer SortByPetName
+{ get { return (IComparer)new PetNameComparer(); } }
+}
+
+// Sorting by pet name made a bit cleaner.
+Array.Sort(myAutos, Car.SortByPetName);

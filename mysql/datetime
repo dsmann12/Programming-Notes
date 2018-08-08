@@ -1,0 +1,23 @@
+DATES AND TIMES
+
+NOW() - returns the system dat and time of the server
+CURDATE() - returns system date without the time
+CURTIME() - returns system time without the date
+
+NOW() - using for adding a timestamp when a row is being added to the database
+
+DAY - gives day of the month
+DAYNAME - gives name of the day of the week
+DAYOFMONTH - same as DAY
+DAYOFWEEK - give number corresponding to the day. Sunday is 1, Saturday is 7
+DAYOFYEAR - give day if we were countin from Jan 1st as 1
+
+MONTH(NOW())
+MONTHNAME(NOW())
+
+DAY(NOW())
+
+UTC
+
+set time_zone = '-4:00'
+set GLOBAL time_zone = '-4:00'

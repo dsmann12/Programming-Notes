@@ -1,0 +1,93 @@
+Generics -- functions that can handle multiple types of data. 
+Called Templates in C++.
+
+template <class david>
+
+Allows any type to be used as a parameter. Automatically uses
+the inputted type
+
+david addCrap(david a, david b) {
+	return a + b;
+}
+
+int main() {
+	int x = 7, y = 43, z;
+	z = addCrap(a, b);
+	cout << z << endl;
+}
+
+addCrap() takes two david parameters. But in main(), addCrap is 
+given two int arguments. Compiler automatically uses int. Akin to:
+
+int addCrap(int a, int b) {}
+
+Cannot have two different types of data with this specific implementation.
+
+To work with multiple templates:
+
+Add long and int. Etc. 
+
+template <class F, class S>
+
+FIRST smaller(F a, S b) {
+	return (a < b ? a : b);
+}
+
+int x = 90
+double y = 56.78;
+smaller(x, y) // returns 56. Since int x was first argument, return
+	 	//type is int
+smaller(y, x) // returns 56.78. Since double y was first argument
+
+Classes can also use generic templates. 
+
+template <class T> //Must declare template before the class
+
+class David {
+	T first, second;\
+	public:
+		David(T a, T b) {
+			first = a;
+			second = b;
+		}
+	
+		T bigger();
+}
+
+template <class T> //Must keep declaring template before any function
+			//that returns its type
+
+T David<T>::bigger() {	//David<T> must be used for methods because 
+			//Class needs to know type for generic
+			//Template parameter. Specifies same one. 
+	return (first > second ? first : second);
+}
+
+David <int> d(69, 105); //Tells class that substitute int for T
+
+Template Specialization:
+
+Way to make a class that has a different implementation depending on
+type of data passed to it. 
+
+template <class T>
+
+class David {
+	public:
+		David(T x) {
+			cout << x << " is not a char!\n";
+		}
+};
+
+template<> //declares template specialization. Class of same name can
+	  	//be created with a specialized type for specific
+		//implementation
+
+class David<char> {
+		public:
+			David(char x) {
+				cout << x << " is a char!\n";
+			}
+};
+
+

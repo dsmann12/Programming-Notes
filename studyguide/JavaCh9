@@ -1,0 +1,135 @@
+Q: What is a priority queue?
+A: A priority queue is an ADT for storing a collection of prioritized elements that supports arbitrary element insertion but supports removal of elements in order of priority. Element with first priority can be removed easily. 
+
+Q: What is a key in a priority queue?
+A: A key stores the element's priority
+
+Q: What is an entry?
+A: An entry is an element and its priority as key-value composite
+
+Q: What is a composite design pattern?
+A: The composite design pattern is a design pattern defining an item class that paired each element with its associated count in our primary data structure
+
+Q: What are the requirements for keys?
+A: A key must have a comparison operation that is comparable, antisymmetric, and transitive. These imply it is reflexive. Comparibility property: k1 <= k2 or k2 <= k. Antisymmetric Property: if k1 <= k2 and k2 <= k1 then k1 = k2. Transitive property: if k1 <= k2 and k2 <= k3 then k1 <= k3. Reflexive Property: k <= k. Comparison rule <= that defines a total order relation will never lead to a contradiction. Such a rule defines a linear ordering among a set of keys; hence if a (finite) set of elements has atotal order defined for it, then the notion of a minimal key kmin is well defined as a key is inwhich kmin <= k for any other k in the set
+
+Q: What are the two means java provides for defining comparisons between object types
+A: java.lang.Comparable and java.util.Comparator
+
+Q: What is a comparable?
+A: A comparable class may define what is known as natural ordering of its instances by fomrally implementing the java.lang.Comparable interface, which include a single method, compareTo(). The syntax a.compareTo(b) must return an integer with following meaning: 1. i < 0 designates that a < b. 2. i = 0 designates a = b. 3. i > 0 designates a > b.
+
+Q: What is lexicographic ordering?
+A: Ordering of strings which is a case-sensitive extension of alphabetic ordering to Unicode
+
+Q: When is comparable useful? When is it not?
+A: Comparable good when objects have a natural ordering, but problems arise if objcets can be ordered naturally ays
+
+Q: What is a comparator?
+A: A comparator is an object that is external to the keys and is used to supply comparison rules
+
+Q: When is a comparator useful?
+A: A comparator is useful when you want to compare ojects according to a rule other than their natural ordering (which string is shortest, which stock is best, etc)
+
+Q: What are the strengths and weaknesses of using an unsorted priority queue?
+A: Insertion, size() and isEmpty() can be done in O(1) time. But min and removeMin perform in O(n) time. 
+
+Q. What are the strengths and weaknesses of using a sorted priority queue?
+A: size(), isEmpty(), min() and removeMin() are insertion is O(1)
+
+Q: What are sorting algorithms associated with each type of priority queue?
+A: Unsorted (Selection Sort) Sorted (Insertion Sort)
+
+Q: Implement a priority queue
+A: Check code
+
+Q: What is a heap?
+A: A heap is a more efficient realization of a priority queue. A binary tree that stores a collectino of entries at its nodes and that satisfies two additional properties: 1. A relational property defined in terms of the way keys are stored in T 2. a structural property defined in terms of the nodes of T itself.
+
+Q: What is the benefit of a heap?
+A: The heap allows us to perform selection and insertion in logarithmic time.
+
+Q: What is the heap order property?
+A: In a heap T, for every node v other than the root, the key stored at v is >= to the key stored at v's parent
+
+Q: What is the complete binary tree property?
+A: A heap T with height h is a complete binary tree if levels 0, 1, 2, ..., h-1 of T have the maximal number of nodes possible (namely leve i has 2^i nodes, for 0 <= i <= (h-1)) and the remaining nodes at level h reside in the leftmost possible positions at that level. Complete binary tree with n elements is one that has positions with level number 0 through (n - 1). Leftmost decided by level numbering.
+
+Q: How do you add an entry to a heap?
+A: To add an entry to a heap. To maintain the complete binary tree property, that new node should be placed at a position p just beyond the rightmost node at the bottom level of the tree, or as the leftmost position of a new level, if the bottom level is already full (or if heap is empty). Then must upheap.
+
+Q: Describe upheap bubbling.
+A: After insertion, tree may violate heap-order property. Unless position p is the root (therefore queue was empty), we compare key at position p to that of p's parent, denoted as q. If kp >= kq then heap order property is satisfied and algorithm terminates. IF kp < kq then we need to restore heap order property by swapping the entries stored at p and q. Causes new entry to move up one level. Again must check if heap oder property is satisfied. Continue until heap order property is satisfied.
+
+Q: What is time complexity of upheap?
+A: O(log(n))
+
+Q: How do you remove an entry from a heap?
+A: Must ensure that the shape of the heap respects the complete binary tree property by deleting leaf at last position p, defined as rightmost position at bottommost level of the tree. Copy that entry into root r (in place of entry that is being removed with minimal key). Then downheap.
+
+Q: Describe downheap.
+A: After removal and swap, tree still likely violate heap-order-property. If T only has one node (root), then heap order property is trivially satisfied and algorithm terminates. Otherwise, distinguish between two cases: 1. If p has no right child, let c be left child of p. 2. Otherwise (p has both children), let c be a child of p with minimal key. If kp <= kc, then heap-order-property is satisfied and algorithm terminates. If kp > kc, restore heap-order-property by swapping p and c. Keep downheaping until heap order property satisfied or reach external node
+
+Q: What is the time complexity of downheap?
+A: O(log(n))
+
+Q: Describe an array-based representation of a complete binary tree?
+A: Elements of tree stored in an array-based list A such that the element at position p is stored in A with index equal to the level number f(p) of p defined as follows: 1. If p is the root, then f(p) = 0. 2. If p is the lect child of position q, then f(p) = 2f(q) + 1. 3. If p is the right child or position q then f(p) = 2f(q) + 2. Last position is always index n-1.
+
+Q: What is benefits of an array-based heap?
+A: Methods insert and removeMin can be done in O(1) since locating last position in heap is easy. If size is not known in advance, can use an ArrayList to dynamically resize array on occasion. Space usage of such an array-based representation of a complete binary tree with n nodes in O(n) and time bounds of methods for adding or removing elements become amortized. 
+
+Q: Describe the analysis of a heap-based priority queue?
+A: size, isEmpty is O(1)
+
+Q: Describe Bottom-Up Heap Construction
+A: If we start with an initially empty heap, n successive calls to the insert operation will run in O(nlogn) time in worst case. However, if all n entries to be stored in the heap are given in advance, such as during first phase of heap-sort, there is an alternative bottom-up construction method that runs in O(n)
+
+Q: Describe implementation of a Bottom-Up Heap Construction.
+A: Assume number of keys, n, is an integer such that n = 2^(h+1) - 1. That is, the heap is a complete binary tree with every level being full so heap has height h = log(n+1) - 1. Viewed, nonrecursively, bottom up heap construction consists of the following h + 1 = log(n+1) steps: 1. construct (n+1)/2 elementary heaps storing one entry each. 2. In second step, form (n+1)/4 heaps, each storing three entries, by joining pairs of elementary heaps and adding a new entry.New entry is placed at root and may have to be swappe with the entry stored at a child to preserve heap-order property. 3. In third step, form (n+1)/8 heaps, each storing 7 entries, by joining pairs of 3-entry heaps and adding a new entry. New entry is placed initially at root, but may have to move down with a down-heap bubbling to preserve heap-order property. i. In generic ith step, 2 <= i <= h, we form (n+1)/2^i heaps, each storing 2^i - 1 entries, by joining pairs ofheaps storing (2^(i-1) - 1) entries and adding a new entry. New enry placced initially at root but may have to downheap. (h+1) In last step, form final heap, storing all n entries by joining two heaps storing (n-1)/2 entries (constructed in previous steps) and adding a new entry. New entry is placed initially at root but may have to downheap.
+
+Q: What is beneficial about a bottom up heap construction?
+A: A bottom-up construction of a leap with n entries takes O(n) time, assuming two keys acan be compared in O(1) time
+
+Q: What is the algorithm for sorting a sequence S with priority queue P?
+A: Consists of two phases: 1. Insert the elements of S as keys into an initially empty priority queue P by means of a series of n insert operations, one for each element. 2. Extract the elements from P in nondecreasing order by means of a series of n removeMin operation, putting them back into S in that order
+
+Q: What determines running time for standard sorting algorithm for a sequence S with priority queue P?
+A: Running time determined by running times of operations insert and removeMin, which do depend on how P is implemented.
+
+Q: What two sorting algorithms does priority queue sorting implement? Why?
+A: Selection Sort (Phase 2 of unsorted pq) because must get minimum from p and Insertion Sort (sorted list) because must sort p upon every insert. 
+
+Q: What is the running time of the standard priority queue sorting algorithm?
+A: O(n^2) because either Insertion Sort or Selection Sort causes bottleneck. 
+
+Q: What is heap sort?
+A: Heap sort is a sorting algorithm that sorts a sequence S of n elements in O(nlogn) time, assuming two elements of S can be compared in O(1) time
+
+Q: What is the benefit of heap-sort in place?
+A: If sequence S to be sorted is implemented by means of an array-based sequence such as an ArrayList in Java, can speed up heap-sort and reduce its space requirement by a constant factor by using a portion of the array itself to store the heap.
+
+Q: How to implement a heap-sort in place?
+A: 1. Redefine the heap operations to be a maximum oriented heap, with each position key beying at least as large as its children. At any time during execution, use left portion os S, up to a certain index i - 1, to store entries of the heap, and right portion of S from index i to n-1. First i elements of S (0, i-1) provide array list representation of the heap 2. In first phase, start with an empty heap and move the boundary between the heap and the sequence from left to right, one step at a time. In step i, for i = 1, ...., n expand the heap by adding element at index i-1. 3. Second phase, start with empty sequence and move boundary between heap and sequence from right to left, one step at a time. At step i, for i = 1...n we remove a maximal element from the heap and store it at index n - i.
+
+Q: What does in-place mean?
+A: In place means that an algorithm uses only a small amount of memory in addition to the sequence of storing the objects to be sorted
+
+Q: What is an adaptable priority queue?
+A: An adaptable priority queue extends the priority queue ADT with additional functionality. 
+
+Q: What are the advantages of an adaptable priority queue?
+A: An adaptable priority queue is useful in situations in which additional methods would be useful. 1. Remove an arbitrary entry (not just max or min) 2. Change key, and therefore heap. 3. Change value of entry in heap. 
+
+Q: How can an adaptable priority queue be implemented to locate a user's element?
+A: In oridingal definition, insert(k, v) returns an instance of type Entry to use. In orer to be able to update or remove an entry in new adaptable priority queue ADT, user must retain Entry object as a token that can be sent back as a parameter to identify the relevant entry
+
+Q: What is the formal adaptable priority queue ADT?
+A: remove(e) removes entry e from PQ. replaceKey(e, k): replaces key of existing entry e with k. replacealue(e, v): replaces value of existing entry e with v. 
+
+Q: What is a location aware entry?
+A: Third field of PQEntry class that designates current index of an entry within the array-based representation of the heap.
+
+Q: What is the performance of the Adaptable priority queue used with an array?
+A: size, isEmpty, min and replaceValue runs in O(1) time. insert, remove, removeMin, and replaceKey run in O(logn)
+

@@ -1,0 +1,229 @@
+Classes
+
+User defined types (UDTs_ can be STL types or types built yourself.
+
+Most user-defined types provide operations. Vector has [] and size(). ostream has <<. 
+
+Why build types:
+1. Representation: A type knows how to represent the data needed in an object.
+2. Operations: A type knows what operations can be applied to objects
+
+Class is a usre defined type. Composed of built-in types and other user defined types, and functions. Parts used to define the class are called members. Class has zero or more members.
+
+Access members using object.member notation
+
+var.m = 7. //m is member of object var
+
+Class has interface and implementation. Interface is part of class's declaration that its users access directly. Implementation is part of class's declaration that users access only indirectly through interface. 
+
+public interface is defined with label public:
+implementation defined with label private:
+
+Class members private by default. 
+
+User cannot directly refer to a private member. Must go through a public function.
+
+Interface is user's view of class. Implementation is implementor's view of class. 
+
+A struct is a class where members are public by default. Structs are primarily used for data structures where members can take any value; that is, can't define any meaningful invariant. 
+
+Structs cannot handle errors as well as classes. 
+
+Date struct
+
+struct Date {
+	int d;
+	int m;
+	int y;
+};
+
+Date x;
+x.d = 32;
+x.m = 48;
+x.y = -3;
+
+//Obvoiusly incorrect. Would have to use function and pass reference to struct to handles errors.
+
+Without constructor, Date objects are assigned garbage values. Basic tool is member functions, that is functions declared as membrs of class within class body. 
+
+struct Date {
+	int y, m, d;
+	Date(int y, int m, int d); //check for valie date and initialize
+	void add_day(int n); //increse Date by n days
+};
+
+Member function with same name as its class is constructor and is used for initialization of objects. Error -- caught by compiler -- to forget to initialize an object of a class that has a constructor that requires an argument.
+
+Date myBirthday; //error
+Date today {12, 24, 2007}; //error
+Date next {2014, 2, 14}; //OK
+Date last = {2000, 12, 31} //slightly verbose
+Date christmas = Date{1976, 12, 24}; //verbose
+
+Can then use objects
+last.add_day(1);
+add_day(2); //error. No implicit object
+
+C++98 used initializer lists with ()
+Dat last(2000, 12, 31);
+
+Public access can cause errors:
+last.d++; //now last day is 32. Invalid data
+
+Therefore use class and make members private. 
+
+class Date {
+	public:
+		Date(int y, int m, int d);
+		void add_day(int n);
+		int month() { return m; }
+		int day() { return d; }
+		int year() { return y; }
+	private:
+		int y, m, d;
+};
+
+Date birthday {1992, 1, 23}; //ok
+birthday.m = 14; //error. m is private
+cout << birthday.month() << endl; //ok. writes 1
+
+Valid values are important. Try to design types so that values are guaranteed to be valid; that is hide representation, provide a constructor that creates only valid objects, and design all member functions to expect valid values and leave only valid values behind when they return. Value of an object often called its state, so idea of valid value is often referred to as a valid state of an object. 
+
+Invariant is a rule for what constituts a valid value. 
+
+If can't think of good invariant, probably dealing with plain data. If so, use a struct. 
+
+When defining members outside a class, need to specify which class it is member of. Do that using the class_name::member_name notation. 
+
+Date::Date(int yy, int mm, int dd) //constructor
+	:y{yy}, m{mm}, d{dd}	//member initializer list
+{}
+
+void Date::add_day(int n) {
+	//...
+}
+
+:y{yy}, m{mm}, d{dd} is how initialize members. Called a member initializer list. 
+
+Traditional style:
+Date::Date(int yy, int mm, int dd) {
+	y = yy;
+	m = mm;
+	d = dd;
+}
+
+But would in principle first have default initialized the members and then assigned values to them. We would then also open possibility of accidentally using a member before it was initialized.
+
+Can define members in class declaration. But class declaration becomes larger and messier. Makes it difficult to read interface. However, may want to do so for simple definitions.
+
+Three effects of defining members within the class definition:
+1. Function will be inline, that is compiler will try to generate code for function at each point of call rather than using function-call instructions to use common code. Can be a significant performance advantage for functions that hardly do anythin but are used a lot. 
+2. All uses of the class will have to be recompiled whenever we make a change to the body of any inlined function. If function body is out of class declaration, recompilation of users is needed only when class declaration is itself changed. Not recompiling when body is changed can be a huge advantage in arge programs. 
+3. Class definition gets larger. Conseuqently it can be harder to find members among member function definitions. 
+
+Rule of thunb: 
+Don't put member function bodies in class declaration unless you know that you need the performance boost from inlining tiny functinos. Large functions (5+ lines) do not benefit form inlining. Rarely inline a function that consists of more than one or two expressions.
+
+Class interface rules of thumb:
+1. Keep interfaces complete
+2. Keep interfaces minimal
+3. Provide constructors
+4. Support copying (or prohibit it)
+5. Use types to provide good argument checking
+6. Identify nonmodifying member functions
+7. Free all resources in the destructor
+
+static const - way to define symbolic constants of types in classes. Use static to make sure that there is just one copy of value in program, rahter than one per object of class.
+
+Copying - Default copy copies all the members from one object into anothre. 
+
+If don't want default meaning, can define own or delete the copy constructor and copy assignment. 
+
+Date d5 {Year{1992}, Month::jan, 23};
+Date d6 {d5};
+
+Default Constructos
+
+Uninitialized variables can cause major errors. To counter problem, constructor can guarantee that eery object of a class in initialized. Default constructor initializes members to default values. 
+
+class T{}
+
+Tt = T{} //default constructor
+T t;
+
+class Date {
+	public:
+		Date();	
+	private:
+		Year y;
+		Month m;
+		int d;
+};
+
+Date::Date() :
+	y{2001}, m{Month::jan}, d{1}
+{}
+
+Could also initialized default values for every member in class itself.
+
+class Date {
+        public:
+                Date();
+        private:
+                Year y {2001};
+                Month m {Month::jan};
+                int d {1};
+};
+
+Date::Date(Year y) :
+	:y{y}
+{
+	if(!is_valid()) throw Invalid{};	
+}
+
+Initializer for class member specified as part of member declaration is called in-class initializer. 
+
+Could use constant (or variable) instead. To avoid global varibale, can use function:
+
+const Date & default_date() {
+	static Date dd {2001, Month::jan, 1};
+	return dd;
+}
+
+Can now define nonempty vectors of Dates without listing element values
+
+vector<Date> birthdays(10);
+
+Withut default constructor, have to be explicit:
+
+vector<Date> birthdays (10, default_date());
+
+Const - members that are not meant to be changed.
+
+const member function tells compiler that it will not modify the object.
+
+class Date {
+        public:
+                //...
+                int day() const; //const member: can't modify object
+                Month month() const;
+                int year() const;
+
+                void add_day(int n);    //non-const: can modify object
+        private:
+                int y;
+                Month m;
+                int d;
+}
+
+So const members can read const objects. Use const right after argument list in member functio
+n declaration to indicate that the member function can be called for a const object, Cannot mo
+dify object in a const member function,
+
+Members and Helper Functions
+
+A function that can be simply, elegantly, and efficiently implemented as a freestanding function (as nonmember functino) should be implemented outside class. That way, a bug in function cannot directly corrupt data in a class object. 
+
+Also if representation changes, only functions that directly access the representation ned to be rewritten.
+
+Helper functions also known as convenience functoins, auxiliary functions, etc. Helper functions often take arguments of the classes that they are helpers of. Are exceptions though. Often use namespaces to identify a group of helper functions. 

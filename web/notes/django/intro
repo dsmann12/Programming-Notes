@@ -1,0 +1,139 @@
+DJANGO
+
+Framwork for web pages with python
+
+sudo pip install Django==1.11 
+
+Go to directory you want to create web app
+
+django-admin startproject <project-name>
+django-admin startproject mysite
+
+mysite/ - root directory is just container for project. Can rename it as you like
+
+manage.py - command line utility that lets you interact with this Django project ins various ways.
+Can get details later
+
+The inner mysite/ directory is actual Python package for project. Its name is Python package name you
+need to import use to import anything inside it (mysite.urls)
+
+mysite/__init__.py - Empty file that tells Python that this directory should be considered a Python package
+
+mysite/settings.py - Settings/configuration for this Django project. 
+
+mysite/urls.py - URL declarations for this Django project; a "table of contents" of your Django-powered site.
+
+mysite/wsgi.py - Entry point for WSFI-compatible web servers to serve project. 
+
+Creates a manage.py file and website directory with python files inside. 
+
+python manage.py runserver -> runs a mini server 
+
+Creating apps: Each app written in Django onsists of a Python package that follows a certain convention. 
+Django comes with utility that automatically generates basic directory structure of an app.
+
+python manage.py startapp <app> - creates a new directory with more files
+python manage.py startapp polls
+
+admin.py - for admin page
+
+apps.py - configuration settings for app
+
+models.py
+
+model - blueprint for database. How will store data
+
+views.py - just functions. Give and get data. 
+
+VIEWS
+
+Place following code in view.py:
+
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+
+Creates simplest possible view in Django. 
+
+Now must mapp it to a URL. For this, need a URLconf. 
+
+To create URLconf, create a file called urls.py. 
+
+Place following code:
+
+from django.conf.urls import url
+
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+]
+
+Next step is to point the root URLconf at the pools.urls module. 
+
+In mysite/urls.py, add an import for django.conf.urls.include and insert an include() into the urlpatterns
+list so there is:
+
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^polls/', include('polls.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+
+include() allows referencing other URLconfs. 
+
+Notice the regular expressions in the include() function does not end in $, but rather a trailing slash. 
+Whenever Django encounters include(), it chops off whatever part of URL matched up to that point and sends 
+remaining string to the included URLconf for further processing. 
+
+Idea is to make it easy to plug and play URLs. Since polls are in their own URLconf (polls/urls.py), they can
+be placed under “/polls/”, or under “/fun_polls/”, or under “/content/polls/”, or any other path root, and the
+app will still work.
+
+You should always use include() when including other URL patterns. admin.site.urls is only exception
+
+Have now wired an index view into the URLconf
+
+Go to http://localhols:8000/polls/ in browser and see mesage. 
+
+The url() function is passed four arguments, two required: regex and view, and teo optional: kwargs and name.
+
+url() argument: regex
+
+Django starts at first regular expression ane makes it way down the list, comparing the requested URL against
+each regular expression until it finds one that matches. 
+
+NOTE: These regular epxressions do not search GET and POST parameters or domain name.
+
+For example, in a request to https://www.example.com/myapp/, the URLconf will look for myapp/. In a request to
+https://www.example.com/myapp/?page=3, the URLconf will also look for myapp/.
+
+url() argument: view
+
+When Django finds a regular expression match, Django calls the specified view function with an HttpRequest 
+object as the first argument and any "captured" values from the regular expression as other arguments. 
+
+If regex uses simple captures, values are passed as positional arguments. If it uses named captures, values 
+are passed as keyword arguments. 
+
+url() argument: kwargs 
+
+Arbitrary keyword argumetns can be apssed in a dictionary to the target view. 
+
+url() argument: name
+
+Naming URL lets you refer to it unambiguously from elsewhere in Django, especially from within templates. 
+Feature allows you to make global changes to URL patterns of project while only touching a single file. 
+
+/admin -> set up in urls.py
+
+urlpatterns = [
+	url(r'^admin', admin.site.urls),
+]
+
+Make urls.py in app directory. (Music).

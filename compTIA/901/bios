@@ -1,0 +1,218 @@
+BIOS
+
+Motherboard - assumes you will be using lots of peripherals for computer so includes connections for them. 
+
+See Motherboard (Northbridge, Southbridge, Chipset). 
+
+Keyboard provides example of how buses and support programming help CPU get job done. 
+
+In early computers, keyboard connected to EDB via a special cihp known as *keyboard controller*. Now handled by Southbridge. Talking about keyboard controllers, memory controllers, USB controllers, etc, is really referring to circuits on CPU, Northbridge, or Southbridge. 
+
+When click J on keyboard, scan code goes through keyboard, through cabling, into motherboard, then stored on chip. Computer needs a way to query that chip to see if letters were pressed and if so what are they (chip in keyboard controller). 
+
+Every time press key on keyboard, scanning chip in keyboard notices which key presed . Scanner sends a coded pattern of ones and zeroes, called the *scan code*, to keyboard controller. Each key has unique scan code. Keyboard controller stores scan code in its own register similar to CPU.
+
+Keyboard controller must be able to respond to multiple commands. How does CPU get scan code out of keyboard controller? How does CPU tell keyboard to change the typematic buffer rate (when hold down a key and letter repeats) or to turn the number lock LED on and off. 
+
+Keyboard controller has its own commands stored in binary. 
+
+If CPU must know what was last key pressed, CPU needs to know command or series of commands that order the keyboard controller to put the scan code of the letter on the EDB so CPU can read it.
+
+Computer needs programming built in to motherboard itself that allows it to speak to assumed hardware.
+
+BIOS - basic input/output services. Stored on chip. ROM (read only memory) chip. Stays on there after power off. Firmware - software stored on chip. Stored on BIOS chip are programs tiny that CPU can use to talk to hardware. Runs routine that knows how to talk to keyboard. Each motherboard has unique BIOS because each has its own things on it. Also keeps time when computer is turned off. 
+
+Programs dedicated to enabling CPU to communicate with device are called *services* or *device drivers*.
+
+Every device on computer needs BIOS. 
+
+Programmer could write BIOS for a keyboard if programmer knew the keyboard's codebook. Where would support programming be stored? Could be in OS, but what about new parts without an OS? CPU must haver access to BIOS for hardware. Stored o moetherboard. 
+
+ROM - read only memory. stored programs, called *services*, like RAM. That is like 8 bit wide spreadsheet. Nonvolatile, meaning infor isn't erased when computer is turned off. Read only means once store a program on one cannot change it. 
+
+Modern mobos use *flash ROM* that differ from traditional ROM in that you can update and change contents through specific process called "Flashing the ROM". 
+
+When CPU wants to talk to keyboard controller, it goes to flash ROM chip to access proper programming. 
+
+Each mobo has flash ROM chip, called *system ROM* chip because it contains code that enables CPU to talk to basic hardware of PC. Holds BIOS for keyboard, hard drives, optical drives, display device, USB ports, and other basic devices on mobo. To talk to all hardware requires hundred of little services (2 to 30 lines of code each). These programs stored on system ROM chip on motherboard called collectively *the system BIOS*. Programs stored on ROM often called *firmware*. 
+
+Sytem BIOS Support
+
+Every system BIOS has two types of hardware to support:
+1. All hardware that never changed. Keyboard controller, etc.
+2. All hardware that might change occasionally. RAM, hard drives, etc. 
+
+System ROM chip stopes BIOS for these devices but system needs another place to store information about the specific details of the hardawre. 
+
+UEFI
+
+For many year, PCs used 16-bit BIOS thatrequired x86-compliant hardware. Fine until really large hard drives (3+ TB) came on market. 
+
+Intel released BIOS used in modern systems:
+
+Unified Extensible Firmware Interface (UEFI). Advantages over 16 bit:
+1. Supports file systems that enable booting to drives larger than 2.2TB
+2. Supoports 32bit and 64bit booting
+3. Handles all boot-loading duties
+4. Not dependent on x86 firmware
+
+Current OSes use UEFI and provide legacy support for BIOS. 
+
+CMOS - Complimentary Metal-Oxide Semiconductor (CMOS). Separate memory chip that stores the information that describes specific device parameters. Doesn not store programs, only stores data that is read by BIOS to complete programs needed to talk to changeable hardware. Also acts as clock to keep current date and time. Used to be separate chip on moetherboard but is now almost always built into Southbridge. 
+
+Most chips store around 64KB of data, but PC ususally needs only small amount -- 128 bytes -- to store all necessary information on changeable hardawre. 
+
+If data stored on CMOS about particular piece of hardware (or its features) is different from specs of actual hardware, PC cannot access that hardware or the features. Cruicial that this information is correct. If change any hardware, must update CMOS to reflet changes. 
+
+Details of BIOS and CMOS only apply to PCs and Linux machines. Apple unified systems and newer ones cannot be upgraded. Some older ones allow additional drives. 
+
+CMOS Setup - Complimentary Metal-Oxide-Semiconductor (CMOS) Setup - Stores a little bit of changeable information.  Changeable apsects of bios which can be adjusted using system or CMOR setup utility. System Setup. Modify CMOS data. 
+
+CMOS Battery - keeps clock running. 
+
+Never really deal with System BIOS. Mostly just upgrade it by flashing. 
+
+BIOS Companies:
+Phoenix Technologies
+American Megatrends
+Award
+
+Can access CMOS Settings at boot or with Charms bar with Windows 8/8.1. Activate charms bar, select settings to open settings charm, click option to change pc settings. In PC settings app, click update and recovery link. Select recovery link. Under Advanced Startup choose Restart Now button to get to Choose an Option screen. Click Troubleshoot. Click Advanced Options. Click UEFI Firmware Settings. 
+
+Usually access at boot with button indicated. Check motherboard book or manufacturer's website. 
+
+Advanced Mode - much more powerful features. 
+
+BIOS Security - adminstrator or user password. Adminstrator password locks or unlocks access to system setup utility. User password locks or unlocks computer booting to an OS. AI Tweaker tab lets you overclock CPU. Can also set passwords for hard drives
+
+Intel Virtual Technology option - allows virtualization support. Virtual machine a powerful type of program that enables you to run a second software based machine inside physical PC. Recreates hardware. To assist this, CPU manufacturers have added *hardware assisted virtualization*. Intel calls it Intel Virtualization Technology (Intel VT) and AMD calls theirs AMD Virtualizations (AMD-V). Helps virtual machines use your hardware more efficiently and is controlled by BIOS. Disabled by default. 
+
+Secure Boot - secures boot process by requiring properly signed software. Includes boot software and software that support specific, essential components. Required an Intel CPU, UEFI BIOS, and OS designed for it (Windows 8+). 
+
+Other Security Features
+
+Chassis Intrusion Detection/Notification - provided by compuiter case or chassic. Contain a switch that trips when someone opens the case. With mobo support and proper connection between mobo and case, the CMOS logs whether the case has been opened, and posts a notification to screen on subsequent boot if it has. 
+
+DriveLock - On some mobos, CMOS setup enables you to control the ATA Security Mode Feature Set, referred to as DriveLock. First line of defense for protecting hard disks form unwanted acess when a system is lost or stolen. 
+
+LoJack - If PC is stolen can track its location, install a key logger, or even remotely shut down computer. 
+
+Trusted Platform Module (TPM) - Acts a secure cruptoprocessor, a hardware platform for the acceleration of cryptographic functions and the secure storage of associated information. Specification published by Trusted Computing Group, includes Intel, Microsoft, AMD, IBM, Lenovo, Dell, HP, etc. Can bea small circuit board plugged into mobo or can be built directly into chipset. CMOS setup utility usually contains settings to turn it on or off and enable or diable it. Hard disk encryption one of most common uses though can be used in wide array of cryptographic operations. BitLocker Drive Encryption feature of Windows can be accelerated by a TPM, which is more secure because the encryption key is stored in tamper-resistant TPM hardware rather than one an external hard drive. Other possible uses include DRM, network access control, application execution control, and password protection. 
+
+OPTION ROM AND DEVICE DRIVERS
+
+All hardware needs some kind of programming that tells CPU how to talk to device. Early PC designed understood they could not anticipate every new type of hardware, so gave a few ways to add programming other than on BIOS. BYOB - bring your own bios. Two ways:
+
+1. Option ROM
+2. Device Drivers
+
+OPTION ROM
+
+Put BIOS on hardware device itself. Serial ATA hard drive controller card - allows you to add more hard drives and contains a chip that is flash ROM that stores BIOS for card. System BIOS may not know how to talk to card, but card brings its own BIOS on option ROM chip. Most BIOS on option ROMs tell you they exist by displaying information when boot system. Mostly been replaced by flexible software method that are device drivers. Excep video cards. Every video card contains its own BIOS. Work well but hard to upgrade. So most hardware relies on software for BIOS. 
+
+DEVICE DRIVERS
+
+Device driver - a file sotred on PC hard drive that contains all commands necessary to talk to whatever device it was written to support. ALL OSes emply a method of loading these device drivers into RAM every time system boots. Know which device drivers to install by reading a file (or files) that lists which device drivers the system needs to load at boot time. ALl OSes are designed to look at this list early in boot process and copy listed files into RAM, giving CPU capability to communicate with hardware supported by device driver. 
+
+Come with device when bought. In installation discs. Often OS will automatically detect and install driver for user. 
+
+May want to add or remove device drivers from time to time. Windows uses special database called the Registry that stores everything you want to know about system, including  device drivers. 
+
+Use Device Manager to access device drivers. 
+
+All hardware must have accompanying program that provides CPU with necessary to communicate with device. 
+
+May reside on system ROM on mobo, on ROM on card, or in device driver file on hard drive loaded into RAM at boot. 
+
+Power On Self Test - POST. Seen when computer first boots up. 
+
+POST
+
+Power On Self Test - other program on system ROM. When computer turned on or reset, initialzed special program stored in System ROM chip called the POST. Checks out system every time computer boots. Sends out command to all devices. All standard devices run built-in diagnostic. Quality of diagnostic up to people who made device. PCs convey POST information. 
+
+When press power - PSU sends power to hardware of system. 
+
+No real start button. In order to get CPU cooking, have wire that runs from PSU to CPU called Power-Good Wire. When Power Good reaches certain voltage, PC starts. When that takes place, CPU does POST. CPU goes through motherboard and makes announcement saying If you hear me, check your self out. If hardware is ok, it reports back to CPU ok, if not it says it has a problem. Takes place before anything shows up on screen and is also first thing to show up on screen. 
+
+What if problem so low level that it doesn't show in video? POST can be broken up to before video tested and after video tested. 
+
+Beep Codes - Systems usually come with small speaker wire. Different BIOS have different beep codes. Today, pretty much have "No Video Card" beep only. Other beep code that is common is for improperly installed RAM (or no RAM). One long beep followed by two or three short beeps. Also beep code for bad or missing RAM (single beep that repeats indefinitely). Series of short beeps after system has been running a while is CPU alarm telling user that high limit is approaching. 
+
+Text Errors - POST errors display on screen as test errors if errors occur after video card has tested ok. 
+
+Sometimes nothing happens on boot.
+
+POST Card - Has two digit readouts and some hex. Readouts mean different things depending on BIOS. High end motherboards have built in post cards. Each two digit code is step in post itself. Inexpensive. Don't pay too much. Beep codes, numeric codes, and text errors can sometimes be misleading. Also an inoperative device can sometimes disrupt POST. POST card can monitor POST and identify which piece of hardware is problem. Simple cards that snap into expansion slots. 
+
+Useful for dead PCs. If POST card shows no reading, problem may be before POST and related to power, the CPU, RAM, or mobo. If board poasts, then must look at more issues, such as drives, etc. 
+
+Trick is knowing what codes mean. Vary from different BIOS makers.
+
+Three major BIOS makers. 
+
+Phoenix, Award, American Megatrends. Within are individual versions of BIOS. Can be found during POST? Otherwise must reference motherboard book or call manufacturer. POST codes vary dramtically. 
+
+After video:
+
+CPU Fan Error. No Keyboard/Mouse. Splash screen that tells BIOS manufacturer. Can do halt on all errors (press F1 to continue). POST best friend when diagnosing computers. Beep codes, POST codes, and on screen information. 
+
+BIOS - remembers drives, boot order, etc. Changeable aspects. To get into BIOS and make those changes use System Setup or CMOS Setup. Press del or F2 to run system setup. 
+
+User and Supervisor Password - Supervisor password needed any time someone tries to get into system setup. User password comes up every time someone boots computer. 
+
+BOOT PROCESS
+
+Once power fed to PC, tight interrelation of hardware, firmaware, and software enables PC to start itself. When first power PC, power supply circuity tests for proper voltage and then sends a signal down a special wire called the *power good* wire to awaken th eCPU. Moment power good wire wakes up CPU, it immediately sends a built-in memory address via its address bus. Speical address is same on every CPU, from oldes 8086 to most recent. Adsdress is first line of POST program on system ROM. After POST is finished, there must be a way for copmuter to find the programs on hard drive to start the OS. 
+
+Next step differs between old BIOS and UEFI. 
+
+In older BIOS, POST passes controls to last BIOS function: the *bootstrap loader* - little more than a few dozen lines of BIOS code tacked to end of POST program. Job is to find OS. Reads CMOS information to tell it where to look first for OS. CMOS setup boot order - which devices to look in and in which order. The *Boot Sequence*. 
+
+Almost all storage devices - hard drives, SSDs, CDs, DVDs,, and USB drives - can be configured to boot an OS by setting aside a specific location called the *boot sector*. If device is bootable, its boot sector contains special programming designed to tell system where to locate hte OS. 
+
+Any device with a functional OS is called a *bootable disk* or a *system disk*. 
+
+If bootstrap loader locates a good boot sector, it passes control to the OS and removes itself from memory. If it doesn't it goes to next device in boot sequence. 
+
+In UEFI systems, POST hands control of boot process to the boot manager, which checks the boot configurations, and then loads the OS boot loader directly. No need for scanning a boot sector. UEFI firmware stores boot manager and boot configuration. 
+
+Preboot Execution Environment (PXE) - some BIOS include feature that enables you to boot aPC without any local storage by retrieving an OS from a server over a network. 
+
+Troubleshooting:
+
+Can cause trouble in System Setup. First thing to do is get back into System Setup and restore to defaults. If someone messes with Adminstrator or User Passwords it can fuck with computer. Must clear System Setup somehow. Most motherboards come with little jumper on motherboard that allows us to clear System or CMOS. Pull out, short it among other connectos for 30 seconds and it will clear BIOS. 
+
+Also battery. Job is to keep clock ticking. CR2032 battery. Hold it by sides. If clock slows down, clue that system has battery that is slowing down. 
+
+Updating BIOS can cause trouble too. Flashing BIOS meeans rewriting new code on chip. Mistkaes in flash (loss of power) may brick computer. May need to update BIOS to take on newer CPUs and other hardware. Can go in System Setup, can maybe download tool from manufacturer, or use BIOS Update utility. On bad flash, will usually trash motherboard. 
+
+Some motherboards (Gigabyte) have dual BIOS. Have two ROM chips. One is used and updated. Other is a fail safe.
+
+Some have USBs with BIOS FLash button. Plug USB with BIOS in and press button and motherboard will flash updated BIOS.      
+
+Default/Optimized Settings - default settings can be returned to. Also optimized settings can optimize PC for speed or stability, 
+
+Clear CMOS - Reste CMOs with dedicated set of wires on mobo called CMOS clear. Turn off and unplug computer. Then find wires. Move shunt (plastic and metal jumper) from wries 1 and 2 to wires 2 and 3. Wait 10 seconds and then move back to default position. 
+
+Losing CMOS Settings - CMOS needs a continuous trickle charge to retain its data. Mobos use battery, usually coin battery, to give CMOS charge it needs when computer is off. Also keeps track of data nad time. If battary runs out, you will lose all CMOS info. Examples:
+-CMOS configuration mismatch
+-CMOS date/time not set
+-BIOS time and settings reset
+-No boot device available
+-CMOS battary state low
+
+More common reasons for losing CMOS data
+-Pulling and inserting cards
+-Touching mobo
+-Dropping something on mobo
+-Dirt on mobo
+-Faulty PSU
+-Electrical surges
+
+Before install a new battery, double check it has same voltage and amperage as old battery. Leave PC plugged in to retain CMOS settings. 
+
+Flashing ROM 
+
+Flash ROM chips can be reprogrammed to update their ontents. With flash ROM, when need to update system BIOS to add support for a new tech, you can run small command-line program combine with aan update file, and update BIOS. Called a *firmware upgrade*. 
+
+Different BIOS makers using different processes. In general, insert removable disk containing an updated BIOS file and use updating utility in CMOS setup. Some mobo manufacturers provide Windows based flash ROM update utilities that check internet for updates and download them to install. Most enable you to back up current BIOS to return to it if updated version causes trouble. 

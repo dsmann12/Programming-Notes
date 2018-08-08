@@ -1,0 +1,138 @@
+OBJECTS
+
+type() -> check type of an object
+
+In Python, everything is an Object.
+
+Even functions
+
+def square(num):
+	return num**2;
+
+type(square)
+> function
+
+class KEYWORD
+
+class Sample(object):
+	pass
+
+Attributes - characteristics of objects. Fields.
+
+Method - operation can perform on object. 
+
+Syntax for creating an attribute is:
+
+self.attribute = something
+
+Special method called:
+
+__init__() - used to initialize the attributes of an object
+
+
+class Dog(object):
+	def __init__(self, breed):
+		self.breed = breed
+
+Every method in a class has the parameter "self"
+
+sam = Dog(breed='Lab')
+
+sam.breed # return 'Lab'
+
+Class object attributes -> same for any instance of class
+
+class Dog(object):
+	species = 'Mammal'
+	
+	def __init__(self, breed):
+		self.breed = breed
+
+METHODS
+
+Basically functions inside the class that perform operations on objects. 
+
+Use self to refer to attributes of specific instance
+
+class Circle(object):
+	# global attribute
+	pi = 3.14
+	
+	def __init__(self, radius=1):
+		self.radius = radius
+
+	def area(self):
+		return pi * (self.radius**2)
+	
+	def set_radius(self, new_radius):
+		"""
+		This method takes in a radius and resets radius of circle
+		"""
+		self.radius = new_radius
+
+	def get_radius(self):
+		return self.radius
+
+c = Circle(radius = 100)
+c.area # 31400.0
+c.set_radius(20)
+c.radius # 20
+
+INHERITANCE
+
+Way to form new classes (derived classes) using classes that have already been defined (base classes)
+
+class Animal(object):
+	
+	def __init__(self):
+		print('Animal created')
+
+	def whoAmI(self):
+		print('Animal')
+	
+	def eat(self):
+		print('Eating')
+
+class Dog(object):
+	
+	def __init__(self):
+		Animal.__init__(self)
+		print('Dog created')
+	
+	def whoAmI(self):
+		print('Dog')
+	
+	def bark(self):
+		print('Woof!')
+		
+SPECIAL METHODS
+
+Classes in Python can implement certain operations with special method names. Not actually called directly but by Python specific language syntax.
+
+print
+len
+
+class Book(object):
+	def __init__(self, title, author, pages):
+		print('A book has been created')
+		self.title = title
+		self.author = author
+		self.pages = pages
+
+	# define how object prints
+	def __str__(self):
+		return "Title: %s, Author: %s, pages %s" %(self.title, self.author, self.pages)
+
+	# define length
+	def __len__(self): 
+		return self.pages
+
+	# define delete
+	def __del__(self):
+		print('A book is gone')		
+
+b = Book('Python', 'David', 100)
+print(b) # Title: Python, Author: David, pages 100
+del b # 'A book is gone'
+
+

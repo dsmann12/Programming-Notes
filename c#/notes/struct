@@ -1,0 +1,476 @@
+STRUCT
+
+structs well suited for modeling mathematical, gemoetrical, and other "atomic" entities in app. 
+
+struct - while class is a reference type, struct is a value type. Value types hold their value in memory where they are declared. Reference types hold a reference to an object in memory. 
+
+structs don't have a indentically named representation in the .NET library (like System.Array, System.Enum, etc). But instead of implicitly derived from System.ValueType. ValueType stroes memory by value, e.g. 
+the type is allocated on the *stack* rather than on the *heap*. Data allocated on the stack and be created and destroyed quickly as its lifetime is determined by its defined scope. Heap allocated data is monitored
+by garbace collector as its lifetime is determined by a number of factors. 
+
+Functionally, only purpose of System.ValueType is to override the virtual methods defined by System.Object and use value-based versus reference based semantics. 
+
+If copy a struct, C# creates a new copy of object and assigns the copy of the object to a separate struct instance. 
+
+If copy a class, C# creates a new copy of the reference to the object and assigns the copy of the reference to the separate class instance. 
+
+structs can't have destructors, but classes can. 
+
+structs cannot have implementation inheritance, but can have interface inheritance. 
+
+The .NET Framework includes many types that are structs, including many of the built-in types. For example, a System.Int32 is a C# int, aSystem.Single is a C# float, and a System.Bool is a C# bool. The C# built-in types are aliases for .NET Framework types, giving you language-specific syntax. If you look at the documentation for any of these .NET Framework types, you’ll see them declared as structtypes. That means you’ll need to recognize what a struct type is when you see it, which the next section helps with by showing you how to create your own custom struct type.
+
+While the behavior of class and struct types are very different, their syntax is similar. You declare the type and its members with the primary visual difference being that a struct uses the keyword struct and a class uses the keyword class.
+
+Must assign each piece of public field data a value before invoking a struct. 
+
+/// <summary>
+/// Custom struct type, representing
+    a rectangular shape
+/// </summary>
+struct Rectangle
+{
+    /// <summary>
+    /// Backing Store for Width
+    /// </summary>
+    private int m_width;
+
+    /// <summary>
+    /// Width of rectangle
+    /// </summary>
+    public int Width 
+    {
+        get
+        {
+            return m_width;
+        }
+        set
+        {
+            m_width = value;
+        }
+    }
+
+    /// <summary>
+    /// Backing store for Height
+    /// </summary>
+    private int m_height;
+
+    /// <summary>
+    /// Height of rectangle
+    /// </summary>
+    public int Height
+    {
+        get
+        {
+            return m_height;
+        }
+        set
+        {
+            m_height = value;
+        }
+    }
+}
+
+To use struct, instantiate just like a class. 
+
+sing System;
+
+/// <summary>
+/// Example of declaring and using
+    a struct
+/// </summary>
+class StructExample
+{
+    /// <summary>
+    /// Entry point: execution starts
+        here
+    /// </summary>
+    static void Main()
+    {
+        // instantiate a new Rectangle struct
+        // where Width is set to 1 and Height
+            is set to 3
+	Rectangle rect1 = new Rectangle();
+        rect1.Width = 1;
+        rect1.Height = 3;
+
+        // show the value of Width and Height
+            for rect1
+        Console.WriteLine("rect1: {0}:{1}", rect1.Width, rect1.Height);
+
+        Console.ReadKey();
+    }
+}
+
+OUTPUT:
+rect1: 1:3
+
+An alternate way of instantiating a struct and setting its properties is with an object initializer, shown below:
+
+        // you can also use object
+    initialization syntax
+        Rectangle rect11 = new Rectangle
+        {
+            Width = 1,
+            Height = 3
+        };
+
+Notice that the object initializer uses curly braces and sets properties via a comma-separated list of name/value pairs.
+
+Overloading struct Constructors:
+
+The two previous examples of instantiating a struct, via constructor only and via object initializer, used the default (parameterless) constructor of the struct. The default constructor is implicitly defined by C# and you can’t implement the default constructor yourself.  The default constructor initializes all struct fields to default values. i.e. integrals are 0, floating points are 0.0, and booleans are false. If you need custom constructor overloads, you can add new constructors, as long as they have one or more parameters
+
+/// <summary>
+/// Custom struct type, representing
+    a rectangular shape
+/// </summary>
+struct Rectangle
+{
+    /// <summary>
+    /// Backing Store for Width
+    /// </summary>
+    private int m_width;
+
+    /// <summary>
+    /// Width of rectangle
+    /// </summary>
+    public int Width 
+    {
+        get
+        {
+            return m_width;
+        }
+        set
+        {
+            m_width = value;
+        }
+    }
+
+    /// <summary>
+    /// Backing store for Height
+    /// </summary>
+    private int m_height;
+
+    /// <summary>
+    /// Height of rectangle
+    /// </summary>
+    public int Height
+    {
+        get
+        {
+            return m_height;
+        }
+        set
+        {
+            m_height = value;
+        }
+    }
+
+ /// <summary> /// Instantiate rectangle struct with
+    dimensions /// </summary>
+    /// <param name="width">Width
+        to make new rectangle</param> 
+            /// <param name="height">Height to make new rectangle</param>
+    public Rectangle(int width, 
+            int height) { m_width = width; m_height = height; }
+}
+
+using System;
+
+/// <summary>
+/// Example of declaring and using
+    a struct
+/// </summary>
+class StructExample
+{
+    /// <summary>
+    /// Entry point: execution starts
+        here
+    /// </summary>
+    static void Main()
+    {
+        // instantiate a new Rectangle struct
+        // where Width is set to 5 and Height
+            is set to 7
+	Rectangle rect2 = new Rectangle(5, 7);
+
+        // show the value of Width and Height
+            for rect2
+        Console.WriteLine("rect2: {0}:{1}", rect2.Width, rect2.Height);
+
+        Console.ReadKey();
+    }
+}
+
+OUTPUT:
+rect2: 5:7
+
+All of the examples so far showed how you can add properties and constructors to a struct, but you can also add methods to a struct. Defining a method in a struct is the same as defining a method in a class. 
+
+/// <summary>
+/// Custom struct type, representing
+    a rectangular shape
+/// </summary>
+struct Rectangle
+{
+    /// <summary>
+    /// Backing Store for Width
+    /// </summary>
+    private int m_width;
+
+    /// <summary>
+    /// Width of rectangle
+    /// </summary>
+    public int Width 
+    {
+        get
+        {
+            return m_width;
+        }
+        set
+        {
+            m_width = value;
+        }
+    }
+
+    /// <summary>
+    /// Backing store for Height
+    /// </summary>
+    private int m_height;
+
+    /// <summary>
+    /// Height of rectangle
+    /// </summary>
+    public int Height
+    {
+        get
+        {
+            return m_height;
+        }
+        set
+        {
+            m_height = value;
+        }
+    }
+
+    /// <summary>
+    /// Instantiate rectangle struct
+        with dimensions
+    /// </summary>
+    /// <param name="width">Width
+        to make new rectangle</param>
+    /// <param name="height">Height
+        to make new rectangle</param>
+    public Rectangle(int width, int height)
+    {
+        m_width = width;
+        m_height = height;
+    }
+
+
+    /// <summary> 
+    /// Increase the size of this rectangle by the size of the specified rectangle
+    /// </summary>
+    /// <param name="rect">Rectangle that will be added to this rectangle</param>
+    /// <returns>New rectangle created by adding rect to this rectangle</returns>
+    public Rectangle Add(Rectangle rect)
+    { 
+        // create instance of rectangle struct with default constructor
+        Rectangle newRect = new Rectangle();
+
+        // add matching axes and assign to new Rectangle struct
+        newRect.Width = Width + rect.Width; newRect.Height = Height + rect.Height;
+
+        // return new Rectangle struct
+        return newRect; 
+    }
+}
+
+You can call the Add method, from Listing 12-5, through an instance of a Rectangle struct. 
+
+using System;
+
+/// <summary>
+/// Example of declaring and using
+    a struct
+/// </summary>
+class StructExample
+{
+    /// <summary>
+    /// Entry point: execution starts
+        here
+    /// </summary>
+    static void Main()
+    {
+        // instantiate a new Rectangle struct
+        // where Width is set to 1 and Height is set to 3
+	Rectangle rect1 = new Rectangle();
+        rect1.Width = 1;
+        rect1.Height = 3;
+
+        // show the value of Width and Height for rect1
+        Console.WriteLine("rect1: {0}:{1}", rect1.Width, rect1.Height);
+
+        // instantiate a new Rectangle struct
+        // where Width is set to 5 and Height is set to 7
+	Rectangle rect2 = new Rectangle(5, 7);
+
+        // show the value of Width and Height for rect2
+        Console.WriteLine("rect2: {0}:{1}", rect2.Width, rect2.Height);
+
+
+        // invoke the Add method on the rect1 Rectangle struct instance,
+        // passing the rect2 Rectangle struct instance as an argument
+        // and assigning the new copy of the value returned by the
+        // Add method to the rect3 Rectangle struct.
+        Rectangle rect3 = rect1.Add(rect2);
+
+        // show the value of Width and Height for rect3
+        Console.WriteLine("rect3: {0}:{1}", rect3.Width, rect3.Height);
+
+        Console.ReadKey();
+   }
+}
+
+OUTPUT:
+
+rect1: 1:3 
+rect2: 5:7 
+rect3: 6:10
+
+VALUE TYPE VS REFERENCE TYPE AND ASSIGNMENT
+
+When assign one value type to another, a member by member copy of field data is achieved. When assining one reference type to
+another, then redirecting what the reference variable ponits to in memory. 
+
+REFERENCE VALUE IN A VALUE TYPE
+
+If you have a reference value as a field inside a value type. If you copy that value type to another, then both valuetypes will
+contain an indentical reference to the same location in memory. Assignment will copy the reference value. 
+
+When wanting to p[erform a deep copy where state of internal reference is fully copies into a new object, one approach is to implement
+the ICloneable interface. 
+
+PASSING REFERENCE TYPES BY VALUE
+
+The reference is passed by value, so can still modify the object the reference is pointing to from outside its scope. But cannot change what original reference is pointing to. 
+
+class Person
+{
+public string personName;
+public int personAge;
+ 
+// Constructors.
+public Person(string name, int age)
+{
+personName = name;
+personAge = age;
+}
+public Person(){}
+ 
+public void Display()
+{
+Console.WriteLine("Name: {0}, Age: {1}", personName, personAge);
+}
+}
+
+static void SendAPersonByValue(Person p)
+{
+// Change the age of "p"?
+p.personAge = 99;
+ 
+// Will the caller see this reassignment?
+p = new Person("Nikki", 99);
+}
+
+static void Main(string[] args)
+{
+// Passing ref-types by value.
+Console.WriteLine("***** Passing Person object by value *****");
+Person fred = new Person("Fred", 12);
+Console.WriteLine("\nBefore by value call, Person is:");
+fred.Display();
+SendAPersonByValue(fred);
+Console.WriteLine("\nAfter by value call, Person is:");
+fred.Display();
+Console.ReadLine();
+}
+
+***** Passing Person object by value *****
+ 
+Before by value call, Person is:
+Name: Fred, Age: 12
+ 
+After by value call, Person is:
+Name: Fred, Age: 99
+
+PASSING REFERENCE TYPES BY REFERENCE
+
+static void SendAPersonByReference(ref Person p)
+{
+// Change some data of "p".
+p.personAge = 555;
+ 
+// "p" is now pointing to a new object on the heap!
+p = new Person("Nikki", 999);
+}
+
+static void Main(string[] args)
+{
+// Passing ref-types by ref.
+Console.WriteLine("***** Passing Person object by reference *****");
+...
+ 
+Person mel = new Person("Mel", 23);
+Console.WriteLine("Before by ref call, Person is:");
+mel.Display();
+SendAPersonByReference(ref mel);
+Console.WriteLine("After by ref call, Person is:");
+mel.Display();
+Console.ReadLine();
+}
+
+***** Passing Person object by reference *****
+Before by ref call, Person is:
+Name: Mel, Age: 23
+After by ref call, Person is:
+Name: Nikki, Age: 999
+
+•	 If a reference type is passed by reference, the callee may change the values of the
+object’s state data, as well as the object it is referencing.
+•	 If a reference type is passed by value, the callee may change the values of the object’s
+state data but not the object it is referencing.
+
+Intriguing Question Value Type Reference Type
+Where are objects allocated? Allocated on the stack. Allocated on the managed heap.
+How is a variable represented? Value type variables are local
+copies. Reference type variables are
+pointing to the memory occupied by
+the allocated instance.
+What is the base type? Implicitly extends
+System.ValueType. Can derive from any other type
+(except System. ValueType), as
+long as that type is not “sealed”
+(more details on this in Chapter 6).
+Can this type function as a
+base to other types? No. Value types are always sealed
+and cannot be inherited from. Yes. If the type is not sealed, it may function as a base to other types
+
+Intriguing Question Value Type Reference Type
+What is the default parameter
+passing behavior? Variables are passed by value
+(i.e., a copy of the variable is
+passed into the called function). For reference types, the reference is
+copied by value.
+Can this type override
+System.Object.Finalize()? No. Yes, indirectly (more details on this
+in Chapter 13).
+Can I define constructors for
+this type? Yes, but the default constructor
+is reserved (i.e., your custom
+constructors must all have
+arguments). But, of course!
+When do variables of this
+type die? When they fall out of the defining
+scope. When the o

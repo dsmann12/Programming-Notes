@@ -1,0 +1,93 @@
+AGGREGATES
+
+Aggregate Functions - take lots of rows of data and combine into a single value. 
+
+MIN, MAX, SUM, and AVG
+
+SELECT AVG(amount) FROM payment;
+
+SELECT ROUND( AVG(amount), 2) FROM payment;
+4.20 <- 2 decimals
+
+SELECT MIN(amount) FROM payment;
+SELECT MAX(amount) FROM payment;
+SELECT SUM(amount) FROM payment;
+
+GROUP BY
+
+Divides the rows returns from the SELECT statement into groups. For each group, you can apply an aggregate function.
+
+Exmaple:
+-calculating the sum of items
+-count the number of items in the groups
+
+SELECT column1, aggregate_function(column2)
+FROM table_name
+GROUP BY column1;
+
+SELECT customer_id 
+FROM payment
+GROUP BY customer_id;
+
+Essentially works like distinct, returning the distinct customer ids. Groups by customer id value. 
+
+Most useful when used in conjunction with an aggregate function. 
+
+SELECT customer_id, SUM(amount)
+FROM payment
+GROUP BY customer_id;
+
+Postgres is flexible with what is called in select statement vs what is called with group by. Others specify that aggregate function must be called on same column data is grouped by. 
+
+So for every customer id, group by that customer id, and apply sum to the amounts for those specific customer ids.
+
+Get sum of payments for each customer id
+
+SELECT customer_id, SUM(amount)
+FROM payment
+GROUP BY customer_id
+ORDER BY SUM(amount) DESC;
+
+Get count of payments made by staff_id
+
+SELECT staff_id, COUNT(*)
+FROM payment
+GROUP BY staff_id;
+
+Get count of each rating of films
+
+SELECT rating, COUNT(rating) FROM film
+GROUP BY rating;
+
+HAVING
+
+Basically using a where statement when using a group by. Used with a group by clause to filter group rows that do not satisfy a specified condition.
+
+SELECT column1, aggregate(column2)
+FROM table_name
+GROUP BY column1,
+HAVING condition
+
+*IMPORTANT*
+The HAVING clause sets the condition for the group rows created by the GROUP BY clause afterthe GROUP BY clause applies while the WHERE clause sets the condition for the individual rows before GROUP BY clause applies. 
+
+Select customers that have spent more than $200
+
+SELECT customer_id, SUM(amount)
+FROM payment
+GROUP BY customer_id
+HAVING SUM(amount) > 200;
+
+Select stores with more than 300 customers. 
+
+SELECT store_id, COUNT(customer_id),
+FROM customer
+GROUP BY store_id
+HAVING COUNT(customer_id) > 300;
+
+
+SELECT rating, AVG(rental_rate)
+FROM film
+WHERE rating IN ('R', 'G', 'PG')
+GROUP BY rating
+HAVING AVG(rental_rate) < 3;

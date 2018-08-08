@@ -1,0 +1,144 @@
+PRINTERS
+
+4 Major. 3 are extremely similar to each other. Thermal printer, inkjet printers, and dot matrix printers. Set of tubes. 
+
+All have tech that moves things back and forth on page. 
+
+Think of 9 tubes.
+
+Impact/Dot Matrix - pins that smack through ink ribbon and onto a piece of paper. 
+
+Thermal - heating wires instead of pins. Heats and cools at incredibly high rates of speeds. Paper sensitive to heat changes color. 
+
+Inkjet - Maybe 36 tubes. Literal tubes, behind are reservoirs of ink, on back of tubes are piazo transistors (making liquid boil really fast) shooting bubbles of ink on paper. Called bubble jets in past. 
+
+Each similar but each have benefit. Dot matrix is impact printer so they can do carbon copies. Very expensive. Thermal doesn't have great benefits but price. Need thermal sensitive paper. Receipt paper. Not good for permanent stuff. Inkjets use big group of colors to do well with color. 
+
+Laser Printing - 
+
+7 Step Printing Process
+
+1. RAM - when print to laser printing, it gets processed. Usually stored on RAM on printer. Stored in format with names like PostScript or Printer Control Language (PCL) that are defined languages that help get stuff printed to paper. 
+
+Photosensitive drum - designed to hold a charge. All laser printer have some form. Usually hold negative charge. Depending where light hits it, it will hold less charge. 
+2. Charging - primary charge roll lays very strong negative charge onto drum. -600V charge in example. 
+3. Exposing - laser or LED is running back and forth and turning on and off creating the image. The more light you hit drum with, the less charge it holds. 
+3. Developing - bring toner really close to it. Toner pre charged into voltage between RED (where laser hit) and BLUE (drum charge). -250 in example. Could see toner on drum at this point.
+5. Transferring - Transfer roller puts extremely positive charge on paper so toner jumps off of drum and onto page. Would smear on tough.
+6. Fusing - heat and pressure used by toner to stay on paper. And gets rid of paper charge, going through anti-static
+7. Cleaning - scraping off any extra toner or goop to make clean. Then back to charging. 
+
+PRINTER CONNECTIONS
+
+To put printer on network:
+1. Plug into system and have system share printer
+2. Plug printer into network directly wired or wireless and share from there.
+
+Either use parallel connections or USB typically to connect directly to computer. 
+
+Parallen/Centronics connections are oldest. Centronics on printer, parallel on PC. 
+
+Networking options:
+
+Can have Ethernet connector. Don't need to plug into computer to connect to network. Can plug into network. It is a DHCP client from factory so will pick up DHCP address. Then can locate and connect to them. 
+
+Print Server - Can plug into network and then plug USB printer into USB. For printers that don't have networking capabilities. 
+
+Wireless Connection - all built in. Wireless hardware inside printer. 
+
+MAINTAINING IMPACT PRINTERS
+
+Dot Matrixes are old technology. 
+
+Handle tractor feed paper- old paper with holes on them.
+
+Print head - have pins that pushed by actuators. Have ink ribbon. Have rewind button often. Inside printhead may get dirty. Way to fix depends on printead. Can clean with isopropyl alcohol. 
+
+Platten - roller. Must be squareish. If they move a bit over years can cause trouble. Dark on one side and getting lighter. Platten has been misaligned. Of if all prints on top, platten may be too high. 
+
+Going to pick up paper dander and other things. So should clean them. 
+
+Rule is never use an air gun on printer cause it will blow in places. 
+
+MAINTAINING INKJET PRINTERS
+
+Can be frustrating. 
+
+Ink Cartridges - can run north of $50 for particular makes and models. 
+
+Tray that moves back and forth carrying ink cartridges. Circle thing where ink trickles out to jets. 
+
+When closed, ink carriage moves to maintenance area that clears inkjets out of way and puts caps on ink outlets to help preserve system.
+
+Maintenance usually is software.
+
+Align Printheads - inkjets lose allignment over time. Makes things fuzzy. 
+
+Clean Printheads - Run through aggressive program to clean the,. 
+
+Estimated Ink Levels
+
+To keep inkjet jets clean is to print with it. Letting them sit will cause problems. Actual printheads may not be replaceable. Also needs to watch for paper dander. 
+
+Make Sure right print driver
+
+Interference - don't print next to electromagnet. 
+
+Can last a long time with maintenance.
+
+MAINTAINING LASER PRINTERS
+
+Tanks. Can last long time. 
+
+Maintenance Kits - something passed out by manufacturer to keep system up and running. Different for every different printer and manufacturer. 
+
+Toner Cartridge - stick with 1st party. Give it shake if start printing lightly. Also make sure photosensitive drum gets any damage it will show up on print. Repetitive problems will indicate problem with photosensitive drum. Need to replace cartridge. 
+
+Generate lots of ozone. All have some kind of ozone filter. Ozone tears up plastics and such. If on maintenance program from manufacturer, they will give ozone filter. Lots of paper errors and hard internals indicate ozone. 
+
+If no good primary charge on drum, then may causes problems. Imagery from older images may still be on it. 
+
+if laser not working, wou will get blank sheets. 
+
+If toner empty, nothing wil show up but is inidcated by fainting prints. Also may have messed up toner assembly, getting full black sheets. 
+
+Transfer problem, if paper coming out blank than transfer roller may be messed up. If smeared, then fusion assembly is bad. What if it is staticy, then static eliminator is busted. 
+
+RAM - not enough RAM to print page. If lucky, will get error. Either need to add more RAM or reduce dots per inch. Out of box, they do 600x600 DPI today. 
+Expensive printers can give print information - total amount of prints, print maintenance.
+
+Paper
+
+Cheap paper not good. Also very high quality papers for photographs, but don't go cheap on regular paper either. 
+
+TROUBLESHOOTING
+
+Properly installed, well maintained printer should be ready to be used when needed. 
+
+Printer Properties - usually first place to go..
+
+Control panel - Devices and Printers
+
+Right click printer and select properties. 
+
+Print Spooler - shows all print jobs currently in queue for particular printer. Can set up printing perfernces and do sharing. Print jobs build up in queue. Once printer is enabled and on, it will go through queue and print. 
+
+Printer Properties - Sharing - give different people different abilities to use printers. Similar to NTFS permissions. To be able to print, manage printer (turn off/on, etc), manage documents (delete), and special permissions. 
+
+No connection - The no connectivity to printer that never been connected to before and no connectivity to familiar printer. 
+
+Often simple. Unplugged cable or disabled cable in BIOS for local printers. 
+
+For network problems, stop thinking of it as printer and think of it as normal DHCP device, is DHCP running, does it have physical connection to switch, do you have connection to switch, trying to query it using DNS name but DNS server is down. Etc. 
+
+Windows 7 - Print Management 
+
+Go Start, type in print management. 
+
+Gives idea of what is on system (and other systems) right now. Tells how many drivers are on system. Number of printers available. Printer not ready and also Printers With Jobs. 
+
+Can see Print Servers. 
+
+Deployed Printers - only for windows systems running active directory. 
+
+ 

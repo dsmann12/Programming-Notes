@@ -1,0 +1,371 @@
+INHERITANCE
+
+using System;
+
+public class ParentClass
+{
+    public ParentClass()
+    {
+        Console.WriteLine("Parent Constructor.");
+    }
+
+    public void print()
+    {
+        Console.WriteLine("I'm a Parent Class.");
+    }
+}
+
+public class ChildClass : ParentClass
+{
+    public ChildClass()
+    {
+        Console.WriteLine("Child Constructor.");
+    }
+
+    public static void Main()
+    {
+        ChildClass child = new ChildClass();
+
+        child.print();
+    }
+}
+
+Use : to show inheritance. 
+
+C# supports single class inheritance only. Only can inherit from one base class. But can inherit from multipleinterfaces. 
+
+Base classes automatically instantiated before derived classes.
+
+using System;
+
+public class Parent
+
+{
+
+    string parentString;
+
+    public Parent()
+
+    {
+
+        Console.WriteLine("Parent Constructor.");
+
+    }
+
+    public Parent(string myString)
+
+    {
+
+        parentString = myString;
+
+        Console.WriteLine(parentString);
+
+    }
+
+    public void print()
+
+    {
+
+        Console.WriteLine("I'm a Parent Class.");
+
+    }
+
+}
+
+
+
+
+public class Child : Parent
+
+{
+
+    public Child() : base("From Derived")
+
+    {
+
+        Console.WriteLine("Child Constructor.");
+
+    }
+
+    public new void print()
+
+    {
+
+        base.print();
+
+        Console.WriteLine("I'm a Child Class.");
+
+    }
+
+    public static void Main()
+
+    {
+
+        Child child = new Child();
+
+        child.print();
+
+        ((Parent)child).print();
+
+    }
+
+}
+
+keyword base calls the base class. 
+
+derived class "is" same as base class. Can be converted easily. Base class cannot be converted to derived class.
+
+base.print();
+
+new - modifer for methods. Tells c# compiler to hide base class method of same name. Otherwise compiler gives warning. 
+
+Notice the new modifier on the Child class print() method. This enables this method to hide the Parent class print() method and explicitly states your intention that you don’t want polymorphism to occur. Without the new modifier, the compiler will produce a warning to draw your attention to this. See the next lesson for a detailed discussion of polymorphism.
+
+Base class constructors are always called before the derived class constructors so it is inefficient to not set data from base class until derived class
+constructor. 
+
+Instead of this:
+
+public Manager(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfOpts)
+{
+// This property is defined by the Manager class.
+StockOptions = numbOfOpts;
+ 
+// Assign incoming parameters using the
+// inherited properties of the parent class.
+ID = empID;
+Age = age;
+Name = fullName;
+Pay = currPay;
+ 
+// OOPS! This would be a compiler error,
+// if the SSN property were read-only!
+SocialSecurityNumber = ssn;
+}
+
+Do this:
+
+// Add to the Employee base class.
+public Employee(string name, int age, int id, float pay, string ssn)
+:this(name, age, id, pay)
+{
+empSSN = ssn;
+}
+
+public Manager(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfOpts)
+: base(fullName, age, empID, currPay, ssn)
+{
+// This property is defined by the Manager class.
+StockOptions = numbOfOpts;
+}
+
+// As a general rule, all subclasses should explicitly call an appropriate
+// base class constructor.
+public SalesPerson(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfSales)
+: base(fullName, age, empID, currPay, ssn)
+{
+// This belongs with us!
+SalesNumber = numbOfSales;
+}
+
+May also use base keyword when a subclass wants to access a public or protected member defined by a parent class. 
+
+CASTING
+
+Implicit casts -> derived types are automatically also thier base types. 
+
+explicit casts -> arguments must be either the specified type or a derived type. Cannot be higher up the chaiBase class constructors are always called before the derived class constructors so it is inefficient to not set data from base class until derived class
+constructor. 
+
+Instead of this:
+
+public Manager(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfOpts)
+{
+// This property is defined by the Manager class.
+StockOptions = numbOfOpts;
+ 
+// Assign incoming parameters using the
+// inherited properties of the parent class.
+ID = empID;
+Age = age;
+Name = fullName;
+Pay = currPay;
+ 
+// OOPS! This would be a compiler error,
+// if the SSN property were read-only!
+SocialSecurityNumber = ssn;
+}
+
+Do this:
+
+// Add to the Employee base class.
+public Employee(string name, int age, int id, float pay, string ssn)
+:this(name, age, id, pay)
+{
+empSSN = ssn;
+}
+
+public Manager(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfOpts)
+: base(fullName, age, empID, currPay, ssn)
+{
+// This property is defined by the Manager class.
+StockOptions = numbOfOpts;
+}
+
+// As a general rule, all subclasses should explicitly call an appropriate
+// base class constructor.
+public SalesPerson(string fullName, int age, int empID,
+float currPay, string ssn, int numbOfSales)
+: base(fullName, age, empID, currPay, ssn)
+{
+// This belongs with us!
+SalesNumber = numbOfSales;
+}
+
+May also use base keyword when a subclass wants to access a public or protected member defined by a parent class. 
+
+CASTING
+
+Implicit casts -> derived types are automatically also thier base types. 
+
+explicit casts -> arguments must be either the specified type or a derived type. Cannot be higher up the chain
+
+static void GivePromotion(Employee emp)
+{
+// Increase pay...
+// Give new parking space in company garage...
+ 
+Console.WriteLine("{0} was promoted!", emp.Name);
+}
+
+static void CastingExamples()
+{
+// A Manager "is-a" System.Object, so we can
+// store a Manager reference in an object variable just fine.
+object frank = new Manager("Frank Zappa", 9, 3000, 40000, "111-11-1111", 5);
+ 
+// A Manager "is-an" Employee too.
+Employee moonUnit = new Manager("MoonUnit Zappa", 2, 3001, 20000, "101-11-1321", 1);
+GivePromotion(moonUnit);
+ 
+// A PTSalesPerson "is-a" SalesPerson.
+SalesPerson jill = new PTSalesPerson("Jill", 834, 3002, 100000, "111-12-1119", 90);
+GivePromotion(jill);
+}
+
+object frank = new Manager("Frank Zappa", 9, 3000, 40000, "111-11-1111", 5);
+// Error!
+GivePromotion(frank);
+
+THE C# as KEYWORD
+
+as - used to quickly determine at runtime whether a given type is compatible with another. Able to determine compatibility by checking against a null 
+return value. 
+
+// Use "as" to test compatability.
+object[] things = new object[4];
+things[0] = new Hexagon();
+things[1] = false;
+things[2] = new Manager();
+things[3] = "Last thing";
+ 
+foreach (object item in things)
+{
+Hexagon h = item as Hexagon;
+if (h == null)
+Console.WriteLine("Item is not a hexagon");
+else
+{
+h.Draw();
+}
+}
+
+THE C# is KEYWORD
+
+is - determine whether two items are compatible. Unlike as, the is keyword returns false rether than a null reference if the types are incompatible.
+
+static void GivePromotion(Employee emp)
+{
+Console.WriteLine("{0} was promoted!", emp.Name);
+ 
+if (emp is SalesPerson)
+{
+Console.WriteLine("{0} made {1} sale(s)!", emp.Name,
+((SalesPerson)emp).SalesNumber);
+Console.WriteLine();
+}
+if (emp is Manager)
+{
+Console.WriteLine("{0} had {1} stock options...", emp.Name,
+((Manager)emp).StockOptions);
+Console.WriteLine();
+}
+}
+
+THE MASTER PARENT CLASS: System.Object
+
+System.Object - also can be represented by C# object keyword. Defines a set of common members for every type in the framework. Compiler automatically 
+ensures that a class that does not define a parent derives from this class. 
+
+public class Object
+{
+// Virtual members.
+public virtual bool Equals(object obj);
+protected virtual void Finalize();
+public virtual int GetHashCode();
+public virtual string ToString();
+ 
+// Instance-level, nonvirtual members.
+public Type GetType();
+protected object MemberwiseClone();
+ 
+// Static members.
+public static bool Equals(object objA, object objB);
+public static bool ReferenceEquals(object objA, object objB);
+}
+
+Instance Method of
+Object Class Meaning in Life
+Equals() By default, this method returns true only if the items being compared refer to
+the same item in memory. Thus, Equals() is used to compare object references,
+not the state of the object. Typically, this method is overridden to return true
+only if the objects being compared have the same internal state values (that is,
+value-based semantics).
+Be aware that if you override Equals(), you should also override GetHashCode(),
+as these methods are used internally by Hashtable types to retrieve subobjects
+from the container.
+Also recall from Chapter 4, that the ValueType class overrides this method for all
+structures, so they work with value-based comparisons.
+
+Instance Method of
+Object Class Meaning in Life
+Finalize() For the time being, you can understand this method (when overridden) is called
+to free any allocated resources before the object is destroyed. I talk more about the
+CLR garbage collection services in Chapter 9.
+GetHashCode() This method returns an int that identifies a specific object instance.
+ToString() This method returns a string representation of this object, using the
+<namespace>.<type name> format (termed the fully qualified name). This method
+will often be overridden by a subclass to return a tokenized string of name/value
+pairs that represent the object’s internal state, rather than its fully qualified name.
+GetType() This method returns a Type object that fully describes the object you are currently
+referencing. In short, this is a Runtime Type Identification (RTTI) method
+available to all objects (discussed in greater detail in Chapter 15).
+MemberwiseClone() This method exists to return a member-by-member copy of the current object,
+which is often used when cloning an object (see Chapter 8).
+
+Two basic static method sthat test for value-based or reference-based equality. 
+
+static void StaticMembersOfObject()
+{
+// Static members of System.Object.
+Person p3 = new Person("Sally", "Jones", 4);
+Person p4 = new Person("Sally", "Jones", 4);
+Console.WriteLine("P3 and P4 have same state: {0}", object.Equals(p3, p4));
+Console.WriteLine("P3 and P4 are pointing to same object: {0}",
+object.ReferenceEquals(p3, p4));
+}

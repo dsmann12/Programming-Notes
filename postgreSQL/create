@@ -1,0 +1,352 @@
+CREATE AND INSERT DATABASES AND TABLES
+
+DATA TYPES
+
+Boolean
+Character
+Number
+Temporal (Date/Time)
+Special Types (Geometric, etc)
+Array
+
+Specify what kind of data type a column should have when creating tables. 
+
+Makes sure that only valid values can be inserted in columns.
+
+
+Boolean - true of false. NULL if unknown. boolean or bool keyword.
+
+When insert data into a Boolean column, PostgreSQL will convert it into Boolean value, e.g. 1, yes, y, t, true are converted to true and 0, no, n, false, f are converted to false. 
+
+When you select dta from a Boolean column, PostgreSQL will display t for true, f for false, and space for NULL
+
+Character - 3 types of character data types. 
+
+1. Single character: char
+2. Fixed-length character strings: char(n). If insert a string that is shorter than length of column, PostgreSQL will pad spaces. If insert a string that is longer than length of column, PostgreSQL will issue an error
+3. Variable length character strigns: varchar(n). Can store up to n characters with variable length character strings. PostgreSQL does not pad spaces when the stored string is shorter than length of the column. 
+
+Number - PostgreSQL provides two distinct types of numbers
+
+1. Integers
+2. Floating Point
+
+3 Types of Integers
+
+1. smallint - small integer is 2 byte signed integer that has range (-32,768, 32,767). short
+2. int - 4 byte integer range of (-2147483648, 2147483647)
+3. serial - same as integer except that PostgreSQL populates value into the column automaticaly. This is similar to AUTO_INCREMENT attribute in other database management systems. 
+
+3 Types of Floating Point Numbers
+
+1. float(n) - a floating point number whose precision, at least, n, up to a maximum of 8 bytes
+2. real or float8 - is a double precision (8 byte) floating point number
+3. numeric or numeric(p, s) is a real number with p digits with s number after the decimal point. The numeric(p,) is the exact number. 
+
+3 Types of Floating Point Numbers
+
+1. float(n) - a floating point number whose precision, at least, n, up to a maximum of 8 bytes
+2. real or float8 - is a double precision (8 byte) floating point number
+3. numeric or numeric(p, s) is a real number with p digits with s number after the decimal point. The numeric(p,) is the exact number. 
+
+3 Types of Floating Point Numbers
+
+1. float(n) - a floating point number whose precision, at least, n, up to a maximum of 8 bytes
+2. real or float8 - is a double precision (8 byte) floating point number
+3. numeric or numeric(p, s) is a real number with p digits with s number after the decimal point. The numeric(p,) is the exact number. 
+
+Temporal - stores date and time data
+
+date - stores date data
+time - stores time data
+timestamp - stores date and time
+interval - stores difference in timestamps
+timestamptz - store both timestamp and timezone data
+
+PRIMARY KEYS AND FOREIGN KEYS
+
+Primary Key - a column or a group of columns that is used to identify a row uniquely in a table. Define primary keys through PRIMARY KEY constraints. 
+
+Table can have one and only one primary key. Good practice to add a primary key to every table. 
+
+When you add a primary key to a table, PostgreSQL creates a unique index on the column or a group of columns used to define the primary key. 
+
+Often use a serial data type because it auto increments when item added to table.
+
+Normally, add the primary key to a table when we define the table's structure using CREATE TABLE statement. 
+
+CREATE TABLE table_name (
+	column_name data_type PRIMARY KEY,
+	column_name data_type, ...);
+
+FOREIGN KEY
+
+A foreign key is a field or group of fields in a table that uniquely identified a row in another table. In other words, it is defined in a table that refers to the primary key of the other table. 
+
+Table that containts the foreign ke is called the referencing table or child table. And the table to which the foreign key references is called the referenced table or parent table.
+
+A table can have multiple foreign keys depending on its relationships with other tables.
+
+In PostgreSQL, you define a foreign key through a foreign key constraint. A foreign key constraint indicates that values in a column or a group of columns in the child table match with the values in a column or a group of columns in the parent table. 
+
+We say a foreign key constraint maintains referential integrity between child and parent tables. 
+
+CREATE TABLES
+
+Syntax
+
+CREATE TABLE table_name (
+column_name TYPE column_constraint,
+table_constrant )
+INHERITS existing_table_name;
+
+Column constraints define constraints on individualy columns. Table constraints define constraints on whole table.
+
+Can inherit properties from existing table. Mean new table contains all columns of the existing table and the columns defined in the CREATE TABLE statement. 
+
+Basic Column Constraints:
+NOT NULL - the value of column cannot be NULL
+UNIQUE - value of the column must be unique across the whole table. However, PostgreSQL treats each NULL value as unique so can have many NULL values. SQL standard only allows one null value in unique column.
+
+PostgreSQL Column Constrainst
+
+PRIMARY KEY - combination of NOT NULL and UNIQUE constraints. Can define one column as PRIMARY KEY by using column-level constraint. In case the primary key containts multiple columns, you must use the table level constraint. 
+
+CHECK - enables to check a condition when insert or update data. Example, price data must be positive. 
+
+REFERENCE - contrains the alue of the column that exists in a column in another table.
+
+PostgreSQL Table Constraints
+
+Basically similar to column constraints except applies to entire table.
+
+UNIQUE(column_list) - force the value stores in the columns lists inside the parentheses to be unique
+
+PRIMARY KEY(column_list) - to define the primary key that consists of multiple columns
+
+CHECK(condition) - to check a condition when inserting or updating data
+
+REFERENCES - to constraint the value stored in the column that must exist in a column in another table
+
+CREATE TABLE account (
+user_id serial PRIMARY KEY,
+username VARCHAR(50) UNIQUE NOT NULL,
+password VARCHAR(50) NOT NULL,
+email VARCHAR(355) UNIQUE NOT NULL,
+created_on TIMESTAMP NOT NULL,
+last_login TIMESTAMP
+);
+
+CREATE TABLE role (
+role_id serial PRIMARY KEY,
+role_name VARCHAR(255) UNIQUE NOT NULL)
+);
+
+//More complex table
+
+CREATE TABLE account_role(
+	user_id integer NOT NULL,
+	role_id integer NOT NULL,
+	grant_date timestamp without time zone,
+	PRIMARY KEY (user_id, role_id),
+	CONSTRAINT account_role_role_id_fkey FOREIGN KEY(role_id)
+		REFERENCE role(role_id) MATCH SIMPLE
+		ON UPDATE NO TACTION ON DELETE NO ACTION,
+	CONSTRAINT account_role_user_id_fkey FOREIGN KEY(user_id)
+		REFERENCES account(user_id) MATCH SIMPLE
+		ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+INSERT
+
+When create a new table, often the first thing you do is to insert new rows into the table.
+
+SQL provides the INSERT statement that allows you to insert one or more rows into a table
+
+First, specify name of table you wan to inserrt a new row after the INSRET INTO clause followed by a comma-separated list. 
+
+Second, you lista comma-separated value list after the VALUES clause. The value list must be in the same order as the columns list specified after the table name.
+
+INSERT INTO table(column1, column2,...)
+VALUES (value1, value2,...)
+
+To add multiple rows into a table at a time:
+
+INSERT INTO table (column1, column2,...)
+VALUES 
+	(value1, value2,...),
+	(value1, value2,...)
+
+To insert data that comes from another table, use INSERT INTO SELECT statement as follows:
+
+INSERT INTO table
+SELECT column1, column2,...
+FROM another_table
+WHERE condition;
+
+Example:
+
+INSERT INTO link(url, name)
+VALUES
+('www.google.com', 'Google')
+
+INSERT INTO link(url, name)
+VALUES
+('www.yahoo.com', 'Yahoo'),
+('www.bing.com', 'Bing')
+
+//Can clone another table
+
+CREATE TABLE link_copy (LIKE link);
+CRATE TABLE new_table (LIKE old_table);
+
+INSERT INTO link_copy
+SELECT * FROM link
+WHERE name = 'Bing';
+
+UPDATE
+
+Update existing data in the table. 
+
+To change values of columns in a table, use the UPDATE statement. 
+
+UPDATE table
+SET column1 = value1,
+	column2 = value2,
+WHERE condition;
+
+Set all descriptions to 'Empty description'
+
+UPDATE link
+SET description = 'Empty description';
+
+UPDATE link
+SET description = 'Name starts with an A'
+WHERE name LIKE 'A%';
+
+Can update data from column based on another column in the same table. As long as data types match. 
+
+UPDATE link
+SET description = name;
+
+Can return updated rows with RETURNING statement
+
+UPDATE link
+SET description = 'New description'
+WHERE id = 1
+RETURNING id, url, name, description
+
+DELETE
+
+Remove data from a table. 
+
+DELETE FROM table
+WHERE condition
+
+Returns the number of rows deleted. If no rows deleted, it returns 0.
+
+DELETE from link
+WHERE name LIKE 'B%';
+
+Can return rows with RETURNING statement
+
+DELETE from link
+WHERE name = 'A'
+RETURNING *;
+
+ALTER TABLE
+
+Change existing table structure. 
+
+ALTER TABLE table_name action. 
+
+Action statements
+
+PostgreSQL provides many actions that allow you to:
+-Add, rmeove, or rename column.
+-Set default value for the column
+-Add CHECK constraint to a column
+-Rename table
+
+Keywords:
+-ADD COLUMN
+-DROP COLUMN
+-RENAME COLUMN
+-ADD CONSTRAINT
+-RENAME TO
+
+ALTER TABLE link ADD COLUMN active boolean;
+
+ALTER TABLE link DROP COLUMN active;
+
+ALTER TABLE link RENAME COLUMN title TO new_title_name;
+
+ALTER TABLE link RENAME TO url_table;
+
+DROP TABLE
+
+To remove exisiting table from the database, you use the DROP TABLE statement
+
+DROP TABLE [IF EXISTS] table_name;
+
+DROP TABLE test_two;
+
+To avoid error:
+
+DROP TABLEIF EXISTS table_name;
+
+If want to make sure table not deleted if any objects are dependent on it. PostgresSQL uses RESTRICT by default.
+
+DROP TABLE IF EXISTS table_name RESTRICT;
+
+If want to drop table that has objects dependent on it. 
+
+DROP TABLE IF EXISTS test_two CASCADE; 
+
+CONSTRAINTS
+
+CHECK
+
+CHECK constraint is a kind of constraint that alows you to specify if a value in acolumn meets a specific requirement. Uses a Boolean expression to evaluate the values of a column. If values of the column pass the check, PostgreSQL will insert or update those values. Otherwise will return some kind of error. 
+
+CREATE TABLE new_users(
+	id serial PRIMARY KEY,
+	first_name VARCHAR(50),
+	birth_date DATE CHECK(birth_date > '1900-01-01'),
+	join_date DATE CHECK(join_date > birth_date),
+	salary integer CHECK(salary > 0)
+);
+
+Can give constraints a personal name
+
+CREATE TABLE checktest(
+	sales integer CONSTRAINT positive_sale CHECK(sales>0)
+);
+
+NOT NULL
+
+In database theory, NULL is unknown or missing data. NULL value is different from empty or zero. If we do not know email of person, we use NULL value. If person has no email, we can mark it as empty string. 
+
+PostgreSQL provides NOT NULL constraint to enforce a column must not have NULL values. 
+
+CREATE TABLE learn_null(
+	first_name VARCHAR(50),
+	sales integer NOT NULL
+);
+
+INSERT INTO leran_null(first_name)
+VALUES('John'); 
+
+Throws error because Postgres tries to put NULL in unprovided data. So make sure NOT NULL values are included when inserting
+
+UNIQUE
+
+Makes sure value in a column or group of columns is unique. 
+
+Every time you insert a new row, PostgreSQL checks if the value is already in the table. If it found the new value is already here, it would give back an error mesage and reject the changed. Same process is carried out for update existing data. 
+
+CREATE TABLE learn_unique(
+	id serial PRIMARY KEY,
+	first_name VARCHAR(50) NOT NULL,
+	email VARCHAR(100) UNIQUE
+);

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#for loop with brace expansion with sequence expression
+for count in {0..10}
+do
+	echo $count
+done
+
+#stop at value 9 and print on one line with -n argument for echo
+for count in {0..9}
+do
+	echo -n $count
+done
+echo
+
+#range for loop with seq
+for count in $(seq 0 2 10)
+do
+	echo -n "$count "
+done
+echo
+
+#c style for loop
+for ((x = 0; x < 10; x++))
+do
+	echo -n $x
+done 
+echo

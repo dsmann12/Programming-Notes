@@ -1,0 +1,39 @@
+Garbage Values
+object definitions
+
+read two strings:
+cin >> first >> second
+
+Operators exactly
+
+CTRL-D is EOF in Unix. CTRL-Z in Windows
+
+If you read system code or machine-generated code, you might see names starting with underscores,
+such as _foo. Never write those yourself; such names are reserved for implementation and system
+entities. By avoiding leading underscores, you will never find your names clashing with some name
+that the implementation generated.
+
+C++ initializations to avoid narrowing conversion. 
+
+The abbreviation I/O stands for “input/output.” In this case, the output from one part of code is the
+input for the next part. What such “parts of a program” share is data stored in main memory, on
+persistent storage devices (such as disks), or transmitted over network connections. By “parts of a
+program” we mean entities such as a function producing a result from a set of input arguments (e.g., a
+square root from a floating-point number), a function performing an action on a physical object (e.g.,
+a function drawing a line on a screen), or a function modifying some table within the program (e.g., a
+function adding a name to a table of customers).
+When we say “input” and “output” we generally mean information coming into and out of a
+computer, but as you see, we can also use the terms for information given to or produced by a part of a
+program. Inputs to a part of a program are often called arguments and outputs from a part of a
+program are often called results.By computation we simp
+
+By computation, we mean producting some output from inputs
+
+Constant Expression - an expression with an integer value composed exclusively of constants. Must be given a value that is known at compile time. 
+//constant plus literal
+
+Magic constants? - Non-obvious literals in code (outside definitions of symbolic constants) are derisively referred to as magic constants. 
+
+Const handles cases where value of a variable that is initialized with a value that is not known at compile time but never changes after initialization. const is older. 
+
+

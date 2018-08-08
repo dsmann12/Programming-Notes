@@ -1,0 +1,567 @@
+MICROPROCESSING
+
+HISTORICAL/CONCEPTUAL
+
+Central Processing Unit - CPU. Known as brain of computer. Basically just a powerful calculator.
+
+Lots of calculations. Allows all productivity to happen on computer. 
+
+Add, substract, divides, multiplies and moves billions of numbers per second. 
+
+Intel 8088 - grandad of CPUs. Invented in late 1970s. CPU defined idea of modern microprocessor and contains same basic parts used in even most advanced CPUs today. 
+
+Before can work with CPU, must come up with way to exchange information with him. 
+
+Imagine install a set of 16 light bulbs, 8 inside the box, and 8 ouside. Each of the 8 light bulbs in side the box connects to one of 8 outside the box. Each pair is either on or off. Can control 8 pairs of bulbs by using a set of 8 switches outside the box. Man in box (CPU) can also control them by using an identical set of 8 switches inside the box. Lightbulb communication device is called *external data bus* (EDB).
+
+By creating on/off patterns with light bulbs that represent data, you can send information to man in box (CPU). He can send informmation back in same way. Assuming agree ahead of time what different patterns mean. 
+
+Need a "cookbook" to determine patterns. 
+
+Realityu: wire sticking out of CPUs or mobos. Applying voltage to wires is in essence flipping a switch. 
+
+1 represents on. 0 represents off. Binary. 
+
+Registers:
+
+Registers - store internal data and commands. Workplace where man in the box (CPU) can get things done. All CPUs contain large number of registers. Four most common are general-purpose registers. Ax, bx, cx, dx. 
+
+Machine language - binary commands. Assembly or binary. 
+
+By placing machine langauge commands -- lines of code -- onto the EDB one at a time, can instruct the man in the box to do specific tasks. 
+
+All machine langauge commands that CPU understands make up the CPU's instruction set. 
+
+Clock:
+
+How does man in box known when finished setting wire in EDB? CPU has type of crank that tells it to calculate data. 
+
+Imagine bell inside box activated by a button on the outside of the box. Each time button pressed to sound the bell, the Man in box reads the next set of lights on the EDB. 
+
+Clock wire - bell on a real CPU (often labeled CLK). Charge on CLK wire tells CPU that another piece of information is waiting to be processed. 
+
+For CPU to process a command placed on the EDB, a certain minimum voltage must be applied to the CLK wire. 
+
+Clock cycle - a single charge to the CLK wire. 
+
+Actually CPU requires at least two clock cycles to act on a command and ususally more. 
+
+In fact, computer may require hundreds of clock cycles to process some commands. 
+
+Clock speed - max number of clock cycles that a CPU can handle in a given period of time. Fastest speed at which a CPU can operate, determined by the CPU manufacturer. 
+
+Intel 8088 had a clock speed of 4.77 MHz (4.77 million cycles per second). Modern CPUs clock speeds exceed 3 GHz (3 billion cycles per second). 
+
+1 HZ = 1 cycle per second
+1 MHz = 1 million cycles per second
+1 GHz = 1 billion cycles per second
+
+CPU's clock speed is its max speed, not speed it must run. 
+
+Manufacturers used to print speed on chip but now use cryptic codes. 
+
+System crystal - determins the speed at which a CPU and rest of PC operate. Usually a quartz oscillator soldered onto motherboard. Sends out electrical pulse at a certain speed, manu millions-of-times per seonc.d Goes first to a clock chip that adjusts the pulse, usually increasing the pulse sent by the crystal by some large multiple. 
+
+(Motherboards could connect crytal directly to CPU's clock wire but then if you wanted to replace your CPU with a CPU with a different clock speed, you'd have to replace the crystal too.)
+
+As long as computer is turned on, the quartz oscillator repeatedly fires a charge on the CLk wire, setting the beat for CPU's activities. If system crystal sets a beat slower than CPU's clock speed, it will run fine but at slower speed. If system crystal foces CPU to run faster than its clock speed, it can overheat and stop working. 
+
+Before install a CPU into a system, must make sure that crystal and clock chip send out the correct clock pulse for that particular CPU. In old days, this required very careful adjustments. With today's systems, the motherboard talks to the CPU. The CPU tells the motherboard the clock speed it needs, and clock chip automatically adjusts for the CPU, making process now invisible. 
+
+Back to the External Data Bus:
+
+Reality. Registers are tiny storage areas on CPU made up of microscopic semiconductor circuits tat hold charges. Just easier to timage a light bulb it up. 
+
+Program - series of commands sent to a CPU in a spefici order for CPU to perform work. 
+
+Memory:
+
+How does program code get to External Data Bus (EDB)?
+
+Computers need some device that takes copies of programs from hard drive and then send them, one line at a time, to the CPU quickly enough to keep up with its demands. Because each line of code is nothing more than pattern of eight ones and zeroes, any device that can stores ones and zeroes eight-across will do. Known as memory. 
+
+Branch - if statement. Conditional. 
+
+Addressing memory takes care of problem: memory must store not only programs but also the result of programs. Stores results in such a way that other programs may later read them or possibly even stores the result on hard drive. By addressing each line of memory, othe rprograms wil know where to find the data. 
+
+Memory and RAM:
+
+Memory must not store only programs, but also data. CPU needs to be able to read and write to this storage medium. Additionally, system must  enable CPU to jump to any line of stored code as easily as to any other line of code. All this must be done at or at least near the clock speed of CPU. 
+
+Random Access Memory - device that does this. RAM transfers and stores data to and from the CPU in byte-sized chunks. 
+
+Number of bytes of RAM varies from PC to PC. Early PCs, 1980 to 1990, typical system would have on a few hundred thousand bytes of RAM. Today's systems have billions of bytes of RAM. 
+
+bit - individual 1 or 0
+nibble - 4 bits
+byte - 8 bites
+16 bits - word
+32 bits - double word
+64 bits - paragraph or quad word. 
+
+Real RAM made up of group of semiconductor chips soldered onto small cards that snap onto computer. 
+
+CPU accesses any one row of RAM as easily and as fast as any other row. Explains random access. Let's CPU access and transfer data very quickly.
+
+Dynamic RAM (DRAM) - for main system meory. DRAM needs both a constant electrical charge and a periodic refresh of the circuits; otherwise it loses data. That's why its dynamic rather than static in content. Refresh can cause delayus because CPU has to wait for refresh to happen. But Modern CPU manufacturers have clever ways to get by this issue. 
+
+Address Bus:
+
+CPU and RAM need some connection so they can takl to each other. Must extend EDB from CPU to talk to RAM.
+
+Need EDB to connect in such a way that CPU can see any one given row but  still give CPU capabilty to look at any row. 
+
+Needs some type of chip between RAM and CPU to make connection. CPU needs toe be able to say which row of RAM it wants and chip should handle mechanics of retrieving that row of data from the RAM and putting it on the EDB. 
+
+Memory Controller Chip - contains special circuitry so ti can grab cont=ents of any single line of RAM and place that data or command on EDB. Enables CPU to act on code. CPU needs to be able to tell MCC which line of code it needs. So CPU gains second set of wires called *address bus*, with which it can communicate with the MCC. Different CPUs have different numbers of wires. 
+
+By turning address bus wires on and off in different patterns, CPU tells the MCC which line of RAM it wants at any given momen.t 
+
+How many patterns?
+
+20 bit bus? 2^20 = 1,048,576 combinations. 1 MB. Number of wires in address bus determines max amount of RAM Cpu can handle. 
+
+Address space - max amount of RAM CPU can handle. Highest address that an be looked up. 
+
+Size Terminology:
+
+1 kilo = 2^10 = 1024 (K)
+1 kilobyte = 1024 bytes (KB)
+1 mega = 2^20 = 1,048,576 (M)
+1 megabyte = 1,048,576 (MB)
+1 giga = 2^30 = 1,073,741,824 (G)
+1 gigabyte = 1,073,741,824 bytes (GB)
+1 tera = 2^40 = 1,099,511,627,776 (T)
+1 terabyte = 1,099,511,627,776 (TB)
+1 peta = 2^50 = 1,125,899,906,842,624 (P)
+1 petabyte = 1,125,899,906,842,624 (PB)
+
+Which pattern goes to which row?
+
+First address if 0000000000000000000
+Last address is 10000000000000000000
+
+MODERN CPUS
+
+AMD and Intel are the two major companies. Have most market. 
+
+Make - Intel or AMD
+Model - #. i7 3770k. 
+
+Each model and make must have own compatible motherboards. Windows will work on either. Both speak same language. Physical difference causes compatibility. 
+
+Market											Intel									AMD
+Mainstream and enthusiast desktop				Core i7/i5/i3							A-Series, FX
+Budget Desktop									Penitum, Celeron						Sempron, Athlon
+Portable/Mobile									Core i7/i5/i3 (mobile), Core M, Atom	A-Series
+Server											Xeon									Opteron
+
+Code Names - both AMD and Intel try to reuse  model names but CPUs inside can be very different from earlier versions. Code names are use dto keep track of different variations within models. 
+
+First Core i7 in 2008 had microarchitecture code named Nehalem. In 2011, Intel introduced Sandy Bridge and since have had Ivy Bridge, Haswell, Broadwell, ettc. 
+
+Desktop vs Mobile - 
+
+Mobile devices such as portable computers have needs that differ from those of desktop computers, notably the need to consume as little electricity as possible. Helps extend battery and reduce heat. 
+
+Throttling - saving energy by making CPU rn more slwoly when demand is light. 
+
+Big difference is how they work on the inside. 
+
+Micro-architecture - how they work on the inside. Once CPU has code name, intersting things happen. 
+
+CPU-Z - from CPUID. Gives information about CPUs on system. CodeName defines micro architecture. Defines lots of features (64bit or 32bit, how many cores, what speed range, is there integrated graphics). One microarchitecture can make different models of CPUs. i7, i5, i3. 
+
+SPEEDS AND CORES
+
+CPUs come with rated speed. 1.6GHz. Hz is time/second. Giga - billion. 1.6 billion cranks per second. What's pushing system is system crystal, oval shaped can on motherboard. System crystal is a piece of ports that oscillating at a certain speed. Internal circuitry pushes it forward. CPUs list max speed. 
+
+Same make and model can have different speeds. All come off same manufacturing line, but ones that have higher speeds passed more tests. 
+
+System crystal - internal circuitry increaess speed. 
+
+CLOCK MULTIPLIERS
+
+Multiplier in CPU. All modern CPUs run at some multiple of the system clock speed.  Take motherboard speed and increase it from 8 to 16 or 20x. 
+
+200MHz motherboard. 1.6Ghz CPU. So 8x multiplier. 200M x 8 = 1.6Ghz
+
+i7 that can go up to 3.4 Ghz. Motherboard runs at 100 MHz. Therefore clock multiplier goes up to x35 at full load. 
+
+Originally, CPUs ran at speed of the bus, but engineers early on realized CPU was only thing doing any work much of the time. If engineers could speed up just internal operations of CPU and not anything else, they could speed up whole computing process. 
+
+Clock speed and multiplier on early clock-mulitplying systems had to be manually configued via jumpers and dual in-line package (DIP) switches on the motherboard. Today's CPUs report to motherboard through a function called CPUID (CPU Identifier) and the speed nad multiplier are set automatically. Can manually override this mautomatic setup on motherboards by overclocking. 
+
+Can buy motherboards for overclocking. Can push CPU faster than rated speed. Increase multiplier? Overclocking. Push CPU beyond rated speed. 
+
+Pentium 4 - came out decade ago. microarchitecture was designed to have it run at high speeds. Thought would get in area of 6 or 8 GHz today. Thought microarchitecture would carry along. 
+
+When try to run at high clockrates, technology is expensive and does not work. 
+
+Now put 2, 4, 8 CPUs in one physical chip. Getting past 3.5GHz hard. Multi-core CPUs.
+
+Intel Core i7 - 2 threads for every core. Hyperthreading. 4 core processor will have 8 threads. 
+
+Clock speeds and cores important to understanding CPU. CPU itself is sold at particular rated speed but speed is driven by system crystal. 
+
+System crystal pushed out a particular speed (motherboard speed) which is then multiplied internallyby the CPU to get full speed. 
+
+Number of cores depend on price and chip bought. Turn off cores and stuff for lower prices items.
+
+CACHES
+
+When start a program, Windows sends many programs to CPU. Each of these programs breaks down into some number of little pieces, called *threads*, and data. Each thread is a series of instructions designed to do a particular job with that data. 
+
+Because CPU runs faster than RAM, will always get pipeline stalls -- called wait states -- because RAM can't keep up with CPU. 
+
+To reduce wait states, CPUs come with built-in, very high speed RAM called *Static RAM (SRAM)*. 
+
+SRAM - preloards as many instructions as possible and keeps copies of already-run instructions and data in case CPU needs to use them again. When used in this fashion it is a cache. 
+
+Puts important data in fast storage to be used later. 
+
+Hard Drive, RAM, CPU. 
+
+Programs and data by default live on hard drive. 
+
+OS loads data from hard drive into RAM. CPU then gets the memory locations to interact with data. 
+
+CPU could get instruction from hard drives, but hard drives are slow. 1000x slower than RAM. RAM is fast but slower than CPU. 
+
+Cache - place data from memory into CPU cache for faster accessing. Ususally static RAM (dynamic RAM is regular RAM sticks). Much faster. More expensive.
+
+More cache you have, harder it is to find things in it. And maintain integrity.
+
+Smaller caches are faster, but bigger caches can hold more information. 
+
+Level 1 Cache - fastest and smallest cache. Closest to cores. 
+
+Level 2 Cache - Slower and bigger than Level 1 cache. Usually half the speed. Variance in microarchitecture. 
+
+Most times CPU is pulling from Level 1 cache, from time to time Level 1 will pull from Level 2, sometimes CPU will pull from Level 2 cache. 
+
+Level 3 Cache - biggest and slowest. At motherboard speed. Maybe a little faster. 10MBs in Core i7. 
+
+Early CPUs, SRAM was tiny, only about 16KB but it improved performance tremendously. Helped that many motherboard makers began adding a cache directly to motherboard. Much larger: 128 to 512KB. 
+
+When CPU looked for line of code, first wetn to built-in cache (the L1 cache). Then looked at cache in motherboard (L2 cache). Eventually L2 added to the CPU. 
+
+Inclusion of L2 cache on chip added new terms to describe connectins between CPU, MCC, RAM, and L2 Cache.
+
+The Address BUS and External Data Bus (EDB) (connecting the CPU, MCC, and RAM) were lumped in to a single term called the *frontside bus*. Connection between the CPU and L2 cache become known as *backside bus*. Terms do not apply to modern computers. 
+
+32bit vs 64bit
+
+CPU covered with hundred of contacts. Can barely see them. One reason needed is to talk to RAM. Has to be able to pick a particular byte of RAM. 
+
+Address BUS - special set of wires. Very small long ago. Now either 32bit or 64bit. 32 wires or 64  wires dedicated to addressing memory. Can be on and off and pattern points to specific type of ram.
+
+32bit - 2^32 bytes of memory. 4, 247. 483, 647. SO 32bit systems could only have 4GBs of memory. 
+
+64bit - 2^64 bytes of memory. 18 gazilion. More RAM available. 64bit cans run 64bit or 32 bit mode. 
+
+64-bit Processing 
+
+EDB generally increased in size from 8 to 16 to 32 to 64 viys wide. Address BUS similarly jumped going from 20 to 24 ro 32 bits wide. 
+
+Engineers also added new and improved registers that used fancy names like multimedia extensions (MMX) and Streaming SIMD Extensions (SSE). Move to 64bit processing was a major shift. Exabytes = 2^60. So 64bits is 16 EBs. 
+
+x86
+
+CPUs from early days can be lumped together as x86 CPUs because they used an instruction set built on earliest Intel CPU architecture. Intel Core 2 Duo could run a program written for ancient 80386 processor. 
+
+x64
+
+Phrase for 64bit instruction set, but confusing. Smaller number, but newer tech. 
+
+x86-64
+
+x64 chips are technically x86 chips too. So common to combine. 
+
+Easiest way to tell in Windows is click start, find you computer, right click and select properties. 
+
+System Type - gives bit size. 
+
+Version of OS determines if 32bit or 64bit is used on 64bit CPU. 
+
+MULTITHREADING
+
+Hyper-Threading - first released with CPU called Pentium 4. Took parallelism to next step. Enabled Pentium 4 to run multiple threads at the same time, generally called simultaneous multithreading. Effectively turns one CPU into two CPUs on one chip, with a catch. 
+
+Couple limitations. First, OS and app have to be designed to take advantage of the feature. Second, althrough CPU simulates actions of a second processor, it does not double processing power because the main execution resources are not duplicated.
+
+MULTICORE PROCESSING 
+
+CPU clock speeds hit practical limit of roughly 4 GHz around 2002-2003. 
+
+Both AMD and Intel decided to combine two CPUs (cores) into a single chip, creating a *dual core* architecture. Dual core CPU has two execution units -- two sets of pipelines -- but the two sets of pipelines share caches and RAM. 
+
+Now multicore CPUS with 4, 6, or 8 cores. 
+
+Core i7 has L1, L2, and L3 caches of 64 KB, 256 KB, and 15 MB. L1 cache divides into 32KB to handle data (D-Cache) and another 32 KB for instructions (I-cache). Each core has dedicated L1 and L2 caches. All cores share gitan L3 cache. Pool of memory enable cores to communicate and work togethre without having to access RAM. 
+
+Multicore procesing - eingineered cores to divide up work independently of OS. Still, apps have to be modified or optimized for this parallelism to have a huge impact on performance. 
+
+INTEGRATED MEMORY CONTROLLER 
+
+Intergrated Memory Controller (IMC) - almost all current CPUs have them. Moved from motherboard chip into CPU to optimize flow of information into and out from CPU. IMC enables faster control over things like large L3 cache shared among multiple cores. 
+
+Manufacturers implement variety of IMCs in CPUs. In practice, means different CPUs handle different types and capacities of RAM. 
+
+INTEGRATED GRAPHICS PROCESSING UNIT
+
+GPU - Video processing portion of a computer typically has a discrete microprocessor that differs in both function and architecture from CPU designed for general-purpose computing. Can handle certain tasks more efficiently than CPU so integrating GPU into CPU enhances overall performance of computer while reducing energy use, size, and cost. Benefits mobile devices. 
+
+Intel HD Graphics and Intel Irisi Pro Graphics integrated into many Core i7/i5/i3. Pales in compairson to AMD's Accelerated Processing Unit (APU). 
+
+SECURITY
+
+All modern processors employ the NX Bit technology that enables CPU to protect certain sections of memory. This couples with implementation by OS stops malixious attacks from getting to essential OS files. Microsoft calls feature Data Execution Prevention (DEP). 
+
+Every company calls NX bit tech something different:
+
+Intel: XD Bit (eXecute Disable)
+AMD: Enhanced Virus Protection
+ARM: XN (eXecute Never)
+CompTIA: Disable execute bit
+
+CPU EXTENSIONS
+
+CPU manufacturers add big chunks of capability to CPUs over the years. CPU extensions. 
+
+Add long integer mathematics, 3D support, power management features. 
+
+Two big ones:
+1. Virtualization support - create virtualized extra systems on same system. Saves on power, if system goes down, can restore it from file. But takes lots of work from CPU. To reduce workload, have virtualization support. Setting to turn on in BIOS. 
+
+Old. Virtualization used to work entirely through software. Programmers had to write a ton of code to enable a CPU - which was designed to run one OS at atime - to run more than one OS. How does memory get allocated, and how does CPU know which OS to update when type something or click icon.
+
+With hardware based virtualization, CPUs took a lot of burden off programmers and made virtualization easier. 
+
+2. Integrated GPU - GPU is video card built into CPU. Makes for smaller systems, uses less power, and pretty good graphics. Video cards are stronger. 
+
+PARALLEL EXECUTION
+
+Parallel execution - Modern CPUs can process multiple commands and parts of commands in parallel. Early processors had to do everything in strict, linear fashion. CPUs accomplish this parallelism through multiple pipelines, deadicated caches, and capability to work with myultiple threads or programs at one time. 
+
+PIPELINING
+
+To get command from data bus, do the calculation, and then get the answer back out on data bus, a CPU takes at least four steps (stages):
+1. Fetch - get data from EDB
+2. Decode - Figure out what type of commands needs to be executed
+3. Execute - Perform the calculation
+4. Send the dat aback onto the EDB
+
+Smart, discrete cirtcuits inside CPU handle each of these stages. 
+
+In early CPUs, when command was placed on data bus, each stage did its job and CPU handed back the answer before starting next command. Requiring at least 4 clock cycles to process a command. In every clock cycle, three of four circuits sat idle. 
+
+Pipeline - today circuits are organized in conveyor-belt fashion called a pipeline. With pipelining, each stage does its job with each clock cycle pulse, creating a much more efficient process. Keep every stage of processor busy on every click of clock, making CPU run more efficiently without increasing clock speed. 
+
+Current CPU pipelines contain up to 20 stages. 
+
+Pipelining not perfect. Sometimes a stage hits a complex command that requires more than one clock cycle, forcing pipeline to stop. CPU tries to avoid thse stops, called pipeline stalls. 
+
+Decode stage tens to cause most pipeline stalls; certain commands are complex and therefore harder to decode than other commands. Current processors use multiple decode stages to reduce change of pipeline stalls due to complex decoding. 
+
+Inside of CPU composed of multiple chunks of circuitry to handle the many types of calculations PC needs to do.
+
+Arithmetic Logic Unit (ALU or Integer Unit) - handles integer math. Basic math for numbers with no decimal point. Typical CPU spends most of its work doing integer math. 
+
+Floating Point Unit (FPU) - special cirtcuitry to handle complex numbers. With single pipelnie, only FPU  or ALU worked in executoin stage. Worse, floating point calculation  often took many clock cycles to execute forcing CPU to stall the pipeline until FPU finished executing the complex command. 
+
+Current CPUs often multiple pipelines to keep the processing going.  
+
+CPU SOCKETS
+
+Every computer needs a CPU, every CPU needs a motherboard. Some exceptions. 
+
+Used to solder CPU to motherboard. But for upgradability and compatibility with different motherboards and CPUs. 
+
+CPU Sockets - can buy a motherboard and place an upgraded CPU into it. 
+
+Talk about socket: number of pins, physical size, thermal characteristics. 
+
+Physical aspects of packages - can break down into two groups:
+
+LGA or PGA
+
+PGA (Pin Grid Aarray) Socket - pins on processor. Break a pin and CPU is dead. Zillions of pins.
+
+ZIF (Zero Insertion Force) - socket that holds processor.
+
+LGA (Land Grid Array) Socket - Intel. ZIF has pressure plate on top. Pins are on socket itself instead. CPU has pads (or lands) on itself. Harder to damage CPU. 
+
+All AMD are PGA and all Intel are LGA. 
+
+Intel Sockets:
+
+LGA 775 - number of lands on each CPU. First mainstream CPU and socket to use LGA. Ran with DDR2 and had long life. Started with Pentium 4s and lasted to Core 2s. 
+
+LGA 1156 - more for mainstream systems. First socket which supported a built in north bridge. Had DDR3 support. First time saw Core i3, i5, i7
+
+LGA 1366 - higher end systems. Had built in memory controller to talk to RAM. Kinda had north bridgefor PCI-E Bus support. Could support lots of DDR3 and used pretty much exclusively on Core i7. First with Core i7. No integrated graphics. 
+
+LGA 1155 - More mainstream. First to have full support of on board graphics. 
+
+LGA 2011 - Replaced 1356 on high end system. Started out with DDR3 but then supported DDR4. These supported first systems to stop supporting PCI and only support PCI-Express. Core i3, i5, i7.
+
+LGA 1150 - Mainstream. Supports multiple CPUs. Started off with DDR3 and moved to DDR4 and supports large number of PCI-E devices. 
+
+LGA 1151 - Skylake. Not on exam. 
+
+A+ skips many important sockets. Mobile chips, Intel Xeon, 
+
+Microarchitecture reason for different sockets. Thinking in long term of 3 or 5 years. Thinking of new technologies, speed improvements, reducing transistor sizes to fit more on processor. Come up with pattern for new stuff. Micro architectures. Core piece of what want next version of CPU to do. 
+
+One micro architecture, cut down some features, and use for lower system. Add some things for mainstream, add more for server level. etc. 
+
+In general, when new micro architecure comes along, new socket too. Though now always. 
+
+AMD Sockets:
+
+AM group and FM group
+
+AM - kind unique
+
+Socket AM2 - before this, AMD sockets had all kinds of different numbers. Keys have certain positions. Had 940 pins. Ran on late Athlon 64 processors. Had hyper transport capability and supported DDR2. 
+
+Socket AM3 - Similar to AM2, but had 941 pins, Different keys. Athlon IIs Phenom IIs and DDR3. Phenom II, Athlon II, Sempron, Opteron. 
+
+Socket AM3+ - Support Athlon IIs, Phenom IIs, DDR3, 942 pins. Big difference was power and speed. FX.
+
+AMD separates sockets based on graphics capability. 
+
+APUs (Accerlated Processing Units) - feature graphics onboard for AMD as well as other features. 
+
+FM1 Socket - 905 pins. Supported APUs. A-Series
+
+FM2 - 904 pins. Power and speed improvements.A-Series
+
+FM2+ - 906 pins. More incremental improvements. Substantially more PCI-Express support. A-Series
+
+G34 - 1974 pins. Opteron
+
+C32 - 1207 pins. Opteron
+
+DECIPHERING PROCESSOR NUMBERS
+
+Intel Core i7 5757 C Processor:
+
+Intel Core - Brand
+i7 - Brand Modifier
+5 - Generation
+755 - SKU Number
+C - alpha suffic (C indicates desktop processor with integrated graphics, socket LGA 1150. 
+
+Intel Core 5950 H Q:
+
+Intel Core - Brand
+i7 - Brand Modifier
+5 - Generation
+950 - SKU number
+HQ - alpha suffix (HQ indicates mobile quad-core processor with integrated graphics).
+
+AMD FX-8350:
+
+AMD - brand
+FX - product line
+8 - series and numbers of processing cores
+3 - generation (higher number means more refined)
+50 - Model number (higher number means faster.)
+
+A-Series not so friendly. 
+
+AMD A10-6800K
+
+AMD - brand
+A10 - product line
+6 - generation
+800 - model number
+K - suffix mean that processor has an unlocked core, designed to make overclocking easier. Non suffix means locked core. M denotes mobile version.
+
+Note, no A-Series name tells you how many cores CPU has. Have to read online to find out. CompTIA does not care about prodcut numbers. 
+
+Installing:
+
+CPUs consume wattage or watts, a unit of electrical power. The more transistors added to CPU, the more power they need and the hotter they get. Almost all CPUs use combination of heat sink and fan. 
+
+Thermal compound, heatsink fan, motherboard with proper socket. 
+
+Cooling PC - fans.
+
+CPU fans, Video Card fans, case fans. Can plug them in and control them. 
+
+Trick to cooling is want to keep system cool but more fans means more noise. 
+
+CPU Fan connector. 4 prong controller. Two connectors for power, one is a tack to keep track of how fast fan is spinning, 4th is controller for fan. Can control speed of fan. 
+
+3 progn connector - Probably plug a system or case fan to it to help cool system. 
+
+How control them and what to plug into them. 
+
+CPU Fans - OEM fan. Orignial Equipment Manufacturer. Base fan. Third party solution gives more cooling usually for extra cost. Cooler Master EVO Hyper 212. OEM are pretty good. 
+
+All cases are different and have different fans. Some just plug into power supply and don't have control. Others are fans that can plug into 4 prong outlets. 
+
+System setup there may be fan control, in third party utilities for motherboard, and SpeedFan utility. SpeedFan is popular and free. Some motherboads come with control tools. SpeedFan may not see all fans. 
+
+Usually give fans a speed threhold. A max. Or adjust by temperature. 
+
+Liquid Cooling - take CPU and put metal mount on it. Liquid goes through mount to take heat away to cool off and cycle it back. Been around for over 15 years. Was ugly, not standardized. Needed custom work. Works better today.
+
+Passive Liquid Cooling - liquid goes through a big mount on top CPU, gets heated up, runs through a radiator to cool down, and pump pushes it back around again
+
+Active Liquid Cooling - refridgerator. Only done by few people. Passive by far most common type. 
+
+Metal is mounted to CPU, radiator mounted to case.  
+
+OVERCLOCKING
+
+For CPU to work, motherboard speed, multiplier, and voltage must be set properly. In most systems, motherboard uses CPUID functions to set these automatically. Some mobos enable you to set this manually by moving a jumper, changing a CMOS setting, or using software. Many change settings to enhance performance. 
+
+Overclocking - running CPUs at clock speeds higher than whay they were rated for. Can void warranty for CPU. Can cause damage. 
+
+Intel and AMD make utilities to help overclock. 
+
+Intel Extreme Tuning Utility (Intel XTU) - Don't skip additoinal Performance Tuning Protection Plan if go this route. 
+
+AMD Overdrive Utility - No extra warranty. 
+
+Most make couple of adjustments to overclock. First, through jumpers, CMOS settings, or software configuration, would increase bus speed for system. Second, often have to increase voltage going into CPU by a little to provide stability. Do that by changing jumpre or CMOS setting. 
+
+Can lock up system. Must do CMOS clear. 
+
+TROUBLESHOOTING
+
+Two categories:
+1. Overheating (more common).
+2. Catastrophic faulures
+
+Vast majority of problems come from faulty installation or environmental issues that cause overheating.
+
+OVERHEATING
+
+Failure to install results in either nothing or a system lock-up in a short period of time. Because of nature of ZIF sockets, almost guaranteed issue isn't CPU but rather installation of heat sink and fan. 
+
+1. Too much thermal paste can impede flow of heat from CPU to heat sink and cause CPU to heat up rapidly. Modern CPUs have built in fail-safes to shut down before heat damage. 
+
+2. Not enough thermal paste or paste spread too unevenly can cause CPU to heat up and consequently shut itself down. 
+
+3. Failure to conncet the fan power to the mobo can cause CPU to heat up and shut down. 
+
+Environmental factors frequently include dust and pet hair. Air conditioning failures. 
+
+CPU needs adequate ventilation. CPU fan is essential but inside of case also needs to get hot air out through exhause fans and cool air in. If intake fan or exhause fans stop working, can cause problems. 
+
+CATASTROPHIC FAILURES
+
+Blue Screen of Death (BSoD) tells catastophic failure. Technically called a Windows Stop erro. 
+
+Mac OS X get pin wheel on screen that just doesn't go away. 
+
+CompTIA calls these *proprietary crash screens*. 
+
+Or entire computer will simply stop and go black. 
+
+If smoke or pop from case, use nose to smell what hardware malfunctioned. If electrical short hit CPU, it likely damaged motherboard too. 

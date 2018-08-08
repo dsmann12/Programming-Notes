@@ -1,0 +1,799 @@
+INTRODUCTION
+
+The **syntax** of a programming language is the form of its expressions, statements, and program units. 
+
+Its **semantics** is the meaning of those expressions, statements, and program units. 
+
+.. code:: c
+   
+   if (<bool_expr>) {
+     <stmts>
+   } else {
+     <stmts>
+   }
+
+The semantics of it may be described as follows.  If ``<boolean_expression>``
+is true, we perform the statements where ``<statements>`` appears within braces
+of the if-clause.  If ``<boolean_expression>`` is false, we perform the
+statements where ``<statements>`` appears in the else clause.
+
+Syntax and semantics are closely related. In well designed language, semantics should follow directly from syntx, that is appearance of a statement should strongly suggest what the statement is meant to accomplish. 
+
+GENERAL PROBLEM OF DESCRIBING SYNTX
+
+A language, whether natural (English) or artificial (Java) is a set of strings of characters from some alphabet called **sentences** or statements. The syntax rules of a language specify which strings of characters from the language's alphabet are in the language. 
+
+Lowest level syntactic units are called **lexemes**. Description of lexemes can be given by a lexical specification which is usually separte from the syntactic description of the language. Inlcude the language's numeric literals, operators, and special words (keywords), among others. Programs can be thought of as strings of lexemes rather than characters. 
+
+Lexemes can be partitioned into groups -- names of variables, methods, classes and so forth form a group called **identifiers**. Each lexeme group represented by a name or a token. 
+
+A **token** of a languge is a category of its lexemes.
+
+.. code:: c
+
+   cats = cats * 5 + 3;
+
+::
+
+  +----------+---------------+
+  |  lexemes | tokens        |
+  +----------+---------------+
+  +----------+---------------+
+  |  cats    | identifier    |
+  +----------+---------------+
+  |  =       | equal_sign    |
+  +----------+---------------+
+  |  cats    | identifier    |
+  +----------+---------------+
+  |  *       | mult_operator |
+  +----------+---------------+
+  |  5       | literal_int   |
+  +----------+---------------+
+  |  +       | plus_operator |
+  +----------+---------------+
+  |  3       | literal_int   |
+  +----------+---------------+
+  |  ;       | semicolon     |
+  +----------+---------------+
+
+LANGUAGE RECOGNIZERS
+
+A **language recognizer** can recognize sentences of a language. Suppose we
+have a language L that uses an alphabet of characters S.  To define S we must
+use a mechanism R, a recognition device, which could take strings from S and
+determine whether or not they are in L.  If R accepts strings from S only if
+they are in L, R is a description of L. 
+
+Because most languages are, for practical purposes, infinite, this could seem an ineffective and lengthy process. 
+
+However, they have a different purpose. 
+
+Syntax analysis part of a compiler is a recognizer for the languge the compiler translates. Does not need to test all possible strings of characters from some set to determine wheter each is in language but rather need only determine whether given programs are syntactically correct. 
+
+LANGUAGE GENERATORS
+
+Languages may be defined by recognition or generation. 
+
+A **language genertor** is a device that can be used to generate sentences of a language. May be more human-readable than a recognizer, which works by trial and error. 
+
+Syntax checking portion of compiler can be used only in trial and error mode. To determine correct syntx of a particular statement using compiler, programmer can only submit a speculated version and note whether compiler accepts it. On other hand, it is often possible to determine whether syntax of a particular statement is correct by comparing it with structure of generator. 
+
+Close conection between formal generation and recognition devices for same language. One of seminal discoveries in computer science and it led to much of what is now known about form language nd compiler design theoru. 
+
+FORMAL METHODS OF DESCRIBING SYNTAX
+
+**Grammars** - formal language generation mechanisms that are commonly used to describe syntax of programming languages. 
+
+Inherit two particular grammer classes from Chomsky: **regular** and **context-free**
+
+Forms of tokens of programming languges can be described by regular grammars. With few exceptions, context-free grammars can describe the syntax of whole langauges. 
+
+1959 paper by John Backus described new formal notation for specifying programming language syntax for ALGOL 58; then modified by Peter Naur following year for ALGO 60. 
+
+Now referred to as **Backus-Naur Form** or **BNF**. Most popular notation for describing program syntax. 
+
+BNG has many similarities to Chomsky's generative device for context-free langauges called **context-free grammars**
+
+Grammar is a language generation mechanism and also known as a **metalanguage**- language used to describe another language. 
+
+In BNF, *abstractions* are used t orepresent syntactic structure. Names of abstractions delimited by angle brackets. 
+
+  <assign> -> <var> = <expr>
+
+Known as a **production** or rule, which specifies how **left-hand side (LHS)**, the text on left side of arrow is defined in terms of tokens, lexemes, and references to other abstractions. 
+
+In this particular example, an assignment statement is
+defined as consisting of a variable then the lexeme ``=`` followed by an
+expression.  A sentence whose syntactic structure is described by the rule is
+``cats = cats * 5``.
+
+Abstractions in BNF are called *non-terminal symbols** while lexemes and tokens are called **terminal symbols**. 
+
+A BNF description or **grammar** is a collcetion of productions. Nonterminals may have more than one definition. 
+
+ <if_stmt> -> if ( <bool_expr> ) <stmt> 
+  <if_stmt> -> if ( <bool_expr> ) { <stmts> }
+
+ <if_stmt> -> if ( <bool_expr> ) <stmt> 
+             | if ( <bool_expr> ) { <stmts> }
+
+DESCRIBING LISTS
+
+Constructs such as lists are defined recursively. 
+
+Suppose we wish to describe
+``love, sunshine, rainbows, suffering``, provided these list elements are
+identifiers.  Since ``love`` is the first identifier, followed by a comma, then
+the list ``sunshine, rainbows, suffering`` follows.  The list terminates with
+an identifer ``suffering``.  A production which describes such a list is:
+
+::
+
+  <list> -> identifier
+          | identifier, <list>
+
+This particular prodcution is **right-recursive** because nonterminal <list> which appears on LHS of production also appears on right end of the RHS of production. A production is **left-recursive** if nonterminal being defined appears on left end of RHS of production. 
+
+ <list> -> identifier
+          | <list>, identifier
+
+Defines <list> s either single token (identifier) or an identifier followed by a comma and another instance of <list>. 
+
+Recursion used to describe lists in many example grammars. 
+
+GRAMMARS AND DERIVATIONS
+
+Grammar is a generative device for defining languages. Sentences of the language are generated through a sequence of applications of the rules, beginning with a special nonterminal of the grammar called the *start symbol*. This sequence of rule applicatinos is calle a *derivation*. 
+
+In grammar for complete programmer langauge, start symbol represents a complete program is often named <program>
+
+Grammar for small language:
+<program> -> begin <stmt_list> end
+
+<stmt_list> -> <stmt>
+			|	<stmt>; <stmt_list>
+
+<stmt> -> <var> = <expression>
+
+<var> -> A | B | C
+
+<expression> -> <var> + <var>
+			|	<var> - <var>
+			|	<var>
+
+Langauge described has only one statement form: assignment. A program consists of special word begin, followed by a list of statements separated by semicolons, followed by the special word end. An expression is either a single varible or two variables separated by either a + or a -. Only variable names in language are A, B, and C. 
+
+Derivation of a program in this language is: 
+
+<program> => begin <stmt_list> end
+=> begin <stmt> ; <stmt_list> end
+=> begin <var> = <expression> ; <stmt_list> end
+=> begin A = <expression> ; <stmt_list> end
+=> begin A = <var> + <var> ; <stmt_list> end
+=> begin A = B + <var> ; <stmt_list> end
+=> begin A = B + C ; <stmt_list> end
+=> begin A = B + C ; <stmt> end
+=> begin A = B + C ; <var> = <expression> end
+=> begin A = B + C ; B = <expression> end
+=> begin A = B + C ; B = <var> end
+=> begin A = B + C ; B = C end
+
+Derivation, like all derivations, begins with statrt symbol (<program>). The => symbol is red "derives". 
+
+Each usccess string in sequence is derived from pervious string by replacing one of the nonterminals with one of the nonterminal's definitions. Each of strings in erivations, including <program> is calle  a *setential form*. 
+
+In this derivation, replaced nonterminal is always the leftmost nonterminal in previous sentential form. Derivations that use this order or replacement are called *leftmost derivations*
+
+Derivation continues until setential form contains no nonterminals. That setential form, consisting only of terminals, or lexemes, is generated sentence. 
+
+Derivation may be rightmost or in an order that is neither leftmost or rightmost. Derivation order has no effect on language generated by grammar. 
+
+By choosing alternative RHSs of rules with which to replace nonterminals in derivation, different sentence of language can be generate. By exhaustiely choosing all cmbinations of choice, the entire language can be generated. This language, like most others, is infinte so one cannot generated *all* sentences in language in finite time. 
+
+A Grammar for Simple Assignment Statements
+
+<assign> -> <id> = <expr>
+<id> -> A | B| C
+<expr> -> <id> + <expr>
+		|	<id> * <expr>
+		|	( <expr> )
+		|	<id>
+
+Statement: A = B * ( A + C )
+
+Derived:
+
+<assign> => <id> = <expr>
+=> A = <expr>
+=> A = < id > * <expr>
+=> A = B * <expr>
+=> A = B * ( <expr> )
+=> A = B * ( <id> + <expr> )
+=> A = B * ( A + <expr> )
+=> A = B * ( A + <id> )
+=> A = B * ( A + C )
+
+PARSE TREES
+
+Grammars naturally describe the hierarchical syntactic structure of sentences of languages they define. 
+
+Parse trees - hierarchical structure of sentences of a language. 
+
+Every internal node labelede with nonterminal symbol; every leaf labeled with a terminal symbl. Every subtree describes one instance of an abstraction in sentence
+
+AMBIGUITY
+
+A grammar that generates a sentential form for which there are two or more distinct parse trees is said to be *ambiguous*. 
+
+An Ambiguous Grammar for Simple Assignment Statements
+<assign> → <id> = <expr>
+<id> → A | B | C
+<expr> → <expr> + <expr>
+| <expr> * <expr>
+| ( <expr> )
+| <id>
+
+Two parse trees possible
+
+FIND THEM!
+
+Rather than allowing parse tree of an expression to grow only on right, this grammar llows growth on both right and left. 
+
+Ambiguity is a problem because compilers often base semantics of those structures on their syntactic form. Compiler chooses code to be generated for a statement by examining is parse tree. If language structure has more than one parse tree, then the meaning of the structure cannot be determined uniquely. 
+
+Other characteristics useful in determining whether a grammar is ambiguous:
+1. If grammar generates a sentence with more than one leftmost derivation
+2. If grammar generates a sentence with more than one rightmost derivation.
+
+Some parsing algorithms based on ambiguous grammars. When such a parser encounters an ambiguous construct, it uses nongrammatical infromation provided by designed to construct correct parse tree. In many cases, ambiguous langaage can be rewritten to be uambiguous but still generate desired language. 
+
+OPERATOR PRECEDENCE
+
+When expression includes two different operators (x + y * z), one obvious semantic issue is order or evaluation. Semantic question answered by assignning different precedence levels to operators. 
+
+If * has been assigned a higher precedence than +, multiplication will be done first. 
+
+Fact than an operator in an arithmetic expression is generated lower in parse tree, can be used to indicate it has precedence over an operator genreated higher up. 
+
+So, in Figure 3.2, (a + B * c), * is first because it is lowest. Lowest always furthest right, getting higher as go left. So (a * b + c), + is lowest and with precedence. 
+
+Grammar can be written that is both unambiguous and specifies a consistent precedences of operators regardless of order they appear in expression.
+
+Correct ordering specified by using seprate nonterminal symbols to represent operands of operators that have different preceence. Requires additional nonterminals and some new rules. 
+
+If <expr> is the root symbol
+for expressions, + can be forced to the top of the parse tree by having <expr>
+directly generate only + operators, using the new nonterminal, <term>, as
+the right operand of + . Next, we can define <term> to generate * operators,
+using <term> as the left operand and a new nonterminal, <factor>, as its right
+operand. Now, * will always be lower in the parse tree, simply because it is
+farther from the start symbol than + in every derivation
+
+Umambiguous Grammar for Expressions:
+<assign> → <id> = <expr>
+<id> → A | B | C
+<expr> → <expr> + <term>
+| <term>
+<term> → <term> * <factor>
+| <factor>
+<factor> → ( <expr> )
+| <id>
+
+Derivation: A = B + c * A
+
+<assign> => <id> = <expr>
+=> A = <expr>
+=> A = <expr> + <term>
+=> A = <term> + <term>
+=> A = <factor> + <term>
+=> A = <id> + <term>
+=> A = B + <term>
+=> A = B + <term> * <factor>
+=> A = B + <factor> * <factor>
+=> A = B + <id> * <factor>
+=> A = B + C * <factor>
+=> A = B + C * <id>
+=> A = B + C * A
+
+Connections between parse trees very close. Either can be constructured from other. 
+
+Every derivation with an unambiguous grammar has a unique parse tree, although tree can be represented by different derivations. 
+
+Derive: A = B + C * A
+<assign> => <id> = <expr>
+	=>	<id> = <expr> + <term>
+	=> <id> = <expr> + <term> * <factor>
+	=> <id> = <expr> + <term> * <id>
+	=> <id> = <expr> + <term> * A
+	=> <id> = <expr> + <factor> * A
+	=> <id> = <expr> + <id> * A
+	=> <id> = <expr> + C * A
+	=> <id> = <term> + C * A
+	=> <id> = <factor> + C * A
+	=> <id> = <id> + C * A
+	=> <id> = B + C * A
+	=> A = B + C * A
+
+Produces same parse tree. 
+
+ASSOCIATIVITY OF OPERATORS
+
+When expressions includes two operators that have same precedence (as * and /) (A / B * C) - a semantic rule is required to specify which should have precedence. This rule is named *associativity*
+
+Consider: A + B + C
+
+Addition meant to be left associative. 
+
+Floating point addition in a computer is not necessarily associative. 
+
+For example,
+suppose floating-point values store seven digits of accuracy. Consider the
+problem of adding 11 numbers together, where one of the numbers is 10 7
+and the other ten are 1. If the small numbers (the 1’s) are each added to
+the large number, one at a time, there is no effect on that number, because
+the small numbers occur in the eighth digit of the large number. However,
+if the small numbers are first added together and the result is added to the
+large number, the result in seven-digit accuracy is 1.000001 * 10 7 .
+
+Substraction and division not associative. 
+
+When grammar rule has its LHS also appearing at beginning of its RHS, the rule is said to be *left recursive*. This left recursion specifies left associativity. 
+
+Unfortunately, left recursion disallws use of some important syntax analysis algoriths. When such algorithms are to be used, grammar must be modified to remove left recusion. This disallows grammar from precisely specifying that certain operators are left associative. Fortunately, left associativity can be enforced by compiler, even though grammar does not dictate it. 
+
+In most langages that provide it, the exponentiation operator is right associative. To indicat right associativity, right recusrion can be used. A grammar rule is *right recursive*, if LHS appears at right end of RHS. 
+
+<factor> → <exp> ** <factor>
+| <exp>
+<exp> → ( <expr> )
+| id
+
+AN UNAMBIGUOUS IF THEN ELSE
+
+The BNF rules for an Ada if-then-else statement are as follows:
+<if_stmt> → if <logic_expr> then <stmt>
+			if <logic_expr> then <stmt> else <stmt>
+
+If we also have <stmt> → <if_stmt>, this grammar is ambiguous. The simplest
+sentential form that illustrates this ambiguity is
+
+if <logic_expr> then if <logic_expr> then <stmt> else <stmt>
+
+Consider following:
+
+
+if done == true
+	then if denom == 0
+		then quotient = 0
+		else quotient = num / denom
+
+Problem: if uppser parse tree in Figure 3.5 used as basis for translation, else cuse would be executed when done is not true. 
+
+Unambiguous:
+
+Rule for if constructs in many languages is that an else clause, when prsent, is matched with the nearest previous unmatched then 
+
+Therefore, cannot be an if statementwithout an else between a then and its matching lse. For this, statements must be distinguised between those that are matched and those that are unmatched, where unmatched statements are else-les ifs, and all other statements are matched. 
+
+
+To reflect different categories of statements, different abstractions, or nonterminals, must be use. 
+
+<stmt> → <matched> | <unmatched>
+<matched> → if <logic_expr> then <matched> else <matched>
+			| any non-if statement
+<unmatched> → if <logic_expr> then <stmt>
+			|if <logic_expr> then <matched> else <unmatched>
+
+Just one possible parse tree, using tis grammar, for following setential form:
+
+if <logic_expr> then if <logic_expr> then <stmt> else <stmt>
+
+EXTENDED BNF
+
+BNF has been extended because a few minor inconveniences with original implementation. Most called Extended BNF or EBNF, though they are not exactly the same. Increase readability and writeability
+
+Three extensions common. 
+
+First denotes an optionl part of an RHS< which is delimtied by brackets (C):
+
+<if_stmt> -> if (<expression>) <statement> [else <statement>]
+
+Without brackets:
+<if_stmt> → if ( <expression> ) <statement>
+			| if ( <expression> ) <statement> else <statement>
+
+Second extension is use of braces in an RHS to indicate that enclose part can be repeate indefinitely or left out altogether. Allows lists to be built with a single rule, instead of using recursion and two rules:
+
+<ident_list> → <identifier> {, <identifier> }
+
+Replaces recursion with implied iteration, the part enclosed within braces can be iterated any number of times.
+
+Third extension deals with multiple choice options: when single element must be chosen from a group, options are placed in parenthese and separaed by OR operator |. 
+
+<term> → <term> ( * | / | % ) <factor>
+
+In regular BNF:
+
+<term> → <term> * <factor>
+		| <term> / <factor>
+		| <term> % <factor>
+
+Brackets, braces, and parenthese in EBNF extensions are called *metasymbols*, which means they are notational tools and not terminal symbols in syntactic entities they help describe. In cases where metasymbols are also terminal symbols in language being described, the instances that are terminal symbols can be underlined or quored. 
+
+BNF and EBNF Versions of an Expression Grammar
+BNF:
+<expr> → <expr> + <term>
+| <expr> - <term>
+| <term>
+<term> → <term> * <factor>
+| <term> / <factor>
+| <factor>
+<factor> → <exp> ** <factor>
+<exp>
+<exp> → ( <expr> )
+| id
+EBNF:
+<expr> → <term> { (+ | -) <term>}
+<term> → <factor> { (* | /) <factor>}
+<factor> → <exp> { ** <exp>}
+<exp> → ( <expr> )
+| id
+
+The BNF rule
+<expr> → <expr> + <term>
+clearly specifies—in fact forces—the + operator to be left associative. However,
+the EBNF version,
+<expr> → <term> { + <term>}
+does not imply the direction of associativity.
+
+This problem overcome in a syntax analyzer based on EBNF grammar for expressions by designing syntax analysis process to enfoce correct associativity. Discussed in CH 4.
+
+Some versions of EBNF allow a numeric superscript to be attached to the right brace to indicate an upper limit to the number of times they enclosed part can be repeated. Also some versions use a (+) superscript to indicate on or more repetitions
+
+<compound> → begin <stmt> { <stmt> } end
+and
+<compound> → begin { <stmt> } + end
+are equivalent.
+
+In recent years, some variations on BNF and EBNF have appeared. Among
+these are the following:
+• In place of the arrow, a colon is used and the RHS is placed on the next
+line.
+• Instead of a vertical bar to separate alternative RHSs, they are simply
+placed on separate lines.
+• In place of square brackets to indicate something being optional, the sub-
+script opt is used. For example,
+Constructor Declarator → SimpleName (FormalParameterList opt )
+• Rather than using the | symbol in a parenthesized list of elements to indi-
+cate a choice, the words “one of ” are used. For example,
+AssignmentOperator → one of
+<<=
+=
+>>=
+*=
+&=
+/= %= +=
+^= |=
+-=
+
+There is a standard for EBNF, ISO/IEC 14977:1996(1996), but it is rarely
+used. The standard uses the equal sign ( = ) instead of an arrow in rules, termi-
+nates each RHS with a semicolon, and requires quotes on all terminal symbols.
+It also specifies a host of other notational rules.
+
+GRAMMARS AND RECOGNIZERS
+
+Close relationship between generation and recognition devces for a given language. 
+
+In fact, givin a context-free grammar, a recognizer for language generated by grammar can be algorithmically constructed. Number of software systems thta perform this construction hve been developed. Such systems allow the quick creation of the syntax analysis part of a compiler for a new language and are therefore quite valuable. 
+
+ATTRIBUTE GRAMMARS
+
+An *attribute grammar* is a device used to describe more of the structure of a programming language than can ebe described with a context-free grammar. Is an extension to a context-free grammar. Extension allows certain language rules to be conveniently described, such as type compatibility. 
+
+First must clarify concept of static semantics:
+
+Static Semantics:
+
+Some characteristics of structure of programming languages ifficult to describe with BNF and some are impossible. 
+
+Java type compatibility. Floating point value cannot be assigned to an integer, but vice versa can.
+
+Although restriction can be specified in BNF, it requires aditional nonterminal symbols and rules and typincg all rules in BNF, grammar would become to large to be useful because size of grammar determines size of syntax analyzer. 
+
+Rule that all variables must be declared before they are references has be proven to not be able to be specified in BNF.
+
+Problems exemplify the categories of languages rule called *static semantic* rules.
+
+The *static semantics* of a language is only indirectly related to meaning of programs during execution; rather it hs to do with legal forms of programs (syntax rather than semantics). Many static semantic rules of a language state its type constraints. Static semantics so named because the anaylisis required to check these specifications can be done at compile time.
+
+Attribute grammars devised for describing static semantics because problems describing them with BNF. 
+
+Attribute grammars designed by Knuth (1968) to describe both syntax and static semantics of programs. 
+
+Attribute grammars - formal approach both to escribing and checking the correctness of the static semantics rules of a program. Basic concepts are at least informally used in every compiler. 
+
+BASIC CONCEPTS
+
+Attribute grammars - context-free grammars to which have been added attributes, attribute computation functions, and predicate functions. 
+
+Attributes - are associated with grammar symbols (terminal and nonterminal symbols), are similar to variables in the sense they can have value assigned to them. 
+
+Attribute computation functions - sometimes called semantic functions are associate with grammar rules. Use to specify how attribute values are computed. 
+
+Predicate functions - state the static semantic rules of the langauge and are associated with grammar rules.
+
+ATTRIBUTE GRAMMARS DEFINED
+
+An *attribute grammar* is a grammar with the following additional features:
+
+-Associated with each grammar symbol X is a set of attribute A(X). The set A(X) consists of two disjoint sets S(X) and I(X) called *synthesized* and *inherited* attributes.
+	-*Synthesized attributes* - used to pass semantic information up a parse tree
+	-*Inherited attributes* - pass semantic information down and across a tree.
+
+-Associated with each grammar rule is a set of semantic funtions and a possibly empty set of predicate functions over the attributes of the symbols of the grammar rule. For a rule X0 -> X1...Xn, the synthesized attributes of X0 are computed with semantic functions of the form S(X0) = f(A(X1),...,A(Xn)) so value of a synthesized attribute on a parse tree noe depends only on values of the attributes on that node's children nodes. Inherited attributes of symbols Xj, 1<=j<=n (in rule above) are computed with a semantic function of the form I(Xj) = f(A(X0)...,A(Xn)). So value of an inherited attribute on a parse tree noe depends on the attribute values of that node's parent node and those of its sibling nodes. Note that, to avoid circularity, inherited attributes are often restricted to functions of the form I(Xj) = f(A(X0),...,A(X(j-1))). This form prevents an inherited attribute from depending on itself or on attributes to right in the parse tree.
+
+-A predicate functoin has the form of a Boolean expression on the union of the attribute set {A(X0),...,A(Xn)} and a set of literal attribute values. The only derivations allowed with an attribute grammar are those in which every predicate associate with every nonterminal is true. A false predicate functio nvalue indicates a violation of the syntax or static ssemantics rules of the langauge
+
+The parse tree of an attribute grammar is the parse tree based on its underlying BNF grammar, with a possibly empty set of attribute values attached to each node. If all the attribute values in a parse tree have been computed, the tree is said to be *fully attributed*. 
+
+In practice, not always dont this way. But it is convenient to think of attribute values as beng computed after the complete unattributed parse tree has been constructed by the compiler
+
+INTRINSIC ATTRIBUTES
+
+*Intrinsic attributes* - are synthesized attributes of leaf nodes whose values are determined outside the parse tree. 
+
+Example, type of an instance of a variable in a program could come from the symbol table are set based on earlier delcaration statements. Initially, assuming that an unattributed parse tree has been constructed and that attribute values are needed, the only attributes with values ar intrinsic attributes of the leaf nodes.
+
+Given intrinsic attribute values on a parse tree, the semantic functions can be used to compute the remaining attribute values
+
+EXAMPLES OF ATTRIBUTE GRAMMARS
+
+EX: Following fragment of attribute grammar that describes the rule that the name on the *end* of an Ada procedure must match the procedure's name (cannot be states in BNF). 
+
+String attribute <proc_name>, denoted by <proc_name> string, is th eactual string of characters that were found immediately following the reserved word *procedure* by the compiler. 
+
+Notice: when there is more than one occurrence of a nonterminal in a syntax rule in an attribute grammar, te nonterminals are subscripted with brackets to distinguish them. Neither subscripts nor brackets are part of described language.
+ 
+Syntax rule: <proc_dec> -> procedure <proc_name>[1]
+							<proc_body> end <proc_name>[2];
+Predicate:	<proc_name>[1]string == <proc_name>[2].string
+
+In example, predicate rule states that name string attribute of the <proc_name> nonterminal in the subprogram header must match the name string attribute of the <proc_name> nonterminal following the end of the subprogram.
+
+Next, larger example. Illustrates how attribute grammar can be used to check type rules of a simple assignment statement. 
+
+Syntax and static semantics of this assignment statement are s follows:
+
+Only variable names are A, B, and C. The right side of the assignments can be either a variable or an expression in the form of a variable added to another variable. The variables can be one of two types: int or real. When there are two variables on the right side of an assignment, they need not be the same type. The type of th expression when the operand types are not the same is always real. When they are the same, the expression type is that of the operands. The type of the left side of the assignment must match the type of the right side. So the types of operands in the right side can be mixed, but the assignment is valid only if the target and value resulting from evaluating the right side have the same type. The attribute grammar specifies these static semantic rules. 
+
+Syntax portion is:
+
+<assign> → <var> = <expr>
+<expr> → <var> + <var>
+		| <var>
+<var> → A | B | C
+
+The attributes for the nonterminals in the example attribute grammar are described in following paragraphs:
+-actual_type - a synthesized attribute associated with the nonterminals <var> and <expr>. It is used to store the actual type, int or real, or a variable or expression. In case of a variable, the ctual type is intrinsic. In case of an expression, it is determine from actual types of the child node or children nodes of the <expr> nonterminal
+
+-expected_type - an inherited attribute associated with the nonterminal <expr>. Use to store the type, either int or real, that is expected for the expression, as determine by the type of the variable on the left side of the assignment statement. 
+
+An Attribute Grammar for Simple Assignment Statements
+1. 	Syntax rule: <assign> → <var> = <expr>
+	Semantic rule: <expr>.expected_type ← <var>.actual_type
+2. 	Syntax rule: <expr> → <var>[2] + <var>[3]
+	Semantic rule: <expr>.actual_type ←
+								if (<var>[2].actual_type = int) and
+									(<var>[3].actual_type = int)
+								then int
+							else real
+							end if
+Predicate: <expr>.actual_type == <expr>.expected_type
+3. 	Syntax rule: <expr> → <var>
+	Semantic rule: <expr>.actual_type ← <var>.actual_type
+	Predicate: <expr>.actual_type == <expr>.expected_type
+4. 	Syntax rule: <var> → A | B | C
+	Semantic rule: <var>.actual_type ← look-up(<var>.string)
+
+The look-up function looks up a given variable name in the symbol table and
+returns the variable’s type.
+
+Parse tree of sentence A = A + B generated by grammar in Figure 3.6. As in grammar, bracketed numbers are added after the repeated node labels in tree so they can be referenced unambiguously. 
+
+COMPUTING ATTRIBUTE VALUES
+
+Sometime scalled *decorating* the parse tree. 
+
+If all attributes were inherited, this could proceed in a completely top-down orer, from root to leaves. Alternatively, it could proceed in a completely bottom-up order, from leaves to root, if all attributes were syntehsized. Because grammar has bother synthesized and inherite attributed, the evaluation process cannot be in any single direction. 
+
+Following is evaluation of attributes, in an order in which it is possible to compute them:
+
+
+1. <var>.actual_type ← look-up( A ) (Rule 4)
+2. <expr>.expected_type ← <var>.actual_type (Rule 1)
+3. <var>[2].actual_type ← look-up( A ) (Rule 4)
+<var>[3].actual_type ← look-up( B ) (Rule 4)
+4. <expr>.actual_type ← either int or real (Rule 2)
+5. <expr>.expected_type == <expr>.actual_type is either
+								TRUE or FALSE (Rule 2)
+
+Tree in Figure 3.7 shows flow of attribute values in example of Figure 3.6. Solid lines are used for parse tree, dashed lines show attribute flow in tree.
+
+Tree in Figure 3.8 shows final attribute values on nodes. A is defined as real, B is defined as int in this exmple. 
+
+Determining attribute evaluation order for general case of an attribute grammar is a complex problem, requiring construction of dpendency graph to show all attribute dependencies. 
+
+EVALUTATION
+
+Checking static semantic rules of a language ian essential part of all compilers. Even if a compiler writer hs never heard o fan attribute grammar, he or she would need to use their fundamental ideas to design the checks of static semantics rules for his or her compiler. 
+
+One of main difficulties in using an attribute grammar is describe all of the syntax and static semantics of a real contemporary programming language is the size and complexity of the attribute grammar. The large number of attributes and semantic rules required for a complete programming language make such grammars difficult to write and read. Futhermore, the attribute values on a large parse tree are costly to evaluate. On other hand, less formal attribute grammars re a powerful and commonly used tool for compiler writers, who are more interested in process of producing a compiler than they are in formalism.
+
+DYNAMIC SEMANTiCSL DESCBRING MEANINGS OF PROGRAMS
+
+*Dynamic semantics* - meaning of expressions, statements, and program units of a programming language. 
+
+Because of power and naturalness of the available notation, describing syntax is relatively simple matter. 
+
+On other hand, no universally accepted notation or approach has been devised for dynamic semantics. 
+
+Several reasons underlying need for methodology and notation for descrbing semantics. 
+
+Programmers need to know precisely what statements of a language do before they can use them effectively in their program. Compiler writers must know exactly what language constructs mean to design implementations for them correctly. If there wre precise semantics specification of a programming language, programs written in language potentially could be proven correct without testing. Also compilers could be shown to produce programs that exhibited exactly the bahavior given in the language definitions; that is their correctness could be verified. A complete specification of syntax and semantics of a programming language could be used by a tool to genreate a compiler for the langauge automatially. Finally, language designers, who would develop the semantic descriptions of their languages, could in the process discover ambiguiities and inconsistencies in their design. 
+
+Software developers and compiler designers typically determine the semantics of programming languages by reading English explanations in language manuals. Because such explanations are often imprecise and incomlete, this approach is unsatisfactory. 
+
+Due to lack of complete semantics specifications of programming languages, programs are rarely proven correct without testing, and commercial compilers are never generated automatically from language descriptions. 
+
+Scheme - one of only a few languages whose definition includes a formal semantics description. However, method use is not one described for this chapter which focuses on methods suitable for imperative languages.
+
+OPERATIONAL SEMANTICS
+
+Idea behind *operational semantics* is to describe the meaning of a statement or program by specifying the effects of running it on a machine. The effects on the machine are viewed as the sequence of changes in its state, where the machine's state is the collection of the values in its storage. An obvious operational semantics description is given by executing a compiled version of the program on a computer.
+
+When write a small test program to determine meaning of some programming language construct, what programmer is doing is using operational semantics to determine meaning of construct.
+
+Several problems with this approach. 
+
+First, individual steps in the execution of machine language and the resulting changes to the state of the machine are too small and too numerous. Second, the storage of a real computer is too large and complex. Usually several levels of memory devices as well as connections to enumerable other computers and memory devices through networks. 
+
+Therefore, machine languages and rel computers are not usd for formal operational semantics. Rather, intermediate-level languages and interpreters for idealized computers are designed specifically for the process.
+
+Different levels of uses of operational semantics:
+1. Highest level - the interest is in the final result of the execution of a complete program. Called *natural operational semantics*.
+2. Lowest level - operational semantics can be used to determine the precise meaning of a program through an examination of the complete sequence of state changes that occur when program is executed. Called *structural operational semantics*. 
+
+THE BASIC PROCESS
+
+First step in creating an operational semantics description of a language is to design an appropriate intermediate language, where the primary characteristic of the language is clarity. 
+
+Every construct of intermiedate language must have an obvious and unambiguous meaning. Language is at intermediate level because machine langauge is too low level to be easily understood and another high-level language is obviously not suitable. 
+
+If semantics description is to be used for natural operational semantics, a virtual machine (an interpreter) must be ocnstructe for the intermediate language. Virtual machine can be used to execute either single statements, code segments, or whole programs. 
+
+Semntics description can be used without a virtual machine if the meaning of a single statement is all that is required. In this usem which is structural operational semantics, the intermediate code can be visually inspected. 
+
+Example of operational semantics: C for construct can be described in terms of simpler statements.:
+
+C Statement
+for (expr1; expr2; expr3) {
+. . .
+}
+
+Meaning
+		expr1;
+loop: 	if expr2 == 0 goto out
+		. . .
+		expr3 ;
+		goto loop
+out: 	...
+
+Human rder of such a decription is th virtual computer and is assumed to be able to "execute" instructions in definition correctly nd recognize effects of "execution"
+
+Intermediate language and associated virtual machine used for formal operational semantics descriptions are often highly abstract. Intermediate language meant to be convenient for the virtual machine, rather than for human readers. 
+
+For our purposes, a more human-oriented intermediate language could be used. 
+
+Consider following list of statements which would be adequate for describing the semantics of the simple control statements of a typical programming language:
+
+ident = var
+ident = ident + 1
+ident = ident – 1
+goto label
+if var relop var goto label
+
+In these statements, relop is one of relational operators from the set {=, <>, >, <, >=, <=}, ident is an identifier, and var is either an identifier or a constant. These statements are all simple and therefore easy to understand and implement. 
+
+Slight generalization of thses three assignment statements allows more general arithmetic expressions and assignment statements to be described. New are:
+
+ident = var bin_op var
+ident = un_op var
+
+where bin_op is a binary arithmetic operator and un_op is a unary operator. 
+
+Multiple arithmetic data types and automatic type conversions, of cource, complicate this generalization. 
+
+Adding a few more relatively simple instructions would allow semantics of arrays, records, pointers, and subprograms to be described.
+
+EVALUATION
+
+First and most significant use of formal operational semantics was to describe the semantics of PL/I. That particular abstract machine and the translation rules for PL/I were together named the Vienna Definition Language(VDL) after the city where IBM designed it. 
+
+Operational semantics prodives an effective means of describing semantics for language users and language implementors, as long as the descriptions are kept simple and informal. The VDL description of PL/I is so complex, it serves no practical purpose. 
+
+Operational semantics depends on programming languages of lower levels, not mathematics. Statements of one programming language are described in terms of statements of a lower-level programming language. Approach can lead to circularities in which concepts are indirectly defined in terms of themselves. 
+
+Methods described in folowing two sections are much more formal, in sense they are based on mathematics and logic, not programming languages. 
+
+DENOTATIONAL SEMANTICS
+
+Denotational semantics - most rigorous and widely known formal method for describing the meaning of programs. Solidly based on recursive function theory. 
+
+This is introduction ans thorough discussion is necessarily long and complicated. So this is just introductionwith some examples. 
+
+Process of constructing a denotational semantics specification for a programming language requires one to define for each langauge entity both a mathetmatical object and a function that maps instances of that language entity onto instances of the mathematical object. Because objects are rigorously defined, they model the exact meaning of their corresponding entities. 
+
+Idea is based on fact that there are rigorous ways to manipulating mathetmatical objects but not programming language constructs. Difficulaty with this method lies in creating the objects and mapping functions. 
+
+Method is named denotational because the mathematicl objects denote the meaning of their corresponding syntactic entities. 
+
+Mapping functions of a denotational semantics programming language specification, like all functions in mathematics, have a domain and a range. Domain is collectoin of objects to which the parameters are mapped. Called the *syntactic domain*. Range is called the *semantic domain*. 
+
+Denotational semantics is related to operational semantics. In operational semantics, programming language constructs are translated into simpler programming language constructs which become basis of meaning of the construct. In denotational semantics, programming language constructs are mappe to mathemtical objects, either sets or more often functions. Howeer, unlike operational semantics, denotational semantics does not model the step-by-step computatoinal procesing of programs. 
+
+TWO SIMPLE EXAMPLES
+
+Character string representation of binary numbers.
+
+Synatx:
+
+<bin_num> → '0'
+		| '1'
+		| <bin_num> '0'
+		| <bin_num> '1'
+
+A parse tree of example binary 110 is shown in Figure 3.9. 
+
+Notice: apostrophes around syntactic digits to show they are not mathematical digits. Similar to relationship between ASCII coded digits and mathematical symbols. When program reads a number as  string, it must be converted to a mathematical number before it can be used as a value in program. 
+
+Syntactic domain of mapping function for binary numbers is set of all character string representation of binary numbers. Semantic domain is set of nonnegative decimal numbers, symbolized by N. 
+
+To describe meaning of binary numbers using denotational semantics, we associate the actual meaning (a decimal number) with each rule that has a single terminal symbol as its RHS.
+
+In example, decimal numbers must be associated with first two grammar rules. Other two grammar rules are, in a sense, computational rules, because they combine a terminal symbol, to which an object can be associated, with a nonterminal, which can be expected to represent some construct. 
+
+Presuming an evaluation that progresses upward in the parse tree, the nonterminal in the right sie would alreayd have its meaning attached. So  syntax rule with a nonterminal as its RHS would require a function that computed the meaning of the LHS, which represents the meaning of the complete RHS> 
+
+The semantic functoin, named Mbin maps the syntactic objects, as described in the previous grammar rules, to the objects in N, the set of nonnegative decimal numbers. 
+
+Mbin defines as follows:
+M bin ('0') = 0
+M bin ('1') = 1
+M bin (<bin_num> '0' ) = 2 * M bin (<bin_num>)
+M bin (<bin_num> '1' ) = 2 * M bin (<bin_num>) + 1
+
+The meaning, or denoted objects (decimal numbers in this case), can be attached to nodes of hte parse tree shown on previous page, yielding tree in Figure 3.10. 
+
+This is syntax-directed semantics. Syntactic entities are mapped to mathematical objects with concrete meaning.
+
+Similar example for describing meaning of syntactic decimal literals. In this case, syntactic domain is set of character strin grepresntations of decimal numbers. Semantic domain is once again the set N.
+
+<dec_num> → '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7''8'|'9'
+		| <dec_num> ( '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' )
+
+The denotational mappings for these syntax rules are:
+
+M dec ( '0' ) = 0, M dec ( '1' ) = 1, M dec ( '2' ) = 2, . . ., M dec ( '9' ) = 9
+M dec (<dec_num> '0' ) = 10 * M dec (<dec_num>)
+M dec (<dec_num> '1' ) = 10 * M dec (<dec_num>) + 1
+. . .
+M dec (<dec_num> '9' ) = 10 * M dec (<dec_num>) + 9
+
+Most imporant simplifying assumption made here is that both syntax and static semanitcs of constructs are correct. In additoinal, we assume only two scalar types are included: integer and Boolean. 
+
+THE STATE OF A PROGRAM
+
+Denotational semantics of a program could be  defined in terms of state changes in an ideal computer. 
+
+

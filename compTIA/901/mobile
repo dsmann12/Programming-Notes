@@ -1,0 +1,57 @@
+MOBILE
+
+Small, roughly handheld. Often a sealed device. Cannot expand much. Cannot do much interms of field replacement, usually have to send back to manufacturer. Packed full of sensors (GPS), compass, accelerometer, gyroscope, camera, and ambient light sensor. Run on specialized OSes designed to work for them.
+
+Android
+iOS
+Windows Mobile (Windows Phone)
+
+Designed primarily to be used by touch. Get applications from some kind of app store. 
+
+Microsoft Surface - hybrid. 
+
+Subclasses:
+
+Personal Digital Assistants - PDA. Ran version of Windows Mobile (not like today's). Palm OS. 
+
+iPhone - combine PDA with phone. Also had wifi ability, etc. 
+
+Smartphone - mobile OS, wifi, and phone capabilities. Small.
+
+Tablet - mobile OS, bigger, some have phone capabilities and generally don't. Some support stylus.
+
+Phablet - hybrid. \
+
+Purpose Built Mobile Devices - designed to do one thing really well. E-Reader. FitBit. 
+
+Wearable - Smartwatches. Apple Watch. General purpose. Can check mail, etc. 
+
+WIRED MOBILE CONNECTIONS
+
+-To give power
+-Data transfer
+-Video output
+
+Often proprietary connectors originally. 
+
+iPhone used 30 pin connector at first. 
+
+micro USB - defacto standard data and power connector for Android and Windows Mobile
+
+USB-C - still USB but handles more power and is faster
+
+Lighting - Apple products. Power and data. 
+
+Video Output
+
+mini HDMI
+
+micro HDMI
+
+Worked for years. Problem is they are fading out. 
+
+Mobile High Definition Link (MHL) - standard for how device sends video out to another device. Not super standardized. MHL connector similar to micro USB and micro HDMI. Often need adapters. Many issues with this. 
+
+3.5mm Audio Jack - Two black marks. Three separate contacts. One ground, one left, and one right. Handles audio out. But can also handle Audio in with 4 contacts. 
+
+External Battery Pack - recharge devices. 

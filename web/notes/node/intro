@@ -1,0 +1,48 @@
+NODE.JS
+
+Node - the trendy JavaScript runtime built on Chrome's V8 JavaScript engine. Uses an event-driven, non-blocking I/O model that makes it lightweight and 
+efficient. Package ecosystem, npm, is largest ecosystem of open source libraries in world. 
+
+Used to only be able to run JS in a browser. Was only front-end code. Couldn't do anything in server side. 
+
+Node is a way to write JS code on server side. cd 
+
+Is popular among existing developers. 
+
+Great libraries, high performance, and open source. Also in JavaScript. Don't have to learn peculiarities of Ruby or PHP. 
+
+Can also use PHP for similar services. 
+
+USING NODE
+
+Use Node Console and run files with node. 
+
+node - command to start node interpreter. Basically a JS console. 
+
+4+10 will return 14
+
+"Hello"+" World" will return 'HELLO WORLD'
+
+REPL - read evaluate print loop. 
+
+DOM does not exist in node. No document object or alert() function. 
+
+Can create a JS file and execute it in command line by using node command.
+
+node <filename>
+
+Like regular coding but in JS.
+
+NPM
+
+npm - node package manager. 
+
+Had to use script tag in HTML to include libraries in HTML. No script tag in backend. Get libraries through npm. Called packages. 
+
+npm install <package name>
+
+npm installs packages into a folder called node_modules/ whenever a package is created. 
+
+require('id') -> imports a package
+
+var soemthing = require('cat-me'); //searches for package called 'cat-me' in folder. 

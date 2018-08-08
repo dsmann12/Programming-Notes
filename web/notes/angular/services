@@ -1,0 +1,114 @@
+SERVICES AND DEPENDENCY INJECTION
+
+Services - centralizes common operations
+
+Just normal TS class. But don't use it by importing the class and manually creating instances. 
+
+logging.service.ts
+
+export class LoggingService {
+    logStatusChange(status: string) {
+        console.log('A server status changed, new status: ' + status);
+    }
+}
+
+HIERARCHICAL INJECTOR
+
+Dependency injector - something that component depends on. Injects instance of dependency into component. 
+
+Must inform Angular that class is required. 
+
+Add constructor to component class and add a property to it with private accessor. Set type assignment and set type to class you want to get injected. Add import to top. 
+
+To provide service, you tell angular how to create instance of service. 
+
+Add providers property to @Component
+
+new-account.componenet.ts
+
+import { Component, EventEmitter, Output } from '@angular/core';
+import { LoggingService } from '../logging.service';
+
+@Component({
+  selector: 'app-new-account',
+  templateUrl: './new-account.component.html',
+  styleUrls: ['./new-account.component.css'],
+  providers: [LoggingService]
+})
+export class NewAccountComponent {
+  @Output() accountAdded = new EventEmitter<{name: string, status: string}>();
+
+  constructor(private loggingService: LoggingService) {
+
+  }
+
+  onCreateAccount(accountName: string, accountStatus: string) {
+    this.accountAdded.emit({
+      name: accountName,
+      status: accountStatus
+    });
+	this.loggingService.logStatusChange(accountStatus);
+  }
+}
+
+DATA SERVICE
+
+See code. Class will hold data. 
+
+UNDERSTANDING HIERARCHICAL INJECTOR
+
+Angular knows to create a service for component and all its child components. One instance shared. 
+
+AppModule - same instance of service is available application-wide. Including services. 
+
+AppComponent - Same instance of service is available for all Components (but not other services)
+
+Any other component - Same instance of service is available for the component and all its child components
+
+For using just one instance, remove the instance from all providers array in child components.
+
+Maybe want to have multiple instances. Then put in providers. 
+
+Can also inject service into another service. Must provide it in app-module to do so. 
+
+For service to import another service, it needs metadata. Need @Injectable
+
+logging.service.ts
+
+import { Injectable } from '@angular/core';
+import { LoggingService } from './logging.service';
+
+@Injectable()
+export class AccountsService {
+    accounts = [
+    {
+      name: 'Master Account',
+      status: 'active'
+    },
+    {
+      name: 'Testaccount',
+      status: 'inactive'
+    },
+    {
+      name: 'Hidden Account',
+      status: 'unknown'
+    }
+  ];
+
+  constructor(private loggingService: LoggingService) {}
+
+  addAccount(name: string, status: string) {
+    this.accounts.push({name: name, status: status});
+    this.loggingService.logStatusChange(status);
+  }
+
+  updateStatus(id: number, newStatus: string) {
+    this.accounts[id].status = status;
+  }
+}
+
+USING SERVICES FOR CROSS COMPONENT COMMUNICATION
+
+Don't need Input/Output chains of compononents to share data
+
+

@@ -1,0 +1,209 @@
+HTTP
+
+How to make HTTP requests in Angular single page app. 
+
+Do need to make requests to server from time to time. For example, when storing information to database. a
+
+Don't want to get a new page back. Response should be sent back to same app with JSON. 
+
+AJAX - XML Http Request object provided by JS. Also use JSON. 
+
+SENDING REQUESTS
+
+Create service that is injectable as it will be injected in Angular Http service. 
+
+Import Http service from @angular/http
+
+http service contains methods equating to HttpRequests:
+delete
+get
+head
+options
+patch
+post
+put
+request
+...
+
+
+Angular uses observables behind the scenes. These methods create observables. Wraps configured request but doesn't send until it is subscribed to.
+
+server.service.ts
+
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+
+@Injectable()
+export class ServerService {
+    constructor(private http: Http) {}
+
+    storeServer(servers: any[]) {
+       return this.http.post('https://udemy-ng-http-8bccb.firebaseio.com/data.json', servers);
+    }
+}
+
+Then add ServerService too app.module
+
+Subscribe to observable in app where it will be handled. 
+
+Import service into main component. 
+
+In html of main component, add button to save servers. Link to onSave() method. 
+
+onSave() {
+    this.serverService.storeServers(this.servers).subscribe(
+      (response) => console.log(response),
+      (error) => console.log(error)
+      );
+  }
+
+Only gets one response, so Angular clears it automatically after one response. 
+
+'data.json' tail in firebase url is to create object data with JSON in database. 
+
+Must be way to connect to real backend. 
+
+ADJUSTING REQUEST HEADERS
+
+Can send headers for specific backend
+
+Do this with headers object. 
+
+service.ts
+
+import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
+
+@Injectable()
+export class ServerService {
+    constructor(private http: Http) {}
+
+    storeServers(servers: any[]) {
+        const headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+       return this.http.post('https://udemy-ng-http-8bccb.firebaseio.com/data.json', servers, {
+           headers: headers
+       });
+    }
+}
+
+SENDING GET REQUESTS
+
+get method - should prepare a request (wrap it in observable) that allows us to reach out to backend and get back data. 
+
+Add in service
+
+getService() {
+        return this.http.get('https://udemy-ng-http-8bccb.firebaseio.com/data.json')
+    }
+
+Could pass object to configure request
+
+In main component, subscribe to the get observable. 
+
+onGet() {
+    this.serverService.getServers().subscribe(
+      (response) => console.log(response),
+      (error) => console.log(error)
+    );
+  }
+
+body holds data in JSON string. 
+
+To turn to JS object. Use .json from Response type in @angular/http.
+
+onGet() {
+    this.serverService.getServers().subscribe(
+      (response: Response) => {
+        console.log(response);
+        const data = response.json();
+		console.log(data);
+      },
+      (error) => console.log(error)
+    );
+  }
+
+put() -> Does a put request. On Firebase it will overwrite data. Does something different on custom backend. 
+
+TRANSFORM RESPONSES EASILY WITH OBSERVABLES
+
+Don't want to have to transform responses from JSON in every component so shoud use the service. 
+
+.map() -> method for observables will take old observable and wrap data into transformed data and wrap it into another observable. 
+
+Must import 'rxjs/Rx'
+
+In service:
+
+getServers() {
+        return this.http.get('https://udemy-ng-http-8bccb.firebaseio.com/data.json')
+        .map(
+            (response: Response) => {
+                const data = response.json();
+                return data;
+            }
+        )
+    }
+
+USING RETURNED DATA
+
+Can manipulate data in component or in service like a normal JS object. 
+
+ERROR HANDLING
+
+Http methods return errors of type Response. Not very useful unless they are caught:
+
+catch() -> does not return Observable so must do it yourself.
+
+.catch(
+            (error: Response) => {
+                return Observable.throw(error);
+            }
+        )
+
+
+Throws ae error object. Cnuld just throw a message:
+
+getServers() {
+        return this.http.get('https://udemy-ng-http-8bccb.firebaseio.com/data.json')
+        .map(
+            (response: Response) => {
+                const data = response.json();
+                for(const server of data) {
+                    server.name = 'FETCHED_' + server.name;
+                }
+                return data;
+            }
+        )
+        .catch(
+            (error: Response) => {
+                //return Observable.throw(error);
+                return Observable.throw('Something went wrong!');
+            }
+        )
+    }
+
+USING THE ASYNC PIPE
+
+If get observable just holding a string value. Can use async and will load value when it is gotten.
+
+Set up retrieval in service
+
+getAppName() {
+        return this.http.get('https://udemy-ng-http-8bccb.firebaseio.com/appName.json')
+        .map(
+            (response: Response) => {
+                return response.json();
+            }
+        );
+    }
+
+Set up variable in ts component
+
+appName = this.serversService.getAppname();
+
+Add h1 to html component and add async pipe
+
+<h1>{{ appName | pipe }}</h1>
+

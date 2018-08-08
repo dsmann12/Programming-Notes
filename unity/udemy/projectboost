@@ -1,0 +1,165 @@
+PROJECT BOOST
+
+Start project.
+
+Add cube. Make it terrain. Give it material for color. 
+
+Can move lighting as well. 
+
+PLACEHOLDER ART FOR PRIMITIVES
+
+Use cubes and object hierarchy to create a rocket ship.
+
+BASIC INPUT BINDING
+
+Unity uses virtual input manager to keep things cross platform.
+
+Can check fps with tool in scene window
+
+AddRelativeForce() -> to add force taking object's rotationa nd such into account
+
+USING TIME.DELTATIME
+
+Unity Preference > Colors to change play tint
+
+Need to think about frame rate indepedence when moving objects in game.
+
+Time.deltaTime tells you last rame time.
+
+This is good predicator of current rame time. Can use this to adjust movement.
+
+Longer frames lead to more movement cause more is calculated.
+
+rotation = rcsThrust * Time.deltaTime;
+
+PIVOT AND CENTER
+
+Press Z to switch between pivot and center in scene. Changes where object rotates from,
+
+If move object, pivot may not be where you want. Must use center.
+
+Calculates center of gravity.
+
+ADDING AUDIO
+
+add sound to rocket to make more polished
+
+INVOKE
+
+Lighting but may be in settings > lighting
+
+Make sure lighting generates for each level so it can calculated for new levels. 
+
+What if want to delay loading level. 
+
+If use timer, other messages may arrive as time is expiring. Other instructions executing. 
+
+Basically means to run function at a certain time. 
+
+Invoke("FunctionName", 2.0f); // invoke FunctionName() in 2 seconds
+
+PLAY MULTIPLE SOUNDS
+
+Have multiple sounds as fields. AudioClips.
+
+Only need one audio source
+
+audioSource.PlayOneShot(clip)
+
+MOVING PLATFORMS
+
+Make component Oscillator
+
+[DisallowMultipleComponent]
+public class Oscillator : MonoBehavior {
+	[SerializeField]
+	Vector3 movementVector = new Vector3(10f, 10f, 10f);
+	[SerializeField]
+	float period = 2f;
+
+	[Range(0,1] [SerializeField]
+	float movementFactor;
+	Vector3 startingPos;
+
+	void Start()
+	{
+		startingPos = transform.position;
+	}
+	
+	void Update()
+	{
+		float cycles = Time.time / period;
+		
+		const float tau = Mathf.PI * 2f; // about 6.28
+		float rawSinWave = Mathf.Sin(cycles * tau); // goes from -1 to 1
+
+		movementFactor = rawSinWave / 2f + 0.5f;
+		Vector3 offset = movementVector * movementFactor;
+		transform.position = startingPos + offset;
+	}
+
+}
+
+[DisallowMultipleCompmonent] -> means can only have one component of this type on 
+
+MATH.SIN() FOR MOVEMENT CYCLES
+
+Radian is the radius of a unit circle bent to follow the cirular arc. The radian is the value of the angle. 
+
+Goes around circle in 1 second at set intervals.
+
+tau = 2pi
+
+Wave 
+
+peroid is amount of time before it repeats itself.
+
+Amplitude is the height of the wave. Total height of wave
+
+Basically it's a way of cycling between something. Moving from A to B back to A
+
+PROTECTING AGAINST NaN
+
+Notes about comparing floats
+-Two floats can very by a tiny amount. 1.9999999999987 and 1.9999999999986
+-It's unpredictable to use == with floats
+-Always specify the accedtable difference (range within)
+-Smallest float is Mathf.Epsilon
+-Always compare to Mathf.Epsilong rather than zero
+
+LIGHTING
+
+Main directoinal light is like the sun
+Environment lighting comes from other things.
+Can also place scene lights. 
+
+Can go to light and change its color and brightness. 
+
+Point Light -> Has a light component that emits light and properties you can change. 
+Represented by a sphere. 
+
+Can change type from point to spot, etc. 
+Intensity. Range, Color, Mode, etc
+
+Lighting > Light Explorer
+
+Can change shadow type from no shadows to hard shadows. Polishes game. 
+
+NESTED PREFABS
+
+Must figure out relationship of prefabs
+
+Nested prefabs are not considered instances of the prefab they are made up from.
+
+If object has body, changing body prefab won't change it. 
+
+You have to change body in the parent prefab, and the prefab of that should update?
+
+When object becomes child of an existing prefab, it ceases to becom a prefab. 
+
+Instead, you should instantiate a gameobject in a certain transform relative to an object. 
+
+LOADING LEVELS
+
+int currentScene = SceneManager.GetActiveScene().buildIndex;
+SceneManager.LoadScene(currentScene+1);

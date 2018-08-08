@@ -1,0 +1,45 @@
+RESTAPI
+
+RESTful services, Data Transfer Objects, etc.
+
+Web API - 
+
+When request arrives to server, MVC hands off request to Action in a controller. This action mostly returns a View which is parsed by the Razor enginer. HTML is generated on server and returned to the client. 
+
+Other way, can generate HTML on the client. Instead, we return only raw data from the server. 
+
+Benefits:
+
+1. Returning raw data requires less server resources. Improves scalability
+2. Raw data often required less bandwidth than HTML. So faster transfers. 
+3. Can build support for broad range of clients. 
+
+Multiple apps can call endpoints and get data. These endpoints are Web APIs or Data Services. 
+
+Other websites can also consume our web api and consume the functionality. 
+
+Frameworks used:
+
+ASP.NET Web API - developed after ASP.NET MVC but follows same principles. Has routing, controllers, actions, actionresults, and so on. 
+
+In next version of ASP.NET MVC (ASP.NET CORE), MS has merged both these frameworks into one. 
+
+Instead of generating HTML markup for list of customers, we can expose the Web API to return the list of customers and use a Jquery plugin called jQuery DataTable to generate table on client. Gives us pagination, sorting, and searching out of the box. 
+
+RESTful CONVENTION
+
+For implementing CRUD operations around customers.
+
+Endpoint will be around:
+
+/api/customers
+
+/api/customers		GET		INDEX
+/api/customers/1	GET		DETAIL
+/api/customer		POST	CREATE
+/api/custom/1		PUT		UPDATE
+/api/customer/1		DELETE	DELETE
+
+This is what's called RESTful convention. Representational State Transfer. 
+
+Convention is found in most API services. 

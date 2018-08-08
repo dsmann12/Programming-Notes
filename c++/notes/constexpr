@@ -1,0 +1,11 @@
+constexpr - values are known at compile time
+
+conexpr is named oject to which you can't give a new value after it has been 
+initialized. 
+
+Constant expression - is an expression with an integer value composed exclusively of
+constants. Values must be known at compile time. Therefore cannot contain variables
+as operands. 
+
+Non-obvious literals in code (outside definitions of symbolic constants) are called magic 
+constants. 

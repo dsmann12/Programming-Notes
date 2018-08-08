@@ -1,0 +1,587 @@
+Input/Output
+
+std::cout is object of stdout
+std::cin is object of stdin
+
+Use << or >> to direct text toward these objects
+<< - string insertion operator?
+>> - stream extraction operator?
+
+cout << "Hello World" << endl; //Hello World\n
+
+char name[15];
+cout << "What is your name?\n";
+cin >> name; //input stream object
+
+cout takes info from computer and gives it to user.
+cin takes info from user and gives it to computer.
+
+cin does not return until a newline is entered (enter key is hit).
+Delay gives user chance to change mind, erase characters, etc. 
+Newline is not part of string stored in memory.
+
+cin - reading of strings is terminated by whitespace. Space, newline, 
+and tab characters.
+
+cin >>  name >> age; //read string followed by integer
+
+int main() {
+	string previous = "";
+	string current'
+	while(cin >> current) {
+		if (previous == current) {
+			cout << "repeated word: " << current << endl;	
+		}
+		
+		previous = current;
+	}
+} 
+
+while(cin>>current) will be true always unless stdin encounters
+an EOF character (Windows CTRL-Z, Linux CTRL-D)
+
+Most OSes separate detaied handling of IO devices into device drivers, and programs then access the device drivers through an IO library that makes IO from/to different sources appear as similar as possible. Generally device drivers are deep in OS, where most users don't see them, and IO library provides an abstraction of IO so that programmer doesn't have to think about devices device drivers. 
+
+In this model, input and output can be seen as streams of bytes (characters) handled by the input/output library. 
+
+Must:
+1. Set up IO streams to the appropriate data sources and destinatoins.
+2. To read and write from/to those streams. 
+
+Details of how characters are actually transmitted to/from the devices are dealt with by the IO library and the device drivers. 
+
+From programmer POV, many different kind sof input and output. One is:
+1. Streams of (many) data items (usually to/from files, network connections, recording devices, or display devices)
+2. Interactions with a user at a keyboard
+3. Interactions with a user through a GUI (outputting objects, receiving mouse clicks, etc).
+
+IOStream Model
+
+C+++ STL provides type istream to deal with streams of input and type ostream to deal with streams of output. Standard istream is cin and standard ostream is cout. 
+
+An ostream:
+1. Turns values of various types into char sequences
+2. Sends those chars somewhere (such as to console, a file, main memory, or another computer).
+
+The buffer is a data structure that the ostream uses internally to store the data you give it while communicating with the OS. Buffering is important to performance, and performance is important is you deal with large amounts of data. 
+
+ostreams provide many features for formatting text to suit various tastes
+
+An istream:
+1. Turns character sequences into values of various types
+2. Gets those characters from somewhere (such as a console, a file, the main meomry, or another computer)
+
+
+istream also uses buffer to communicate wit OS. Bufferin noticeable. When using istream attached to keyboard, what typed is left behind in buffer until hit Enter (return/newline), and you can use erase (Backspace) key to "change your mind" until you hit enter. 
+
+Input is often formatted to make easy to read. istream therefore provide features for reading the kind of output produced by ostreams. 
+
+Files:
+
+File is simply a sequence of bytes numbered from 0 upward. File has a format, set of rules that determine what bytes mean. Format serves same role for files on disks as types serve for objects in main memory. Can make sense of bits in a file IFF we know its format. Text file, first 4 bytes will be first 4 characters. On other hand, if file uses a binary representation of integers, those very same first 4 bytes will be taoken to be primary represntation of first integer. 
+
+To read a file, must:
+1. Know its name
+2. Open it(for reading)
+3. Read in the characters
+4. Close it (though typically done implicitly)
+
+To write a file, must:
+1. Name it
+2. Open it(for writing) or create a new file of that name
+3. Write out our objects
+4. Close it (though that is typically done implicityly)
+
+Opening a File:
+If want to read from file or write to file, have to open a stream specifically for that file. 
+
+An ifstream is an istream for reading from a file, an ofstream is an ostream for writing to a file, and an fstream is an iostream that can be used for both reading and writing. Before a file stream can be used, it must be attached to a file. 
+
+cout << "Enter file name: ";
+string iname;
+cin >> iname;
+ifstream ist {iname}; //ist is an input stream for file named iname
+if (!ist) error("can't open inpput file ", iname);
+
+Defining ifstream with a name string opens file of that name for reading. For example, assuming input operator >> defined for type Point, could write:
+
+vector<Point> points;
+for(Point p; ist>>p;
+	points.push)back(p);
+}
+
+Defining ofstream with a name string opens file with name for writing. Test of !ost checks if file was properly opened:
+
+cout << "Enter file name: ";
+string oname;
+cin >> oname;
+ofstream ost {oname}; //ost is an input stream for file named iname
+if (!ost) error("can't open inpput file ", iname);
+
+Can write to file exactly as we would to any other ostream:
+for(int p: points) {
+	ost << '(' << p.x << ',' << p.y << endl;
+}
+
+When a file stream goes out of scope, its associated file is closed. When a file is closed, its associated buffer is flushed (that is characters from buffer are written to file). 
+
+Usually best to open files early in a program before any serious computation has taken place. 
+
+Opening file implicitly as part of creation of an ostream or an istream and relying on scope of stream to take care of closing file is ideal. 
+
+Can also use open() and close() operations. However, someone may try use file stream before it has been attached to a strea, or after it was closed:
+
+ifstream ifs; //no initiallization
+ifs >> foo; //won't succeed. No file opened
+
+ifs.open(:name, ios_base::in); //open file named name for reading
+//
+ifs.close(); //close file
+//
+
+ifs >> bar; //wont' succeed. ifs file was closed. 
+
+Cannot open a file stream a second time without first closing it. 
+
+IO Error Handling: 
+
+Errors can occur because humands make mistakes (misunderstanding instructions, mistyping, etc), because files fail to meet specifications, because we (as programmers) have wrong expectations, etc. 
+
+istream reduced all possibilities for errors to four possible cases called the stream state:
+
+good() - operations succeeded
+eof() - we hit end of input (end of file)
+fail() - something unexpected happened (e.g. looked for a digit and found 'x')
+bad() - Something unexpected and serious happened (e.g. a disk read error);
+
+Unfortunately, distinction between fail() and bad() is not precisely defined and subject to vaarying opinions among programmers defining I/O operations for new types. Basic idea is simple: if input operations encounters a simple format error, it lets stream fail() , assuming that user/programmer might be able to recover. If, something really bad happens (bad disk read), input operation lets stream go bad(), assuming that there is nothing much you can do except to abandon the attempt to get data from that stream. A stream that is bad() is also fail()
+
+int i = 0;
+cin >> i;
+if(!cin) { //get here only if an input operation failed. (cin is not good())
+	if (cin.bad()) error("cin is bad"); //stream corrupted: get out!
+	if(cin.eof() {
+		//No more input	
+		//Often how want a sequence of input operations to end
+	}
+
+	if(cin.fail()) { ..stream encountered something unexpected
+		cin.clear(); //make ready for more input
+		//somehow recover
+	}
+}
+
+cin.clear() takes stream out of fail() state and makes state of cin good()
+
+
+Read from file to terminate at EOF or *
+1 2 3 4 5 *
+
+void fill_vector(istream & ist, vector<int>& v, char terminator) {
+	//read integers from is
+	for(int i; ist>>i;) v.push_back(i);
+	
+	if(ist.eof()) return; //fine. found eof
+	if(ist.bad()) error("ist is bad"); //stream corrupted
+	if (ist.fail()) { //clearn up mess best we can and report problem
+		ist.clear(); //clera stream state
+		
+		char c;
+		ist >> c; //read char, hopefuully terminator
+		if( c != terminator) { //unexpected character
+			ist.unget(); //put char back
+			is.clear(ios_base::failebit); //set state to fail()
+		}
+
+	}
+}
+
+clear() with argument, sets iostream stateflags (bits) mentioned and (only) clears flags not mentioned. unget() is shorter version of putback() that relies on stream remebering which character it last produced. 
+
+In almost all cases, only thing want to do if encounter bad() is throw an exception. Can tell istream to do that for us:
+
+//make ist throw if it goes bad
+ist.exceptions(ist.exceptions() | ios_base::badbit);
+
+//Effect is that from statement onward, ist will throw the STL exception ios_base::failure if it goes bad(). Need to execute that exceptions() call only once in a program. Allow us to simplify all input loops on ist by ignoring bad(). 
+
+
+void fill_vector(istream & ist, vector<int>& v, char terminator) {
+        //read integers from is
+        for(int i; ist>>i;) v.push_back(i);
+
+        if(ist.eof()) return; //fine. found eof
+        //if not eof and not bad, must be fail
+	
+	ist.clear(); //clera stream state
+
+        char c;
+	ist >> c; //read char, hopefuully terminator
+	if( c != terminator) { //unexpected character
+		ist.unget(); //put char back
+		is.clear(ios_base::failebit); //set state to fail()
+	}
+}
+
+ios_base is part of iostream that holds constants such as badbit, exceptions such as failure, and other useful stuff. Refer to them using ::, for example ios_base::badbit.
+
+Could take whole course to explain all of iostreams. For example, iostreams can handle different character sets, implement different buffering strategies, and also contains facilities to the formatting monetary amounts in various languages. 
+
+Can test an ostream for exactly same states a sistream. Errors much rarer for output than for inpu. Output errors more common where output devices have a more significant chance of being unavilable, filled, or broken. 
+
+To get robust read, have to deal with:
+1. User typing an out-of-range value
+2. Getting no value (EOF)
+3. The user typing something of the wront type (here, not an integer)
+
+Three alternatives:
+1. Handle problem in code doing th read
+2. Throw an exception and let someone else handle the problem
+3. Ignore the problem
+
+Error checking can be messy. Reason code is messy is that code dealing with several different concerns all mixed together.
+1. Reading values
+2. Prompting user for input
+3. Writing error messages
+4. Skipping past "bad" input chars
+5. Testing input against a range
+
+Way to make code clearer is to separate logically distinc concerns into separate functions
+
+Integer Outputs:
+
+Integer values can be output as octal(base 8), decimal (base 10), hexadecimal (base 16). Hex popular for outputting hardware related information. Hex digit exactly represents a 4-bit value. Thus two hex digits can be used to represent value of 8 bit byte. Four hex digits give value of 2 bytes (often half a word). Eight hex digits give value for 4 bytes (often size of word or register). octal was popular for presenting bit patterns in times of C but not now. 
+
+Can specify output
+
+cout << 123 << \t(decimal)\n"
+	<< hex << 1234 << \t(hexadecimal)\n"
+	<< oct << 1234 << \t(octal)\n";
+
+1234 (decimal)
+4d2 (hexadecimal)
+2322 (octal)
+
+<< hex
+and
+<< oct
+
+Do not output values but tell stream that any further integer values should be displayed in octal. 
+
+cout << 1234 << '\t' << hex << 1234 << '\t' << oct << 1234 << '\n';
+cout << 1234 << '\n'; 
+
+1234 4s2 2322
+2322
+
+To alleviate confusion, can tell ostream to show base of each integer
+
+cout << 1234 << '\t' << hex << 1234 << '\t' << oct << 1234 << '\n';
+cout << showbase << dec; //show bases
+cout << 1234 << '\t' << hex << 1234 << '\t' << oct << 1234 << '\n';
+
+1234 4d2 2322
+1234 0x4d2 02322
+
+Octal numbers have prefix 0 and hexadecimal value have prefix 0x
+
+showbase also persists. Must use noshowbase to stop it
+
+oct
+dec
+hex
+showbase
+noshowbase
+
+Integer Inputs:
+
+int a, b, c, d;
+
+cin >> a >> hex >> b >> oct >> c >> d;
+cout << a << '\t' << b << '\t' << c << '\t' << d << '\n';
+
+If type:
+
+1234 4d2 2322 2322
+Will print:
+1234 1234 1234 1234
+
+To get >> to accept and correctly interpret 0 and 0x prefixes must unset all defaults:
+
+cin.unsetf(ios::dec):
+cin.unsetf(ios::oct);
+cin.unsetf(ios::hex);
+
+Stream member function unsetf() clears flag (or flags) given as argument. Now if write:
+cint >> a >> b >> c >> d;
+and enter:
+1234 0x4d2 02322 02322
+you get:
+1234 1234 1234 1234
+
+Floating Point Output
+
+Scientific notation must deal with formatting floating point values. Also handled using IOStream manipulators
+
+<< fixed - use fixed point notation
+<< scientific - use mantissa and exponent notation: mantissa is always in [1:10) range, that is, there is a single nonzero digit before decimal point
+<< defaultfloat - default format. Default is 6 total digits. Most appropriate form is chosen and number is rounded to give best approximation that can be printed using only six digits. Only applies to floating point numbers (prints integers).
+
+1234567 prints as 1234567
+1234567.0 prints as 1.23457e+006 //ostream switched to scientific format
+
+Basically defaultfloat format chooses between scientific and fixed formats to present user with most accurate representation of a floating point value within precision of general format, which defaults to six total digits. 
+
+Can set precision using setprecision() manipulator
+
+
+Precision:
+cout << 1234.56789 << '\t'
+	<< fixed << 1234.56789 << '\t'
+	<< scientific << 1234.56789 << '\n';
+cout << defaultfloat << setprecision(5)
+	<< 1234.56789 << '\t' 
+	<< fixed << 1234.56789 << '\t'
+	<< scientific << 1234.56789 << '\n'
+cout << defaultfloat << setprecision(8)
+        << 1234.56789 << '\t'
+        << fixed << 1234.56789 << '\t'
+        << scientific << 1234.56789 << '\n'
+
+Prints:
+1234.57 1234.567890 1.234568e+003
+1234.6  1234.56789  1.23457e+003
+1234.5679 1234.56789000 1.23456789e+003
+
+Fields
+
+Using scientific and fixed formats, programmer can control exactly how much space a value takes up on output. Useful for pinrting tables.
+
+Equivalent mechanism for integer values is called fields. 
+
+Can specify exactly how many char positoins a integer value or string value will occupy using setw() (set field width). 
+
+cout << 123456 //no field
+	<< '|' << setw(4) << 123456 << '|'
+	<< setw(8) << 123456 << '|'
+	<< 123456 << "|\n"; //field sizes don't stick
+
+prints:
+123456|123456|  123456|123456|
+
+Since number cannot fit in 4 char widths.
+
+Fields do not stcik. 
+
+File Opening and Positioning
+
+If we open an istream for a file, we can read from the file, whereas if we open a file with an ostream, we can write to it. With istream we can read from the file, wereas with ostream can write to it.
+
+File Open Modes
+
+Can open a file in one of several modes. By defaulkt, ifstream opens its file for reading and ofstream opens its file for writing. However, seeral alternatives:
+
+ios_base::app	- append (i.e. add to end of file)
+ios_base::ate 	- "at end" (open and seek to end)
+ios_base::binary - binary-mode -- beware of system-specific behavior
+ios_base::in	- for reading
+ios_base::out	- for writing
+ios_base::trunc	-truncate fil to 0 length
+
+File mode is optionally specified after name of file:
+
+ofstream of1 {name1}; //defaults to ios_base::out
+ifstream if1 {name2}; //defaults to ios_base::in
+
+ofstream ofs {name ios_base::app}; //ofstreams by default intclude iosbase::out
+fstream fs {"myfile", ios_base::in|ios_base::out}; //both in and out
+
+The | is bitwise or that can be used to combine mods as shown. 
+
+In every case, exact effcet of opening a file may defepend on OS, and if OS cannot honor request in a certain way, result will be a stream that is not in a good() state. 
+
+Most common reason for failure to open a file for reading is that file does not exist (at least not with name used):
+
+ifstream ifs {"redungs"};
+if (!ifs) //erro: can't open readings for reading
+
+Typically, OS will create a new file if you try to open a nonexistant file for output but not if try to open nonexistent file for input. 
+
+ofstream ofs {"no such file"}; //create new file
+ifstream ifs {"No-file-of-this-name"}; //error
+
+Binary Files:
+
+Number 123 can be represented in memory as string or int. Different representatoins. Ints have a fixed-size binary represntation but character strings are variable-size. Each string is as many bytes as characters plus the fixed overhead for managing a string. 
+
+iostreams deal with character representations by default. istream reads a sequence of characters and turns it into object of desired type. ostream takes an object of a specified type and transforms it into a sequnce of characters which it writes out. 
+
+Posibble to reqest istream or ostream to simply copy bytes to and from files. Called Binary I/O and is requested by opening fil with mode:
+ios_base::binary
+
+Open file of ints in binary
+int main() {
+	//open an istream for binary input from a file
+	cout << "Enter input file name:\n";
+	string iname;
+	cin >> iname;
+	ifstream ifs {iname, ios_base::binary}; //stream omde
+		//binary tells stream to to try anything clever with bytes
+	if (!ifs) error("can't open file", iname);
+	
+	//open an ostream for binary output to a file
+	cout << "{lease enter an output file name\n";
+	string oname;
+	cin >> oname;
+	ofstream ofs {oname, ios::binary}; //stream mode
+		//binary tells stream not to try anything clever with bytes
+	if(!ofs) error("cant open output file", oname);
+	
+	vector<int> v;
+	
+	//read from binary file
+	for(int x; ifs.read(as_bytes(x), sizeof(int)); ) //reading bytes
+		v,push_back(x);
+	//do something with v
+
+	//write to binary file
+	for(int x: v)
+		ofs.write(as_bytes(x), sizeof(int)); //writing bytes
+	
+	return 0;
+}
+
+as_bytes() gets address of first byt of an object's representation. 
+
+template <class T>
+char * as_bytes(T &i) {
+	void *addr = &i;
+	return static_cast<char*>(addr);
+}
+
+The (unsafe) type conversion using static_cast is necessary to get "raw bytes" of a variable. 
+
+Music or image files have no character representation and are really just a sequence of bits. 
+
+Positioning in Files
+
+If you must make change to file, many times it's best to produce a new file containing the change. 
+
+However, if necessary, you can use positioning to select a specific place in a file for reading or writing. Every file open for reading has a "read/get position" and every file open for writing has a "write/put position"
+
+seekg() - move reading position
+seekp() - move writing position
+
+fstream fs {name};
+fs.seekg(5); //move reading position to 5
+char ch;
+fs >> ch; //read and increment reading position (now is 6)
+
+fs.seekp(1); //move writing position to 1
+fs<<'y' //write and increment writing position to 2
+
+No run-time error checking when using positioning. It is undefined what happens if try to seek beyond end of a file. OSes really differ in what happens. 
+
+Strings streams:
+
+Can use string as source of an istream or target for an ostream. 
+
+An istream that reads from a string is called an istringstream. An ostream that stores characters written to it in a string is called an ostringstream. 
+
+Useful for extracting numeric values from a string
+
+double str_to_double(string s) {
+	istringstream is {s};
+	double d;
+	is >> d;
+	if(!is) error("double format error: ", s);
+	return d;
+}
+
+double d1 = str_to_double("12.4");
+double d2 = str_to_double("1.34e-3");
+double d3 = str_to_double("twelve point three"); //will call error
+
+If try to read beyond end of istringstream's string, istringstream will go into eof() state. So the usual input loop for istringstream works. 
+
+ostringstream can be useful for formatting output for a system that requires simple string argument, such as a GUI system.
+
+void mycode(string label, Temperature temp) {
+	//
+	ostringstream os;
+	os << setw(8) << label << ": "
+		<< fixed << setprecision(5) << temp.temp << temp.unit;
+	someobject.display(Point(100, 100), os.str().c_str());
+}
+
+The str() member function of ostringstream returns string composed by output operations to ostringstream. The c_str() is member function of string that reutns a C-style sttring as required by many system interfaces. 
+
+stringstreams generally used when want to separate I/O from processing. string argument for str_to_double() will usually originate in fileor from keyboard. Can be seen as mechanism for tailoring I/O to special needs and tastses
+
+Typically want to initialize istringstream with a string and then read characters from that string using input operations. Conversely, typically initialize an ostringstream to empty string and fill it using output operations. 
+
+ss.str() returns copy of ss's string. ss.str(s) sets ss's string to copy of s
+
+Line Oriented Input
+
+A >> operator reads into objects of a given type according to that type's standard format. When reading into an int, >> will read until it encounters something that's not a digit. When reading into a string, >> will read until it encounters whitespace. 
+
+Standard library istream library also provides facilities for reading individual chas and whoe lines. 
+
+getline(cin, name); //reads whole line from stdin and stores it in string name
+
+One common reason for wanting to read a whole line is that definition of whitespace isn't always appropriate/ May want to consider a newline as different from other wihtespace chaaracter. 
+
+Character Classification:
+
+Can read one character at a time:
+
+for(char ch; cin.get(ch);) {
+	if(isspace(ch)) {
+		//do nothing. skip
+	}
+	if(isdigit(ch)) {
+		//read a number
+	}
+	else if(isalpha(ch)) {
+		//read an identifier
+	}
+	else {
+		//deal with operator
+	}
+}
+
+istream::get() function reads a single character into its argument. Does not skipwhitespace and like >>, get() returns a reference to its istream so that we can test its state. 
+
+STL functions for classifying a char
+
+isspace(c) - is c whitespace(' ', '\t', '\n', etc)
+isalpha(c) - is caa letter (not symbols like '-' but a-zA-Z
+isdigit(c) - is ca decimal digit (0-9)
+isxdigit(c) - is c a hex digit (a-fA-F)
+isupper(c) - is c uppercase
+islower(c) - is c a lowercase letter
+isalnum(c) - is c a letter or a decimal digit
+iscntrl(c) - is c a control character (ASCII 0-31...and 127)
+ispunct(c) - is c not a letter, digit, whitespace, or invisible control character
+isprint(c) - is c printible
+isgraph(c) - is isalpha(c) or isdigit(c) or ispunct(c) (not space)
+
+Also STL provides two useful functions for getting rid of case difference:
+
+toupper(c) - c or c's uppercase equivalent
+tolower(c) - c or c's lowercase equivalent
+
+
+IO is Complex
+
+Langer - Standard C++ IOStreams and Locales
+Stroustrup, The C++ Programming Language
+
+locale -- term usually applied to facilities for dealling with natural language differences
+
+iostreams also rely on a concept called streambuf. For advanced work -- whether for performance or functoinality -- with iostreams these streambuf are unavoidable. 
+
+If need to define own iostreams or tune iostreams to new data sources/sinks, see Ch 38 of The C++ Programming Language by Stroutrup
+
+also can encounter printf() and scanf() in C++. 

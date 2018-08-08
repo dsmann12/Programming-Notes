@@ -1,0 +1,46 @@
+Namespaces
+
+Use blocks to organize code within a function. Use classes to organize functions, data, and types into a type. A function and class both do two things:
+1. Allow us to define a number of "entities" without worrying that their names clash with other names in program.
+2. Give us a name to refer to what we have defined. 
+
+Namespaces allow us to organize classes, functions, data, and types into an identifiable and named part of a program without defining a type. 
+
+Graphics library with classes called Color, Shape, Line, etc 
+
+namespace Graph_lib {
+	struct Color { .../}
+	struct Shape {...}
+	struct Line : Shape { };
+	struct Text : Shape { };
+	...
+}
+
+Graph_lib::Color is specific object. Any new object named Color is not same. Only problem if class or namespace also named Graph_lib with Line as member. Better obvious name like Graphics had grater chance of already being used somewhere. 
+
+Suppose you make class Text and put it in naemspace called TextLib:
+
+namespace TextLib {
+	class Text;
+	class Glyph;
+	class Line;
+}
+
+Had both used global namespace, could hav ebeen real trouble. Clash with Line and Text. Avoided problem by using namespaces so Graph_lib::Text and TextLib::Text are separate. 
+
+Name composed of a namespace name (or a class name) and a member named combined by :: is called a fully qualified name. 
+
+Writing fully qualified names can be tedious. Facilities of C++ STL are defined in namespace std.
+
+Don't have to refer to cout and string by fully qualified names:
+
+using std::string
+using std::cout
+
+Called a using declaration. 
+
+Sometimes prefer an even stronger "shorthand" for use of names from namespace. "If you don't find declaration for a name in this scope, look in std." 
+
+using namespace std;
+
+*Usually a good idea to avoid using directives for any namespace except for a namespace, such as std, that's extremely well known in an application area. Can lose track of which names comes from where.

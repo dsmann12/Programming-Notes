@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#comment
+
+echo "Hello World"
+
+myName="David"
+
+declare -r NUM1=5 #constant
+
+num2=4
+
+num3=$((NUM1+num2)) #expression.
+num4=$((NUM1-num2)) #expression. 
+num5=$((NUM1*num2)) #expression. 
+num6=$((NUM1/num2)) #expression. 
+
+#can use exponents and modulus as waell
+
+echo "5 + 4 = $num3"
+echo "5 - 4 = $num4"
+echo "5 * 4 = $num5"
+echo "5 / 4 = $num6"
+
+echo $((5**2))
+echo $((5%4))
+
+#+=, -=, *=, /=
+
+rand=5
+
+let rand+=4
+echo "$rand"
+
+echo "rand++ = $((rand++))"
+echo "++rand = $((++rand))"
+echo "rand-- = $((rand--))"
+echo "--rand = $((--rand))"
+
+num7=1.2
+num8=3.4
+#can use python?
+num9=$(python -c "print $num7+$num8")
+echo $num9
+
+#here script
+
+cat<<EOF
+This text
+prints on
+many
+lines
+EOF
+
+echo
+echo "And here's more"
+
+ 

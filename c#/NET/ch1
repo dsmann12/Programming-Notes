@@ -1,0 +1,512 @@
+BUILDING BLOCKS OF .NET Platform (CLR, CTS, CLS)
+
+.NET can be understood as two things: 
+1. a runtime environment
+2. a comprehensive base class library.
+
+CLR - Runtime layer. Common Language Runtime. Primary role of CLR is to located, load, and manage .NET objects on your behalf. CLR also takes care of a number of low-level  details suchas memory management, application hosting, coordinating threads, and performing basic security checks (among other low-level deatils). 
+
+CTS - Common Type System. Specification fully describes all possible dat atypes and all programming constructs supported by the runtime, specifies how these entities an interact with each other, and details how they are represented in .NEt metadat format.
+
+A given .NET aware language might not support every feature defined by the CTS. 
+
+CLS - Common Language Specification - related specigication that defines a subset of comon types and programming constructs that all .NET programming languages can agree on. if buld .NEt types that expose only CLS-compliant features, you can rest assured that all .NET aware langauge can consume them.conversely, if you make use of a data type or programming construct that is outside of the bounds of the CLS, you cannot guarantee that every .NET programming language can interact with your .NEt code library. Simple to tell C# compiler to check code for CLS compliance.
+
+BASE CLASS LIBRARIES
+
+In addition to CLR, CTS, and CLS
+
+.NET platform provides a base class library that is available to all .nET programming languages. Not only does base class library encapsulate various primitives such as threads, file I/O, graphical rendering systems, and interaction with various externa hardware devices, but also provides support for a number of services required by most real-world applications. 
+
+ASP.NET - can be used to build websites and REST services
+WCF - to build distributed systems
+WPF - to build desktop GUI apps 
+
+Also provide types to interact with XML documents, directory and file system on a given computer, communicate with a relational databases (via DO.NET). 
+
+Figure 1-1.
+
+C# like Java and Visual Basic. 
+
+C# supports notion of class properties (as opposed to getter and setter) and optional parameters. Like C++, allows operator overloading as well as to create structures, enumerations, and callback functions (via delegates). Like functional langauges, supports lambda expressions and anonymous types. 
+
+With advent of *Language Integreated Query (LINQ), C# supports a number of constructs that make it unique. 
+
+.NET 1.0
+-No pointers needed (can be used though)
+-Memory management automatically. GC. No delete keyword
+-Formal syntactic structures for classes, interfaces, structures, enumerations, and delegates. 
+-C++ like ability to overload operators (makes sure "return *this to allow chaining" is not your problem
+-Support for attribut-based programming. Alloes you to annotate types nad their members to further qualify their behavior. If mark a method with [Obsolete] attribute, programmers will see your custom warning message print out if they attempt to use the decorated member. 
+
+.NET 2.0 (2005)
+-Generic types and generic members. Able to build efficient and type-safe code that defines numerous *placeholders* specified at time you interact with generic item
+-Anonymous methods which allow you to supply an inline function anywhere a delegates type is required.
+-Ability to define a single tpe across multiple code files (or if necessary, as an in emomry representation) using *partial* keyword
+
+.NET 3.5 (2008)
+-Strongly typed queries (LINQ) used to interact with various forms of data. 
+-Support for anonymous types that allow model the *structure* of a type (rather than its behavior) on the fly in code. 
+-Ability to extend the functionality oif an existing type (without subclassin) using extension methods
+-Inclusion of lambda operator (=>) which even further simplies working with .NET delegatetypes
+-New object initialization syntax, allows you to set propertyvalues at time of object creation
+
+.NET 4.0 (2010)
+-Support for optional method parameters as well as named method arguments
+-Support for dynamic lookup of members at runtime via the *dynamic* keyword. Provides a unified approach to invoking members on the fly, regardless of which framework the member implemeneted (COM, IronRuby, IronPython, or via .NET reflection services
+-WOrkin with generic types more intuitive, can easily map gneeric dat to and from general *System.Object* collectoins via covariance and contravariance
+
+.Net 4.5
+-*async* and *await* which greatly simplify multithreaded and asynchronous programming. 
+
+.Net 4.6
+-Inline initialization for automatic properties as well as support for read-only automatic 
+-Single-line method implemenrations using C# lambda operator
+-Support of static imports to provide a direct access to static members within a namespace
+-A null conditional operator which helps check for null parameters in a method implementation
+-A new string formatting syntax termed *string interpolation*
+-bility to filter exceptions using new *when* keyword. 
+
+MANAGED vs UNMANAGED CODE
+
+C# can be used only to build software that is hosted underthe .NET runtime. Could never use C# to build a native COM server or an unmanaged C/C++ styles application. 
+
+Managed code - term describing code targeting .NET runtime. 
+
+Assembly - binary unit that contains the managed code. 
+
+Unmanaged code - code that cannot be directly hosted by .NET runtime. 
+
+Can use Xamarin Studio to build a C# app on Linux. 
+
+.NET also works with Visual Basic, C++/CLI, JavaScript, and F#.
+
+Also .NET compilers for Smalltalk, Ruby, Python, COBOL, and Pascal. 
+
+MULTI-LANGUAGES
+
+Why .NET language agonstic? 
+1. Programmers very particular when it comes to languages. They have many choices now.
+2. All all languages have own strengths and weaknesses. 
+
+.NET ASSEMBLIES
+
+Regardless of language, desptite that .NET binaries take same file extensions as unmanaged Windows binaries (*.dll or *.exe), they have absoltite;ly no internal similarities. 
+
+.NET binaries do not contain platform-specific instructions but rather platform-agnostic Intermediate Language (IL) and type metadata. 
+
+CIL or MSIL - Common Intermediate Language or Microsoft Intermediate LAnguage. When .dll or .exe has been created using .NET aware compiler, binary blob is termed an *assembly*. 
+
+Assembly - contains CIL code, which is similar to Java bytecode in that it is not compiled to platform-specific instructions until absolutely necessary. Typically, point at which a block of CIL instructions is referenced for use by .NET runtime. In addition to CIL instructions, also contain metadat that describes in vivid detail the characteristics of every "type" within the binary. If have class named SportsCar, the type metadata descibes details such as psortsCar's base class, which interfaces are implemented by class, as well as a full description of each member supported by the class type. 
+'
+.NET metadata is always present within an assembly and is automatically generated by a .NET aware langauge compiler. 
+
+In addition to CIL and type metadata, assemblies are also described using metadata, which is officially termed a *manifest*. 
+
+manifest - ocntains information about the current version of the assembly, culture information (used for localizing string and image resourece) and a list of all externally references assemblies that are required for proper execution. 
+
+ROLE OF CIL
+
+After compile code file using C# compiler (csc.exe), you end up with single file *.exe assmbly that contains a minfest, CIL instructions, and metadata describing the aspect of Calc and Program Classes
+
+IF were to open assembly using ildasm.exe, would find that Add() method is represented using CIL such as following:
+
+.method public hidebysig instance int32 Add(int32 x,
+int32 y) cil managed
+{
+// Code size 9 (0x9)
+.maxstack 2
+.locals init (int32 V_0)
+IL_0000: nop
+IL_0001: ldarg.1
+IL_0002: ldarg.2
+IL_0003: add
+IL_0004: stloc.0
+IL_0005: br.s IL_0007
+IL_0007: ldloc.0
+IL_0008: ret
+} // end of method Calc::Add
+
+If you made code with Visual Basic
+
+BENEFITS OF CIL
+
+Like benefits of Java. Single code base running on numerous OSes. International standard for C# and a large subset of .NET platform and implementatoins already exist for many non-Windows OSes. 
+
+COMPILING CIL TO PLATOFRM SPECIFIC INSTRUCTIONS
+
+CIL code must be compiled o nthe fly before use. JIT compiler or Jitter compiles CIL code into meaningful CPU instructions. 
+
+If building a .NET app to be used in handheld device (Windows mobile), corresponding Jitter is well equipped to run within a low-memory environment. On other hand, if deploying assembly to back-end company server (Where memory is high) then Jitter will be optimized to function in a high-memory environment. So developers can write a single body of code that can be efficiently JIT compiled and eecuted on machines with different architecture.
+
+Also, as given Jitter compiles CIL instructions into corresponding machine code, it will cache the results in memory in a manner suited to the target OS. This way, if call is made to a method named PrintDocument(), the CIL isntructions are compiled into platform-specific instructions on the first invocation and retined in memory for later use. So next time, no need to recompile the CIL. 
+
+*Also possible to perform a "pre-JIT" of an assembly when installing app using ngen.exe command line tool that hsips with .NET Framework SDK. Can improve startup time for graphically intensive apps.*
+
+ROLE OF .NET TYPE METADATA
+
+Metadata - describes every types (e.g. class, structure, enumeration) defined in binary as well as the membrs of each type (e.g. properties, methods, events). Always job of compiler (not programmer) to emit the latest and greatest type metadata. .NET metadata makes assemblies self-describing.
+
+Metadata generated by Add() function of Calc. 
+
+TypeDef #2 (02000003)
+-------------------------------------------------------
+TypDefName: CalculatorExample.Calc (02000003)
+Flags
+: [NotPublic] [AutoLayout] [Class]
+[AnsiClass] [BeforeFieldInit] (00100001)
+Extends
+: 01000001 [TypeRef] System.Object
+Method #1 (06000003)
+-------------------------------------------------------
+MethodName: Add (06000003)
+Flags
+: [Public] [HideBySig] [ReuseSlot] (00000086)
+RVA
+: 0x00002090
+ImplFlags : [IL] [Managed] (00000000)
+CallCnvntn: [DEFAULT]
+hasThis
+ReturnType: I4
+2 Arguments
+Argument #1: I4
+Argument #2: I4
+2 Parameters
+(1) ParamToken : (08000001) Name : x flags: [none] (00000000)
+(2) ParamToken : (08000002) Name : y flags: [none] (00000000)
+
+Metadata used by numerous aspects of .NET runtime environment as well as by various development tools. Intellisense feature provided by tools such as Visual Studio is made possible by reading an assembly's metadata at design time. Also used by various object-browsing utilities, debugging tools, and C# compiler itself. Backbone of numerous .NET tech including Windows Communication Foundation (WCF), reflection, late binding, and object serialization. 
+
+ROLE OF ASSEMBLY MANIFEST
+
+Metadat that describes assembly itself. Documents all external assemblies required by current assembly to function correctly, the assembly's version number, copyright information, and so forth. Like type metadat, it is always job of compiler to genreate assembly's manifest. 
+
+.assembly extern mscorlib
+{
+.publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
+.ver 4:0:0:0
+}
+.assembly Calc
+{
+.hash algorithm 0x00008004
+.ver 0:0:0:0
+}
+.module Calc.exe
+.imagebase 0x00400000
+.subsystem 0x00000003
+.file alignment 0x00000200
+.corflags 0x00000001
+
+UNDERSTANDING COMMON TYPE SYSTEM
+
+type - simply a general term used to refer to a member from the set {class, interface, structure, enumeration, delegate}. 
+
+CTS is formal specification that documents how types must be defined in order to be hosted by CLR. Typically only cared about by those building tools and or compilers that target the .NET platform. 
+
+Imporant for all .NET programmers to lean how to work with five types defined by CTS.
+
+CTS CLASS TYPES
+
+Every .NET aware langauge supports, at the least, the notion of a *class type* which is the cornerstone of OOP. Clas may be composed of any number of members (such as constructors, properties, methods, and events) and data ponts (fields). Declared using *class* keyword.
+
+// A C# class type with 1 method.
+class Calc
+{
+public int Add(int x, int y)
+{
+return x + y;
+}
+}
+
+CTS INTERFACE TYPES
+
+Interfaces are a named collection of abstract member definitions which may be implemented by a given class or structure. Defined using *interface keyword*. 
+
+// A C# interface type is usually
+// declared as public, to allow types in other
+// assemblies to implement their behavior.
+public interface IDraw
+{
+void Draw();
+}
+
+CTS STRUCTURE TYPES
+
+Structure can be through of as lightweight class tpye having value-based semantics.  Typically best suited for modeling geometric and mathematical data. Use the *struct* keyword. 
+
+// A C# structure type.
+struct Point
+{
+// Structures can contain fields.
+public int xPos, yPos;
+ 
+// Structures can contain parameterized constructors.
+public Point(int x, int y)
+{ xPos = x; yPos = y;}
+ 
+// Structures may define methods.
+public void PrintPosition()
+{
+Console.WriteLine("({0}, {1})", xPos, yPos);
+}
+}
+
+CTS Enumeration Types
+
+Enumerations - handy programming construct that allows you to group name-value pairs. Use *enum* keyword.
+
+
+// A C# enumeration type.
+enum CharacterType
+{
+Wizard = 100,
+Fighter = 200,
+Thief = 300
+}
+
+By default, storage used to hold each item is a 32-bit integer, however it is possible to alter this storage slot if need be (when programmign for low-memory device). Also, CTS demands enumerated types derive from common base class, System.Enum. Base class defines a number of members that allow you to extract, manipulate, and transform the underlying name-value pairs. 
+
+CTS Delegate Types
+
+Delegates are .NET equivalent of a type-safe C style function pointer. Key difference is that a .NET delegate is a class that derives from System.MulticastDelegate, rather than a simple pointer to a raw memory address. Declared with *delegate* keyword.
+
+CTS TYPE MEMBERS
+
+Most types take any number of members. Type member is constrained by set {constructor, finalizer, static constructor, nested type, operator, method, property, indexer, field, read=only field, constant, event}. 
+
+CTS defines various *adornments* that may be associated with given member. Each has a given visibility trait (*public, private, protected*). Soome may be declared as abstract or virtual. Also most may be configured as static (bound at class level) or isntance (bound at object level)
+
+INTRINSTIC CTS DATA TYPES
+
+Established well defined set of fundamental dat atypes. 
+
+CTS Data Type VB Keyword C# Keyword C++/CLI Keyword
+System.Byte Byte byte unsigned char
+System.SByte SByte sbyte signed char
+System.Int16 Short short short
+System.Int32 Integer int int or long
+System.Int64 Long long __int64
+System.UInt16 UShort ushort unsigned short
+System.UInt32 UInteger uint unsigned int or unsigned long
+System.UInt64 ULong ulong unsigned __int64
+System.Single Single float float
+System.Double Double double double
+System.Object Object object object^
+System.Char Char char wchar_t
+System.String String string String^
+System.Decimal Decimal decimal Decimal
+System.Boolean Boolean bool bool
+
+UNDERSTANDING THE COMMON LANGUAGE SPECIFICATOIN
+
+Different languages express same programming constructs in own specific ways. 
+
+Concatenation in C# is + and in VB it is &. The minor syntactic variatoins are inconsequential in eyes of .NET runtime given that respective compilrs emit a similar set of CIL instructions. 
+
+However, languages can differ in functionality. One may have keyword to reprsent unsigned dat aand might or might not support pointer types. Thus it is ideal to have a baseline to which all .NET aware langauges are expected to conform. 
+
+CLS is a set of rules that describe in vivid detail the minimal nad complete set of features a given .NET aware compiler must support to produce code that can be hosted byu the CLR while at same time be accessed in a uniform manner by all languages that target the .NET platform. 
+
+Can be viewed as a subset of the full functionality defined by the CTS.
+
+CLS ultimately a set of rules that compiler builders must conform to if they intend their products to function seamlessly within the .NET universe. Each rule is assigned a simgple name (CLS Rule 6) and describes how this rule affects those who build the compilers as well as those who (in some way) interact with them. 
+
+Rule 1: CLS rules apply only to those parts of a type that are exposed outside the defining assembly. 
+
+Given this rule, can correctly infer that the remaining rules of the CLS do not apply to the logic used to build the inner working of a .NET type. Only aspects of a type that must conform to the CLS are member definitions themselves (naming conventions, parameters, and return types). Implremenation logic for a member may use any number of non-CLS techniques as outside world won't know the difference. 
+
+FollowingC# Add() method is not CLS compliant. Because parameters and return values make use of unsigned data (which is not a requirement of CLS). 
+
+class Calc
+{
+// Exposed unsigned data is not CLS compliant!
+public ulong Add(ulong x, ulong y)
+{
+return x + y;
+}
+}
+
+Howevger, if only use unsigned data internally, then it is CLS conformed and all .NET languages are able to invoke the Add() method. 
+
+class Calc
+{
+public int Add(int x, int y)
+{
+// As this ulong variable is only used internally,
+// we are still CLS compliant.
+ulong temp = 0;
+...
+return x + y;
+}
+}
+
+CLS describes how given language must represent text strings, how enumerations should be represented internally (base type used for storage), how to define static members, etc. 
+Interest of CTS and CLS spec typically only to tool/compiler builders. 
+
+Ensuring CLS Compliance - 
+
+C# does define a number of programming constructs that are not CLS compliant. 
+
+Can instruct C# compiler to check code for CLS compliance using a single .NET attribute. 
+
+// Tell the C# compiler to check for CLS compliance.
+[assembly: CLSCompliant(true)]
+
+UNDERSTANDING COMMON LANGUAGE RUNTIME
+
+runtime - can be understood as a collection of services that are required to execute a given compiled unit of code. 
+
+Java developers must have Java Virtual Machine (JVM) in order to run software. 
+
+.NET provides single runtmie layer that is shared by all languages and platform that are .NET aware. 
+
+CLR physically represented byg a library named mccoree.dll (Common Object Runtime Execution Engine). When assembly is rreferenced for use, this file is loaded automatically which in turn loads the required assembly into memory. 
+
+Runtime engine responsible for number of tasks. 
+
+First, it is agent in charge of resolving the location of an assembly and finding the requested type witin the binary by reading the contained metadata. CLR then lays out the type in memory, compiles the associated CIL into platform-specific instructions, performs any necessary security checks, and then executes the code in question.
+
+In addition to loading custom assemblies and creating custom types, the CLR will also interact with the types contained withi nthe .NET base clas libararies when required. 
+
+Although entire base classs library has been broken into a number of discrete assemblies, the key assembly is mscorlib.dll, which contains a large number of core types that encapsulate a wide variety of common programming tasks, as well as the core data types used by all .NET langauges. When build .nET solutions, you automatically have acces to this particular assembly. 
+
+Figure 1-3. Pg 21
+
+ASSEMBLY/NAMESPACE/TYPE DISTINCTION
+
+Point of framework libraries is to give developers a well-defined set of existing code to leverage in their apps. However, C# language does not come with a language specific code library. Rather, C# developers leverage the language-neutral .NET libraries. 
+
+To keep all types within base class libraries, .NET platform makes use of namespaces. 
+
+namespace - a grouping of semantically related types contained in an assembly or possibly spread across multiple related assebmlies. 
+
+System.IO namespace containes file I/O related types and System.Data namespace defines basic database types, etc. 
+
+A single assembly (moscorlib.dll) can contain any number of namespaces, each of which contain any number of types. 
+
+Visual Studio Object Browser - allows you to examine the assemblies references by current project, the namespaces within a particular assembly, the types within a given namespace, and members of a specific type. 
+
+Note that mscorlib.dll assembly contains many different namespaces (such as System.IO) each with its own semantically related types (e.g. BinaryReader).
+
+Key difference between this approach and a language-specific library is that any language targeting the .NET runtime uses the *same* namespaces and *same* types. 
+
+// Hello world in C#.
+using System;
+ 
+public class MyApp
+{
+static void Main()
+{
+Console.WriteLine("Hi from C#");
+}
+}
+ 
+' Hello world in VB.
+Imports System
+Public Module MyApp
+Sub Main()
+Console.WriteLine("Hi from VB")
+End Sub
+End Module
+ 
+// Hello world in C++/CLI.
+#include "stdafx.h"
+using namespace System;
+ 
+int main(array<System::String ^> ^args)
+{
+Console::WriteLine(L"Hi from C++/CLI");
+return 0;
+}
+
+Cannot build any C# app without at least making a reference to System namespace as core data types (Int32, System.String) are defined here.ing System;
+using System.Windows.Controls;
+ 
+class MyGUIBuilder
+{
+public void BuildUI()
+{
+// Create a button control.
+Button btnOK = new Button();
+...
+}
+
+// Not listing System.Windows.Controls namespace!
+using System;
+ 
+class MyGUIBuilder
+{
+public void BuildUI()
+{
+// Using fully qualified name.
+System.Windows.Controls.Button btnOK =
+new System.Windows.Controls.Button();
+...
+}
+}
+
+REFERENCING EXTERNAL ASSEMBLIES
+
+In addition to specifying the namespace via the C# using keyword, also need to tell C# compiler the name of the assembly containing the actual CIL implementation for the referenced type. 
+
+Many core .NET namespaces are defined with mscorlib.dll. However some, like System.Drawing.Bitmap class contained within a separate assembly named System.Drawing.dll. 
+
+Majority of .NET Framework assemblies are located under a specific directory trmed the *global assembly cache* (GAC). On Windows, this is located under:
+
+C:\Windows\Assembly\GAC
+
+EXLPORING ASSEMBLY USING ildasm.exe
+
+Intermediate Language Disassembler utility (ildasm.exe) - allows you to load up any .NET assembly and investigate its contents, including the associated manifest, CIL code, and type metadata. Allows a programmer to dive deeply into how their C# code maps to CIL and ultimately helps one understand the inner workings of the .NET platform. 
+
+NEver need to use ildasm to become proficient .NET programmer, recommeded to better understand how C# code maps to runtime concepts. 
+
+After launching ildasm.exe, process to File-> Open menu command and naviage to an assembly you would like to explore. 
+
+Viewing CIL Code
+
+In addition to showing the namespaces, types, and members contained in a given assembly, ildasm.exe allows you to view the CIL instructions for a given member. Double click on member.
+
+Viewing Type Metadata
+
+To view type metdata, press CTRL-M
+
+Viewing Manifest
+
+Double click MANIFEST icon in main window. 
+
+THE COMMON LANGUAGE INFRASTRUCTURE
+
+CLI - Microsoft crafted a set of documents that described the sytnax and semantics of C# and CIL languages, the .NET assembly format, core .NET samespaces, and mechanics of .NET runtime engine. Official standards:
+
+-ECMA-334: The C# Language Specification
+-ECMA-335: The Common Language Infrastructure (CLI)
+
+Enable third parties to build distributions of .NET platofrm for any nymbre of OSes and/or processors. 
+
+ECMA-335 has been broken down into smaller partitions:
+
+ rtitions of ECMA-335 Meaning in Life
+Partition I: Concepts
+and Architecture Describes the overall architecture of the CLI, including the rules of the
+CTS and CLS and the mechanics of the .NET runtime engine.
+Partition II: Metadata
+Definition and Semantics Describes the details of .NET metadata and the assembly format.
+Partition III: CIL Instruction Set Describes the syntax and semantics of CIL code.
+Partition IV: Profiles
+and Libraries Gives a high-level overview of the minimal and complete class libraries
+that must be supported by a .NET distribution.
+Partition V: Binary Formats Describes a standard way to interchange debugging information
+between CLI producers and consumers.
+Partition VI: Annexes Provides a collection of odds-and-ends details such as class library
+design guidelines and the implementation details of a CIL compiler.
+
+Partition IV (Profiles and Libraries) defines only a minimal set of namespaces tha trepresent the core services expected by a CLI distribution (collections, console I/O, file I/O, threading, reflectoin, network access, core security needs, XML data manipulation). CLI does not define namespaces that afacilitate web development (ASP.NET), database access (ADO.NET), or desktop GUI applicatoin development (Windows PresentationFoundatoin or Windows Forms). 
+
+Alternative .NET distribution (MONO) extends the CLI llibraries with Microsoft-compatible equivalents of ASP.NET implementation, ADO.NET implementations, and various desktop GUI implemenations to provide full-feauterd production level devleopment platforms. 
+
+Two Major implementations of CLI beyond .NET. 
+
+Mono - open source distribution of CLI that targets various Linux distributions (SuSe, Fedor), Mac OS X, iOS, Android, and Windows
+
+.NET Core 5 - In addition to Windows-Centric .NET framework, Microsoft also supports a cross platform version of .NET which focuses on construction of code libraries and enterprise web apps. Open source. Not complete copy of .NET Framework. Focuses on construction of ASP.NET web apps that can run on Linux, Mac OS X, and Windows. If need to build desktop GUI apps, the Mono project is a better choice. 

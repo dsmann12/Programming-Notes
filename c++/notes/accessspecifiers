@@ -1,0 +1,12 @@
+Access Specifiers
+
+public means other objects can access access variables or methods
+
+private means only class has access to variable or method. Must
+build public methods for other Classes to access private methods
+
+protected - like combination of both. Anything inside class has
+access to data. Any friend has access to data. And derived class
+has access to these.
+
+Derive does not inherit private. But does inherit public and protected. 

@@ -1,0 +1,335 @@
+TILE VANIA
+
+Uses Tile Map feature. 
+
+Also cinemachine. 
+
+Rule tiles to decide if tiles should be top, bottom, etc.
+
+GAME DESIGN
+
+2D platformer
+
+Start point, finish point, enemies, ladders and screen size. Also camera and camera size. 
+
+Tile map is very small in size and a very efficient way of putting art into game. 
+
+Castlevania, Mega Man, Spelunky
+
+Under pressue, rune and jump mechanics and needing to escape.
+
+Will have multiple tile map layers
+-background for visuals 
+-foreground for gameplay
+
+
+Camera - snapping or follow
+
+Automated painting feature.
+
+Get art assets
+
+kenny.nl
+
+open game art. org
+
+uniry asset store
+
+SPLICING SPRITE SHEETS
+
+Drag assets into project. 
+
+Click sprite itselt, make sure it is a sprite. Change to multiple if a sprite sheet.
+
+Apply
+
+Click sprite editor.
+
+Can slice automatically. Get green outlines behind each tile.
+
+Otherwise can set grid cell size. And padding.
+
+There is also offset. 
+
+Apply
+
+INTRO TO UNITY TILE MAP
+
+Add tiles to tile palette which you can paint into tile map.
+
+Can have multiple tile maps that act as layers. 
+
+2D Object > Tilemap
+
+Can make one tile map fo rbackground and one for foreground,
+
+Create a new palette. 
+
+Call it manual tiles. Future will have automatic. 
+
+Drag sprite sheet into palette and select where to save tile asets.
+
+Can change their color tinint or collider types.
+
+Change pixel per unit to fit in tiles. 
+
+May want to double fidelity by selected 16 as PPU on 32. So lowering ppu raises fidelity?
+
+Can grab multiple to pant mltiple tiles at once. 
+
+Can also drag it along. 
+
+Can make background of entire level to 
+
+Tile Maps Layers ahve sorting orders. 
+
+Can change sorting orders for layering. Higher nubers are on top. 
+
+Can also edit layers and tags. 
+
+Can set up sorting layers for this.
+
+Rearranging tlie maps.
+
+Click Edit and click on move tool to move tiles. 
+
+Can slect multiple.
+
+Can flip tils by copying them and applying different scale to flipped version.
+
+UNITY RULE TILES
+
+Have to download a repo from GitHub called 2d-extras.
+
+Unzip into Assets. 
+
+Right click asset folder, create, Rule Tile.
+
+Give it name. Platforms, etc.
+
+Can use + and - to add and remove rule. 
+
+Select default sprite for when it can't find a rule. 
+
+Choose a tile, and in grid can put particular rules. 
+
+Click in cell to get an arrow, click second time does x.
+
+Arrow means something in tthat tile, and x means nothing. 
+
+Drag this new asset into til emap grid. Select it to paint with it. 
+
+Add more rules.
+
+Fixed means onlt one direction, otherwise can make it rotated. 
+
+Mirror X where only have two scenariors. Like mirroring left and right cornersrs.
+
+Put very specific rules on top and general ones on bottom of rule set. 
+
+PLAYER IDLE ANIMATION
+
+Use animation conroller with animator component. Use animations and make sure object has a sprite renderer.
+
+Add player sprites, slice it, and handle animations
+
+Then do animation states and transitions.
+
+Animation durations and trasition duration is for 3d movement and such.
+
+Not 2D. Can turn on dixed duration and set transition offset to 0
+
+IMPLEMENT 2D COLLISION
+
+Body Types:
+Dynamic - gravity and physics forces
+Kinematic - infinte ass. We drive position with code.
+Static - collision but no movement.
+
+Add colliders to tile map. TileMap collider 2D component. 
+
+Then add a composite collider to combine tiles together to one shape.
+Tell tilemap collider to use composite.
+
+Make sure to make rigid body to static.
+
+Can also manipulate collision shape on tiles by messing wit hsprite sheet. 
+
+Can also tell collider type to grid. 
+
+MOVING PLAYER
+
+Can chang player's velocity to move them left and right.
+
+What is [SerializeField]? To put private variable in inspector.
+
+Can also change movement input in physics 2d stuff. Input manager.
+
+Also need to flip sprite when moving the other way.
+
+Mathf.Epsilon is 0. Good when comparing to 0.0f;
+
+Mathf.Sign - get sign of float.
+
+Use transform.localScale to change scale of object
+
+TIPS AND TRICKS
+
+Don't cache data if you can calculate it. Because quicker to access processor than memory?
+
+Is that right?
+
+Idk. 
+
+ANIMATION STATE IN CODE
+
+Get animator controller and set parameters to effect transitions. 
+
+Like already learned in other lessons.
+
+JUMPING
+
+They do it by adding velocity to y of object.
+
+JUMP IF ISTOUCHINGLAYERS
+
+Layers useful if have same functionality across multiple objects
+
+To have things ifnored by camera, clickable, or a collision check
+
+Add a user layer
+
+Can turn culling mask in camera off to hide certain layers in camera.
+
+Collider2D.IsTouchingLayers will return true or false if collider touching layermask.
+
+LayerMask.GetMask() - to get mask. Convert layer names to mask.
+
+CLIMB LADDER
+
+Add ladder to its own tile map layer.
+
+Use tile map collider and comoposite collider. 
+
+Put on layer called climbing. 
+
+Can use IsTouchingLayer to see if touching ladder. 
+
+CINEMACHINE
+
+Have deadzone, look ahead, follow, etc.
+
+Isn't creating new cameras but is creating virtual cameras. 
+
+Download cinemachine from asset store. 
+
+Cinemachine brain will move between virtual cameras to create shots in 3D world. 
+
+Add cinemachine brain to main camera. 
+
+Go to cinemachine menu and add a virtual camera. Create 2D camera for 2D game. Gives orthorgraphic size.
+
+3D camera will have FOV option. 
+
+Have guides in virtual camera. Blue is what will see. in camera. 
+
+Framing Transpose shows gizmos for camera.
+
+Yellow shows targget of camera
+
+Has a  deadzone to only move camera in certain sot.
+
+Many features.
+
+Dampening, dead zone size, lookahead etc. 
+
+Dampening is how quickly the camera will follow camera. Lookahead means camera moves ahead of player in direction they are running. 
+
+CINEMACHINE CONFINER EXTENSION
+
+Adds constraints so that camera will not go past the ebackground. 
+
+In cvirtual camera can add extensions
+
+ADd cinemachine confiner.
+
+Need a collider to detect border of where camera can run into. 
+
+STATE DRIVEN CAMERAS
+
+Cinemachine > State Driven Camera
+
+Sync camera with animation states
+
+Add target to Animated Target of state driven camera.
+
+Add state and choose camera for that state
+
+Make sure cameras are 2D or 3D depending on what's needed. 
+
+Can also create blends to switch between cameras, choosing the style of transition and the time it takes. 
+
+Can also tell camera how llong to wait to go to blend n the state machine of camera.
+
+You put virtual cameras as chlidren to state camera. Give them names and add them to state camera so state camera can switch among them.
+
+PREVENT WALL JUMPS
+
+Problem is that there is friction on player and wall.
+
+Must create a Physics Material 2D.
+
+Name Zero Friction.
+
+Give it 0 friction.
+
+If want to make something bouncy, mess with bounciness.
+
+Add physics material to the player's collider.
+
+Can add second collider to represent player's feet. 
+
+ENEMIES
+
+Slice enemy sprite sheet and make animations. 
+
+Handle collisions and etc
+
+GAME SESSION CONTROLLER
+
+Player has lives. When all lives over, restart game.
+
+Create empty game object and add script. 
+
+Make it a singleton.
+
+If a new one is created but one already exists then destroy new one. 
+
+Have public methods to handle player death and stuff.
+
+Needs to restart current scene when player dies. 
+
+If lives all used, need to load current scene and destory session manager. 
+
+PERSISTENT SFX
+
+If destory object when playing sound, it will destory audio source.
+
+Create SFX.cs wih public method that can call when player touches coin, etc.
+
+To avoid using sfx.cs can tell the game to play audio source at camera location and then destroy pickup.
+
+PERSIST ENEMIES/COLLECTABLES
+
+Scene Persist game object.
+
+Put all collectables/enemies in this scene persist object.
+
+Ad dscript and make it a singleton. Don't destroy on load.
+
+Get starting scene index.
+Get the current scene index and such. 
+
+Check if current scene is equal to starting scene index.
+
+If not, destory scene persist. 

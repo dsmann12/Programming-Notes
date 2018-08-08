@@ -1,0 +1,49 @@
+Separate Compilation - User code sees declarations of types and functions used. Definitions of tose types and functions are in separate source files and compiled separately. 
+
+//Vector.h
+
+class Vector {
+	public:
+		Vector(int s);
+		double &operator[](int i);
+		int size();
+
+	private:
+		double *elem;
+		int sz;
+};
+
+Declaration would be placed in a file Vector.h and users will include that file, called a header file, to access that interface. 
+
+//user.cpp
+
+#include "Vector.h" //get Vector's interface
+#include <cmath> //get the standard-library math function interface including sqrt()
+
+using namespace std; //make std members visible
+
+double sqrt_sum(Vector &v) {
+	double sum = 0;
+	for (int i = 0; i != v.size(); ++i) {
+		sum += sqrt(v[i]);
+	}
+	return sum;
+}
+
+To help the compiler ensure consistency, the .cpp file providing the implementation of Vector will also include the .h file providing its interface
+
+//Vector.cpp
+
+#include "Vector.h"
+
+Vector::Vector(int s) : elem {new double[s]}, sz{s} {}
+
+double &Vector::operator[](int i) {
+	return elem[i];
+}
+
+int Vector::size() {
+	return sz;
+}
+
+Code in user.cpp and Vector.cpp shares Vector interface information presented in Vector.h but two files are otherwise independent and can be separately compiled. 

@@ -1,0 +1,99 @@
+TILING
+
+2D Worldbuilding - Tile Map
+
+A 2D tool for making grid based layouts. 
+
+Import Pipeline - 
+
+Art Tool -> Sprites -> Tiles
+
+Tile because wanted intermediate asset that is not a sprite. References sprites. HAs extra data: transform, color. 
+
+Create -> Tile. 
+
+Tile Pallette 
+
+Window -> Tile Pallette
+
+Way to view and manage pallettes of tiles. Collections of tiles. Can be used to paint on tile map of scene. 
+
+Create New Pallette . Give name. 
+
+Dropdown has all tile pallettes created. 
+
+Drag sprites into tile pallette. Generates tile assets.
+
+Can use single sprites or multiple sprites. 
+
+Crate tile map. 
+
+Crate -> 2D Object -> Tile Map
+
+Tile Map gives a grid parent object. That defines cell size and gap between cells. 
+
+Tile Map Renderer - renders tile map;
+
+Can paint. 
+
+Grid can have mutliple tile maps. Floor. Walls. Ordering layer used to sort them. So one drawn in front other
+
+Can have multple grids. Plant Grid. Plants. 
+
+The lower, the later the rendering. Therefore on top. 
+
+Choose tile map.
+
+Choose pain brush. Chooce tile from tile pallette. And then you can paint. 
+
+Box fill - big box full of tile. 
+
+Can use variety. 
+
+Pick many tiles. Use box fill. 
+
+[] - can rotate tiles. 
+
+Colliders. 
+
+For walls? As a box?
+
+TileMapCollider2D - colliders on each tile in the tile map. 
+
+But often you don't want to colide with the entire grid. 
+
+Tile can have collider type. Can give collider type of sprite instead of grid. 
+
+If add TileMap collider2D here to sprite. The collider wil be just on the edges. 
+
+Give physics shape for specific tile to use as collider. That's why only edge matters. 
+
+CompositeCollider2D - so not every tile has colliders. Make suer tilemapcollider2d is being used by composite. Combines collision shape to simplify it. 
+
+When add compositecollider2D want to change rb to static not dynamic. 
+
+Custom Tiles and Custom Brushes. Can extend tile class and make it do interesting things. 
+
+Example: Animation.m
+
+Waterfall
+
+Pipeline - based on what neighbors are. What should change abount tile. 
+
+Use custom scripts. 
+
+RefreshTile() -> make decisions about neighboring tiles. 
+
+TerainTile - has a bunch of rules to do with neighbors in 8 directions. 
+
+Custom Brushes 
+
+Default brush places tile. Colors it white. Etc. 
+
+Basic idea is that want to extend grid brush and override painting actions. 
+
+Want to do something different when paint, box fill, erase, etc. 
+
+Can have tint color and show preview. 
+
+RoboDash. Can learn from this. 

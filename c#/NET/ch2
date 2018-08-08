@@ -1,0 +1,51 @@
+BUILDING C# APPLICATIONS
+
+Tools used depends on:
+1. Cost
+2. OS developing on
+3. Computer platforms being targeted
+
+Visual Studio:
+
+Visual Studio Express
+Visual Studio Community
+Visual Studio Professional (or higher)
+
+Differ by number of enterprise-level features and number of supported projet types. 
+
+Express lacks some sophisiticated database integration tools and specialized project templates for alternative .NET langauges (such as F# and Python) that are included in Professional. Community Edition supports same project types as Professional but lacks some features that would be most useful in corporate development environment (such as full integration with Team Foundation Server). 
+
+Each chips with sophoisticated code editors, key database designers, integrated visual debuggers, GUI designers for desktop and web app, and so forth. 
+
+Express only works for building apps for Windows 7+. 
+
+Community can build for Apple and Linux. Provides single environment for building dsktop and web pages. Also provides suppport for number of additional programming languages (F#, Python, JavaScript). 
+
+-Projects that target Windows Phone and Windows 8.x
+-Project that target Android devices
+-Projects that taget iOS devices
+-Projects that target lower-level C++ APIs such as MFC and ATL
+-Several project types that target construction of video games on various devices
+-Projects that llow you to extend Visual Studio Community (as well as PRocessional) with new functionality vis extensibility plugins. 
+-Projects to build custom PowerShell scripts
+
+Professional - Same features in community. In addition, has number of features geared toward corporate-level collaborative development. With Visual Studio Professional, have following:
+
+-Integration with Team Foundation Server (TFS) to manage Agile and Kanban boards
+-Tools to create and manage stories tasks and epics
+-SharePoint integeration and development char rooms
+-Tools to manage sprint planning
+
+class Program
+{
+static void Main(string[] args)
+{
+// Display a simple message to the user.
+Console.WriteLine("***** My First C# App *****");
+Console.WriteLine("Hello World!");
+Console.WriteLine();
+ 
+// Wait for Enter key to be pressed before shutting down.
+Console.ReadLine();
+}
+}

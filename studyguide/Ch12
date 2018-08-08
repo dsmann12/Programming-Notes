@@ -1,0 +1,122 @@
+STRING OPERATIONS
+
+Document processing important to computers. Edit documents, search documents, transport documents over Internet, and display documents on printers and screens. 
+
+HTML, XML. Parsing thse requires text processing. Text processing algorithms highlight important algorithmic design patterns.
+
+Brute-Force Method - often ineffcient but wide applicavility. Pattern matching. 
+
+Greedy method - often allows us to approximate solutions to hard problems and for some problems (such as text compressions) actually gives rise to optimal algorithms. 
+
+Dynamic Programming - text similarity. Design pattern which can be applied in some special instances to solve a problem in polynomial time that appears at first to require exponential time to solve. 
+
+
+TEXT PROCESSING
+
+Methods for dealing with character strings at heart. 
+
+Several string processing operations involve breaking large strings into smaller strings. 
+
+Substring - substring of m character string P refers to string of form P[i]P[i+1]...p[j] for some 0 <= i <= j <= m-1, that is the string formed by the characters in P from index i to index j inclusive. 
+
+Technically, a string is acutally a substring of itself (taking i = 0 and j - m-1. To rule this out, nust restrict definition to *proper* substrings, which require that either i > 0 or j < m-1. 
+
+To simplify, P[i..j]. If i > j, then P[i..j] is equal to the *null string* which has length 0. 
+
+In addition, in order to distinguish some special kinds of substrings, let us refer to any substring of form P[0..i], for 0 <= i <= m-1 as a *prefix* of P and any substring of form P[i..m-1] for 0 <= i <= m-1 as a *suffix* for P. 
+
+Some example strings:
+
+P = “CGTAAACTGCTTTAATCAAACGC”
+S = “http://www.wiley.com”
+
+For example, if we again take P to be the string of DNA given above, then “CGTAA” is a prefix of P, “CGC” is asuffix of P, and “TTAATC” is a (proper) substring of P. Note that the null string is a prefix and a suffix of any other string.
+
+To allow fo fairly general notions of a string, we do not restrict characters in T and P to explicitly come from a well known character set, like ASCII or Unicode. 
+
+Instead use symbol E to denote the character set, or *alphabet*, from which characters can come. Since most document processing algorithms are used in apps where the underlying character set is finite, we usually assume that size of alphabet E, denoted with |E|, is a fixed constant. 
+
+C++: THE STL STRING CLASS
+
+C Style string - array of char type terminated by null character '\0'. By themselves, thses do not support complex string operations. 
+
+C++ Standard Template Library (STL) provides a complete string class. Supports many operations. 
+
+Let S denote the STL string object on which the operation is being performed and let Q denote another STL string of C style string. 
+
+size() - returns number of characters n of S
+empty() - returns true if string is empty, false otherwise
+operator[i] - return the character at index i of S without performing array bounds checking
+at(i) - return character at index i of S. An out_of_range exception is thrown if i is out of bounds
+insert(i, Q) - insert string Q prior to index i in S and return a reference to result
+append(Q) - append string Q to end of S and return a reference to result
+erase(i, m) - remove m characters starting at index i and return a reference to result
+substr(i, m) - return the substring of S of length m starting at index i
+find(Q) - If Q is a ssubstring of S return the index of the beginning of the first occurrence of Q in S, else return n, the length of S
+c.str() - return a C style string containing the contents of S
+
+By default, string initialized to empty string. String may be initialized from another STL string or from C style string. Not possible to initialize an STL string from a single character. 
+
+Also support functions that return forward and backward iterators. All operations that are defined in terms of integer indices have counterparts that are based on iterators. 
+
+STL string class also supports assignment of one string to another. Provides relational operators, such as ==, M, >=, which are performed lexicographically. Strings can be concatenated with + and may append on string to another using +=. Strings can be input using >> and output using <. 
+
+The function getline(in, S) reads an entire line of input from the input stream in and assigns it to the string S. 
+
+STL string class is actually a special case of amore general templated class, called basic_string<T>, which supports all the string operations but allows its elements to be an arbitrary type, T, not just char. STL string is just a short way of saying basic_string<char>. String of ints can be defined as basic_string<int>
+
+Operation
+S.size()
+S.at(5)
+S[5]
+S + "qrs"
+S == "abcdefghijklmnop"
+S.find("ghi")
+S.substr(4, 6)
+S.erase(4, 6)
+S.insert(1, "xxx")
+S += "xy"
+S.append("z")
+
+Output
+16
+’f’
+’f’
+"abcdefghijklmnopqrs"
+true
+6
+"efghij"
+"abcdklmnop"
+"axxxbcdklmnop"
+"axxxbcdklmnopxy"
+"axxxbcdklmnopxyz"
+
+DYNAMIC PROGRAMMING
+
+This technique similar to divide-and-conquer technique of Section 11, in that it can be applied to a wide variety of different problems. 
+
+Take problems that seem to require exponential time and produce polynomial time algorithms to solve them. 
+
+Also, algorithms that result from applications of the dynamic programming technique are usually quite simple - often needing little more than a few lines of code to describe some nested looos for filling in a table. 
+
+MATRIX CHAIN-PRODUCT
+
+Suppose we are given a collection of n two-dimensional arrays (matrices) for which we wish to compute the product
+
+A = A0 . A1 . A2 . ...An-1
+
+where Ai is a (di * d(i+1)) matrix for i = 0, 1, 2, ..., n-1. 
+
+In standard matrix multiplication algorithms (which is one we use), to muliple a d x e-matrix B times an e x f-matrix C, we compute product A as
+
+A[i][j] = E(k=0, e - 1) B[i][k] . C[k][j]
+
+This definition implies that matrix multiplication is associative, that is, it implies that B . (C . D) = (B . C) . D.
+
+This, we can parenthesize the expression for A in a way we wish and end up with the same answer. We do not necessarily perform the same number of primitive (that is, scalar) multiplications in each parenthesization.
+
+Let B be a 2 × 10-matrix, let C be a 10 × 50-matrix, and let D be a 50 × 20-matrix. Computing B · (C · D) requires 2 · 10 · 20 + 10 · 50 · 20 = 10, 400 multiplications, whereas computing (B ·C) · D requires 2 · 10 · 50 + 2 · 50 · 20 = 3000 multiplications.
+
+The *matrix chain-product* problem is to determine the parenthesization of the expression defining the product A that minimizes the total number of scalar multiplications performed. Finding a good solution can result in significant speedups. 
+
+

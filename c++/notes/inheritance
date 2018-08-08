@@ -1,0 +1,70 @@
+Inheritance
+
+Overloading - Creating methods of same name but with different signatures.
+Signatures are parameter types. 
+
+void printNumber(int n) {}
+
+void printNumber(float f) {} 
+
+Calls correct function based on type of argument.
+
+Inheritance 
+
+Idea that one class can inherit methods and fields
+from other classes. No need to copy code over. 
+
+Overloading
+Overriding
+
+Descendant class with inherit from Ancestor class.
+Ancestor class is the base class. Inheriting class
+is the derived class. 
+
+class Descendant: public Ancestor {
+
+}
+
+public keyword means descendants inherit all public
+methods and variables of base class.Except constructor. 
+
+Inheriting doesn't actually grab everything from base class. 
+Private variables are not inherited. Must access them from 
+public methods.
+
+Derived classes does not inherit base constructors and destructors. 
+But derived class is created, compiler creates instances of base
+class first and destroys them with derived classes destroyed first 
+until base class. Derived class sets off chain of deconstructors
+
+Polymorphism -- means many forms.
+
+Ex. Computer game. Multiple monsters. All can attack. but each attack 
+is different depending on the monster. i
+
+Virtual Functions - Tells compiler a function will be used polymorphically
+
+virtual void attack() { }
+
+Compiler selects the appropriate method based on the class of the object
+that calls it. 
+
+If enemy class has virtual method attack(). And object extends enemy and 
+overrides the attack() method. Then when an object of the derived class
+calls attack(), the compiler knows to call that object's implementation
+of the attack() method.
+
+Same function but different results. 
+
+If derived class does not override the virtual function but calls a function
+of the same name, then it will call the base class's implementation. 
+
+Abstract Classes or Pure Virtual Function - Virtual function that does not 
+have a body at all. 
+
+virtual void attack()=0;
+
+Has no implementation at all. Any derived class that inherits a class that 
+contains a pure virtual function MUST override that function.
+
+Abstract class is a class that has a pure virtual function in it.  

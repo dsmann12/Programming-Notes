@@ -1,0 +1,36 @@
+Important Functions:
+socket()
+bind()
+connect()
+accept()
+send()
+recv()
+gethostname()
+htons() // variations
+
+
+1. What is OSI Layer? What are the layers?
+2. What is a packet?
+3. Describe encapsulation with networking and what it is similar to.
+4. Describe an example of these layers?
+5. What is TCP/IP? IPv4? IPv6?
+6. What is HTTP?
+7. Describe what happens with these layers when Web Browser accesses data on the Internet?
+8. What is a socket? How do they work?
+9. What is a stream socket?
+10. What is a datagram socket?
+11. What are common socket functions?
+
+How does the Data-Link layer work and what is its main protocol?
+What is a MAC address?
+What is ARP? What is it used for? 
+What data does an Ethernet packet include?
+How do ARP requests work? ARP replies?
+What protocols exists on the network layer?
+How does Network layer work? What data does a network packet include? What is the checksum?
+What is ICMP used for? What command cli command uses this?
+How is large data handled on the network layer?
+What are transfer layer protocols?
+What is the benefit of TCP?
+How does TCP work? What is the handshake process?
+

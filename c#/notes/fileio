@@ -1,0 +1,1668 @@
+FILE I/O AND OBJECT SERIALIZATION
+
+SYSTEM.IO NAMESPACE
+
+Base class libraries devoted to file-based (and memory-based) input and output services. 
+
+Defines a set of classes, interfaces, enumerations, structures, and delegates, most of which can be found in 
+mscorlib.dll. Also the System.dll assembly defines additional members of System.IO namespace. 
+
+Visual Studio project automatically set a reference to both assemblies. 
+
+Many of types within System.IO namespace focus on programmatic manipulation of physical directories and files.
+However, additional types provide support to read data from and write data to string buffers, as well as raw memory locations. 
+
+Nonabstract I/O Class Type 			Meaning in Life
+BinaryReader
+BinaryWriter 						These classes allow you to store and retrieve primitive data types
+									(integers, Booleans, strings, and whatnot) as a binary value.
+
+BufferedStream 						This class provides temporary storage for a stream of bytes that you can
+									commit to storage at a later time.
+
+Directory
+DirectoryInfo 						You use these classes to manipulate a machine’s directory structure.
+									The Directory type exposes functionality using static members, while
+									the DirectoryInfo type exposes similar functionality from a valid object
+									reference.
+
+DriveInfo 							This class provides detailed information regarding the drives that a given
+									machine uses.
+
+File
+FileInfo 							You use these classes to manipulate a machine’s set of files. The File
+									type exposes functionality using static members, while the FileInfo type
+									exposes similar functionality from a valid object reference.
+
+FileStream 							This class gives you random file access (e.g., seeking capabilities) with
+									data represented as a stream of bytes.
+
+FileSystemWatcher 					This class allows you to monitor the modification of external files in a
+									specified directory.
+
+MemoryStream 						This class provides random access to streamed data stored in memory
+									rather than in a physical file.
+
+Path 								This class performs operations on System.String types that contain file
+									or directory path information in a platform-neutral manner.
+
+StreamWriter
+StreamReader 						You use these classes to store (and retrieve) textual information to
+									(or from) a file. These types do not support random file access.
+
+StringWriter
+StringReader 						Like the StreamReader/StreamWriter classes, these classes also work with
+									textual information. However, the underlying storage is a string buffer
+									rather than a physical file.
+
+DIRECTORY(INFO) AND FILE(INFO) TYPES
+
+4 classes allow you to manipulate individual files as well as interact with a machine's directory structure. 
+
+Directory and File expose creation, deletion, copying and moving operations using various static members.
+
+The related FileInfo and DirectoryInfo types expose similar functionality as instance-level methods (therefore
+, must allocate them with the new keyword). 
+
+Directory and File directly extend System.Object while DirectoryInfo and FileInfo derive from abstract 
+FileSystemInfo type. 
+
+FileInfo and DirectoryInfo typically better choices for obtaining full details of a file or directory (e.g. 
+time created or read/write cabalities) because members tend to be strongly typed objects. 
+
+THE ABSTRACT FILESYSTEMINFO BASE CLASS
+
+For most part used to discover general characteristics about given file or directory. 
+
+Property 				Meaning in Life
+Attributes 				Gets or sets the attributes associated with the current file that are represented by
+						the FileAttribute  enumeration (e.g., is the file or directory read-only, encrypted,
+						hidden, or compressed?).
+
+CreationTime 			Gets or sets the time of creation for the current file or directory.
+
+Exists 					Determines whether a given file or directory exists.
+
+Extension 				Retrieves a file’s extension.
+
+FullName 				Gets the full path of the directory or file.
+
+LastAccessTime 			Gets or sets the time the current file or directory was last accessed.
+
+LastWriteTime 			Gets or sets the time when the current file or directory was last written to.
+
+Name 					Obtains the name of the current file or directory.
+
+Delete()				Implemented by derived typed to delete a given file or directory from the hard drive
+
+Refresh()				Prior to obtaining attribute information to ensure that the statistics regarding the 
+						current file (or direcctory) are not outdated
+
+WORKING WITH THE DIRECTORYINFO TYPE
+
+Contains a set of members for creating, moving, deleting, and enumerating over directories and subdirectories.
+
+In addition to FileSystemInfo members, there are:
+
+Member 					Meaning in Life
+Create()
+CreateSubdirectory() 	Create a directory (or set of subdirectories) when given a path name
+
+Delete() 				Deletes a directory and all its contents
+
+GetDirectories() 		Returns an array of DirectoryInfo objects that represent all subdirectories
+						in the current directory
+
+GetFiles() 				Retrieves an array of FileInfo objects that represent a set of files in the
+						given directory
+
+MoveTo() 				Moves a directory and its contents to a new path
+
+Parent 					Retrieves the parent directory of this directory
+
+Root 					Gets the root portion of a path
+
+// Bind to the current working directory.
+DirectoryInfo dir1 = new DirectoryInfo(".");
+// Bind to C:\Windows,
+// using a verbatim string.
+DirectoryInfo dir2 = new DirectoryInfo(@"C:\Windows");
+
+If attempt to interact with nonexistant directory, a System.IO.DirectoryNotFoundException is thrown. 
+
+If call a directory that is not yet created, need to call the Create() method before proceeding.
+
+// Bind to a nonexistent directory, then create it.
+DirectoryInfo dir3 = new DirectoryInfo(@"C:\MyCode\Testing");
+dir3.Create();
+
+Also:
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Directory(Info) *****\n");
+ShowWindowsDirectoryInfo();
+Console.ReadLine();
+}
+ 
+static void ShowWindowsDirectoryInfo()
+{
+// Dump directory information.
+DirectoryInfo dir = new DirectoryInfo(@"C:\Windows");
+Console.WriteLine("***** Directory Info *****");
+Console.WriteLine("FullName: {0}", dir.FullName);
+Console.WriteLine("Name: {0}", dir.Name);
+Console.WriteLine("Parent: {0}", dir.Parent);
+Console.WriteLine("Creation: {0}", dir.CreationTime);
+Console.WriteLine("Attributes: {0}", dir.Attributes);
+Console.WriteLine("Root: {0}", dir.Root);
+Console.WriteLine("**************************\n");
+}
+}
+
+***** Fun with Directory(Info) *****
+ 
+***** Directory Info *****
+FullName: C:\Windows
+Name: Windows
+Parent:
+Creation: 10/10/2015 10:22:32 PM
+Attributes: Directory
+Root: C:\
+**************************
+
+ENUMERATINGG FILES WITH DIRECTORYINFO TYPE
+
+Can use GetFile() method to obtain information about files, including specifying a criterion like only files 
+with a certain extension. 
+
+GetFiles() returns an array of FileInfo objects, each of which exposes details of a particular file.
+
+static void DisplayImageFiles()
+{
+DirectoryInfo dir = new DirectoryInfo(@"C:\Windows\Web\Wallpaper");
+// Get all files with a *.jpg extension.
+FileInfo[] imageFiles = dir.GetFiles("*.jpg", SearchOption.AllDirectories);
+ 
+// How many were found?
+Console.WriteLine("Found {0} *.jpg files\n", imageFiles.Length);
+ 
+// Now print out info for each file.
+foreach (FileInfo f in imageFiles)
+{
+Console.WriteLine("***************************");
+Console.WriteLine("File name: {0}", f.Name);
+Console.WriteLine("File size: {0}", f.Length);
+Console.WriteLine("Creation: {0}", f.CreationTime);
+Console.WriteLine("Attributes: {0}", f.Attributes);
+Console.WriteLine("***************************\n");
+}
+}
+
+CREATING SUBDIRECTORIES WITH DIRECTORYINFO TYPE
+
+DirectoryInfo.CreateSubdirectory() - can create a single subdirectory as well as multiple nested 
+subdirectories in a single function call. 
+
+static void ModifyAppDirectory()
+{
+DirectoryInfo dir = new DirectoryInfo(@"C:\");
+ 
+// Create \MyFolder off application directory.
+dir.CreateSubdirectory("MyFolder");
+ 
+// Create \MyFolder2\Data off application directory.
+dir.CreateSubdirectory(@"MyFolder2\Data");
+}
+
+Returns a DirectoryInfo object representing newly created item on successful execution. 
+
+static void ModifyAppDirectory()
+{
+DirectoryInfo dir = new DirectoryInfo(".");
+ 
+// Create \MyFolder off initial directory.
+dir.CreateSubdirectory("MyFolder");
+ 
+// Capture returned DirectoryInfo object.
+DirectoryInfo myDataFolder = dir.CreateSubdirectory(@"MyFolder2\Data");
+ 
+// Prints path to ..\MyFolder2\Data.
+Console.WriteLine("New Folder is: {0}", myDataFolder);
+}
+
+DIRECTORY TYPE
+
+For most part, static members of Directory mimic the functionality provided by instance-level members defined
+by DirectoryInfo. Recall, members of Directory typicaly return string data rather than strongly typed 
+FileInfo/DirectoryInfo objects. 
+
+static void FunWithDirectoryType()
+{
+// List all drives on current computer.
+string[] drives = Directory.GetLogicalDrives();
+Console.WriteLine("Here are your drives:");
+foreach (string s in drives)
+Console.WriteLine("--> {0} ", s);
+ 
+// Delete what was created.
+Console.WriteLine("Press Enter to delete directories");
+Console.ReadLine();
+try
+{
+Directory.Delete(@"C:\MyFolder");
+ 
+// The second parameter specifies whether you
+// wish to destroy any subdirectories.
+Directory.Delete(@"C:\MyFolder2", true);
+}
+catch (IOException e)
+{
+Console.WriteLine(e.Message);
+}
+}
+
+DRIVEINFO CLASS TYPE
+
+System.IO.DriveInfo - Has DriveInfo.GetDrives() similar to Directory.GetLogicalDrives() allowing you to 
+discover named of machine's drives. 
+
+DriveInfo provides numerous other details (drive type, available free space, and volume label). 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with DriveInfo *****\n");
+ 
+// Get info regarding all drives.
+DriveInfo[] myDrives = DriveInfo.GetDrives();
+// Now print drive stats.
+foreach(DriveInfo d in myDrives)
+{
+Console.WriteLine("Name: {0}", d.Name);
+Console.WriteLine("Type: {0}", d.DriveType);
+ 
+// Check to see whether the drive is mounted.
+if(d.IsReady)
+{
+Console.WriteLine("Free space: {0}", d.TotalFreeSpace);
+Console.WriteLine("Format: {0}", d.DriveFormat);
+Console.WriteLine("Label: {0}", d.VolumeLabel);
+}
+Console.WriteLine();
+}
+Console.ReadLine();
+}
+}
+
+***** Fun with DriveInfo *****
+ 
+Name: C:\
+Type: Fixed
+Free space: 791699763200
+Format: NTFS
+Label: Windows10_OS
+ 
+Name: D:\
+Type: Fixed
+Free space: 23804067840
+Format: NTFS
+Label: LENOVO
+ 
+Press any key to continue . . .
+
+FILEINFO CLASS
+
+FileInfo - allows you to obtain details regarding existing files on hard drive (time created, size, and file 
+attributes) and aids in creation, copying, moving, and destruction of files. 
+
+Member 				Meaning in Life
+AppendText() 		Creates a StreamWriter object (described later) that appends text to a file
+
+CopyTo() 			Copies an existing file to a new file
+
+Create() 			Creates a new file and returns a FileStream object (described later) to interact with
+					the newly created file
+
+CreateText() 		Creates a StreamWriter object that writes a new text file
+
+Delete() 			Deletes the file to which a FileInfo instance is bound
+
+Directory 			Gets an instance of the parent directory
+
+DirectoryName 		Gets the full path to the parent directory
+
+Length 				Gets the size of the current file
+
+MoveTo() 			Moves a specified file to a new location, providing the option to specify a new file name
+
+Name 				Gets the name of the file
+
+Open() 				Opens a file with various read/write and sharing privileges
+
+OpenRead() 			Creates a read-only FileStream object
+
+OpenText() 			Creates a StreamReader object (described later) that reads from an existing text file
+
+OpenWrite() 		Creates a write-only FileStream object
+
+Note: Majority of methods of FileInfo class return a specific I/O centric object (FileStream and StreamWriter)
+that allows you to begin reading and writing data to (or reading from) associated file in a variety of 
+formats. 
+
+FILEINFO.CREATE()
+
+static void Main(string[] args)
+{
+// Make a new file on the C drive.
+FileInfo f = new FileInfo(@"C:\Test.dat");
+FileStream fs = f.Create();
+ 
+// Use the FileStream object...
+ 
+// Close down file stream.
+fs.Close();
+}
+
+Notice the Create() method returns a FileStream object which exposes synchronous and asynchronous read/write 
+operations to/from the underlying file. The FileStream object returned by Create() grants full read/write 
+access to all users. 
+
+Also must Close down handle to release underlying unmanaged stream resources. 
+
+Because FileStream implements IDisposable, you can use the C# using scope to allow compiler to generate 
+teardown logic. 
+
+static void Main(string[] args)
+{
+// Defining a using scope for file I/O
+// types is ideal.
+FileInfo f = new FileInfo(@"C:\Test.dat");
+using (FileStream fs = f.Create())
+{
+// Use the FileStream object...
+}
+}
+
+FILEINFO.OPEN METHOD
+
+FileInfo.Open() - method to open existing files as well as to create new files with far more precision than
+you can with FileInfo.Create(). Works because Open() typically takes several parameters to qualify exactly 
+how to iterate the file you want to manipulate. Returns a FileStream object. 
+
+static void Main(string[] args)
+{
+// Make a new file via FileInfo.Open().
+FileInfo f2 = new FileInfo(@"C:\Test2.dat");
+using(FileStream fs2 = f2.Open(FileMode.OpenOrCreate,
+FileAccess.ReadWrite, FileShare.None))
+{
+// Use the FileStream object...
+}
+}
+
+Requires three parameters.
+
+First parameter of Open() specified the general flavor of the I/O request (e.g. make a new file, open an 
+existing file and append to a file), which you specify using FileMode enumeration:
+
+public enum FileMode
+{
+CreateNew,
+Create,
+Open,
+OpenOrCreate,
+Truncate,
+Append
+}
+
+Member 			Meaning in Life
+CreateNew 		Informs the OS to make a new file. If it already exists, an IOException is thrown.
+
+Create 			Informs the OS to make a new file. If it already exists, it will be overwritten.
+
+Open 			Opens an existing file. If the file does not exist, a FileNotFoundException is thrown.
+
+OpenOrCreate 	Opens the file if it exists; otherwise, a new file is created.
+
+Truncate 		Opens an existing file and truncates the file to 0 bytes in size.
+
+Append 			Opens a file, moves to the end of the file, and begins write operations (you can use this
+				flag only with a write-only stream). If the file does not exist, a new file is created.
+
+Second parameter - value from the FileAccess enumeration, to determine read/write behavior of underlying 
+stream. 
+
+public enum FileAccess
+{
+Read,
+Write,
+ReadWrite
+}
+
+Third parameter - FileShare specifies how to share the file among other file handlers.
+
+public enum FileShare
+{
+Delete,
+Inheritable,
+None,
+Read,
+ReadWrite,
+Write
+}
+
+FILEINFO.OPENREAD() AND FILEINFO.OPENWRITE METHODS
+
+FileInfo.OpenRead() and FileInfo.OpenWrite - return a properly configured read-only or write only FileStream 
+object without need to supply various enumeration values. Return FileStream object
+
+static void Main(string[] args)
+{
+// Get a FileStream object with read-only permissions.
+FileInfo f3 = new FileInfo(@"C:\Test3.dat");
+using(FileStream readOnlyStream = f3.OpenRead())
+{
+// Use the FileStream object...
+}
+ 
+// Now get a FileStream object with write-only permissions.
+FileInfo f4 = new FileInfo(@"C:\Test4.dat");
+using(FileStream writeOnlyStream = f4.OpenWrite())
+{
+// Use the FileStream object...
+}
+}
+
+FILEINFO.OPENTEXT METHOD
+
+FileInfo.OpenText() - returns an instance of StreamReader type. Gives access to file. 
+
+static void Main(string[] args)
+{
+// Get a StreamReader object.
+FileInfo f5 = new FileInfo(@"C:\boot.ini");
+using(StreamReader sreader = f5.OpenText())
+{
+// Use the StreamReader object...
+}
+}
+
+FILEINFO.CREATETEXT() AND FILEINFO.APPENDTEXT() METHODS
+
+FileInfo.CreateText() and FileInfo.AppendText() - Both return a StreamWriter object
+
+static void Main(string[] args)
+{
+FileInfo f6 = new FileInfo(@"C:\Test6.txt");
+using(StreamWriter swriter = f6.CreateText())
+{
+// Use the StreamWriter object...
+}
+ 
+FileInfo f7 = new FileInfo(@"C:\FinalTest.txt");
+using(StreamWriter swriterAppend = f7.AppendText())
+{
+// Use the StreamWriter object...
+}
+}
+
+StreamWriter - provids a way to write character data to the underlying file. 
+
+WORKING WITH THE FILE TYPE
+
+File type uses several static members to provide functionality almost identicial to that of the
+FileInfo type. 
+
+Like FileInfo, File supplies AppendText(), Create(), CreateText(), Open(), OpenRead(), OpenWrite(), and OpenText() methods. 
+
+static void Main(string[] args)
+{
+// Obtain FileStream object via File.Create().
+using(FileStream fs = File.Create(@"C:\Test.dat"))
+{}
+ 
+// Obtain FileStream object via File.Open().
+using(FileStream fs2 = File.Open(@"C:\Test2.dat",
+FileMode.OpenOrCreate,
+FileAccess.ReadWrite, FileShare.None))
+{}
+ 
+// Get a FileStream object with read-only permissions.
+using(FileStream readOnlyStream = File.OpenRead(@"Test3.dat"))
+{}
+ 
+// Get a FileStream object with write-only permissions.
+using(FileStream writeOnlyStream = File.OpenWrite(@"Test4.dat"))
+{}
+
+// Get a StreamReader object.
+using(StreamReader sreader = File.OpenText(@"C:\boot.ini"))
+{}
+ 
+// Get some StreamWriters.
+using(StreamWriter swriter = File.CreateText(@"C:\Test6.txt"))
+{}
+ 
+using(StreamWriter swriterAppend = File.AppendText(@"C:\FinalTest.txt"))
+{}
+}
+
+ADDITIONAL FILE_CENTRIC MEMBERS
+
+Method 				Meaning in Life
+ReadAllBytes() 		Opens the specified file, returns the binary data as an array of bytes, and then closes
+					the file
+
+ReadAllLines() 		Opens a specified file, returns the character data as an array of strings, and then
+					closes the file
+
+ReadAllText() 		Opens a specified file, returns the character data as a System.String, and then
+					closes the file
+
+WriteAllBytes() 	Opens the specified file, writes out the byte array, and then closes the file
+
+WriteAllLines() 	Opens a specified file, writes out an array of strings, and then closes the file
+
+WriteAllText() 		Opens a specified file, writes the character data from a specified string, and then
+					closes the file
+
+Can use these methods of the File type to read and write batches of data in only a few lines of code. Each of
+these members automatically closes down the underlying file handle. 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Simple I/O with the File Type *****\n");
+string[] myTasks = {
+"Fix bathroom sink", "Call Dave",
+"Call Mom and Dad", "Play Xbox One"};
+// Write out all data to file on C drive.
+File.WriteAllLines(@"C:\tasks.txt", myTasks);
+ 
+// Read it all back and print out.
+foreach (string task in File.ReadAllLines(@"C:\tasks.txt"))
+{
+Console WriteLine("TODO: {0}", task);
+}
+Console.ReadLine();
+}
+}
+
+THE ABSTRACT STREAM CLASS
+
+stream - represents a chunk of data flowing between a source and a destination. Streams provide a common way to 
+interact with a sequence of bytes, regardless of what kind of device (e.g. file, network connection, or printer)
+stores or displays the bytes in question. 
+
+System.IO.Stream - abstract class that defines several members that provide support for synchronous and 
+asynchronous interactions with the storage medium (e.g. an underlying file or memory location). 
+
+NOTE: .NET libraries provide stream access to networks, memory locations, and other stream-centric abstractions
+
+Stream descendants represent data as a raw stream of bytes; therefore, working directly with raw streams can be 
+quite cryptic. Some support seeking, which refers to process of obtaining and adjusting the current position in 
+the stream.
+
+Member 			Meaning in Life
+CanRead
+CanWrite
+CanSeek 		Determines whether the current stream supports reading, seeking, and/or writing.
+
+Close() 		Closes the current stream and releases any resources (such as sockets and file
+				handles) associated with the current stream. Internally, this method is aliased to
+				the Dispose() method; therefore, closing a stream is functionally equivalent to
+				disposing a stream.
+
+Flush() 		Updates the underlying data source or repository with the current state of the
+				buffer and then clears the buffer. If a stream does not implement a buffer, this
+				method does nothing.
+
+Length 			Returns the length of the stream in bytes.
+
+Position 		Determines the position in the current stream.
+
+Read()
+ReadByte()
+ReadAsync() 	Reads a sequence of bytes (or a single byte) from the current stream and advances
+				the current position in the stream by the number of bytes read.
+
+Seek()	 		Sets the position in the current stream.
+
+SetLength() 	Sets the length of the current stream.
+
+Write()			Writes a sequence of bytes (or a single byte) to the current stream and advances
+WriteByte()		the current position in this stream by the number of bytes written.
+WrriteAsync()
+
+FILESTREAMS
+
+FileStream class provides an implementation of abstract Stream members in a manner appropriate for file-based 
+streaming. Fairly primitive. Can only read or write a single byte or an array of bytes. 
+
+Will not often need to interact directly with members of FileStream. Instead, you will use various stream wrappers
+which makes it easier to work with textual data or .NET types. 
+
+Because FileStream can only operate on raw bytes, you need to encode the System.String type into a corresponding 
+byte array. 
+
+System.Text namespace defines a type named Encoding that provides members that encode and decode strings to (or 
+from) an array of bytes. 
+
+Once encoded, byte array is persisted to file with the FileStream.Write() method. To read bytes back into memory, 
+you must reset the internal position of the stream (using Position property) and call the ReadByte() method. 
+
+// Don't forget to import the System.Text and System.IO namespaces.
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with FileStreams *****\n");
+ 
+// Obtain a FileStream object.
+using(FileStream fStream = File.Open(@"C:\myMessage.dat",
+FileMode.Create))
+{
+// Encode a string as an array of bytes.
+string msg = "Hello!";
+byte[] msgAsByteArray = Encoding.Default.GetBytes(msg);
+ 
+// Write byte[] to file.
+fStream.Write(msgAsByteArray, 0, msgAsByteArray.Length);
+ 
+// Reset internal position of stream.
+fStream.Position = 0;
+ 
+// Read the types from file and display to console.
+Console.Write("Your message as an array of bytes: ");
+byte[] bytesFromFile = new byte[msgAsByteArray.Length];
+for (int i = 0; i < msgAsByteArray.Length; i++)
+{
+bytesFromFile[i] = (byte)fStream.ReadByte();
+Console.Write(bytesFromFile[i]);
+}
+ 
+// Display decoded messages.
+Console.Write("\nDecoded Message: ");
+Console.WriteLine(Encoding.Default.GetString(bytesFromFile));
+}
+Console.ReadLine();
+}
+
+Example populates the file with data, but shows weakness of FileStream type. 
+
+Other Stream-derived types operate in similar manner. If want to write a sequence of bytes to a region of memory, 
+you can alloacte a MemoryStream. If want to push an array of bytes through a network connection, can use 
+NetworkStream class (in System.Net.Sockets namespace). 
+
+STREAMWRITERS AND STREAMREADERS
+
+StreamWriter and StreamReader - useful whenever you need to read or write character-based data (e.g. strings). Both
+work by default with Unicode characters, however can change this by supplying a properly configured 
+System.Text.Encoding object referece. 
+
+StreamReader derives from an abstract type named TextReader, as does related StringReader. TextReader base class 
+provides a limited set of funtionality to these descendents, such as ability to read and peak into a character 
+stream. 
+
+StreamWriter - derives from abstract base class named TextWriter. Defines members that allow derived types to write
+textual data to a given character stream. 
+
+Member 			Meaning in Life
+Close() 		This method closes the writer and frees any associated resources. In the process,
+				the buffer is automatically flushed (again, this member is functionally equivalent
+				to calling the Dispose() method).
+
+Flush() 		This method clears all buffers for the current writer and causes any buffered data
+				to be written to the underlying device; however, it does not close the writer.
+
+NewLine 		This property indicates the newline constant for the derived writer class.
+				The default line terminator for the Windows OS is a carriage return, followed
+				by a line feed (\r\n).
+
+Write()
+WriteAsync() 	This overloaded method writes data to the text stream without a newline constant.
+
+WriteLine()
+WriteLineAsync() This overloaded method writes data to the text stream with a newline constant.
+
+StreamWriter implements these and defines additional AutoFlush property. When set to true, property forces StreamWriter
+to flush all data every time a write operation is performed. Can gain better performance by setting AutoFlush to false 
+provided you always call Close() when finish writing with a StreamWriter.
+
+WRITING TO A TEXT FILE
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with StreamWriter / StreamReader *****\n");
+ 
+// Get a StreamWriter and write string data.
+using(StreamWriter writer = File.CreateText("reminders.txt"))
+{
+writer.WriteLine("Don't forget Mother's Day this year...");
+writer.WriteLine("Don't forget Father's Day this year...");
+writer.WriteLine("Don't forget these numbers:");
+for(int i = 0; i < 10; i++)
+writer.Write(i + " ");
+ 
+// Insert a new line.
+writer.Write(writer.NewLine);
+}
+ 
+Console.WriteLine("Created file and wrote some thoughts...");
+Console.ReadLine();
+}
+
+READING FROM A TEXT FILE
+
+StreamReader derives from abstract class TextReader
+
+Member 				Meaning in Life
+Peek() 				Returns the next available character (expressed as an integer) without actually
+					changing the position of the reader. A value of -1 indicates you are at the end of
+					the stream.
+
+Read()
+ReadAsync() 		Reads data from an input stream.
+
+ReadBlock()
+ReadBlockAsync() 	Reads a specified maximum number of characters from the current stream and
+					writes the data to a buffer, beginning at a specified index.
+ReadLine()
+ReadLineAsync() 	Reads a line of characters from the current stream and returns the data as a
+					string (a null string indicates EOF).
+
+ReadToEnd()
+ReadToEndAsync() 	Reads all characters from the current position to the end of the stream and
+					returns them as a single string.
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with StreamWriter / StreamReader *****\n");
+...
+// Now read data from file.
+Console.WriteLine("Here are your thoughts:\n");
+using(StreamReader sr = File.OpenText("reminders.txt"))
+{
+string input = null;
+while ((input = sr.ReadLine()) != null)
+{
+Console.WriteLine (input);
+}
+}
+Console.ReadLine();
+}
+
+DIRECTLY CREATING STREAMWRITER/STREAMREADER TYPES
+
+Confusing that when working with typed in System.IO, you can often achieve an identical result using different approaches. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with StreamWriter / StreamReader *****\n");
+ 
+// Get a StreamWriter and write string data.
+using(StreamWriter writer = new StreamWriter("reminders.txt"))
+{
+...
+}
+ 
+// Now read data from file.
+using(StreamReader sr = new StreamReader("reminders.txt"))
+{
+...
+}
+}
+
+WORKING WITH STRINGWRITER AND STRINGREADERS
+
+Can use StringWriter and StringReader types to treat textual information as a stream of in-memory characters. This can prove
+helpful when you would like to append character-based information to an underlying buffer. 
+
+Can write a block of string data to a StringWriter object rather than to a file:
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with StringWriter / StringReader *****\n");
+ 
+// Create a StringWriter and emit character data to memory.
+using(StringWriter strWriter = new StringWriter())
+{
+strWriter.WriteLine("Don't forget Mother's Day this year...");
+// Get a copy of the contents (stored in a string) and dump
+// to console.
+Console.WriteLine("Contents of StringWriter:\n{0}", strWriter);
+}
+Console.ReadLine();
+}
+
+StringWriter also derives from TextWriter. StringWriter also allows you to use following GetStringBuilder() method to extract a
+System.Text.StringBUilder object:
+
+using (StringWriter strWriter = new StringWriter())
+{
+strWriter.WriteLine("Don't forget Mother's Day this year...");
+Console.WriteLine("Contents of StringWriter:\n{0}", strWriter);
+ 
+// Get the internal StringBuilder.
+StringBuilder sb = strWriter.GetStringBuilder();
+sb.Insert(0, "Hey!! ");
+Console.WriteLine("-> {0}", sb.ToString());
+sb.Remove(0, "Hey!! ".Length);
+Console.WriteLine("-> {0}", sb.ToString());
+}
+
+StringReader - when want to read from a stream of character data. Does nothing more than read from block of character data rather 
+than a file. 
+
+using (StringWriter strWriter = new StringWriter())
+{
+strWriter.WriteLine("Don't forget Mother's Day this year...");
+Console.WriteLine("Contents of StringWriter:\n{0}", strWriter);
+ 
+// Read data from the StringWriter.
+using (StringReader strReader = new StringReader(strWriter.ToString()))
+{
+string input = null;
+while ((input = strReader.ReadLine()) != null)
+{
+Console.WriteLine(input);
+}
+}
+}
+
+BINARYWRITERS AND BINARYREADERS
+
+BinaryWriter and BinaryReader - both derive from System.Object. Allow you to read and write discrete data types to an underlying 
+stream in a compact binary format. 
+
+BinaryWriter:
+
+Member 				Meaning in Life
+BaseStream 			This read-only property provides access to the underlying stream used with the
+					BinaryWriter object.
+
+Close() 			This method closes the binary stream.
+
+Flush()				This method flushes the binary stream.
+
+Seek() 				This method sets the position in the current stream.
+
+Write() 			This method writes a value to the current stream.
+
+BinaryReader:
+
+Member 				Meaning in Life
+BaseStream 			This read-only property provides access to the underlying stream used with the
+					BinaryReader object.
+
+Close() 			This method closes the binary reader.
+
+PeekChar() 			This method returns the next available character without advancing the position in the stream.
+
+Read() 				This method reads a given set of bytes or characters and stores them in the incoming array.
+
+ReadXXXX() 			The BinaryReader class defines numerous read methods that grab the next type from the
+					stream (e.g., ReadBoolean(), ReadByte(), and ReadInt32()).
+
+Following example writes a number of data types to a new *.dat file:
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Binary Writers / Readers *****\n");
+ 
+// Open a binary writer for a file.
+FileInfo f = new FileInfo("BinFile.dat");
+using(BinaryWriter bw = new BinaryWriter(f.OpenWrite()))
+{
+// Print out the type of BaseStream.
+// (System.IO.FileStream in this case).
+Console.WriteLine("Base stream is: {0}", bw.BaseStream);
+ 
+// Create some data to save in the file.
+double aDouble = 1234.67;
+int anInt = 34567;
+string aString = "A, B, C";
+ 
+// Write the data.
+bw.Write(aDouble);
+bw.Write(anInt);
+bw.Write(aString);
+}
+Console.WriteLine("Done!");
+Console.ReadLine();
+}
+
+Notice: The FileStream object returned from FileInfo.OpenWrite() is passed to constructor of BinaryWriter type. Using this 
+technique makes it easy to layer in a stream before writing out the data. Constructor of BinaryWriter takes any Stream-derived 
+type. Thus, writing binary data to memory instead is as simple as supplying a valid MemoryStream object. 
+
+BinaryReader provides number of options to read data from file stream:
+
+static void Main(string[] args)
+{
+...
+FileInfo f = new FileInfo("BinFile.dat");
+...
+// Read the binary data from the stream.
+using(BinaryReader br = new BinaryReader(f.OpenRead()))
+{
+Console.WriteLine(br.ReadDouble());
+Console.WriteLine(br.ReadInt32());
+Console.WriteLine(br.ReadString());
+}
+Console.ReadLine();
+}
+
+WATCHING FILES PROGRAMMATICALLY
+
+FileSystemWatcher - to monitor files on system. Can monitor files for any actions specified by System.IO.NotifyFilters enumeration. 
+
+public enum NotifyFilters
+{
+Attributes, CreationTime,
+DirectoryName, FileName,
+LastAccess, LastWrite,
+Security, Size
+}
+
+To begin wroking with FilSystemWatcher type, need to set Path property to specify name (and location) of directory that contains the 
+files you want to monitor as well as Filter property that defines the file extensions of files you want to monitor. 
+
+Can choose to handle Changed, Craeted, and Deleted events, all of which work in conjunctin with FileSystemEventHandler delegate. 
+
+// The FileSystemEventHandler delegate must point
+// to methods matching the following signature.
+void MyNotificationHandler(object source, FileSystemEventArgs e)
+
+Can also handle Renamed event using the RenamedEventHandler delegate.
+
+// The RenamedEventHandler delegate must point
+// to methods matching the following signature.
+void MyRenamedHandler(object source, RenamedEventArgs e)
+
+Next, let’s look at the process of watching a file. Assume you have created a new directory on your C:
+drive named MyFolder that contains various *.txt files (named whatever you like). The following Console
+Application project (named MyDirectoryWatcher) monitors the *.txt files in the MyFolder directory and
+prints messages when files are created, deleted, modified, or renamed:
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** The Amazing File Watcher App *****\n");
+// Establish the path to the directory to watch.
+FileSystemWatcher watcher = new FileSystemWatcher();
+try
+{
+watcher.Path = @"C:\MyFolder";
+}
+catch(ArgumentException ex)
+{
+Console.WriteLine(ex.Message);
+return;
+}
+// Set up the things to be on the lookout for.
+watcher.NotifyFilter = NotifyFilters.LastAccess
+| NotifyFilters.LastWrite
+| NotifyFilters.FileName
+| NotifyFilters.DirectoryName;
+ 
+// Only watch text files.
+watcher.Filter = "*.txt";
+ 
+// Add event handlers.
+watcher.Changed += new
+watcher.Created += new
+watcher.Deleted += new
+watcher.Renamed += new
+FileSystemEventHandler(OnChanged);
+FileSystemEventHandler(OnChanged);
+FileSystemEventHandler(OnChanged);
+RenamedEventHandler(OnRenamed);
+ 
+// Begin watching the directory.
+watcher.EnableRaisingEvents = true;
+ 
+// Wait for the user to quit the program.
+Console.WriteLine(@"Press 'q' to quit app.");
+while(Console.Read()!='q')
+;
+}
+
+The following two event handlers simply print the current file modification:
+
+static void OnChanged(object source, FileSystemEventArgs e)
+{
+// Specify what is done when a file is changed, created, or deleted.
+Console.WriteLine("File: {0} {1}!", e.FullPath, e.ChangeType);
+}
+ 
+static void OnRenamed(object source, RenamedEventArgs e)
+{
+// Specify what is done when a file is renamed.
+Console.WriteLine("File: {0} renamed to {1}", e.OldFullPath, e.FullPath);
+}
+
+To test this program, run the application and open Windows Explorer. Try renaming your files, creating
+a *.txt file, deleting a *.txt file, and so forth. You will see various bits of information generated about the
+state of the text files within your MyFolder, as in this example:
+
+*****
+ 
+Press
+File:
+File:
+File:
+File:
+File:
+The Amazing File Watcher App *****
+'q' to quit app.
+C:\MyFolder\New Text Document.txt Created!
+C:\MyFolder\New Text Document.txt renamed to C:\MyFolder\Hello.txt
+C:\MyFolder\Hello.txt Changed!
+C:\MyFolder\Hello.txt Changed!
+C:\MyFolder\Hello.txt Deleted!
+
+OBJECT SERIALIZATION
+
+Serialization - process of persisting (and possibly transferring) the state of an object into a stream (file stream 
+or memory stream). Persisted data sequence contains all necessary information needed to reconstruct (deserialize) the
+state of the object for later use. 
+
+Use the [Serializable] attribute
+
+[Serializable]
+public class UserPrefs
+{
+public string WindowColor;
+public int FontSize;
+}
+
+static void Main(string[] args)
+{
+UserPrefs userData= new UserPrefs();
+userData.WindowColor = "Yellow";
+userData.FontSize = 50;
+ 
+// The BinaryFormatter persists state data in a binary format.
+// You would need to import System.Runtime.Serialization.Formatters.Binary
+// to gain access to BinaryFormatter.
+BinaryFormatter binFormat = new BinaryFormatter();
+ 
+// Store object in a local file.
+using(Stream fStream = new FileStream("user.dat",
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+binFormat.Serialize(fStream, userData);
+}
+Console.ReadLine();
+}
+
+When object is persisted to a stream, all associated data (base class and contained objects) are automatically serialized as well.
+All data up the chain of inheritance is persisted. 
+
+Can persist an object into any System.IO.Stream type. 
+
+OBJECT GRAPHS
+
+Object graph - a set of related objects. CLR accounts for related objects to ensure that data is persisted correctly when object
+is serialzied. Does not denote OOP relationships.
+
+Relationship documented like:
+
+[Car 3, ref 2], [Radio 2], [JamesBondCar 1, ref 3, ref 2]
+
+If you parse this formula, you can see that object 3 (the Car) has a dependency on object 2 (the
+Radio). Object 2, the Radio, is a lone wolf and requires nobody. Finally, object 1 (the JamesBondCar) has a
+dependency on object 3, as well as object 2. In any case, when you serialize or deserialize an instance of
+JamesBondCar, the object graph ensures that the Radio and Car types also participate in the process.
+
+CONFIGURING OBJECTS FOR SERIALIZATION
+
+Just need to add [Serializable] attribute. 
+
+If you determine that a given type has some member data that should not or cannot be serialized, you can mark such fields with the 
+[NonSerializable] attribute. Some membres do not need to be remembered (fixed values, random values, and transient data).
+
+[Serializable]
+public class Radio
+{
+public bool hasTweeters;
+public bool hasSubWoofers;
+public double[] stationPresets;
+ 
+[NonSerialized]
+public string radioID = "XF-552RR6";
+}
+Next, insert two additional class types to represent the JamesBondCar and Car classes, both of which are
+also marked [Serializable] and define the following pieces of field data:
+[Serializable]
+public class Car
+{
+public Radio theRadio = new Radio();
+public bool isHatchBack;
+}
+ 
+[Serializable]
+public class JamesBondCar : Car
+{
+public bool canFly;
+public bool canSubmerge;
+}
+
+Cannot inherit the [Serializable] attribute from a parent class. If derive a class from a type marked [Serializable], the child must
+be marked as well.
+
+PUBLIC FIELDS, PRIVATE FIELDS, AND PUBLIC PROPERTIES
+
+BinaryFormatter, SoapFormatter - Programmed to serialize all serializable fields of a type whethery they are public, private, or private
+but exposed by public properties. 
+
+XmlSerializer - will only serialize public data fields or private fields exposed by public properties. 
+
+[Serializable]
+public class Person
+{
+// A public field.
+public bool isAlive = true;
+ 
+// A private field.
+private int personAge = 21;
+ 
+// Public property/private data.
+private string fName = string.Empty;
+public string FirstName
+{
+get { return fName; }
+set { fName = value; }
+}
+}
+
+CHOOSING A SERIALIZATION FORMAT
+
+BinaryFormatter - serializes object's state to a stream using a compact binary format. Defined within the 
+System.Runtime.Serialization.Formatters.Binary namespace part of mscorlib.dll. 
+
+// Gain access to the BinaryFormatter in mscorlib.dll.
+using System.Runtime.Serialization.Formatters.Binary;
+
+SoapFormatter - persists an object's state as a SOAP message (standard XML format for passing messages to/from a SOAP-based web service,
+which is defined in a separate assembly. Must reference System.Runtime.Serialization.Formatters.Soap.dll in Visual Studio.
+
+// Must reference System.Runtime.Serialization.Formatters.Soap.dll.
+using System.Runtime.Serialization.Formatters.Soap;
+
+XmlSerializer - if want to persist tree of objects as an XML document. Need to specify using System.Xml.Serialization namesapce and set a
+reference to assembly. System.Xml.dll. 
+
+// Defined within System.Xml.dll.
+using System.Xml.Serialization;
+
+IFORMATTER AND IREMOTINGFORMATTER INTERFACES
+
+All previous formatters derive directly from System.Object. 
+
+However, BinaryFormatter and SoapFormatter do support commom members through implementation of IFormatter and IRemotingFormatter 
+interfaces. XmlSerializer implements neither. 
+
+System.Runtime.Serialization.IFormatter - defines core Serialize() and Deserialize() methods. Also defines a few properties implementing 
+type uses behind the scenes. 
+
+public interface IFormatter
+{
+SerializationBinder Binder { get; set; }
+StreamingContext Context { get; set; }
+ISurrogateSelector SurrogateSelector { get; set; }
+object Deserialize(Stream serializationStream);
+void Serialize(Stream serializationStream, object graph);
+}
+
+System.Runtime.Remoting.Messaging.IRemotingFormatter - interface leveraged internally by .NET remoting layer overloads the Serialize() 
+and Deserialize() members into a manner more appropriate for distributed persistence. Derives from IFormatter interface. 
+
+Can be used to have options for serializing object graph through polymorphism:
+
+static void SerializeObjectGraph(IFormatter itfFormat,
+Stream destStream, object graph)
+{
+itfFormat.Serialize(destStream, graph);
+}
+
+TYPE FIDELITY
+
+BinaryFormatter - will persist field data of objects but also each type's fully qualified name and the full name of te defining assembly
+(name, version, public key token, and culture). Extra points of data make BinaryFormatter an adeal choice when want to transport objects 
+by value (e.g. as full copy) across machine boundarie for .NET applications. 
+
+SoapFormatter - persist traces of assembly of origin through use of XML namespace. Opening element qualified by generated xmlns. 
+
+<a1:Person id="ref-1" xmlns:a1=
+"http://schemas.microsoft.com/clr/nsassem/SimpleSerialize/MyApp%2C%20
+Version%3D1.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<isAlive>true</isAlive>
+<personAge>21</personAge>
+<fName id="ref-3">Mel</fName>
+</a1:Person>
+
+XmlSerializer does not attempt to preserve full type fidelity, therefore does not record the type's fully qualified name or assembly of 
+origin. Used by classic .NET web services, which can be called by clients on any platform, not just .NET. So no need for .NET metadata. 
+
+<?xml version="1.0"?>
+<Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<isAlive>true</isAlive>
+<PersonAge>21</PersonAge>
+<FirstName>Frank</FirstName>
+</Person>
+
+BINARYFORMATTER
+
+BinaryFormatter:
+
+Serialize() - persists an object graph to a specified stream as a sequence of bytes
+
+Deserialize() - converts a persisted sequence of bytes to an object graph. 
+
+
+
+// Be sure to import the System.Runtime.Serialization.Formatters.Binary
+// and System.IO namespaces.
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Object Serialization *****\n");
+ 
+// Make a JamesBondCar and set state.
+JamesBondCar jbc = new JamesBondCar();
+jbc.canFly = true;
+jbc.canSubmerge = false;
+jbc.theRadio.stationPresets = new double[]{89.3, 105.1, 97.1};
+jbc.theRadio.hasTweeters = true;
+ 
+// Now save the car to a specific file in a binary format.
+SaveAsBinaryFormat(jbc, "CarData.dat");
+Console.ReadLine();
+}
+
+static void SaveAsBinaryFormat(object objGraph, string fileName)
+{
+// Save object to a file named CarData.dat in binary.
+BinaryFormatter binFormat = new BinaryFormatter();
+ 
+using(Stream fStream = new FileStream(fileName,
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+binFormat.Serialize(fStream, objGraph);
+}
+Console.WriteLine("=> Saved car in binary format!");
+}
+
+Deserializing:
+
+static void LoadFromBinaryFile(string fileName)
+{
+BinaryFormatter binFormat = new BinaryFormatter();
+ 
+// Read the JamesBondCar from the binary file.
+using(Stream fStream = File.OpenRead(fileName))
+{
+JamesBondCar carFromDisk =
+(JamesBondCar)binFormat.Deserialize(fStream);
+Console.WriteLine("Can this car fly? : {0}", carFromDisk.canFly);
+}
+
+SOAPFORMATTER
+
+SoapFormatter - serializes data in proper SOAP envelope. Simple Object Access Protocol (SOAP) defins a standard process in which you can 
+invoke methods in a platform and OS neutral manner. 
+
+// Be sure to import System.Runtime.Serialization.Formatters.Soap
+// and reference System.Runtime.Serialization.Formatters.Soap.dll.
+static void SaveAsSoapFormat (object objGraph, string fileName)
+{
+// Save object to a file named CarData.soap in SOAP format.
+SoapFormatter soapFormat = new SoapFormatter();
+ 
+using(Stream fStream = new FileStream(fileName,
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+soapFormat.Serialize(fStream, objGraph);
+}
+Console.WriteLine("=> Saved car in SOAP format!");
+}
+
+XMLSERIALIZER
+
+static void SaveAsXmlFormat(object objGraph, string fileName)
+{
+// Save object to a file named CarData.xml in XML format.
+XmlSerializer xmlFormat = new XmlSerializer(typeof(JamesBondCar));
+ 
+using(Stream fStream = new FileStream(fileName,
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+xmlFormat.Serialize(fStream, objGraph);
+}
+Console.WriteLine("=> Saved car in XML format!");
+}
+
+XmlSerializer requires you to specify type information that represents the class you want to serialize. 
+
+<?xml version="1.0"?>
+<JamesBondCar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<theRadio>
+<hasTweeters>true</hasTweeters>
+<hasSubWoofers>false</hasSubWoofers>
+<stationPresets>
+<double>89.3</double>
+<double>105.1</double>
+<double>97.1</double>
+</stationPresets>
+<radioID>XF-552RR6</radioID>
+</theRadio>
+<isHatchBack>false</isHatchBack>
+<canFly>true</canFly>
+<canSubmerge>false</canSubmerge>
+</JamesBondCar>
+
+XmlSerializer demands that all serialzied types in object graph support a default constructor. 
+
+Crucial to ensure data within XML document conforms to a set of rules that estalbish validity of data. Valid means document confroms to 
+agreed-upon formatting rules (field X must be expressed as an attribute and not a subelement), which are typicaly defined by an XML 
+schema or document-type definition (DTD) file. 
+
+By default, XmlSerializer serializs all public fields/properties as XML elements rather than as XML attributes. 
+
+Can control how XmlSerializer generates resulting XML document by decorating types with any number of additional .NET attributes from 
+System.Xml.Serialization namespace.
+
+.NET Attribute 			Meaning in Life
+[XmlAttribute] 			You can use this .NET attribute on a public field or property in a class to tell
+						XmlSerializer to serialize the data as an XML attribute (rather than as a subelement).
+
+[XmlElement] 			The field or property will be serialized as an XML element named as you so choose.
+
+[XmlEnum] 				This attribute provides the element name of an enumeration member.
+
+[XmlRoot] 				This attribute controls how the root element will be constructed (namespace and
+						element name).
+
+[XmlText] 				The property or field will be serialized as XML text (i.e., the content between the start
+						tag and the end tag of the root element).
+
+[XmlType] 				This attribute provides the name and namespace of the XML type.
+
+This example shows how field ata is persisted:
+
+<?xml version="1.0" encoding="utf-8"?>
+<JamesBondCar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+...
+<canFly>true</canFly>
+<canSubmerge>false</canSubmerge>
+</JamesBondCar>
+
+If want to specify things:
+
+[Serializable, XmlRoot(Namespace = "http://www.MyCompany.com")]
+public class JamesBondCar : Car
+{
+[XmlAttribute]
+public bool canFly;
+[XmlAttribute]
+public bool canSubmerge;
+}
+
+<?xml version="1.0"""?>
+<JamesBondCar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+canFly="true" canSubmerge="false"
+xmlns="http://www.MyCompany.com">
+...
+</JamesBondCar>
+
+SERIALIZING A COLLECTIONS OF OBJECTS
+
+Since System.Object represents a tree of objects, you can pass i nan object that has been marked as [Serializable] and contains other 
+[Serializable] objects, the entire set of objects is persisted in a single method call. 
+
+Most types in System.Collections and System.Collections.Generic are marked as Serializable.
+
+So to persist a set of objects, add  them to container and serialize object. 
+
+[Serializable,
+XmlRoot(Namespace = "http://www.MyCompany.com")]
+public class JamesBondCar : Car
+{
+public JamesBondCar(bool skyWorthy, bool seaWorthy)
+{
+canFly = skyWorthy;
+canSubmerge = seaWorthy;
+}
+// The XmlSerializer demands a default constructor!
+public JamesBondCar(){}
+.
+
+tatic void SaveListOfCars()
+{
+// Now persist a List<T> of JamesBondCars.
+List<JamesBondCar> myCars = new List<JamesBondCar>();
+myCars.Add(new JamesBondCar(true, true));
+myCars.Add(new JamesBondCar(true, false));
+myCars.Add(new JamesBondCar(false, true));
+myCars.Add(new JamesBondCar(false, false));
+using(Stream fStream = new FileStream("CarCollection.xml",
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+XmlSerializer xmlFormat = new XmlSerializer(typeof(List<JamesBondCar>));
+xmlFormat.Serialize(fStream, myCars);
+}
+Console.WriteLine("=> Saved list of cars!");
+}
+
+BinaryFormatter exmaple:
+
+static void SaveListOfCarsAsBinary()
+{
+// Save ArrayList object (myCars) as binary.
+List<JamesBondCar> myCars = new List<JamesBondCar>();
+ 
+BinaryFormatter binFormat = new BinaryFormatter();
+using(Stream fStream = new FileStream("AllMyCars.dat",
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+binFormat.Serialize(fStream, myCars);
+}
+Console.WriteLine("=> Saved list of cars in binary!");
+}
+
+CUSTOMIZING SOAP/BINARY SERIALIZATION PROCESS
+
+Might want to become more involved in how tree is constructed and handled during serialization process. Perhaps have a business rule 
+saying all data must be persisted using a particular format, or perhaps you need to add additional bits of data to the stream that do 
+not map directly to fields in the object being persisted (timestamps and unique IDs). 
+
+Type 					Meaning in Life
+ISerializable 			You can implement this interface on a [Serializable] type to control its
+						serialization and deserialization.
+
+ObjectIDGenerator 		This type generates IDs for members in an object graph.
+
+[OnDeserialized] 		This attribute allows you to specify a method that will be called immediately
+						after the object has been deserialized.
+
+[OnDeserializing] 		This attribute allows you to specify a method that will be called before the
+						deserialization process.
+
+[OnSerialized] 			This attribute allows you to specify a method that will be called immediately
+						after the object has been serialized.
+
+[OnSerializing] 		This attribute allows you to specify a method that will be called before the
+						serialization process.
+
+[OptionalField] 		This attribute allows you to define a field on a type that can be missing from the
+						specified stream.
+
+[SerializationInfo] 	In essence, this class is a property bag that maintains name-value pairs
+						representing the state of an object during the serialization process.
+
+DEEPER LOOK
+
+When BinaryFormatter serialzies an object graph, it is in charge of transmitting following information into a specified stream:
+-The fully qualified name of the objects in the graph
+-The name of the assembly defining the object graph
+-An instance of the SerializationInfo class that contains all stateful data maintained by members in object graph.
+
+Besides moving required data into and out of a stream, formatters also analyze the members in object graph for following infrastructure:
+-A check is made to determine whether the object is marked with [Serializable] attribute. If not, SerializationException is thrown. 
+-If object is marked [Serializable], a check is made to determi newhether object implements the ISerializable interface. If so, 
+GetObjectData() is called on object
+-If object does not implement ISerializable, the default serialization process is used, serializing all fields not marked as 
+[NonSerialized]. 
+
+Also responsible for discovering whether types in questino support members that have been adorned with the [OnSerializing], 
+[OnSerialized], [OnDeserializing], or [OnDeserialized] attributes. 
+
+CUSTOMIZING SERIALIZATION USING ISERIALIZABLE
+
+Objects marked [Serializable] have option of implementing the ISerializable interface. Lets you get involved with serialization process 
+and perform any pre- or post-data formattign. 
+
+ISerialiable defines only a single method, GetObjectData(). 
+
+// When you wish to tweak the serialization process,
+// implement ISerializable.
+public interface ISerializable
+{
+void GetObjectData(SerializationInfo info,
+StreamingContext context);
+}
+
+GetObjectData() method is called automatically by a given formatter during the serialization process. Implementation populates the incoming
+SerializationInfo parameter with a series of name-value pairs that typically map to the field data of the object being persisted. 
+SerializationInfo defines numerous variations on the overloaded AddValue() method, as well as a small set of properties that llow the type 
+to get and set the type's name, defining assembly, and member count. 
+
+public sealed class SerializationInfo
+{
+public SerializationInfo(Type type, IFormatterConverter converter);
+public string AssemblyName { get; set; }
+public string FullTypeName { get; set; }
+public int MemberCount { get; }
+public void AddValue(string name, short value);
+public void AddValue(string name, ushort value);
+public void AddValue(string name, int value);
+...
+}
+
+// You must supply a custom constructor with this signature
+// to allow the runtime engine to set the state of your object.
+[Serializable]
+class SomeClass : ISerializable
+{
+protected SomeClass (SerializationInfo si, StreamingContext ctx) {...}
+...
+}
+
+StreamingContext type contains information regarding source of the bits. State property represnets a value from StreamingContextStates 
+enumeration. Represents basic ocmposition of current stream. 
+
+Only needed if intend to implement low-level custom remoting services. 
+
+public enum StreamingContextStates
+{
+CrossProcess,
+CrossMachine,
+File,
+Persistence,
+Remoting,
+Other,
+Clone,
+CrossAppDomain,
+All
+}
+
+Assume have class containing two points of string data. Assume must ensure string objects ar eserialized to stream in all uppercase and 
+deserialized from stream in lowercase. 
+
+[Serializable]
+class StringData : ISerializable
+{
+private string dataItemOne = "First data block";
+private string dataItemTwo= "More data";
+public StringData(){}
+protected StringData(SerializationInfo si, StreamingContext ctx)
+{
+// Rehydrate member variables from stream.
+dataItemOne = si.GetString("First_Item").ToLower();
+dataItemTwo = si.GetString("dataItemTwo").ToLower();
+}
+ 
+void ISerializable.GetObjectData(SerializationInfo info, StreamingContext ctx)
+{
+// Fill up the SerializationInfo object with the formatted data.
+info.AddValue("First_Item", dataItemOne.ToUpper());
+info.AddValue("dataItemTwo", dataItemTwo.ToUpper());
+}
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Custom Serialization *****");
+ 
+// Recall that this type implements ISerializable.
+StringData myData = new StringData();
+ 
+// Save to a local file in SOAP format.
+SoapFormatter soapFormat = new SoapFormatter();
+using(Stream fStream = new FileStream("MyData.soap",
+FileMode.Create, FileAccess.Write, FileShare.None))
+{
+soapFormat.Serialize(fStream, myData);
+}
+Console.ReadLine();
+}
+
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0"
+SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<a1:StringData id="ref-1" ...>
+<First_Item id="ref-3">FIRST DATA BLOCK</First_Item>
+<dataItemTwo id="ref-4">MORE DATA</dataItemTwo>
+</a1:StringData>
+</SOAP-ENV:Body>
+ 
+</SOAP-ENV:Envelope>
+
+CUSTOMIZING SERIALIZTION WITH ATTRIBUTES
+
+Preferred way to customize serialization is todefine methods that are attributed with any of new serialization-centric attribues:
+[OnSerializing], [OnSerialized], [OnDeserializing], [OnDeserialized]
+
+[Serializable]
+class MoreData
+{
+private string dataItemOne = "First data block";
+private string dataItemTwo= "More data";
+ 
+[OnSerializing]
+private void OnSerializing(StreamingContext context)
+{
+// Called during the serialization process.
+dataItemOne = dataItemOne.ToUpper();
+dataItemTwo = dataItemTwo.ToUpper();
+}
+ 
+[OnDeserialized]
+private void OnDeserialized(StreamingContext context)
+{
+// Called when the deserialization process is complete.
+dataItemOne = dataItemOne.ToLower();
+dataItemTwo = dataItemTwo.ToLower();
+}
+}

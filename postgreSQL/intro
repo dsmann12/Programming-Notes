@@ -1,0 +1,278 @@
+POSTGRESQL 
+
+Databases - systems that allow users to store and organize data. Useful when dealing with large amounts of data
+
+Analysts - marketings, business, sales
+
+Technical - data scientists, software engineers, web developers
+
+Spreadsheets vs Databases
+
+Spreadseets
+-One time analyses
+-Quickly need to char something out
+-reasonable dat aset size
+-Ability for untrained people to work with data
+
+Databases
+-Data integrity
+-can handle massive amounts of data
+-Quickly combine different datasets
+-automate steps for reuse
+-can support data for websites or applications
+
+SQL is programming language used to communicate with database
+
+SELECT customer_id, item_id
+FROM sales
+ORDER BY sale_date
+
+INSTALL POSTGRES
+
+Go to documentation.
+
+Add repository to sources list. 
+
+sudo apt update
+sudo apt install postgresql
+sudo apt install pgadmin3
+
+ROLES and DATABASES
+
+Roles handle authentication and authorization. Similar to unix style accounts but does not distinguish between users and groups. 
+
+Upon installation, Postgres is set up to use ident authentication meaning it associates Postgres roles iwth a matching Unix/Linux system account. If role exists within Postgres, a Unix/Linux username with same name will be able to sign in as that role. 
+
+THE postgres ACCOUNT
+
+The installation procedure creates user account called postgres that is associated with default Postggres role. 
+
+Must log into that account.
+
+$ sudo -i -u postgres
+
+Logged into postgres account in new shell. 
+
+psql - postgres prompt
+
+\q - to exit from postgres prompt
+
+postgres=# \q
+
+Can run command with out going into shell
+
+$ sudo -u postgres psql
+
+CREATE A NEW ROLE
+
+Create new roles from command line with createrole command. The --interactive flag with prompt you for necessary values
+
+Must log into postgres account or run sudo into postgres and command
+
+postgres@server:~$ createuser --interactive
+sudo -u postgres createuser --interactive
+
+Output
+Enter name of role to add: sammy
+Shall the new role be a superuser? (y/n) y
+
+Can see other options:
+$ man createuser
+
+CREATE NEW DATABASE
+
+Another assumption Postgres makes is that there will be a database with same name as role being used to login, which the role has access to. 
+
+In last section, created a user called sammy, that role will attempt to connect to a database which is also called sammy. 
+
+Can create appropriate database with createdb command
+
+postgres@server:~$ createdb sammy
+
+or
+
+$ sudo -u postgres createdb sammy
+
+OPEN A POSTGRES PROMPT WITH THE NEW ROLE
+
+To log in withident based authentication, you'll need a Linux user with the same name as Postgres role and database
+
+If no matching Linux user available, can create one with adduser command. Must do this from account with sudo privileges. 
+
+$ sudo adduser sammy
+
+Once created, can either switch over and connect to database or do it inline
+$ sudo -i -u sammy
+$ psql
+
+$ sudo -u sammy psql
+
+Can also change credentials for postgres account.
+
+ALTER USER postgres PASSWORD 'newpassword';
+
+Then
+
+psql -U postgres -h localhost
+
+Type password previously set
+
+CONNECT TO DIFFERENT DATABASE
+
+$ psql -d postgres
+
+Once logged in, can check current connection information by typing 
+
+sammy=# \conninfo
+
+Output
+You are connected to database "sammy" as user "sammy" via socket in "/var/run/postgresql" at port "5432".
+
+CREATE AND DELETE TABLES
+
+Create table to store data (such as for play ground equipment
+
+CREATE TABLE table_name (
+	column_name1 col_type (field_length) column_constraints,
+	column_name2 col_type (field_length),
+	column_name3 col_type (field_length),
+);
+
+CREATE TABLE playground (
+	equip_id serial PRIMARY KEY,
+	type varchar (50) NOT NULL,
+	color varchar (25) NOT NULL,
+	location varchar (25) heck (location in ('north', 'south', 'west', 'east', 'northeast', 'southeast', 'northwest', 'southwest')),
+	install_date date
+);
+
+serial - type. Auto incrementing integer. 
+primary key - constraint means that values must be unique and not null
+
+equip_id and install)date not give na field length because some column types don't require a st length because length is implied by the type. type and color cannot be empty. location requires that value be one of eight possible values. 
+
+Can see new table by typing: \d
+
+sammy=# \d
+
+Output
+                  List of relations
+ Schema |          Name           |   Type   | Owner 
+--------+-------------------------+----------+-------
+ public | playground              | table    | sammy
+ public | playground_equip_id_seq | sequence | sammy
+(2 rows)
+
+playground_equip_id_seq is of type sequence. Is a representation of serial type that keeps track of next number in sequence and is created automatically for columns of this type. 
+
+If want to see just table without sequence can type \dt
+
+sammy=# \dt
+
+Output
+          List of relations
+ Schema |    Name    | Type  | Owner 
+--------+------------+-------+-------
+ public | playground | table | sammy
+(1 row)
+
+ADD, QUERY, and DELETE Data In A Table
+
+Add swing. Call table we're wanting to add to naming columns and providing data
+
+INSERT INTO playground (type, color, location, install_date) VALUES ('slide', 'blue', 'south', '2014-04-28');
+INSERT INTO playground (type, color, location, install_date) VALUES ('swing', 'yellow', 'northwest', '2010-08-16');
+
+Column names should not be quoted, but values should be. Also do not enter value for equip_id. 
+
+To get back info from table
+
+sammy=# SELECT * FROM playground
+
+Output
+ equip_id | type  | color  | location  | install_date 
+----------+-------+--------+-----------+--------------
+        1 | slide | blue   | south     | 2014-04-28
+        2 | swing | yellow | northwest | 2010-08-16
+(2 rows)
+
+To delete entry from table
+
+sammy=# DELETE FROM playground WHERE type = 'slide'
+
+equip_id | type  | color  | location  | install_date 
+----------+-------+--------+-----------+--------------
+        2 | swing | yellow | northwest | 2010-08-16
+(1 row)
+
+ADD and DELETE COLUMNS FROM TABLE
+
+sammy=# ALTER TABLE playground ADD last_maint date;
+
+If view table, you will see new column has been added (but no data entered)
+
+sammy=# SELECT * FROM playground;
+
+Output
+ equip_id | type  | color  | location  | install_date | last_maint 
+----------+-------+--------+-----------+--------------+------------
+        2 | swing | yellow | northwest | 2010-08-16   | 
+(1 row)
+
+To delete a column
+
+sammy=# ALTER TABLE playground DROP last_maint;
+
+HOW TO UPDATE DATA IN A TABLE
+
+Can update values of existing entry by querying for the record you want and setting the oclumn to the value you wish to use. 
+
+sammy=# UPDATE playground SET color = 'red' WHERE type = 'swing';
+
+sammy=# SELECT * FROM playground;
+
+Output
+ equip_id | type  | color | location  | install_date 
+----------+-------+-------+-----------+--------------
+        2 | swing | red   | northwest | 2010-08-16
+(1 row)
+
+pgAdmin - GUI for working with SQL engine. 
+
+Go to Postgres website and into Downloads. Click the enterprise executable. Will install PostgreSQL and pgAdmin. 
+
+Must choose a superuser password. 
+
+Open pgAdmin. Sign in to database server with password. 
+
+To create a database. Right-click Databases and select create. Name database. 
+
+Create dvdrental
+
+Can restore a database.
+
+Right click dvdrental and choose restore. 
+
+If it says please configure PostgreSQL binary path, then go to preferences, paths, binary paths, and put in path to bin folder. 
+
+Must refresh after restore. 
+
+To run commands
+
+Right click on dvdrental, click QueryTool. Then 
+
+Select * FROM actor;
+
+DATABASES AND TABLES
+
+Create databse with pgAdmin
+Restore a database
+Delete a database
+
+Rightclick Databases, select new database. 
+
+Or
+
+CREATE DATABASE testdvd;
+
+Rightclick database, select Delete/Drop to delete. 

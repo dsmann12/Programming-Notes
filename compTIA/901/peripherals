@@ -1,0 +1,216 @@
+PERIPHERALS
+
+Compact Discs
+
+CDs - optical media. Changed tech world. 1970s started. Music industry trying to replace vinyl LPs. 
+
+CDDA - Compact Disc Digital Audio. Stored everything in lands and pits on back of disc. Designed to store music so measured in time. Stored about 74 minutes of music. Equivalent of longest version of Beethoven's 9th. Strong. Laser reflected or didn't reflect to determine 1s and 0s. People wanted to use for data.
+
+Problem: CDs stored in sprial fashion. Used tracks. So individual chunks for each song. Data needs root directories.
+
+ISO - European Industry Standards Organization. Came up with ISO 9660. Took CDDA format and created format to store folders and files. 
+
+CD ROM - CD formatted with ISO 9660 format. Needed special mastering equipment. Used for distribution medium. Stored 650 MBs.
+
+Discovered they could use more space in center. Could then store 700 MB. Could not burn own CD ROM. 
+
+CD-R - Compact Disc Recordable. Burn once type media. 
+
+CD ROM and CD-R drives look similar but CD-R drive had burner. Two lasers. One for reading and one for writing. Could heat up material with laser to make pits and lands on disc. CD-R drives could read CD ROMs. Quick way for archiving information. 
+
+CD-RW - Compact Disc Rewritable - Ability to read and write. Read, burned, erased and burned over and over to a limit. 
+
+74 minutes/650 MB vs 80min/700MB sizes. 
+
+First CDs came out at particular speed. Read at 1x. Today some may read at 52x. Very fast rotations. 52x means can go up to 52x for reading. 
+
+CD-R. Read speed and write speed.
+
+CD-RW- read speed, write speed, and rewrite speed. 
+
+Speeds and Sizes
+
+DVDs
+
+Digital Video Disc - Now Digital Versitile Disc - optical media exact same time as CD that was meant to store video. Came on board with tools to make video work well. Came with menuing systems, etc. Allowed people to create master DVDs for distribution of movies to home markets. 
+
+Capacities measured in bytes of storage. 
+
+Single Sided vs Dual Sided DVDs - One side of data or two.
+
+Single Layer vs Dual Layer - two layers of data on one side. Each layer separated by half mirror with special laser that can read one layer or next automatically. 
+
+Can combine then.
+
+DVD 9 - single sided dual layer. 
+
+Designed for movies and data. So can handle ISO 9660 format. Can format DVDs to create CDFS - Compact Disc File System. 
+
+Live DVDs - boot an OS from a DVD. 
+
+DVD-ROM - Mastered. Need special mastering program and mastered disc to make thse but can make many copies. 
+
+DVD+R - Write once and read unlimited. DVD-R another format. May lead to incompatibilities. Capacities are same. 
+
+DVD+RW - Also DVD-RW. Lots of RW versions. Incompatibility issues even worse. Now work better. 
+
+DVD-RAM - Came in cartridge. Big issue was that other drives could read all other media. Needed specific drive to handle these cartridges. 
+
+Region Codes - DVDs that play movies have region codes built into them. US is Region 1. Need Region 1 player to play it. Gives control to releases. 
+
+Speeds - Player will have one speed. The read speed. If +R will have read speed and write speed. If +RW, will have read speed, write speed, and rewrite speed. 
+
+Capacities - May start at 4.7 GB. But if add double sided and double layered they can get much bigger. 
+
+Blu Ray
+
+DVD - pushed out video in about 480 lines. Same as TV was for many years. Lower resolution. DVDs couldn't handle great higher resolution.
+
+Blu Ray - 25GB or 50GB. Single sided single layer or single sided dual layer respectively. Better resolution and better sound.
+
+High-Bandwidth Digital Content Protection (HDCP) - In order to play Blu Ray, must have HDCP compliant equipment. If not, only plays in lower resolutions. Also showing up in data world.
+
+BD-R - Blu Ray Recordable - Required to use UDF format - improvement on ISO 9660. UDF can be used on DVD or CD too. UDF writes in more concise fashion. UDF built into every Windows since XP.
+
+BD-RE - Blu RAy Recordable/Erasable. Basically Read WRite. 
+
+USB
+
+Universal Serial Bus - almost every peripheral used USB. 
+
+Before USB, peripherals sometimes needed own cards to run in system. Others had to use Serial port. 
+
+USB 1.0 = 1.5 Mbps (keyboards and mice) Low speed . And 12 Mbps full speed. 1.1?. 3M
+USB 2.0 = 480 Mbps. 5m cable length. Hi-speed.
+USB 3.0 = 5 Gbps. Gen 1 and Gen2 at 10 Gbps. 3m cable length. Superspeed and Superspeed+.
+
+USB A - connectors that go into system. Standard connection. Downstream connectors. 
+
+USB B - Goes into device. Upstream connectors. Connectors vary due to different devices. 
+
+USB B [Full Size] - like printer connector. Big connector. 
+
+USB B-Mini - smaller version of 
+
+USB B-Micro - android devices.
+
+USB 3.0 B micro connector - longer connector. Few more combined into one. Cause more power. 
+
+USB 3.0 A - blue. 
+
+USB-C connector. s
+
+Black port - USB 1.0/2.0
+Blue port - USB 3.0
+Red - power comes from USB. Power delivery specification.
+
+USB designed to work in stream fasion. USB hubs built into PC but can add hubs if needed. Powered external hub better so devices don't take power.
+
+Each USB device uses power so can use juice. 
+
+Can put max of 127 devices on USB hub. 
+
+FLASH MEDIA
+
+Compact Flash - Big flash memory cards. Seen in cameras and things. 
+
+Smart Media Card (SMC) - 1995. Again seen in cameras. Thinner than compact flash,
+
+xD Oicture Card - popular flash media
+
+Secure Digital - 1999. Panasonic. One of most popular flash media formats. used in computers, cameras, video recorders, etc. 
+
+miniSD - used for a little while. 
+
+micro SD - memory card used in phones
+
+FIREWIRE AND OTHERS
+
+FireWire - Early 2000s. Still has some support especially for video cameras. A lot like USB. 
+
+6 Conductor FireWire 400 - 400 Mbps
+4 Conductor FireWire 400 - Not powered. 
+9 pin FireWire 800 - 800 Mbps
+
+4.5 m standard cable length. 
+
+Serial Connection - DB-9 connection. 9 pins. Male. First PCs used as primary connections. First I/O. Like a D. Seen on point of sale systems, old scanners, thermal scanners on point of sale. 
+
+YOST or ROLLOVER cable. Found on Cisco routers in specific port. Uses cable (serial connection) to talk to router directly. With Serial port, had to assign a value known as COMM PORT to serial port. Must know COMM PORT number to actually talk through serial port. CISCO routers need serial ports. 
+
+Parallel Ports - DB-25. 
+
+Centronics connection - pretty much only for printers. 
+
+KEYBOARD AND MICE
+
+Almost all mice and keyboards are USB. 
+
+Human Interface Devices - basic drivers for mice and keyboards. Basic drivers do not give features for high feature keyboard and mice. 
+
+CMOS Setup - may have setting to tell mobo that USB keyboards need to be supported. 
+
+Configure Mouse - Mouse applet in Control panel. Can switch primary and secondary buttons. Set pointer speed. And Set wheel scrolling. 
+
+Erratic pointer - consider dirt. Use air can or damp cloth with mild detergent. 
+
+Keyboard properties - Keyboard applet.
+
+Repeat delay - how long to wait before repeating.
+Reapeat rate - how fast to repeat once it start.
+
+Third party configurations for higher pieces of software.
+
+Accessibilty Options
+
+Make keyboard easier to use.
+
+Mouse keys - control mouse with keyboard
+
+Sticky keys - can let go of keys instead of holding down for combo presses. ALT+TAB.
+
+Toggle keys - hear tone when press CAPS LOCK, NUM LOCK, SCROLL LOCK
+
+Filter keys - ignore double taps
+
+Keyboards subject to a lot of dirt. Use air can to clean it. 
+
+OTHER INPUT DEVICES
+
+Digitizer - tablet that can take drawings and make them a digital file. Acts as alternative input. Like a mouse. 
+
+Wacom tablet - creates control panel applet for controlling. 
+
+Barcode Scanner - Line up with barcode. Scan barcode and barcode number will come up in notepad. Like input from keyboard. Sometimes there's an orientation issue and must preset scanner to work with particular orientation.
+
+Game Controller - 
+
+Joysticks usde to have 15pin av port. Now have USB port. Go to Devices and Printers in Control Panel. Click on Generic USB Joystick. Rigth click and look at properties. Go to game controller settings and select properties. Primay job is to act as joystick first. Can program what wnt buttons to do. 
+
+KVM SWITCHES
+
+Need to access more than one computer at desk. 
+
+KVM Switch - Keyboard, video, and mouse. Take one keybaord, one video, and one mouse and plug it into multiple systems. Press buttons to switch between computer. Some have software and can hit hotkeys to switch between computers. Some support sound and other devices as well. 
+
+CAMERAS AND CAMCORDERS
+
+Cameras - often have USB connection or HDMI. Camera often shows up as removeable drive. 
+
+Camcorders - HDMI or USB connections. 
+
+Also likely have storage cards inside. Can interface with them through camera or through card reader.
+
+WEBCAMS
+
+Make sure have webcam plugged in and proper driver installed. Application should know how to use it. Make sure it can handle input from Web Cam. 
+
+PCIe Cards
+
+Video cards, wireless cards, video capture cards, sound cards. 
+
+Make sure getting the correct card. Also make sure you have power connectors and power for it.  
+
+Turn off power before you do it. Slot into place in mobo. Screw into slot in back of card.  Install drivers. Install software if necessary. Then configure. 
+
+Make sure card is compatible with system. OS should not be too old. 

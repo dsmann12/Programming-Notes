@@ -1,0 +1,369 @@
+PREFERENCES
+
+DATA PERSISTANCE
+
+Saving data to phone. 
+
+5 ways:
+1. Using savedInstanceState. Use key value pairs to save state during things like app rotation of if system destroys activity. Temporary. Should only be used if user still using the app
+
+Otherwise should save data to actual file system. 3 ways to do this
+2. SharedPreferences class. You specify a file and it saves key value pairs to a file. Keys are always strings and values are primitives. Used when need to save single text or numerical value about user. May save playerName or last webpage user was looking at in web browser. Etc. But sometimes have more complicated data than primitives
+3. Database. Relational databases in form of sqlite. Android provides various frameworks and components such as content providers that help manage and share data in databases.
+4. Internal Storage. External Storage. Saving files (multimedia nad larger data) onto phone
+
+5. Cloud. Setting up database on server or using firebase. Data that multiple ohones will access. 
+
+
+Persistence Option					Type of data saved											Lengths of time saved
+onSavedInstance State				kev/value (complex values)									While app is open
+SharedPreferences					kev/value (primitive values)								Between app and phone restarts
+SQLite Database						Organized, more complicated text/numeric/boolean data		Between app and phone restarts
+Internal/External Storage			Multimedia or larger data									Between app and phone restarts
+Server (ex. Firebase)				Data that multiple phones will access						Between app nad phone restarts, deleting the app, using a different phone, etc
+
+PREFERENCE FRAGMENTS
+
+SharedPreferences usually the best bet for saving preferences. Save in key value pairs. 
+
+Work hand in hand with another Android framework component meant for creating a UI for settings activities - PreferenceFragments
+
+Fragment - a class that represents a modular and reusable piece of an activity. May want to split up portions of activity UI into fragments. So you can use those portions on different screens. Common use case is if you want to provide a phone and a tablet UI for app. 
+
+Ex. App that has list of book recommendations. When click on list item, you see a detail screen about book. On tablet, you may want to show both on screen in one activity. 
+
+PrefernceFragment -> usually have activity have that can contain one or more subclasses of fragments called PreferenceFragments. Build for displaying preferences. PreferenceActivity is something different and deprecated. Fragments populate themselves with preferences provided in XML. When user interacts, it automatically updates value in SharedPreferences file and app reads from this file. 
+
+Step 1. Create SettingsActivity
+Step 2. Add a PreferenceFragment (SettingsFragment.java). Create pre_visualizer.xml file
+Step 3. Preferences Change App UI
+Step 4. Add Preference Summaries
+
+Menu XML
+
+Add app namespace.
+
+app:showAsAction="never"
+
+Give SettingsActivity a parent so that it becomes a child activity
+
+<activity
+	android:name=".SettingsActivity"
+	android:label="@string/action_settings"
+	android:parentActivityName=".VisualizerActivity">
+	<meta-data
+		android:name="android.support.PARENT_ACTIVITY"
+		android:value=".VisualizerActivity" />
+</activity>
+
+Also give parent activity launch mode as singleTop so that when you go back to parent activity, it isn't remade
+
+android:launchMode="singleTop"
+
+Can also override back button to be an up button and so that it goes back to parent activity and not exit app. 
+
+In onCreate of SettingsActivity
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.activity_settings);
+	ActionBar actionBar = this.getSupportActionBar();
+	
+	if (actionBar != null) {
+		actionbar.setDisplayHomeAsUpEnabled(true);
+	}
+}
+
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+	int id = item.getItemId();
+	if (id == android.R.id.home) {
+		NavUtils.navigateUpFromSameTask(this);
+	}
+	
+	return super.onOptionsItemSelected(item);
+}
+
+CREATING PREFERENCE FRAGMENTS
+
+To use, must add dependency to gradle file for backward compatibility support
+
+compile 'com.android.support:preference-v7:25.0.0'
+
+Create new class called SettingsFragment and extend PreferenceFragmentCompat (make sure import from v7 library)
+
+Must override methods.
+
+@Override
+public void onCreatePreference(Bundle savedInstanceState, String rootKey) {
+	addPreferencesFromResource(R.xml.pref_appname.xml); // this generates preference screen from that file
+}
+
+Also must now create a preferences xml file. 
+
+New folder in res -> xml. Create new xml resource file. pref_appname.xml
+
+Any preference xml outer tag is always a PreferenceScreen tag. 
+
+<PreferenceSCreen> </PreferenceScreen>
+
+Within tag, you can nest other Preferences tags of different types including other PReferenceScreen tag (for when click setting to go to a new settings screen)
+
+<CheckBoxPreference> -> checkbox setting. Also can define attributes in this tag
+
+android:defaultValue="true" // default value
+android:key="show_bass" // key for accessing data
+android:summaryoff="Hidden" // tells what hsould expect when user unchecks item
+android:summaryOn="Shown" // tells what user should expect when check item
+android:title="Show Bass" // title for setting
+
+Then go to SettingsActivity xml layout file. 
+
+Add a fragment tag.And bind it to settings fragment.
+
+<fragment
+	android:id="@+id/activity_settings"
+	android:name="android.example.com.visualizerpreferences.SettingsFragment"
+	andoird:layout_width="match_parent"
+	android:layout_height="match_parent"
+</>
+
+Becauser using PrefernceFragmentsCompat library, need to add a theme to styles.xml, otherwise app will crash
+
+so stylles.xml
+
+<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+READING FROM SHARED PREFERENCES
+
+How and when should we read this from the file
+
+To read from shared preferences:
+
+SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferencs(this); // in case of preferences set by a preference screen (file?). 
+
+There are other options, but only if you want multiple preference files for app other than default. 
+
+Can use various get methods to get data from sharedPreference file. getInt, getBoolean, etc. Pass String key, and type defValue (basically result if preference not found in file). No type checking, so if tell it to get a long when there is a string, the app will crash.
+
+mVisualizerView.setShowBass(sharedPreferences.getBoolean("show_bass", true));
+
+Fragment will handle writing to preference, but there is code to do so.
+
+SharedPreferences.Editor editor = sharedPreferences.edit();
+editor.putBoolean("show_bass", true);
+
+USE REFERENCES - BEST PRACTICES
+
+Should be using string resources from strings.xml file for all preferences. 
+
+Add strings for key and title
+
+<string name="pref_show_bas_label">Show Bass</string>
+<string name="pref_show_bass_key" translatable="false">show_bass</string>
+
+Set translatable to false if you ever localize app, don't need translate keys that are not even visible to user. Also don't want translater to change what names keys are saved under. 
+
+Next go into preference xml and use those strings by replacing hardcoded strings with ones created in strings.xml
+
+Also use them in the Java code
+
+mVisualizerView.setShowBass(sharedPreferences.getBoolean(getString(R.string.pref_show_bass_key), true));
+
+Can also define boolean constants
+
+bools.xml in res/values
+
+<bool name="pref_show_bass_default">true</bool>
+
+Then in preference.xml
+
+android:defaultValue="@bool/pref_show_bass_default"
+
+PREFERENCE CHANGE LISTENER
+
+One solution would be to read from preferences in onStart or onResume. But there is a better way
+
+SharedPreferences object allows you to register an object thta implements an onSharedPreferenceChangeListener. This gets called whenever a value in sharedPreferences file changes. Can be triggered to update UI if and only if a preference is changed. 
+
+4 steps:
+
+1. Determine activity that needs to get called when preferences change.
+2. Need this activity to implement an onSharedPreferenceCangeListener. This will require the activity implement method onSharedPreferenceChange that will be triggered when a preference is changed. 
+3. Link the onSharedPreferenceChangeListener with sharedPreference object it should be listening to. Do this with .registerOnSharedPreferenceChangeListener()
+4. Must unregister when activity is shut down. unregisterOnSharedPreferenceChangeListener()
+
+In activity, implement SharedPreferences.OnSharedPreferenceChangeListener
+
+Must override, onSharedPreferenceChanged(Shared preferences sharedPreferences, String key)
+
+@Override
+public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	if (key.equals(getString(R.string.pref_show_bass_key))) {
+		mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, getResources().getBoolean(R.bool.pref_show_bass_default)));
+	}
+}
+
+Register listener in onCreate when activity is created
+
+sharedPreferences.registerOnSharedPreferenceChangeListener(this); // can use this if activity implement OnSharedPReferenceChangeListener
+
+Unregister listener in onDestroy
+
+@Override
+public void onDestroy() {
+	super.onDestroy();
+	PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+}
+
+LIST PREFERENCE
+
+Bring up a modal with a list of options to pick from. 
+
+<ListPreference
+	android:defaultValue="<Default value>"
+	android:entries="<Array with all the option labels>"
+	android:entryValues="<Array with all the values>"
+	android:key="<String key>"
+	android:title="<Label for the entire preference>" </>
+
+Use values in strings.xml
+
+For arrays, need to use a new values resource file in res/values
+
+arrays.xml
+
+<array name="pref_color_option_labels">
+	<item>@string/pref_color_label_red</item>
+	<item>@string/pref_color_label_blue</item>
+	<item>@string/pref_color_label_green</item>
+</array>
+
+Ordering in label must match ordering in value. 
+
+PREFERENCE SUMMARY
+
+Contains info about what preference is for or its current value. 
+
+SettingsFragment must update summary programmatically. 
+
+In fragment, in onCreatePreference(Bundle bundle, String s)
+
+SharedPreferences sharedPreference = getPreferenceScreen().getSharedPreferences(); // using preference screen
+PreferenceScreen prefScreen = getPreferenceScreen();
+int count = prefScreen.getPreferenceCount();
+
+for (int i = 0; i < count; i++) {
+	Preference p = prefScreen.getPreference(i);
+	if (!(p instanceof CheckBoxPreference)) { // ignoring check box because change summary with attributes also because their values are booleans not strings
+		String value = sharedPreferences.getString(p.getKey(), "");
+		setPreferenceSummary(p, value);
+	}
+}
+
+Settings summary for list preference is a little tricky. Cannot use key or value string. In summary, we want to display current label. 
+
+private void setPreferenceSummary(Preference preference, String value) {
+	if (preference instanceof ListPreference) {
+		ListPreference listPreference = (ListPreference) preference;
+		int prefIndex = listPreference.findIndexOfValue(value);
+		if (prefIndex >= 0) {
+			listPreference.setSummary(listPreference.getEntries()[prefIndex]); //get Entries gets labels
+		}
+	}
+}
+
+However, settings summary may not change. Again need to implement a listener
+
+implement SharedPreferences.OnSharedPreferenceChangeListener
+
+@Override
+public void onSharedPreferencChanged(SharedPreferences sharedPreferences, Sting key) {
+	Preference preference = findPreference(key);
+	if (null != preference) {
+		if (!(preference instanceof CheckBoxPreference)) {
+			String value = sharedPreference.getString(preference.getKey(), "");
+			setPreferenceSummary(preference, value);
+		}
+	}	
+}
+
+Still need to register and unregister in oNCreate and onDestroy.
+
+onCreate
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState)
+	getPreferencesScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+}
+
+EDIT TEXT PREFERENCE
+
+<EditTextPreference
+	android:defaultvalue="@string/pref_size_default"
+	android:key="@string/pref_size_key"
+	android:title="@string/pref_size_label" />
+
+Just an edit text box
+
+PREFERENCE CHANGE LISTENER
+
+But if you don't error check, user can put in an invalid value. And since it is a sharedPreference, the app will crash whenever it tries to start back up.
+
+To apply constraints to this, we can use a PreferenceChangeListener (not the same as SharedPreferenceChangeListener)
+
+-SharedPreferenceChangeListener - triggered after any value is saved to the SharedPreference file
+-PreferenceChangeListener - triggered before a value is saved to the SharedPreferences file. Therefore, it can prevent an invalid update to a preference. Also attached to a single preference
+
+Flow:
+1. User updates a preference
+2. PreferenceChnageListener triggered for that preference
+3. The new value isa saved to the SharedPreference file
+4. onSharedPreferenceChanged listeners are triggered
+
+Otherwise, they act very similarly. 
+
+In activity, implement the Preference.OnPreferenceChangeListener, override the onPreferenceChange(Preference preference, Object newValue). The onPreferenceChange method will return either true or false depending on whether preference should actually be saved
+
+public class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener
+
+Attach listener to preference in onCreatePreferences
+
+@Override
+public void onCreatePreference(Bundle bundle, String s) {
+	// other preference set up code
+	// ...
+	Preference preference = findPreference(getString(R.string.pref_size_key));
+	preference.setOnPreferenceChangeListener(this);
+}
+
+Implement onPreferenceChange
+
+Code will first try to convert the preference into a number and then hekcs that number is between 0 and 3. If either fail, toast will be shown and false is returned. 
+
+public boolean onPreferenceChange(Preference preference, Object newValue) {
+	Toast error = Toast.makeText(getContext(), "Please select a number between 0.1 and 3", Toast.LENGTH_LONG);
+
+	String sizeKey = getString(R.string.pref_size_key);
+	if (preference.getKey().equals(sizeKey)) {
+		String stringSize = ((String) (newValue)).trim();
+		if (stringSize == null) stringSize = "1";
+		try {
+			float size = Float.parseFloat(stringSize);
+			if (size > 3 || size <= 0) {
+				error.show();
+				return false;
+			}
+		} catch (NumberFormatException nfe) {
+			error.show();
+			return false;
+		}
+	}
+	return true;
+}
+
+SHOULD IT BE A SETTING
+
+

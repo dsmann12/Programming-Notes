@@ -1,0 +1,38 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0304
+header_name {.h}
+code_name {.cxx}
+decl {\#include <stdio.h>} {private local
+}
+
+decl {\#include <stdlib.h>} {private local
+}
+
+Function {Button_CB(Fl_Widget *, void *)} {open return_type {static void}
+} {
+  code {printf("CALLBACK!\\n");} {}
+}
+
+Function {WinQuit_CB(Fl_Widget *, void *)} {open selected return_type {static void}
+} {
+  code {printf("Window Quit CALLBACK!\\n");
+exit(0);} {}
+}
+
+Function {} {open
+} {
+  Fl_Window {} {
+    callback WinQuit_CB open
+    xywh {969 1069 955 230} type Double hide
+  } {
+    Fl_Button {} {
+      label button
+      callback Button_CB
+      xywh {20 5 935 60}
+    }
+    Fl_Button {} {
+      label Button2
+      xywh {20 75 940 40}
+    }
+  }
+}

@@ -1,0 +1,260 @@
+LAMBDA EXPRESSIONS
+
+C# can handle events inline like with anonymous method, assigning a block of code 
+statements directly to an event rather than building a stand-alone method to be called by underlying delegate.
+
+lambda expressions - just a concise way to author anonymous methods and ultimately simplify working with .NET 
+delegate types. 
+
+Consider the FindAll() method of generic List<T> class. Can be called when need to extract a subset of items 
+from collection and is prototyped like so:
+
+// Method of the System.Collections.Generic.List<T> class.
+public List<T> FindAll(Predicate<T> match)
+
+// This delegate is used by FindAll() method
+// to extract out the subset.
+public delegate bool Predicate<T>(T obj);
+
+When call FindAll(), each item in the List<T> is passed to method point to by the Predicate<T> object. The 
+implementation of said method will perform some calculations to see whether incoming data matches the 
+necessary criteria. 
+
+Long way, using delegate objects directly. Add method to program named TraditionalDelegateSyntax() within 
+Program type that iteracts with the System.Predicate<T> type to discover the even numbers in a List<T> of ints
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Lambdas *****\n");
+TraditionalDelegateSyntax();
+Console.ReadLine();
+}
+
+static void TraditionalDelegateSyntax()
+{
+// Make a list of integers.
+List<int> list = new List<int>();
+list.AddRange(new int[] { 20, 1, 4, 8, 9, 44 });
+ 
+// Call FindAll() using traditional delegate syntax.
+Predicate<int> callback = IsEvenNumber;
+List<int> evenNumbers = list.FindAll(callback);
+ 
+Console.WriteLine("Here are your even numbers:");
+foreach (int evenNumber in evenNumbers)
+{
+Console.Write("{0}\t", evenNumber);
+}
+Console.WriteLine();
+}
+ 
+// Target for the Predicate<> delegate.
+static bool IsEvenNumber(int i)
+{
+// Is it an even number?
+return (i % 2) == 0;
+}
+}
+
+
+Method IsEvenNumber() tests incoming integger parameter to see if even or odd. 
+
+However, method only called in limited circumnstances leaving you with baggage of a full method definition.
+
+Anonymous Method Example:
+
+static void AnonymousMethodSyntax()
+{
+// Make a list of integers.
+List<int> list = new List<int>();
+list.AddRange(new int[] { 20, 1, 4, 8, 9, 44 });
+ 
+// Now, use an anonymous method.
+List<int> evenNumbers = list.FindAll(delegate(int i)
+{ return (i % 2) == 0; } );
+ 
+Console.WriteLine("Here are your even numbers:");
+foreach (int evenNumber in evenNumbers)
+{
+Console.Write("{0}\t", evenNumber);
+}
+Console.WriteLine();
+}
+
+Still required to use the delegate keyword (or strongly typed Predicate<T>) and you must ensure that the 
+parameter list is a dead-on match. 
+
+Lambda Expression Example:
+
+static void LambdaExpressionSyntax()
+{
+// Make a list of integers.
+List<int> list = new List<int>();
+list.AddRange(new int[] { 20, 1, 4, 8, 9, 44 });
+ 
+// Now, use a C# lambda expression.
+List<int> evenNumbers = list.FindAll(i => (i % 2) == 0);
+ 
+Console.WriteLine("Here are your even numbers:");
+foreach (int evenNumber in evenNumbers)
+{
+Console.Write("{0}\t", evenNumber);
+}
+Console.WriteLine();
+}
+
+No trace of underlying delegate object. 
+
+lambda expression: i => (i % 2) == 0
+
+Lambda expressions can be used anywhere you would have used an anonymous method or strongly typed delgate. 
+
+In fact, that lambda expression is combiled into following anonymous method:
+
+// ...becomes this anonymous method.
+List<int> evenNumbers = list.FindAll(delegate (int i)
+{
+return (i % 2) == 0;
+});
+
+DISSECTING A LAMBDA EXPRESSION
+
+Lambda expressions written by first defining a parameter list, followed by => token, follwed by a set of 
+statements (or single statement) that will process these arguments. 
+
+ArgumentsToProcess => StatementsToProcessThem
+
+// "i" is our parameter list.
+// "(i % 2) == 0" is our statement set to process "i".
+List<int> evenNumbers = list.FindAll(i => (i % 2) == 0);
+
+Parameters of lambda expression can be explicitly or implicitly typed. 
+
+Implicitly typed like previous example. Compiler is able to figure out that i is an integer based on context 
+of the overall lambda expression and underlying delegate. 
+
+Can also explicitly define type of each parameter by wrapping data type nad variable name in a pair of 
+parentheses:
+
+// Now, explicitly state the parameter type.
+List<int> evenNumbers = list.FindAll((int i) => (i % 2) == 0);
+
+As seen, if lambda has a single, implicitly typed parameter, the parentheses may be omitted from the parameter
+list. Can be consistent and always wrap parameter list within parentheses:
+
+List<int> evenNumbers = list.FindAll((i) => (i % 2) == 0);
+
+Can also wrap the expression in parentheses:
+
+// Now, wrap the expression as well.
+List<int> evenNumbers = list.FindAll((i) => ((i % 2) == 0));
+
+PROCESSING ARGUMENTS WITHIN MULTIPLE STATEMENTS
+
+Can build lambdas using multiple statement blocks. Can do so with brackets:
+
+static void LambdaExpressionSyntax()
+{
+// Make a list of integers.
+List<int> list = new List<int>();
+list.AddRange(new int[] { 20, 1, 4, 8, 9, 44 });
+ 
+// Now process each argument within a group of
+// code statements.
+List<int> evenNumbers = list.FindAll((i) =>
+{
+Console.WriteLine("value of i is currently: {0}", i);
+bool isEven = ((i % 2) == 0);
+return isEven;
+});
+ 
+Console.WriteLine("Here are your even numbers:");
+foreach (int evenNumber in evenNumbers)
+{
+Console.Write("{0}\t", evenNumber);
+}
+Console.WriteLine();
+}
+
+LAMBDAS WITH MULTIPLE (OR ZERO) PARAMETERS
+
+static void Main(string[] args)
+{
+// Register with delegate as a lambda expression.
+SimpleMath m = new SimpleMath();
+m.SetMathHandler((msg, result) =>
+{Console.WriteLine("Message: {0}, Result: {1}", msg, result);});
+ 
+// This will execute the lambda expression.
+m.Add(10, 10);
+Console.ReadLine();
+}
+
+OR
+
+m.SetMathHandler((string msg, int result) =>
+{Console.WriteLine("Message: {0}, Result: {1}", msg, result);});
+
+If delegate takes 0 parameters, can define as: 
+
+public delegate string VerySimpleDelegate();
+
+// Prints "Enjoy your string!" to the console.
+VerySimpleDelegate d = new VerySimpleDelegate( () => {return "Enjoy your string!";} );
+Console.WriteLine(d());
+
+EXAMPLE
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** More Fun with Lambdas *****\n");
+ 
+// Make a car as usual.
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Hook into events with lambdas!
+c1.AboutToBlow += (sender, e) => { Console.WriteLine(e.msg);};
+c1.Exploded += (sender, e) => { Console.WriteLine(e.msg); };
+ 
+// Speed up (this will generate the events).
+Console.WriteLine("\n***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.ReadLine();
+}
+
+LAMBDAS AND SINGLE STATEMENT MEMBER IMPLEMENTATIONS
+
+.NET 4.6 Now permissible to use => operator to simplify some but not all member implementations. 
+
+If have member or property that consists of a single line of code in implementation, you are not required to 
+define a scope via curly bracket. 
+
+c1.AboutToBlow += (sender, e) => Console.WriteLine(e.msg);
+c1.Exploded += (sender, e) => Console.WriteLine(e.msg);
+
+OR
+
+class SimpleMath
+{
+public int Add(int x, int y)
+{
+return x + y;
+}
+ 
+public void PrintSum(int x, int y)
+{
+Console.WriteLine(x + y);
+}
+}
+
+BECOMES:
+
+class SimpleMath
+{
+public int Add(int x, int y) => x + y;
+public void PrintSum(int x, int y) => Console.WriteLine(x + y);
+}

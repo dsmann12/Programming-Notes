@@ -1,0 +1,183 @@
+INTENTS
+
+Splitting up information based on actions users want to do makes app easier to code and easier for users to understand. 
+
+How to start one activity from another.
+
+Intents - messaging objects that allow an app request that an action take place. Including starting a new activity, picking or displaying a photo, or making a phone call.
+
+Each includes which component you want to deliver data to, also data can be delivered as primitive tuples. 
+
+Explicit intent uses name of target component. 
+
+USING INTENT
+
+Create a new activity and its layout.
+
+Ex. Add a TextView to layout of new activity. In its Java class, create a member variable to hold TextView and then define it in OnCreate. 
+
+Call method startActivity which takes intent as a parameter. 
+
+Because we know which specific activity to run, we can use the Intent constructor that uses a Context
+
+Context gives us a way of doing certain thigns that might affect a certain app as a whole or might outlive lifetime of a single activity. 
+
+Intern internt = new Intent(MainActivity.this, ChildActivity.class;
+startActivity(intent) 
+
+or more readable
+
+Context context = MainActivity.this;
+Class destinationActivity = ChildActivity.class;
+Intent intent = new Intent(context, destinationActivity);
+startActiity(intent);
+
+Can also send data when creating intent. 
+
+PASSING DATA BETWEEN ACTIVITIES
+
+Use Intent.putExtra() method to pass data.
+
+Intent putExtra (String name, String value); 
+
+name -> String name of extra data with package prefix
+value -> String data value
+
+Can use names from Intent class
+
+startChildActivityIntent.putExtra(Intent.EXTRA_TEXT, textEntered);
+startActivity(startChildActivityIntent);
+
+Also must update information in other activity that is being opened by intent
+
+Intent intentThatStartedThisActivity = getIntent();
+
+Use getStringExtra(String name) -> method to retrieve string using string name. But shouldn't immediately call it. 
+
+Activities always have an intent which triggers activity. But may not have data. Should always check so app doesn't crass.
+
+use hasExtra(String name) to check
+
+if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
+	String textEntered = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
+	mDisplayText.setText(textEntered);
+}
+
+IMPLICIT INTENTS
+
+When don't know or don't care how request will be fulfilled. 
+
+If want to retrieve contact, image, or call a number. Implicit intents indicate an action to be done and an optional bit of data on which to execute it. 
+
+Specific applicatoin doesn't matter. 
+
+Can see common intents in documentation. 
+
+Such as how to load a web page. 
+
+public void openWebPage(String url) {
+    Uri webpage = Uri.parse(url);
+	// Intents need a URI to be identified. Address that points to data. Intent.ACTION_VIEW tells android you want to view content
+    Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+	//is there an app that can handle the request. Otherwise request could fail and crash app.
+    if (intent.resolveActivity(getPackageManager()) != null) {
+        startActivity(intent);
+    }
+}
+
+UNDERSTANDING URIs
+
+Now can open a map. 
+
+Similar concepts
+
+public void showMap(Uri geoLocation) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(geoLocation);
+    if (intent.resolveActivity(getPackageManager()) != null) {
+        startActivity(intent);
+    }
+}
+
+URI is a string of characters that identifies a resource. Uniform Resource Identifier. URL, Uniform Resource Locator, is a URI that identifies a web or network resource. 
+
+scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
+
+scheme describes what type of resource we're pointing to. http, https, ftp, mailto, geo.
+
+host name could be domain name or ip address and optional port. Unless otherwise started, http assumes 80, ftp assumes 21
+
+atharty? - the www.google.com part. as host. 
+
+query - begins with ? and may use key value pairs to specify data. Has no size limit officially but in practice can range from 8,000 characters to 190,000. 
+
+fragment - indicates secondary data the path resource will use. What happens depends on the browser, the app, etc. 
+
+Need to convert address to geo uri. 
+
+Proper geo URI needs a latitude ,logitude and optional query parameters for street address, zoom, or businesses nearby
+
+If query is for street address or business, lat and lng should be 0,0
+
+geo:0,0?q=Antwerp,Belgium&z=10
+
+Can use Uri.parse() and inline string concatenation.
+
+but best to use Uri.Builder
+
+public void onClickOpenAddressButton(View v) {
+	String addressString = "1600 Amphiteatre Parkway, CA";
+	
+	Uri.Builder builder = new Uri.Builder();
+	builder.scheme("geo")
+			.path("0,0")
+			.query(addressString);
+	
+	Uri addressUri = builder.build();
+	
+	Intent intent = new Intent(Intent.ACTION_VIEW);
+	intent.setData(addressUri);
+
+	if (intent.resolveActivity(getPackageManager()) != null) {
+		startActivity(intent);
+	}
+}
+
+SHARING
+
+ShareCompat 
+
+When click share button, chooser dialog appears on bottom on screen showing all apps that can handle this type of intent.
+
+When want to share data, there is a lot to think about:
+
+What type of data it is
+How big it is
+Number of files
+More...
+
+ShareCompat used to abstract away these decisions. And ShareCompat.IntentBuilder
+
+Every type of content that can be transmitted on the internet has two-part identifier that describes it called a media type.
+
+MIME -> multi purpose internet mail extensions. When initially defined for RFC 2046, these allowed you to have emails with different types of attachments. 
+
+Media Type String
+
+top-level type name / subtype name [;parameters]
+
+text/html;charset=UTF-8
+video/mp4
+text/plain
+image/png
+
+public void onClickShareTextButton(View v) {
+	String mimeType = "text/plain";
+	String title = "Learning How to Share";
+	String textToShare = "Hello there";
+
+	ShareCompat.IntentBuilder.from(this)
+			.setChooserTitle(title)
+			.setType(mimeType)
+			.setText(textToShare);
+}

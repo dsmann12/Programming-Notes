@@ -1,0 +1,29 @@
+Linux
+
+File Permissions
+
+USER IDs
+
+Every user on Unix system has a unique user ID. Can be displayed with id command. 
+
+id david
+
+Root user with user ID 0 is like administer account, which has full access to system. 
+
+su command can be used to switch to different user, and if this command is run as root, can be done without a password. 
+
+sudo command allows a single command to be run as root user
+
+sudo su
+
+chsh - allows any usre to change his or her own login shell. Program needs to be ble to make changes to /etc/passwd file, but only the line that pertains to curren't user's account. 
+
+Solution to this problem in Unix is set user id (setuid) permission. Additional file permission bit that can be set using chmod. When program with this flag is executed it runs as userid of file's owner. 
+
+setuid flag indicated by s in ls output. chsh uses setuid and belongs to root, means that program will run as root when any user runs it. 
+
+Program logic in chsh is designed to only allow writing to the line in /etc/passwd that corresponds to the user running the program, even though program is effective running as root.
+
+So a running program has both a real user ID and an effective user ID.
+
+Can be retrieved using functions getuid() and geteuid()

@@ -1,0 +1,217 @@
+WIRELESS NETWORKS
+
+Wireless networks use either radio wave or beams of infrared light to communicate with each other. 
+
+Use the IEEE 802.11 standard (WiFi). 
+
+Used to have infrared *transciever* ports 
+
+Wireless Access Point - WAP. To extend the capabilities of a wireless Ethernet network, such as connecting to a wired network or sharing a high-speed Internet connection, you need a wireless access point (WAP). A WAP centrally connects wireless network nodes in the same way that a hub connects wired Ethernet PCs. Many also act as switches and Internet routers.
+
+Power over Ethernet (PoE) - Only need to plug a single Ethernet cable into WAP to provide both power and a network connection. 
+
+Carrier Sense Multiple Access/Collision Avoidance (CSMA/CA) - network scheme used by wireless devices. Devices also use same networking protocols and client thattheir wires counterparts use. Collision avoidance differs from collision detection standard used in wired Ethernet. Wireless node listens in on the wireless medium to see if another node is currently broadcasting data. Ifso it waits a random amount of time before retrying. 
+
+Request to Send/Clear to Send (RTS/CTS) - protocol offered by wireless nodes because have more difficult time detecting collisions. With this enabled, a trasmitting node sends an RTS frame to the receiving node after it determines the wireless medium is clear to use. Reciving node responds with a CTS frame, telling the sending node that it's ok to transmit. Then, once data is sent, the transmitting node waits for an acknowledgement (ACK) from receiving node before sending the next data packet. Introduces significant overhead to process and can impede performance. 
+
+802.11 - big kahuna of wireless networks. 15 year old standard. Got faster over years.
+
+Need a couple items:
+1. Wireless Network Card (Wireless NIC) - two antennaes. 
+2. Wireless Access Point - often in home routers. Or by self. Only has Ethernet port. And antennaes. 
+
+Ad-hoc Mode - doesn't use wireless access point. Number of computers, want to play a game together. One person will initiate an ad-hoc network and others will connect to it. AKA Peer to Peer mode. Each wireless node in direct contact with every other node in a decentralized free-for-all. Two or more wireless nods communicating in ad-hoc mode form what's called a Independent Basic Service Set (IBSS). 
+
+Infrastructure Mode - configure wireless acceess point and clients connect to access point. Very easy way to connect to wired network. Uses one ore more WAPs to connect te wireless network nodes to a wired network segment. Single WAP servicing a given area is called a Basic Service Set (BSS). Service area can be extended by adding more WAPs, calledan Extended Basic Service Set (EBSS). 
+
+Speeds and Range
+
+Throughput speeds depend on several factors. Foremost is standard that the wireless devices use. Can have speeds range from 2Mbps to 1Gbps. Other factor is distance between wireless nodes. Wireless devices dynamically negotiate the top speed at which they can communicate without dropping too many data packets. Speed decreases as distance increases so max throughput speed is usually close (within 25 feet). 
+
+Interference caused by solid objects and other wireless devices operating in the same frequency range - such as cordless phone or baby monitors - can reduce both speed and range. 
+
+Dead spots - occur when something capable of blocking the radio signal comes between wireless network nodes. 
+
+Can increase range by installing multiple WAPs. 
+
+Is radio so needs radio frequency.
+
+ISM Industrial Scientific and Medical Bands - anyone can use these. Don't need license from FCC. Use bands from everything from baby monitors to wireless home phones. 
+
+
+WIFI STANDARDS
+
+802.11 - first standard came out in 1997. Primary technology used for wireless networks. Wireless Ethernet standard. WiFi. Defines methods devices may use to communicate via spread-spectrum radio waves. Spread spectrum broadcasts data in small, discrete chunks over the frequencies available within a certain frequency range. 
+
+2.4 Ghz Bands - crowded with baby monitors, garage door openers, microwaves, and wireless phones. 
+
+5 Ghz Bands - less prone to interference from other devices.  
+
+Bands - range of frequencies. Usually divided up into discrete slices called channels. 
+
+802.11 breaks bands down into 11 channels. You tell wireless access point to choose a channel. Channels keep devices from interfering with each other. 
+
+802.11B - was arguably first popular 802.11 standard. Ran at 2.4 GHz ISM band. And ran at 11 Mbps. Introduction of Linksys routers. Max range of 300 feet. 
+
+802.11A - came out roughly same time as B. Ran at 5Ghz band at 54Mbps. Had a couple technical issues that made it difficult to use. B had much wider range. Max range of 150 feet. 
+
+Wanted robustnes and speed of A but popularity of B.
+
+802.11G - took over world. Took all goodness of A and B and put in one standard. Ran at 2.4Ghz band at 54 Mbps. A G access point could communicate with B devices since they run at 2.4Ghz. Could not communicate with A because it ran at 5Ghz. Max range of 300 ft. 
+
+802.11N - brought a lot of complexity. Faster speeds and new antenna technology. Ran at both 2.4 and 5.0Ghz band. And ran at top speed of 600Mbps. Introduced MIMO - Multiple Input, Multiple Output - enables device to make multiple simultaneous connections. brought idea of data streams. If had enough radios or antennaes, could send more than one piece of data to an individual client or groups of clients. Each antennae would create a stream. Could create up to 4 streams, 4 antennas. Downside is that it worked in 2.4 Ghz band. Most properly configured N access points only did stuff in 5.0 Ghz band and used 2.4Ghz band for backwards compatbility. Up to 600Mbps. 300+ feet. 100+ Mbps
+
+Many 802.11n WAPs emply *transmit beamforming*, a multiple antenna technology that helps get rid of dead spots - or at least make them not so bad. Antennas adjust signal once te WAP discovers a client to optimize the radio signal. Dual band 0 need advanced WAP that runs at both 5GHz and 2.4 GHz simultaneously. 
+
+802.11AC - Incorporates even more streams, wider bandwidth, and higher speed. runs at 5.0 Ghz band. Should run about 1Gbps to individualized client. Up to 8 streams of mimo. Also has multiuser mimo (mu-mimo) which supports up to 4 clients at once. In old days, clients formed a queue. 1 Gbps. 300 feet. 
+
+Multiuser MIMO (MU-MIMO) - Gives a wAP the ability to broadcast to multiple users simultaneously. 
+
+OTHER WIRELESS STANDARDS
+
+Infrared or Bluetooth. 
+
+Infrared Wireless Networking
+
+Infrared Data Association (IrDA) - protocol that implements communication through infrared devices. Up to 4 Mbps. 1 meter range. Subject to interference. 
+
+Bluetooth
+
+Bluetooth - designed to create small wireless networks preconfigured to do very specific jobs. Personal Area Networks (PANs) that link two PCs for a quick-and-dirty wireless network, and input devices such as keyboards and mice. Not designed to be a full function networking solution.
+
+1st Generation - 1 Mbps. Basis for IEEE 802.15 standard for wireless PANs.
+
+2nd Generation - Backward compatible with its first generation and adds support for more speed by introducing Enhanced Data Rate (EDR). Up to 3 Mbps. 
+
+3rd Generation - Tops out 24 Mbps. Accomplished over 802.11 connection after Bluetooth negotiation. High Speed (+HS) feature is optional. 
+
+4th Generation - (4.0, 4.1, 4.2) - called Bluetooth Smart, largely focused on imporiving Bluetooth's suitability for use in networked "smart" devices/appliances by reducing cost and power consumption, improving speed and security, and introducing IP connectivity. 
+
+ Bluetooth uses broadcasting method that switches between any of the 79 frequencies available in 2.45GHz range. Hops frequencies some 1600 times per second making it highly resistant to interference. 
+
+Class 1 - 100 mW pwer usage. 100 meter max distance
+
+Class 2 - 2.5 mW. 10 meters.
+
+Class 3 - 1 mW. 1 meter. 
+
+Used in peripherals.
+
+Bluetooth acceptable for quick file transfers.
+Bluetooth's speed and range make it good match for wireless print server solutions
+
+BASIC WIRELESS ACCESS POINT SETUP
+
+Go into wireless router to set up wireless access point. 
+
+May have three radios. 1 2.4 Ghz, 1 5 Ghz, and another 5 Ghz. 
+
+SSID - Service Set Identifier - names wireless connection. 
+
+Can show wireless network or hide it (won't really hide it in real world with modern tech). 
+
+Set channel - auto or manual change. 
+
+site survery - can use smartphone and applications. Wifi Analyzer. Give idea of what wireless networks are around. 
+
+Auto settings usually does a good job.
+
+Mode - what to support. Only support 802.11G, or 802.11N, or default so 802.11AC. 
+
+Smart Connect - one wireless network name for both 5Ghz radios. 
+
+Apply Security 
+
+WPA
+
+WPA2-PSK [AES]
+
+WPA-PSK [TKIP] + WPA2-PSK[AES]
+
+WPA/WPA2 Enterprise
+
+PSK - personal shared key
+
+Enterprise means there is a RADIUS server. RADIUS server port is 1812. RADIUS server is special server that has to be configured and handles users and passwords and such. 
+
+WPA2-PSK - most common in homes. Change default password.
+
+WIRELESS ENCRYPTION
+
+Downside of wireless network is unless you secure it, everything you do on network is being broadcast. People can capture data.
+
+People who came up with 802.11 knew this and came up with authentication method, which allowed you to talk to WAP, and encryption mode, which protected data. Bad standard. Authetication would transmit passwords in clear as part of authentication process. Pretty much ignored now so anyone can talk to WAP. Need encryption to get passed WAP.
+
+WEP - Wired Equivalent Privacy - wasn't very good. Not bad encryption but way it worked was poor. If encrypt packet, then must bring key along with every packet so people can unlock it. And key must change or people will figure it out. Like secret decoder ring and iterated code after every packet. If know that ahead of time you can mathematically figure out key. 
+
+64 bits or 128bit. Problem was 24 bits of key were used as initialization vector. So really only have 40 bits for 64bit. 
+
+802.11I - was going to have robust authentication. Then going to come up with better encryption. Was going to use tougher cryptology in IDS?? Said it would take 5 years. 
+
+Cisco, DLink. Netgear, Linksys, etc. They figured out what to do. Decided not to worry about authentication but would provide some for very advanced networks. But can fix WEP. But can't add ADS, which requires new hardware. Wanted software fix. 
+
+WPA = Wifi Protected Access - Works pretty good. Really nothing more than all parts of 802.11I standard except ADS encryption. Can be cracked but takes a long time. WEP can be punched into in 5 minnutes. WPA can take hours. 
+
+Eventually industry marched along and craeted network cards and wireless access points that can handle ADS and such. 
+
+WPA2 = Wifi Protected Acces 2. Brought encryption. very slight vulnerabilities. Extremely difficult to crack. 
+
+TKIP - improvement to WEP
+AES - better. 
+
+WIRELESS PROBLEM SCENARIOS
+
+Well configured wireless network is like fridge, just gonna run. Some problems though.
+
+Interference - when connect to wireless network, you establish a certain speed that you and network will run at. Let's say 802.11G. 54 Mbps is top speed, but interference can have it run slower. Determine what speed hardware has agreed with WAP to run. 
+
+Resoure Monitor in Windows. Go into status of like ink Network and Sharing Center. If speed dips, usually its interferences.
+
+Have interference when WAP starts stomping on channel or things like baby monitors and call phones. Can either kill the interference or run away from it. Will have to get rid of interfering devices, set channel to WAP to something different, or go somewhere else. 
+
+No internet. Can't get on internet but can connect to WAP network. First, check IP address. If APIPA, then probably bad password. 
+
+Working on network then suddenly can't get on. Two aspects of network, the site survey (a list of all wireless networks in area) and the connection itself. Once make connection to SSID, everything is going to be remembered. Such as authentication and password. If go into WAP and change authentication and encryption, then you won't be able to get on without updating settings. Must tell pc to forget the network and then give correct credentials. 
+
+CONNECTING TO A WIFI NETWORK
+
+Need to find wireless network. Windows 7. There's connection bars in system tray. Click it and see a site survey of available connections. Hovering over connection will give its details. Can right click and select properties. Just because connected does't really mean connected. If IP address is legitimate it will have same Network ID. 
+
+Wifi Protected Setup WPS - need WPS enabled equipment. Usually button in back of router. Press button then have a few minutes to get to device (printer) and press button there. As long as press buttons they will set themselves up. Also have 8 digit code that can be typed in as password on windows. Problem is that its incredibly hackable and crackable. 8 digit code - 1 digit is not used so really 7 digit code and it is passed in two chunks: one of 4 digits and one of 3. Should find a way to turn it off. Some situations where you can't turn off WPS. 
+
+TROUBLESHOOTING
+
+User maybe can't get on network. Or network has low signal. Or an intermittent signal. 
+
+WAP not configured right. SSID hidden and not known. 
+
+Antannaes - tend to want to be in straight up motion. People like to play with them. 
+
+Should know what wireless networks are out there. Also how strong are these signals. Most clients with Windows and other OSes have these tools. Only downside is they don't give channels. Tons of tools to check channels on mobile phones and such.  
+
+AP isoltation - if running in coffee shop, client can hook up to WAP but cannot see any other computer hooked to the network. 
+
+TX Power - transmit power. WAP often don't transmit as hard as radios will allow by default. Can install other firmware on router (DD-WRT) to get extra features.  Also good for turning down power, which can hide network from others farther away. 
+
+Third party antennaes - will improve signal quality. But longer wire from router means getting less signal.
+
+Make sure correct people are on network and others aren't.
+
+MAC filter - can enable in settings. Can permit only clients listed to access network. Or prevent certain clients listed from accessing network.
+
+BLUETOOTH
+
+Bluetooth - been around a while. 
+ 
+Profiles - If have a bluetooth device is must have ability to need certain functions or provide certain functions. Bluetooth headset provides a microphone and a speaker and thus can connect it to phone. One profile that handles that.
+
+Personal Area Network (PAN) - where two devices share data with each other. 
+
+Pairing - one device must become discoverable. Other device must see it. The first device must provide a passcode, then put that pass code into second device and should be connected. 
+
+Three classes of bluetooth devices:
+Class 1 - 100M
+Class 2 - 10M
+Class 3 - 1M
+
+Most devices class 2 or 3. 

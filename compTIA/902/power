@@ -1,0 +1,52 @@
+POWER Ch 8 Power Supplies
+
+Protecting PC from Spikes and Sags in AC Power
+
+No matter how clean AC supply appears to multimeter, truth is that voltage from power company tends to drop well below (sag) and shoot far above (surge or spike) the standard 115V. Can keep PC from running or destory it or a peripheral. Will keep lamps and fridges running though. 
+
+Two devices handle spikes and sags in AC supply:
+1. Surge suppressors
+2. Uninterruptible Power Supplies
+
+Brownouts - large sags in electricity. Blackout - when power cuts completely. 
+
+SURGE SUPPRESSORS
+
+Surges or spikes are far more dangerous than sags. Even strong sag only shuts off or reboots PC. Any surge can hard computer and strong surge destroys components. Given seriousness of surges, every PC should use a *surge suppressor* that absorbs extra voltage fro ma surge to protect PC. 
+
+PSU does a good job of surge suppression and can handle many of smaller surges that take place fairly often. But PSU takes a lot of damage from this and will eventually fail. 
+
+Make sure suppressor has Underwriters Laboratories UL 1449 for 330-V rating to ensure substantial protection for system. Also check Joule ratine. 
+
+Joule - unit of electrical energy. How much energy a surge suppressor can handle before it fails is describes in joules. Should rate at minimum 2000 joules, and more joules, the better the protection. 
+
+Surges also come from telephone or cable connections. If use a modem, DSL, or cable modem, make sure to get surge suppressor that incldues support for these types of connections. 
+
+If system plugged into a suppressor takes a hit, call company. Many provide cash guarantees against system failure due to surges as long as guidelines were followed. 
+
+Make sure surge suppressor has a test/reset button so you'll know when device has turned into an extension cord. 
+
+No surge protector can handle electrical discharge of a lightning strike. Unplug devices during electrical storms. 
+
+Surge suppression is not just about joules. Also rated in *clamping voltage*, in which an overvoltage condition is "clamped" to a more manageable voltage for a certain amount of time. Good consumer suppressors can clamp 600V down to 180V or less for at least 50 microseconds and can do so on iether the hot line or neutral line. 
+
+Power conditioning - really great surge suppression. Power lines take in signals such as electromagnetic interference (EMI) and radio frequency interference (RFI). Most time, the noise is so minimal to not be owrth addressing, but occassionaly events (lightning) generate enough line noise to cause weird problems (keyboard lockups, bad adata). All better surge suppressors add power conditioning. 
+
+UPS
+
+Uniterruptible Power Supply (UPS) - protects computer and adat in event of a power sag or power outage. Essentially contains big battery that provides AC power to pc regardless of power coming from AC outlet. 
+
+Measured in both watts (the true amount of power they supply in event of power outage) and volt-amps (VA). Volt-amps is amount of power the UPS could supply if devices took power from UPS is a perfect way. UPS provides perfect AC power, moving current smoothly back and forth 60 times a second (50 in other parts of world). Devices may not take all power UPS has to offer at every point as AC power moves back and forth, resulting in inefficiencies. If they did, VA would equal watts. 
+
+Because you have no idea of exactly efficiency of every device that will plug into UPS, go with wattage rating. 
+
+Need to figure out wattage needed. Also need to know how long want UPS to run without power as its a battery.
+
+Two types of UPS:
+1. Online - devices are constantly powered through UPSs battery
+2. Standby - devices connected to UPS receive battery power only when AC sags below ~80-90V. 
+3. Line-interactive - similar to standby UPS but has special circuitry to handle moderate AC sags and surges without need to switch to battery power.
+
+Quicker method for determing UPS needed it to go to major surge suppressor/UPS maker's Websites and use power calculators. 
+
+Every UPS also has surge suppression and power conditioning so look for joule and UL 1449 ratings. Also look at replacement battery costs. Last, look for UPS with a USB or Ethernat (RJ-45) connection. These come with monitoring and maintenance software that tells you status of ssytem and amount of battery power available, logs power events, and provides other handy options. 

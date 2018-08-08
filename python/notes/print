@@ -1,0 +1,34 @@
+PRINT
+
+Python2
+
+print 'This is a string'
+
+Can use printf like syntax
+
+x = 'String'
+print 'Place my variable here $s' %(x)
+
+# also works if x = 123. % formats variable as string
+
+print 'Floating point number: %1.2f' %(13.145)
+
+# %1.2f 1 is minimum number of digits before decimal. 2 if minimum after decimal. f means float. 
+
+Using %25.2f causes python to print whitespace before number if number has less than 25 digits. 
+
+%s - string format
+%r - also converts to string but uses regular expression
+
+print 'First %s, Second: %s, Third: %s' %('hi, 'two', 3)
+
+print 'First: {x} Second {y}.format(x='inserted', y='two)
+
+Python3
+
+print('This is a string')
+
+from __future__ import print_function
+
+print('One: {x}'.format(x='INSERT!'))
+

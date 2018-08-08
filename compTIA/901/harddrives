@@ -1,0 +1,420 @@
+HARD DRIVES
+
+Primary form of mass storage.
+
+Hard drive - magnetic drive. Spindle drive. Some form of rotational media. Platters. Read/write head is reading and writing data on the fly. Chip on other side of the hard drive is the controller. Integrated Drive Electronics (IDE). Built in controller. 
+
+HISTORICAL/CONCEPTUAL
+
+Hard Disk Drive HDD - composed of individual disks, or platters, with read/write heads on actuator arms controlled by a srevo motor - all contained in a sealed csae that prevents contamination by outside air. Aluminum platters are coated with magnetic medium. Two tiny read/write heads service each platter, one to read top of platter and other to read bottom of platter. Also known as magnetic har ddrives or platter based hard drives. 
+
+Spingle/Rotational Speed - HDD run at set spindle speed, with spinning platters measured in revolutions per minute (RPM). Faster the spindle speed, the faster controller can store and retrieve data. 5400, 7200, 10000, 15000 RPM. Faster drives mean better system performance but can also cause computer to overheat. Especially true in tight cases. Heat can also cut life expectancy of HDD. Drive bay fans can be used. 
+
+Booting PC takes time in part because HDD needs to first spin up before read/write heads can retrieve data off drive and load itinto RAM. All moving metal parts of platter-based drive use a lot of power, create a lot of heat, take up space, wear down over time, and take a lot of nanoseconds to get things done. SSDs address all this.
+
+Solid State Drive SSD - Based on combination of semiconductors and transistors used to create electrical components with no moving parts. In simple terms, SSDs use memory chips to store data insteal of metal spinning parts. Commonly used in desktop and laptop HDD, memory cards, cameras, USB thumb drives, and other handheld devices. 
+
+Typically  1.8, 2.5, and rarely 3.5 inch. 
+
+Also come in exotic flavors such as mSATA, a standardized for factor used in portable devices, and M.2 that have special slots on mobo. Finalyl can be installed as addon PCIe cards. 
+
+Can use PATA, SATA, eSATA, or USB for desktop. Some portables have mini-PCIe versions. 
+
+Early SSDs used SDRAM that was volatile. Current SSDs use nonvolatile flash memory such as NAND that retains data when power is turned off. Much more expensive than HDDs. Less expensive SSDs typically implement less reliable multi-level cell (MLC) memory technology in place of more efficient single-level cell (SLC) tech to cut sosts. 
+
+Cutting edge memory in SSDs today is stacked memory, which takes NAND and adds a third dimension to it giving it increased density and capacity. 
+
+SSDs operate internally by writing data in a scattersh otfashion to high speed flash memory cells in accordance with rules contained in internal SSD controller. Process is hidden from OS by presenting an electronic facade to OS that makes SSD appear to be a traditional cylinder/head/sector CHS drive. Sheer speed of internal read/write process far exceeds any slowdowns caused by the CHS-to-memory map translation. 
+
+SSD memory cells have finite amount of times they can be written to before wearing out. So would wait until all cells of SSD were filled before erasing and reusing a previously written cell. Casuing something like disk fragmentation. Slowly performance worsens though it may not be noticed. 
+
+Windows *trim* function built into Windows 7 and later is periodic garbage collection system that seeks SSD memory cells with deleted contents and rerases them, making them available. 
+
+Hybrid Hard Drives - HHDs - combine flash memory and spinning platters to provide fast and reliable storage. Drives that hvae 128MB and 256MB flash cache to shave boot times in half and because platters don't have to spin all the time, add 20-30 minutes of battery life for portable computers. 
+
+PARALLEL AND SERIAL ATA
+
+ATA - Advanced Technology Attachment. Langauge to talk to hard drives, also connctions, data speeds, etc. A Standard. Been around a long time. 
+
+ATA drives often referred to as Integrated Drive Electronics (IDE) drives. 
+
+Parallel ATA (PATA) - 40 pin connectors and had 40 pin plug in. Master and slave conections. Ribbon connection. Older drives that sent data in parallel on 40 or 80 wire data cable called ribbon cable.Dominated for more than a decade but have been replaced by serial connectors that use one wire for transfer. 
+
+ATA/ATAPI-7 - last PATA standard. Provides support for very large hard drives (144 petabytes PB, more than 144 million GB) at speds up to 133 MBps. All use standard Molex connector. 
+
+Ancient PATA drives (33 MBps) could get by with a 40 pin ribbon cable. Drives that go 66 MBps or faster needed 80-wire cable. 
+
+Can connect up to two PATA drives - including HDD, optical drives, and tap drives - to single ATA controller. Set jumpers on drivs to make one master and the other slave. 
+
+ATA went thought 7 major revisions.
+
+ATA-3 - introducted Self Monitoring and Reporint Technology. SMART. Internal drive program that tracks errors and error conditoins within drive. Information is stored in nonvolatile memory on drive and must be examined externally with SMART reader software. There are generic SMART reading programs and every drive manufacturer has software to get at the vendor-specific information being tracked. Regular usage ofMSART software will help create a baseline of HDD funtionality to predict potential drive failure.
+
+SATA
+
+PATA had issues. Ribbon cables impeded airflow and could be pain to insert properly. Cables had a limited length of only 18 inches. And could not hot swap PATA drives. Also tech had reached limits of what it could do in terms of throughput. 
+
+Serial ATA (SATA) - modern connection. Two connectors. Smaller one is data connector. Larger is power connector. Different sized. 3.5 inch drive. Larget. 2.5 inch drive. Connectors identical for each. Smaller for laptops usually. 
+
+SATA creates a point-to-point connection between the SATA device (HDD, CDROM, CD-RW, DVD-ROM, dVD-RW, BD-R, BD-RE, etc) and SATA controller, the *host bus adapter (HBA)*. 
+
+Serial connection needs only 7 wires instead of 80 typical of PATA. Did away with entire master/slave concept. Each drive connects to one port. Further, no max number of drives. Many mobos support up to 8 SATA drives. Can add more. 
+
+Hot-Swap - Capacity to plug a device into computer without harming iether. Also for device to be automatically recognized and become a fully functional component of system. SATA handles this fine. 
+
+SATA Cable - can be up to 1m long. 18inch common. 
+
+SATA Power Cable - Can plug in multiple drives to same connector. 
+
+External SATA (eSATA) - more for external devices. External hard drives, etc. Designed for hot plug ability. So can plug and unplog as needed.
+
+Micro SATA (mSATA) - For hard drives mounted directly to mobos. Seen in laptops a lot. 
+
+SATA - been around since 2004, but gets faster. Throughput its its main strength. Up to 30x faster than PATA.  
+
+SATA1 - 2003. 1.5 Gbps. Max throughput of 150 MBps. 
+SATA2 - 2004. 3 Gbps. 300 MBps. ADded Navtive command queing. On regular hard drive have number of requests for pieces of data. Sectors being requested. Normally asked in order requests come in. Must rotate HD a number of time to get data. NCQ lets hard drive reorder data requests to reduce rotations. 
+
+eSATA - 2004. No power supplied by cable. Devices must have own power. Same speed as SATA. If have SATA1 capable mobo, then it will run at SATA1 speeds. If have SATA2 mobo, then it will run at SATA2 speeds. Etc. 2m long cable at longest. Use connectors similar to external devices but they're keyed differently. 
+
+SATA3 - 2009. 6 Gbps. 600 MBps. Large number of features. Currently the most common and popular. 
+
+SATAe or SATA 3.2 - latest version. ties capable drives direcrlt into PCI Express bus on mobos. Lack of overhead by dropping both SATA link and transport layers and embracing full performance of PCIe enhanced speed of SATA throughput, with each lane of PCIe 3.0 capable of handling up to 8 Gbps. Drive grabbing two lanes could move  a whopping 15 Gbps through bus. Will need mobo to handle these. 
+
+Must make sure system will take advantage of new SATA.
+
+Advanced host Controller Interface (AHCI) - Turn on in System Setup. SATA CONFIGURATION. SATA Mode Selection. IDE mode basically means turn off AHCI. Might not be turned on by default. If turn it on after OS installed, may have to reinstall OS. 
+
+AHCI - efficient way to work with SAT HBAs. Using AHCI unlocks some of advanced features of SATA such as hot swapping and native command queuing. 
+
+After pluggin in SATA drive to running IWindows computer that does not have AHCI enabled, drive doesn't appear automatically. 
+
+Vista - go to Control Panel and run the Add New Hardware to make drive appear.
+
+Windows 7+ - ned to run hdwwiz.exe from Start menu Search bar. Alternatively, can run Disk MAnagement console and run Rescan Disks under Action menu. 
+
+With AHCI enabled, drive should appear in Computer immediately. 
+
+Native Command Queuing (NCQ) - disk optimization feature for SATA drives. Enables faster read and write speeds. 
+
+AHCI designed for spinning SATA drives. Works for SSD, but not optimal ecause SSD works with OS by including circuitry that OS can see that makes SSD appear to be traditional spinning drive. Once read or write operation is commenced, virtual drive circuits pass the operation through a tanslator in SSD that maps the true inner guts of SSD.
+
+Non-Volatile Memory Express (NVMe) - specification supports a communication connection between the OS and the SSD directly through a PCIe bus lane, reducing latency and taking full advantage of the speeds of SSD. Come in couple of formats such as add-on expansion card and 2.5 inch drive, like SATA drives for portables. A lot more expensive that other SSDs but much higher speeds.
+
+NVMe -
+
+INSTALLING
+
+Check drives in System Setup. Boot options. BBC something. 
+
+Disk Management - in Windows. Shows drives. Still needs to be partitioned and formatted. 
+
+SOLID STATE DRIVES
+
+SSD - becoming very popular. Same SATA interfaces. Mostly same as installing any other drive. SSD really more like RAM than hard drive. SSDs use flash memory like phones or cameras. Can do things better than HD. Better than 1 GBps. 
+
+Old School HDs max at about 120MBps
+
+NVMe - Non-Volatile Memory Host Controller Interface Specification - standard designed from ground up to talk to SSDs. Neat features - designed to run on PCIe bus. Takes advantage of RAM-like aspects of SSD to make system run faster. 16-bit queues? 65336 queues? Must have OS that supported NVME - Windows 8.1 and up do. Windows 7 with updates. Must have mobo that supports NVMe too. Must have NVMe SSD. Can buy PCIe card for this. NVMe standard realized it would need special connections. 
+
+SATAe - SATA Express. Unique connectors. Not very popular. 
+
+M.2 - chip or card that plugs into mobo. 
+
+These (SATAe and M.2) designed to be legacy compatible systems. Designed to work with not only NVMe drives but also AHCI (or SATA) drives. A single SATAe port supports two legacy SATA drives. M.2 drives can be SATA drives and will use SATA speeds.
+
+Still need to partition and format. 
+
+Many different types of mass storage tech: HD, SSD, optical media, USB drive, etc. Modern OSes can handle all of them. Must be commonality.
+
+Logical Block Addressing  (LBA) - HDD. Rotational media and voice coil. Data stored in discrete chunks called sectors. On modern hard drive, these sectors are 4096 bytes. Was only 512 bytes for many decades. SSD store data on flash memory. Data stored in discrete chunks called pages typically sized 4096 bytes. *sectors* on HDD, *pages* on SDD. LBA takes storage devices and stores data in discrete containers called *blocks*. LBA lives on mass storage device. Ignores how data really stored in disk. OS does not care what tech is in drive. OS should have number and disk should return what is stored in that particular container. In order to get to any block, LBA acts as store owner for disk contents. LBA thinks in terms of blocks. OS thinks in terms of files and folders. 
+
+File System - sits between OS and mass storage devices. Act as translator. OS presents file to File System. File System documents save, then talks to hard drive using LBA language to save file.
+
+RAID
+
+As HDs get bigger and bigger, is there benefit to using many HDDs to act as one drive.
+
+Disk mirroring - One drive is primary drive and other drive, mirror drive, would not be used unless primary drive failed. Hard drive controller reads and writers data to two hard drives simultaneously
+
+Disk duplexing - Separate controller for each driver. System will continue to operate even if primary drive's controller stops working. Faster than disk mirroring becasuse one controller does not write each piece of data twice. 
+
+Both slower than one driver, one controller.
+
+Disk striping - multiple drives to increase hard drive access speed. Spreading data among multiple hard drives. 
+
+Disk striping with parity - protects dat aby adding extra information called *parity data* that can be used to rebuilt data if one of drives fails. Requires at least 3 drives. Majoity of network servers use a type of disk striping with parity. 
+
+Random/Redundant Array of Independent Drives/Devices (RAID) - based on presmise that better to have a lot of smaller drives that act like big drive than one big drive. Two benefits are speed and data safety. Have different levels. 
+
+RAID 0 - known as striping. Have to have at least two HDDs. RAID controller card separates drives from system so system only sees one array, not both drives. Saves pieces of data to both devices. Speeds up process. If one HDD fails, you lose all data. Most mobos have RAID 0 capabilities. 
+
+RAID 1 - As each cluster of data saved, RAID controller makes two copies and saves each copy to a hard drive. So both drives store same information. No speed up. Mirroring. May even slow down. But ensures there is a backup. RAID 1 mirroring - usually means a single controller. Drive duplexing - version of RAID 1 with two separate controllers, each controller feeding each drive the array. 
+
+RAID 5 - Take two clusters of data and create a third piece (the parity). If lose any one cluster, the parity with other cluster is enough to recreate the data. Beauty is one drive can be lost but data will still be ok. Little faster and gives data security. Three drives? Distributes data and parity information evenly across all drives. About one drive worth of parity. So 4 2TB drives would give 6TB of space. 1 drive is parity. 
+
+RAID 1+0 or RAID 10 - A stripe of mirrors? Must have minimum of 4 drives and must be even. Each pair constitutes a mirror. Other pieces are striped to other pair. Etc. If lose an entire mirror, would lose data. If lose one drive, it will still work. Takes a lot of drives. 
+
+RAID 0+1 - Nested set of arrays that works in opposite config than RAID 1+0. 4 drives minimum. Start with two RAID 0 striped arrays. Then mirror the two arrays to each other. 
+
+RAID LEVEL			MINIMUM DRIVES			NUMBER OF FUNCTIONAL FAILURES
+RAID 0				2						0
+RAID 1				2						1
+RAID 5				3						1
+RAID 6				5						2
+RAID 1+0			4						Up to 2
+RAID 0+1			4						Up to 2
+
+Hardware RAID used when need speed along with data redundancy. Software RAID does not require special controllers; can use regular ATA conrollers or SATA controllers to mtake software RAID aray. 
+
+HARDWARE RAID
+
+Software RAID - telling OS to set up RAID. Disk Management in Windows. In Vista, can only do RAID 0. Can do RAID 0 and RAID 1 in others. OS in charge of all RAID functions. Works for smal lRAID solutions but tends to cause slowdowns in large ones. 
+
+Hardware RAID - some type of controller built into system that sets up RAID arrays and presents those arrays to OS as one volume. When need to not let user know any problem has occurred. Intelligent controller handles all RAID functions. Have own processor and memory allowing card instead of OS to handle all work of implementing RAID. Almost all hardware solutions provide hot-swapping. Invisible to OS and configured in several ways. Most have speicla configuration utility in Flash ROM that access after CMOS but before OS loads. 
+
+Firmware RAID - take advantage of mobo that has built in RAID functoinalities to set up RAID. 
+
+Need to go through mobo documentations. 
+
+Have backup ready. 
+
+System Setup - go to boot. Go to where drives are. Change from AHCI to RAID. 
+
+Intel Rapid Storage Technology - in mobo to handle RAID. Do not overwrite OS drive. 
+
+Create RAID Volume.
+
+To take advantage of it, go into OS and in Windows in Disk Management. Configure RAID array. Mostly RAID needs to be handled at BIOS level. 
+
+BOOT ORDER
+
+When boot computer up, after POST system looks for OS to boot to. BIOS needs boot order to know which drives to boot from. May want to boot from DVD or USB drive. 
+
+In old days had to boot from primary master, to secondary master, to primary slave, to secondary slave. 
+
+Boot menus - press button on boot to change boot order on the fly. 
+
+Decimal and Binary Prefixes
+
+Kilo - K - 1000. 
+Mega - M - 1,000,000. (1000 Ks)
+Gige - G - 1,000,000,000 (1000 Ms)
+Tera - T - 1,000,000,000,000 (1000 G)
+Peta - P - 1,000,000,000,000,000 (1000 T)
+Exa - E	- 1,000,000,000,000,000,000 (1000 P)
+
+Technically not accurate. Often use binary values in computing work. 4 bit addressing mean 16 is highest number. 
+
+IEC - Binary Prefixes 
+
+Kibi - Ki - 2^10 - 1024
+Mebi - Mi - 2^20 - 1024 Ki
+Gibi - Gi - 2^30 - 1024 Mi
+Tebi - Ti - 2^40 - 1024 Gi
+Pebi - Pi - 2^50 - 1024 Ti
+Exbi - Ei - 2^60 - 1024 Pi
+
+Binary prefixes were not thought about until mid 90s. 
+
+Values are very close together. 
+
+IMPLEMENTING RAID
+
+Software RAID - letting OS do work. OS takes overhead to do RAID. 
+
+Hardware RAID - typical higher end desktop mobo has hardware RAID built into it. Just pick certain number of regular SATA connectors and reconfigure system to do RAID. Vast majority of mobos are either all RAID or JBOD (Just bunch of discs). Then will need to reinstall Windows because moment go from AHCi to RAID, all controllers are immediately RAID controllers. Some mobos keep some connectors as regular connectors. 
+
+Better option is dedicated RAID controller. Has SATA connections on it. Whatever plugged into controller is built into RAID array. Usually RAID wants to be added after the the system is built. 
+
+Can go into hardware configuration utility of RAID controller. Like System Setup for RAID controller itself. Must define RAID array here. JBOD is like adding more hard drives only. No RAID. Follow utility to make RAID array. RAID Array just manifests as simple HDD to windows.
+
+How-Swappable - extra system that has hard drives in it. If one drive goes bad, can pull drive out and shove one in without reboot.
+
+Software RAID - Windows. Disk Management. Make disks dynamic for using software RAID. Right click for dynamic. Must have blank drives. Rigth click and select to make a new striped or mirrors volume. Add other drive. 
+
+Span volume - two disks. One disk gets filled up and just continues into other drive. 
+
+Can add mirror to existing drive with software RAID.
+
+INSTALLING
+
+Jumpers and Cabling on PATA Drives
+
+If only have one drive, set drive's jumpers to master or standalone. If have two drives, ste one to master and other to slave. Or set both to cable select. Most have diagram on them to determine settings. 
+
+May have other jumpers. One common set of jumpers is used for diagnostics at manufacturuing plant or for special settings in other kinds of devices that use hard drives. Many provide a third setting to be used if only one drive connects to a controller. 
+
+Many PATA hard drives use a jumper setting called cable select rather than master or slave. Position of cable determiens which drive will be master or slave. Master on end, slave in middle. For CS to work properly with two drives, must set both drives as cable select. 
+
+Pin 1- hard drive cables have a colored stripe that corresponds to the number one pin on the connector. Need to make certain that pin 1 on controller is same wire as pin 1 on hard drive. 
+
+SATA drives are simple to install. 
+
+BIOS SETUP
+
+Configuring controllers - make sure they're enabled. 
+
+Autodetection - if controllers enabled and drive is properly connected, it should appear in CMOS through autodetection. PATA had priority according to master/slave setings. Checked autodetect to make sure it ws right. With SATA, mobos use a numbering system. Uses term *channel* for each controller. 
+
+TROUBLESHOOTING
+
+Very specific problems with it. 
+
+With platters spinning at thousands of rotations per minute, they also genreate heat and vibration. Make hard drives susceptible to failure. 
+
+Most expensive part of IT troubleshooting is you. 
+
+Today, if hard drive is dying, must do back up and replace it. 
+
+Slow Performance
+
+As problem that points to hard drive troubleshooting issue. Are tools to measure slow performance, but usually talking about basic maintenance issues.
+
+DEFRAGMENTATION
+
+Defragmentation - Under Administrative Tools in Windows 10. Other places in differnt versions of Windows. In general can right click on disks to find defragmentation option. World where now have SSDs, defragmentation is issue with those. With old school magnetic drives, defragmentation was important. Savnig files and erasing them spreads data around. Defragmentation would bring them back together. Widnows 10 will defrag SSDs.
+
+Two Steps: analyze step and then do it step. Runs as automated task in Windows. Make sure it is on.
+
+Defrag monthly. Access Optimize Drives sne wy access Error Checking. Longer between defrags, longer it takes. But should run in middle of night. 
+
+DISK CLEANUP
+
+Disk Cleanup - job to erase as much data on HDD as possible to give more space. 
+
+Files in Recycle Bin
+Temporary Internet Files - Windows keeps copies off websites graphics and other items so page loads morequickly next time. 
+Downloadad Program files - system keeps copy of any Java or ActiveX applets it downloads
+Temporary Files - many apps create temp files that are supposed to be deleted when app closes. Sometimes aren't. Always reside in folder called Temp. 
+
+Vista and 7 - Start, All Programs, Accessories, System Tools, Disk Cleanup.
+8, 8.1, 10 - Start, type disk cleanup, show up in Search charm or dialog box. Click it to run. 
+
+Still slow performance? Backup data and get a new drive
+
+Read/Write Failures - physical drive in system and error popping up at screen saying Data Error Writing To Drive C or Unable To Read Data From C Drive. Can't really fix these in classical sense but can do error checking. Error Checking launged from GUI. Go through blocks individually and mark bad blocks. Right click on drive and in tools go to Check. Can take hours. 
+
+
+ERROR CHECKING
+
+Individual clusters on hard drives sometimes go bad. Cannot prevent this. Important to check.
+
+Chkdsk - command line tool. Does quick scan of drive and reports back. 
+
+chkdsk /f - do not just scan but also fix. 
+
+ScanDisk - command line utility. 
+
+MS calls tool ErrorChecking in new Windows. Mac OS X calls it Disk Utility. 
+
+Linux offers fsck. 
+
+When tools find bad clusters, it puts electroinc equivalent of orange cones around them so system won't try to place data there. 
+
+Most tools also go through drive's filenames, looking for invalid names and attempting to fix them. Look for clusters with no filesnames associated with them (lost chains) and erase them or save them as files for review. Good tools also check ervery parent and child  folder to make sure parent and child links are valid. 
+
+Error Checking - Windows. Open Exploerer, right click on drive, choose PRoperties, select Tools, and check now to run checkdsk. Check Automaticall fix file system errors, but Scan for and attempt recovery of bad sectors will take a long time on large drives. 
+
+Disk Utilty - in Utilties folder. When open, get two options such as Verify Disk and/or Repair Disk. Verify Disk checks for errors. Repair Disk fixes those erors. Can verify but not fix the startup disk. If Disk Utility finds errors on startup disk, restart and press APPLE KEY+R until REcovery parition loads. Can fix startup disk from there. 
+
+Should run them about once a week.
+
+See read/write failure once, don't worry. If see frequently, worr
+
+Still slow performance? Backup data and get a new drive
+
+Read/Write Failures - physical drive in system and error popping up at screen saying Data Error Writing To Drive C or Unable To Read Data From C Drive. Can't really fix these in classical sense but can do error checking. Error Checking launged from GUI. Go through blocks individually and mark bad blocks. Right click on drive and in tools go to Check. Can take hours. 
+
+Chkdsk - command line tool. Does quick scan of drive and reports back. 
+
+chkdsk /f - do not just scan but also fix. 
+
+See read/write failure once, don't worry. If see frequently, worry. Usually just replace it. 
+
+Loud Clicking Noises - sign of drive dying. Replace hard drive.
+
+Drive Not Recognized - Check if installed correctly. Check BIOS if it is properly installed. Check controller to see if it's on. Are using AHCI when should be using SATA? If BIOS sees it and Windows doesn't, maybe driver. Probably bad drive otherwise.
+
+OS Not Found - Remove any bootable media that is not primary. Go into BIOS and double check boot order. May have little corruption. Use WindowS Repair Utilities. 
+
+Crash Screen - BSoD and pinwheel. Will say FileSystem or NTFS if it actually at HDD level. Error checking or Windows Repair
+
+System Monitoring and Reporting Technology - SMART. To create values that are built into HDD where if reach a certain threshold value on these issues, HDD can tell user there is a problem. Just a predictor of failure. Some studies say not that good. Windows has no native SMART support. Mostly seen in BIOS. System will query drive and if anything is bad BIOS will notify in boot process. OS X has built in SMART support. As SMART errors climb, relace drives.
+
+Way to recover data on drives but expensive. 
+
+INSTALLATION ERRORS
+
+4 steps to installation:
+1. Connectivity
+2. CMOS
+3. Partitioning
+4. Formatting
+
+Partitioning - either failed to partiion or made wrong size or type of partition. Fix it in Disk Management.
+
+Formatting - failng from format makes drive unable to hodl data. Accesing drive in Windows results in "is not accesssible" error. "Invalid media type". Format drive unelss certain that drive has a format already. Corrupted files can create invalid media error. 
+
+Allocation Unit - another term for cluster. Seeing error a few times is not bad. All drives havea few bad spots. No longer true. Now will proabably be dyying. Bad clusters are reported by SMART.
+
+Mental Reinstallation - Errors show up moment you try to install. Do a mental resintall. go through steps in mind.
+
+DATA CORRUPTION
+
+All drivfes occasionally get corrupted data in individual sectors. Power surges, accidental shutdowns, corrupted installation media, and viruses, along with other problems, cause corruptoin. 
+
+Errors:
+
+App can't run on your PC
+Following file is missing or corrupt
+Download location information is damaged
+Unable to load file
+...is not a valid Wind32 application
+Bootmgr is missing...Press CTRL+ALT+DEL to restart
+PC ran into a proble, .. this problem cause PC to restart
+
+
+If core boot files are corrupted, may se text errors at boot:
+
+Cannot find COMMAND.COM
+Error loading operating system
+Invalid BOOT.INI
+NTLDR is missing or corrupt
+An error occurred while attempting to read the boot configuration data
+
+Older ones: Sector Not Found reading drive C: Abort, Retry, Fail?
+
+First fix is to run Error-checking utility. If continues, chance drive has bad sectors. 
+
+Error Correction Code (ECC) - every drive takes advantage of built-in codes that constantlty checks drive for bad sectors. If ECC detects a bad sector, marks sector as bad in drive's internal error map. Not to be confusde with FAT. Drive's internal error map was created at the factory on resrved drive heads and is invisible to the system. If ECC finds a bad sector, you will get a corrupted data error as computer attempts to read the bad sector. Disk checking utilities fix this problem most of the time. 
+
+Often ECC thinks a bad sector is good, however, and fails to update the interna lerror map. Thus, need a program that goes back into drive and marks sectors as bad.
+
+SpinRite - Gibson Reserach. MArks sectors as bad or good more accurates than ECC and does not disturb data. 
+
+Otherwise must use a low-level format program supplied by hard drive marker, assuming you can get it. Work like SprinRite but wipe out all dat aon drive. 
+DYING HARD DRIVE
+
+Only dying hard drives fail to read and write. 
+
+Sounds:
+-Continuous high-pitched squeal
+-A loud clicking noise, a short pause, and then another series of clicks
+-Continuous grinding or rumbling
+
+Back up data and replace drive. 
+
+Device will stop showing up or boot will not occur. Test power and such before deciding. 
+
+RAID has mostly same problems. 
+
+Drive Not Recognized -If configuration firmware doesn't recognize one of drives, check to make sure drives are powered and connected to proper connections.
+
+RAID stops - RAID 0, if drive fails, you'll get BSoD and OS won't be found on reboot. Other levels don't do anything extraordinary when one drive fails. Often failure of drive will cause access to contents of drive to slow. Slow performance is clue to check Device Manager or RAID controller firmware. Replace failed drive and let RAID rebuild itself. SMART if need to know reason fo rfailure. 
+
+RAID Not Found 
+
+Implies series of errors where an existing RAID array suddenly fails to appear. They vary greatly depending on make and model of hardware RAID or software RAID. Properly functioning hardware RAID wil lalays show up in configuration utility. If anexisting array stops working and enter configuration utility only to find the array is gone, then its big trouble. Points to either dead drives or faulty controllers. Must replace. 
+
+If array is gone but can still se drives, then controller may have broken array on its own. Rare action some controllers do to try to save data. Try to rebuild array using tools controllers provide. 

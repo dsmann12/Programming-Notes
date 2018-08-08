@@ -1,0 +1,75 @@
+Strings - an array of characters from some alphabet. 
+
+Has a string class. 
+
+#include <string>
+
+String class provides functions for dealing with strings. 
+
+cin only parses the first string from input. Ends at whitespace. 
+
+strin x;
+getline(cin, x) //getline() waits until there is a newline character
+instead of terminating at whitespace. 
+
+String constructors:
+
+string s1("hamster.txt");
+string s2;
+string s3;
+
+s2 = s1;
+s3.assign(s1);
+
+Strings are arrays of character so can be accessed by index
+
+string s1 = "david";
+cout << s1.at(2) << endl; //outputs v
+
+for (int x = 0; x < s1.length(); x++) [
+	cout << s1.at(x);
+}
+
+s1.length() -- returns length of string. Not inlcuding null character (if its used?)
+
+String Functions
+
+Substrings - selecting parts of the string
+
+s1 = "My name is David";
+s1.substr(11, 17); //gets string David
+
+Swap - swap strings
+
+string one = "apples ";
+string two = "beans ";
+
+one.swap(two); //now one = beaks and two = apples
+
+Find
+
+string s1 = "ham is spam oh yes I am!";
+cout << s1.find("am") << endl; //gets starting index of string "am" (1)
+
+To find from the end of the string use rfind
+
+cout s1.rfind("am"); //returns 21
+
+Can use find to loop through text and find all instances of string. Then use
+replace to replace them ith proper string. 
+
+Erase - erase all chars of string after index argument
+
+string s1 = "Hi my name is daivd and I love bacon and ham!"
+s1.erase(20); //changes value of s1 to "Hi my name is david"
+
+Replace - takes three parameters
+
+replace(first char, number of chars, 
+s1.replace(14, 5, "David Scheuermann");
+
+Insert - inserts string at specified index and moves all chars after
+that index by length of inserted string
+
+s1.insert(char where to insert, string to insert);
+s1.insert(14, "awesome "); //returns "My name is awesome david and I love bacon and ham"

@@ -1,0 +1,495 @@
+BOWL MASTER
+
+3D game
+
+CREATING 3D CUBE FLOOR
+
+Use bowling lane specifications.
+
+Use centimeters for scale.
+
+1829 cm from foul line to head pin.
+
+Make it 2000cm long in total
+105cm wide
+Give some height e.g. 1cm
+
+GameObject > 3D Object > Cube
+
+Select material to change how cube looks. 
+
+Create new material in assets. Then edit shader 
+
+Albedo -> color for shader.
+
+If too stretched you can mess with tiling to get lane to look right.
+
+Can move camera by moving camera in scene, selecting main Camera, and clicking
+
+GameObject -> Align With View
+
+Moves camera to where it is in scene. 
+
+INSTALL BLENDER
+
+Need it to use .blend files.
+
+Blender needed to work with these models.
+
+Interface has many views you change with a button. Can overwrite views with others.
+
+completeBlenderCreator.com to learn blender
+
+Can remove the mesh renderer from the pin and add a mesh collider from Unity. This is a simpler mesh so better performance. Uses Pin_Collider mesh filter.
+
+Also need to tell Unity that mesh is convex so that it can hit other pins. So click convex.
+
+Mess with object positions and camera position's to give riht user experience. 
+
+Can use a 1x1 cube to check scale of game objects. 
+
+Put pins in their own Game Object. 
+
+3D SPHERE AS A BALL
+
+Set the scale for x, y, and z to get a perfect sphere.
+
+Mov eit to correct coordinates. 
+
+Texture ball. 
+
+Add a rigid body to the ball.
+
+Give it 7.3 kg mass. 
+
+Make script to move ball. Ball.cs
+
+Get rgidibody.
+Set its velocity to new Vector3(0, 0, launchSpeed);
+
+Add audio to ball.
+
+Add Audio Source component. Set clip to specified audio clip. 
+
+Then call audioSource.Play();
+
+CONTROL CAMERA TO TRACK BALL
+
+Camera needs to track ball.
+
+Also needs an offset. 
+
+Stop camera at headpin.
+
+Positions:
+camera = ball + offset
+offset = camera - ball
+
+Change float velocity in ball to velocity (Vector3)
+
+Check if ball has reached pins
+
+if (transform.position.z < 1829f) {
+
+}
+
+3D COLLISIONS AND CONVEX MESHES
+
+Need to add a rigidbody to pins to give it physicl properties
+
+Make bowling pin a prefab. 
+
+Give correct values for each pin.
+
+Change mass for pins in preabs
+
+Can mess with physics settings to get game to play how you want it to feel. 
+
+
+Would have to mess with overall physics to get pins to fall right. 
+
+Why?
+
+Because we used 1cm as a world unit. We must ust 981 for realistic gravity.
+
+9.81 * 100
+
+Unity's default is 1 world unit = 1m. 
+
+CONVEX MESH
+
+Conves means the mesh is curved like the exterior of a sphere.
+
+Mesh collidgers must be convex to self-collide. Max triangles in collider is 255. These are performance limitations of the engine. *self collide means for a pin to collide with a pin. 
+
+These limitations is why you use one mesh to render model and one mesh for collisions. 
+
+Cannot have non-convex collider on an object with a rigidbody. 
+
+TOP CAMERA RENDER TEXTURE
+
+To have top down camera looking at pins. 
+
+Assets -> Create -> Render Texture
+
+Rename it. 
+
+Will look funny cause nothing streamed into it. 
+
+Put camera above pins looking down. Make pins fill about 80% of view. Set "target Texture" to TopCamera.renderTexture. 
+
+Test that game runs.
+
+Add a new camera to scene. Change its coordinates accordingingly.
+
+This will erase old main camera however. 
+
+Change its Target Texture to the new render texture. 
+
+Now add canvas.
+
+Change canvas mode to Sceen Space - Camera. 
+
+Set up Camera view UI
+
+Create gameObject > UI > Raw Image.
+Position it on UI Left Panel.
+
+Set texture to TopCamera.renderTexture
+
+IMPROVE UI SCALING
+
+Add new UI > Panel ready or swipe gesture
+
+Set scaling and anchors for UI panels
+
+Make sure it scales well. 
+
+Remove image from panel. Set alpha to 0. 
+
+Then change anchors for left panel.
+
+Tell it to stretch on the left and it will stick to left.
+
+Mess with anchors and things to get it to work in all resolutions. 
+
+SIMPLE TOUCH CONTROL SYSTEM
+
+Refactor Ball.cs
+
+Use signature public Launch(Vector3 velocity)
+
+rigidBody.useGravity = false on Start()
+
+rigidBody.useGravity = true on Launch()
+
+Test by calling from Start()
+
+Now attach DragLaunch.cs to ball to control launch of ball.
+
+Because this script needs a ball. You can tell script it requires a component.
+
+[RequireComponent (typeof(Ball))]
+
+Give script access to Ball.
+
+private Ball ball;
+
+ball = GetComponent<Ball>();
+
+Now make two functions:
+
+public void DragStart() and public void DragEnd()
+
+In DragStart() you get values of input coordinates and time of touch
+
+In DragEnd() you launch the ball.
+
+Now can wire up user interface.
+
+Go to touch input panel. Add Event Trigger
+
+Add Component -> Event -> Event Trigger
+
+Add New Event Type -> PointerDown
+
+Then Drag Ball instance to slot and select DragStart() function. 
+
+Do the same with Event Type PointerUp and select DragEnd(). 
+
+Should try to launch ball depending on length and speed of drag. So get start position and time and end position and itme. 
+
+In Drag end get time and input position.
+
+float startTime = Time.time;
+Vector3 startPos = Input.mousePosition;
+
+In Drag end get end time and input
+
+flat endTime = Time.time;
+Vector3 endPos = Input.mousePosition;
+
+Speed = distance/time
+
+float dragDuration = endTime - startTime;
+ballSpeedX = (endPos.x - startPos.x) / dragDuration;
+ballSpeedZ = (endPos.y - startPos.y) / dragDuration;
+
+Vector3 launchVel = new Vector3(ballSpeedX, 0, ballSpeedZ);
+ball.Launch(launchVel);
+
+ADDING ARROWS TO NUDGE BALL
+
+Add another UI panel at bottom of screen. 
+Ensure panel "occludes" input panel
+
+Add panel to canvas an dput to bottom of page. Add arrrow image
+
+Create left and right arrows. Mess with anchors and such.
+
+Use an EventTrigger on arrows to call MoveStart(), a public method in DragLaunch that takes an x value to move ball.
+
+Must ensure arrows are above touch input in hierarchy.
+
+iOnly allow moving before ball is launched, clamp ball to within lane width. 
+
+Can use publlic boolean on ball inPlay that checks state of ball. 
+
+ANIMATION SUB STATE MACHINES
+
+Essentially nested animation state machine. 
+
+Helps keep animation machine tidy.
+
+Can keep animations from returning to default state machine if it gets caught in a loop.
+
+Make cube for swiper. Set dimensions and location.
+
+Then make animation for swipin. use record funtionality to do it. Make keyframe. 6 seconds. 
+
+Curves show how movement is interpolated between two points. 
+
+Can mess with them if clipping is happening. 
+
+Make animation controller first.
+Can make state for new animation. Then create animation and assign the state's motion to that animation.
+
+WORKING AROUND NESTED PREFABS
+
+Bowling pins in Pins prefab is not the same as bowling pin prefab.
+
+Should deltet bowling pin prefab then. 
+
+Simple solution is to change things for all pins in pin prefab. Not very elegant. 
+
+Unity doesn't support nested prefabs. 
+
+Detect in pins are standing. 
+
+Unity stores rotations in Quaternions.
+
+To convert to Euler angle use:
+
+Vector3 rotation = tranform.rotation.eulerAngles;
+
+Give pins standingThreshold
+
+Check if tiltInX < standingThreshold AND tiltz < standingThreshold
+
+If so, standing, else not standing. 
+
+COUNTING UPRIGHT OBJECTS
+
+Make UI Text object that holds number of pins and put it below Pin camera overlay.
+
+Make cube that encompasses pins and swiper from back of lane. Remove render component. 
+
+Add pinsetter.cs script. 
+
+Will loop through all pins in scene, keep track of number of standing pins, and returns current number of standing pins. 
+
+int CountStanding () {
+	int standing = 0;
+	
+	foreach (Pin pin in GameObject.FindObjectsOfType<Pin>()) {
+		if (pin.IsStanding()) {
+			++standing;
+		}
+	}
+
+	return standing;
+}
+
+Then tie this to text.
+
+DETECTING PINS HAVE SETTLED
+
+Set instance variable in PinSetter.cs for detecting if ball entered box.
+
+bool ballEnteredBox.
+
+When ball enters box, set it to true. 
+
+In Triggercollision detection, check if collided object is ball. Can check to see if it has Ball component or other ways. 
+
+Use OnTriggerExit to destroy pins and other objects that exit the box. 
+
+Collider is what is being caught by method and needs to get Pin from parent. Better just to tag it really. 
+
+On PinSetter
+
+public int lastStandingCount = -1
+private last ChangeTime;
+
+void CheckStanding() {
+	// update last standing count
+	// call pins have settled
+	int currentStanding = CountStanding();
+
+	if (currentStanding != lastStandingCount) {
+		lastChangeTime = Time.time;
+		lastStandingCount = currentStanding;
+		return;
+	}
+
+	float settleTime = 3f;
+	if ((Time.time - lastChangeTime) > settleTime) {
+		PinsHaveSettled();
+	}
+}
+
+void PinsHaveSettled() {
+	lastStandingCount = -1;
+	standingDisplay.color = Color.green;
+}
+
+Then resetBall etc.
+
+Create public bool inPlay in ball. Capture ball's start positoin in Start. 
+Prevent ball from falling until next launch.
+
+ANIMATOR SUB STATES AND DEFAULT STATES
+
+Make PinSetter animation controller.
+
+Tidy and Reset sub state machine. Idle as default state. 
+
+To create sub state machine, right click in Animation Controller and click create sub state machine. 
+
+Jump into StateMachine not a sub state in transitions. 
+
+CALLING ANIMATOR HELPER SCRIPTS
+
+Temporary UI buttons for Reset and Tidy.
+
+Raise Pins, Lower Pins. 
+
+Can use Animation Events to call these methods. 
+
+** Go back to watch how its implemented
+
+Uses Transform.Translate()
+
+DEBUGGING
+
+transform.Translate needs a vairable showing which axes to be relative to. Should be relative to world. 
+
+Don't add complexity to solve a problem if it can be helped. No turning off colliders and such.
+
+Refactor raise and lower to be in Pin class and for each pin to call it. 
+Disable and re-enable gravity as needed. 
+
+COMMON PHYSICS ISSUES
+
+Rididbodies going through collisions. 
+
+Create default material. Physics material. 
+
+Make all objects have material. Should hav esome bounciness and dynamic and static friction. 
+
+Project Settings > Time
+
+Fixed Timestep tells engine how often to compute physics. 
+
+Can mess with this to fix bugs. 
+
+Mess with many settings that can be caused by physics bugs. 
+
+*****************************************
+
+TIDYING AND REFACTING CODE
+
+Just some refactoring. 
+
+HOW TEN PIN BOWLING SCORING WORKS
+
+TEST DRIVEN DEVELOPMENT
+
+Red > Green > Refactor Loop
+
+Idea is to write tests first, designed to fail. If it succeeds, then this sis bad and should redo test. If fails, then write production code and keep running test wihle it fails. When it succeeds, clean up code. 
+
+Editor -> special folder. When scripts are placed it in they are treated as Editor scripts rather than Runtime scripts and enable additional functionality to be added to Unity editor. 
+
+Unity 5.6/2017 has Test Runner functionality.
+
+Create new test script.
+
+ScoreMasterTest.cs
+
+using System;
+using System.Collections.Generic;
+using NUnit.Framework;
+using UnityEngine;
+
+[TestFixture]
+public class ScoreTest {
+	[Test]
+	public void PassingTest () {
+		Assert.AreEqual(1,1);
+	}
+}	
+
+He changes ScoreMaster class to ActionMaster. Renames test as well.
+
+There is UnitTests panel. Can tell it to run. And will show what tests pass.
+
+Can make multiple functions with [Test] attribute to be tests
+
+He uses enum to keep track of states in a script. Makes it public so test can access it. 
+
+public enum Action {TIDY, REST, ENDTURN, ENDGAME}
+
+[Test]
+public void T01OneStrikeReturnsEndTurn () {
+	ActionMaster actionMaster = new ActionMaster();
+	Assert.AreEqual(ENDTURN, actionMaster.Bowl(10));
+}
+
+Can throw UnityException in code you are testing if there is no case and it needs a return value.
+
+Red > Green > Refactor
+
+Create new tests and do this method. Make test. It should fail. Get it to pass. Then refactor code. 
+
+Use tests and wire to game. Uses a state to handle game. 
+
+USING ONTRIGGEREXIT
+
+Uses it for detecting when ball goes out of play and pins. Has to move collision detection a bit. 
+
+REFACTORING
+
+Basically just reactoring the game. Coming up with an architecture and implementing it. 
+
+GOLDEN COPY TESTING
+
+Using [Category ("Name")] annotaions
+
+Let's you filter for certain kinds of tests
+
+Golden copies are full examples of real  games. Not very useful for driving development because they fail and it is not obvious why they fail. That's why build solution frame at a time.
+
+But can be used for verification tests. 
+
+

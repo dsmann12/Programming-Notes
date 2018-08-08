@@ -1,0 +1,245 @@
+Q: What is CPU scheduling?
+A: CPU scheduling is the basis of multiprogrammed OSes. By switching CPU among proceses, OS can make computer more productive. 
+
+Q: What is process scheduling?
+A: Process scheduling regards general scheduling
+
+Q: What is thread scheduling?
+A: Thread scheduling regards thread specific ideas
+
+Q: What is the benefit of CPU scheduling?
+A: Objective of multipgramming is to have some process running at all times, to maximize CPU utilization. Allows CPU utilization to be maximized. Otherwise, CPU just sits idle, wasting time. 
+
+Q: What is a cycle?
+A: Process execution consists of a cycle of CPU execution and I/O wait. Processes alternate between these two states. Process begins with a CPU burst, which is followed by I/O burst, and another CPU burst, then another I/O burst so on before ending witha CPU burst with a system request to terminate execution. 
+
+Q: What is an I/O bound program/
+A: An I/O bound program - many short CPU bursts
+
+Q: What is a CPU bound program?
+A: A CPU bound program consists of a few long CPU bursts. 
+
+Q: What is the CPU scheduler?
+A: When CPU becomes idle, CPU scheduler (short term scheduler) selects from one ofthe processes in the ready queue (among processses in memory that are ready to execute), and allocated the CPU to that process. Ready queue can be queue, priority queue, tree, or simply an unordered linked list. Records in queues generally PCBs. 
+
+Q: When do CPU scheduling decisoins take place?
+A: CPU scheduling decisions may take place when a process: 1. Switches from running to waiting state (as result of I/O request or invocation of wait() for termination of a child process). 2. Switches from running to ready state (when interrupt occurs) 3. Siwtched from waiting to ready state (at completion I/O) 4. Terminates
+
+Q: When is scheduling non-preemptive?
+A: Scheduling in nonpremptive when only 1 and 4 take place. If new process in ready queue, it mus be selected for execution. 1. Once CPU is allocated to a process, the process keeps the CPU until it switches to waiting state or terminates 2. Only method that can be used on certain hardware platforms because it does not recquire special hardware (for example, a timer, needed for preemptive scheduling. 
+
+Q: When is scheduling preemptive?
+A: Scheduling is preemptive in all other cases. 1-4. 1. Incurs an overhead. 2. Can result in race conditoins when data are shared among several processes. 3. Affects design of OS kernel 3.1 During processing of syscall, kernel may be busy with activity on behalf of a process. May involve changing important kernel data (for instance, I/O queues). What if process is preempted in middle of these changes and kernel (or device driver) needs to read or modify the same structure? Chaos! 3.2. UNIX deals with this by waiting either for a syscall to complete or for an I/O block to take place before doing a context switch: 3.2.1. Scheme ensures kernel structure is simple, sinc ekernel will not preempt a process while kernel data structures are in an inconsistent state. 3.2.2. Poor model for supporting real-time computing where tasks must complete execution within a given time frame. 4. Interrupts can by definition occur at any time, and because they cannot always be ignored by the kernel, sections of code affected by interrupts must be guarded from simultaneous use: 4.1. OS needs to accept interrupts at almost all times, otherwise input might be lost or output overwritten. 4.2. So these sections of code are not accessed concurrently bby several processes, they dsiable interrupts at entry and reenable interrupts at exit. 4.3. Sections of code ths disable interrupts do not occur very often and typically contain few instructions.
+
+Q: What is the dispatcher?
+A: The dispatcher module gives control of the CPU to the process selected by short-term scheduler: involves: 1. Switching context 2. Switching to use rmode. 3. Jumping to the proper location in the user program to restart that program.
+
+Q: What is the dispatch latency?
+A: Dispatch latency is time it takes for dispatcher to stop one process and start another running. Must be fast as possible since it is invoked during every process switch.
+
+Q: What properties must be considered when choosing a particular CPU scheduling algorithm?
+A: Many criteria used for comparison: 1. CPU Utilization - want to keep CPU as busy as possible. Conceptually can range from 0 to 100. In reality, should range from 40 (lightly loaded system) to 90 (heavily loaded system). 2. Throughput - # of processes that complete their execution per time unit 3. Turnaround time - amount of time to execute a particular process. Interval from time of submission of a process to time of completion. Sum of the period spent waiting to get into memory, waiting in the ready queue executing on the CPU, and doing I.O. May not be best criterion in interactive system. 4. Waiting time - amount of time a process has been in the ready queue. CPU scheduler does not affect amount of time which a process executes or does I/OO. Only waiting time. The sum of periods spent waiting in ready queue. 5. Response time - amount of time it takes from when a request was submitted until the first response was produced. Time it takes for process to start responding not time it takes to output response. Turnaround time generally limited by speed of output device. 
+
+Q: What is scheduling algorithm optimization criteria?
+A: Max cpu utilization, max throughput, min turnaround time, min waiting time, min response time. Optimize the max/min values or average (most cases) measure or variance (for interactive systems). System with reasonable and predictable response time may be considered more desirable than a system that is faster on aerage but is highly variable. 
+
+Q: What does CPU scheduling deal with?
+A: CPU scheduling deals with problem of deciding which of processes in ready queue is to be allocated to CPU
+
+Q: What is first-come first-served (FCFS) scheduling?
+A: FCFS is the simplest CPU scheduling algorithm (i.e. no scheduling). Process that requests CPU first is allocated CPU first. 
+
+Q: How is FCFS algorithm implemented?
+A: FCFS is implemented with a FIFO queue. 1. PCB of a new process is linked onto the tail of the ready queue. 2. When CPU free, process at head of queue allocated to CPU first. 3. Running process then removed from queue
+
+Q: Describe the average waiting time of a FCFS algorithm?
+A: The average waiting time for FCFS varies a lot and is quire long -- depening on order and CPU usage properties of coming requests. 
+
+Q: What is a Gantt Chart?
+A: A Gantt chart is a bar chart that illustrate a particular schedule, including the start and finish times of each participating process. 
+
+Q: What is convoy effect?
+A: Convoy effect is when all other processes wait for one big process to get off CPU. Results in lower CPU and device utilization than might be possible if shorter processes were allowed to go first. 
+
+Q: Is FCFS preemptive?
+A: No, FCFS is non-preemptive. A process keeps the CPU until it releases it either by terminating or by requesting I/O. 1. Thus, troubling for time-sharing systems where it is important that each user get a share of CPU at regulat intervals. Would be disastrous for one proces to keep CPU for extended period
+
+Q: What is shortest job first scheduling (SJF)?
+A: SJF associates with each proess the length of the process's nextCPU burst. When CPU is available, it is assigned process with smalest next CPU burst. If nexy CPU bursts of two processes are the same, FCFS scheduling is used to break the tie. Really, shortest next CPU burst
+
+Q: What is optimal about SJF algorithm?
+A: SJF is provably optimal in that it gives the minimum average waitng time for a given set of processes. Moving short process before long one decreases waiting time of short more than it increases time of long. Average decreases
+
+Q: When is SJF scheduling usually used?
+A: SJF used frequently in long term (job) scheduling in batch system where can use proces timmit. Users motivate to estimate time limit accurately. Lower value may mean faster response but too low a value will cause time-limit exceeded error. Although optimal, SJF cannot be implemented at level of short-term CPU scheduling. No way to know length of next CPU burst. 
+
+Q: How can SJF be implemented in short-term CPU scheduler?
+A: One approach to implement SJF in short term scheduler is to approximate length of CPU burst by expecting it to be similar in length to previous one. By computing approximation of length of next CPU burst, can pick process with the shortest predicted CPU burst. Genreally predicted as an exponential average of measured lengths of pervious CPU bursts. Defined by formula. Tn+1 = Atn + (1-A)Tn where tn is length of nth CPU burst and contains most recent information. Tn stores pass guesses and A controls relative weight of recent an past history in predicition. Typically A is less than 1. As result (1-A) is also less than 1 and each successive term hsa less weight. 
+
+Q: Explain difference between nonpreemptive and preemptive SJF algorithms.
+A: Nonpreemptive SJF then once CPU given to the process it cannot be prempted until it completes it CPU burst. Premeptive SJF then if new process arrives with CPU burst length less than remaining time of current executing process, preempt. Scheme is known as Shortest-Remaining-Time-First (SRTF). Improves average waiting time over non-preempt. 
+
+Q: What is priority scheduling?
+A: SJF algorithm is a special case of the general priority-scheduling algorithm. A priority number (integer) is associated with each process. 1. CPU allocated to process with highest priority. 2. FCFS used to break tie if equal properties. 3. SJF is priority scheduling where priority is inverse of predicted next CPU burst time. Larger the CPU burst, lower priority, and vice versa. Discusses as high and low priority. No general agreement on whethre 0 is highest or lowest priority. Some systems use low numbers to represent low priority, some use low numbers for high priority.
+
+Q: How are priorities defined in priority scheduling?
+A: Priorities can be defined internally or externally. Internally defined priorities use some measurable quantity or quantities to compute the priority of a process. E.g. time limites, memory requiresments, number of open files, or ratio of average I/O burst to average CPU burst. External priorities are set by criteria outside the OS, such as importance of the process, the type and amount of funds being paid for computer use, the department sponsoring the work, and other, often political, factors. 
+
+Q: Explain priority preemption?
+A: In preemptive - high priority process new arrivals preempt the low priority processes. Nonpreemptive then simply put the new process to the head of the ready queue. 
+
+Q: What is the disadvantage of priority scheduling?
+A: The disadvantage of priority scheduling is starvation (indefinite blocking) where low priority processes may never execute. 1. Process will eventually run (when system finally lightly-loaded) 2. System will crash and lose all unfinished low-priority processes. Solution is aging: as time processes increase priority of process. 
+
+Q: What is round robing scheduling?
+A: Round robin scheduling is a scheduling algorithm designed especially for time-sharing systems. Similar to FCFS, but preemption is added to enable system to switch between processes. 
+
+Q: How does round robin scheduling work?
+A: 1. Small unit of time, called time quantum (q) or time slice is defined. Usually 10-100ms. After time has elapsed, process is preempted and added to end of ready queue. Ready queue treated as circular queue. 2. CPU scheduler goes around the ready queue, allocating CPU to each process for time interval of up to 1 time quantum. 3. Treat ready queue as a FIFO queue of processes. New processes added to the tail of the ready queue. CPU picks the first process from ready queue, sets timer to interrupt after 1 time quantum, and dispatches the process: 3.1 If process has CPU burst of less than 1 time quantum, process will release the CPU voluntarily. Scheduler will then proceed to the next process in the ready queue. 3.2. If CPU burst of currently running process is longer than 1 time quantum, the timer will go off and will causes an interrupt to the OS. A context switch will be executed, and the proces will be put at the tail of the ready queue. CPU scheduler will then select the next process in ready queue. 4. Average wait time often long. 5. Thus preempted algorithm
+
+Q: How are processes divided in the round robin queue?
+A: If there are n processes in the ready queue and the time quantum is q, then each process gets 1/n of theCPU time in chunks of at most q time units at once. 1. Bound waiting time - no process waits more than (n-1)q time units until its next quantum. 
+
+Q: What most affects performance in round robin scheduling?
+A: Performance in round robin scheduling depends heavily on size of time quantum. 1. If q is too large -> FIFO. FCFS policy. 2. If q is too small -> (1ms) context switch overhead is too hi Wait time quantum to be large with respect to the context-switch time. If context-switch time is approximately 10% then about 10% of CPU time will be spent in context switching. In practice most modern systems hae time quanta ranging from 10 to 100ms. Time required for context siwtch is typically less than 10 ms. Thus context switch is small fraction of time quantum. 
+
+Q: What affects turnaround time in round robin scheduling?
+A: Turnaround time in round robin scheduling depends on size of quantum. 1. Average turnaround time of a set of processes does not necessarily improve as the time quantum size increases. 2. In general, should set time quantum to let most processes finish their next CPU burst in a single time quantum. 3. Rule of thumb, 80% of CPU bursts should be shorter than time quantum. 
+
+Q: What is multi-level queue scheduling?
+A: A multilevel queue was created for situation in wihch processes are easily classified into different groups. Multilevel queue is ready queue partitioned into separate queues: e.q. 1. foreground (interactive processes) 2. background (batch) processes. Two types have diferent reponsetime requirements and so may have different scheduling needs. Also fg processes may have priority (externally defined) over bg processes. Properties permanently assigned a given queue based on their properties (e.g. memory size, priority, type). Each queue has its own scheduling algorithm e.g. Fg: RR scheduling. Bg: FCFS scheduling. Scheduling must be done between the queues: 1. Fixed priority scheduing - (i.e. serve all from foreground then from background) possibility of starvation. 2. Time slice - each queue gets a certain amount of CPU time which it can schedule amongst its processes 2.1. 80% to FG in RR. 2.2. 20% to BG in FCFS. 
+
+Q: Describe an example of multilevel queue?
+A: Multilevel queue has five queues with differing priorities (1. systems proceses 2. interactive processes 3. Interactive editing processes. 4. Batch processes. 5. Student processes. Each queue has absolute priority  over lower priority queues. Normally, when multilevel queues scheduling algorithm is used, processes are permanently assigned to a queue when they enter the system. Low scheduling overhead but inflexible. 
+
+Q: What is a multilevel feedback queue?
+A: A multilevel feedback queue is queue where process can move between various queues (implementing aging). Idea is to separate processes according to the characteristics of their CPU bursts. If process uses too much CPU time, it will be moved to a lower-priority queue. This leaves I/O bound and interactive processes in higher-priority queue. A process that waits too long in a lower-priority queeu may be moved to a higher priority queue (aging). Can schedule queues by quantum. Queues 0, 1, 2. Processes in lower priority queues do not excute until higher priority queues empty. Doubles quantum in first two queues with RR (8 quantum to 16 and FCFS in last).
+
+Q: What parameters define multilevel feedback queues?
+A: 1. Number of queues. 2. scheduling algorithms for each queue. 3. method use to determine when to upgrade a process. 4. method used to determine when to demote a process. 5. method used to determine which queue a process will enter when that process needs service. 
+
+Q: Describe multilevel feedback queue scheduling
+A: Three queues: q0 - RR with tim equantum 8 ms. q1 - RR with time quantum 16 ms. q3 - FCFS. Scheduling: 1. New job enters Q0 which is served RR. When it gains CPU, job receives 8 ms. If it does not finish in 8ms, job is moved to q1. 2. At q1, job is again served RR, and receives additional 16 ms. If it still does not complete it is preempted and moved to q2
+
+Q: What are the characteristics of multilevel feedback queue scheduling?
+A: Multilevel feedback queue scheduler is most general CPU scheduling algorithm but also most complex since defining best scheduler requires some means by wihch to select values for all parameters. 
+
+Q: What is thread scheduling?
+A: On OSes that support them, it is kernel level threads - not processes - that are being scheduled by OS. User level threads are managed by a thread library, and kernel is unaware of them. To run on CPU, use threads must be mapped to an associated kernel level thread. Although mapping may be indirect and may use a lightweight process (LWP)
+
+Q: What is the distinction between user level thread and kernel level threads
+A: Distinction between user level threads and kernel level threads lies in how they are scheduled.
+
+Q: What is process contention scope (PCS)?
+A: Process contention scope is scheme in many-to-one and many-to-many models where thread library schedules user level threads to run on LWP. Known as this since scheduling competition is within the process. 
+
+Q: How is process contention scope implemented?
+A: 1. PCS typically done via priority. User thread priorities set by programmer. Scheduler selects runnable thread with highest priority to run. Some thread libraries may allow programmer to change priority of a thread, but most do not. Typically preempt thread running for higher priority. 2. Library schedules user threads to LWP (does not mean thread are actually running on a CPU. would require OS to schedule kernel thread onto physical CPU. 
+
+Q: What is system contention scope?
+A: Kernel uses system contention scope (SCS) to decide which kernel level thread to schedule onto a CPU. Competition for CPU with SCS scheduling takes place among all threads in sysSystems using one-to-one models (windows, linux, solaris) schedule threads using only SCS. 
+
+Q: What is difficulty of multiple processor scheduling?
+A: If multiple CPUs available, load sharing becomes possible but scheduling becomes more complex. Even if processors are homogenous (can use any processor to run any process), there can be limitations (system ith IO device attached to private bus of one processor. Processes must be scheduled to run on that processor. 
+
+Q: What is asymmetric multiprocessing?
+A: In asymmetric multiprocessing - one single processor (master server) handles all scheduling decisions, IO processing, and other system activities. Other processor execute only user code. 
+
+Q: What is symmetric multiprocessing?
+A: In symmetric multiprocessing (SMP) - each processor is self scheduling. All processes may be in common ready queue or each may have its own private queue of ready processes. 1. Scheduler proceeds by having scheduler for each processor examine the ready queue and select a proces to execute. Virtually all modern OSes support SMP (windows, linux, osx).
+
+Q: What are the two issues of symmetric multiprocessing?
+A: The two issues of symmetric multiprocessing are processor affinity and load balancing
+
+Q: What is purpose of processor affinity?
+A: Processors have cache memory. Accessed by process for successive memory calls. What if process migrates to other processor? Contents of original processor memory cache must be ed and cache for second mus tbe repopulated. High cost, so most SMP systems try to avoid migran
+
+Q: What is processor affinity?
+A: Processor affinity is when process has affinity for processor on which it is currently running
+
+Q: What is soft affinity?
+A: In soft affinity, os has policy of attempting to keep process on same processor but does not guarantee it
+
+Q: What is hard affinity?
+A: Hard affinity allows process to specify a subset of processor on which it may run. guarantee not to migrate. 
+
+Q: Is hard or soft affinity more common?
+A: Many oses provide both soft and hard affinity. Linux implements soft affinity but provides sched_setaffinity() system call which supports hard affinity. 
+
+Q: What is hyperthreading?
+A: SMP runs several threads at a time by providing multiple logical rather than physical processors.
+
+Q: What is a multicore processor?
+A: Modern trend to place multiple processor cores on same physical chip. Each cre maintains its architectural state and thus appears to OS to be a separate physical processor. SMP systems that use multicore processors are faster and consume less power than systems in which each processor has its own physical chip. Each logical processor has its own architecture state (registers, interrupt handling) supported in hardware level. To create multiple logical processors on same physical processor.
+
+Q: What is memory stall?
+A: Memory stall - researchers have discovered that when a processor accesses memory, it spends a significant amount of time waitin for data to become available. 
+
+Q: Why does memory stall occur?
+A: Memory stall may occur for various reasons, such as cache miss (accessing data that are not incache memory). In this scenario, processor can spend up to 50% of its time waiting for data to become available from memory. 
+
+Q: What are remedies for memory stall?
+A: One remedy is that multhreaded processor cores in which two (or more) hardware threads are assigned to each core. 1. If one stalls while waiting for memory, core can switch to another thread. 2. From OS perspective, each hardware thread appears as a logical processor that is available to run a software thread. 2.1. On dual core dual threaded dual core system, four logical processors are pressented to OS. Also multiple thread per core growing (SMP). Takes advantage of memory stall to make progress on another thread of memory while memory retrieve happens. 
+
+Q: What ar etwo ways to multithread a processing core?
+A: coarse grained and fine grained (interleaved)
+
+Q: What is coarse grained multithreading?
+A: Coarse grained multithreading. A thread executes on a processor until a long-latency event such as a memory stall occurs. Long latency event causes processor to switch to another thread to begin execution. However, cost of switching between threads in high, since instruction pipeline must be flushed before other thread can begin execution on processor core. 
+
+Q: What is fine grained multithreading?
+A: Fine grained multithreading (interleaved) switched between threads at a much finer level of granularity - typically at the boundary of an instruction cycle. However, architectural design of fine grained systems includes logic for thread switching. As a result, cost of switching between threads in small.
+
+Q: How many levels of scheduling do multithreaded multicore processors require?
+A: 1. One one level, scheduling decision must be made by OS as it chooses which software thread to run on each hardware thread (logical processor) 1.1. OS may choose any scheduling algorithm. 2. Second level specifies how each core decides which hardware thread to run. Several strategies to adopt: UltraSPACT T# uses simple RR to schedule eight hardware threads to each core. Intel Itanium, dual core processor with two hardware managed threads per core. Assigned to each hardware thread is a dynamic urgency value ranging from 0 to 7, with 0 representing the lowest urgency and 7 the highest. Identifies five different events that ay trigger a thread switch. When one occurs, the thread switching logic compares the urgency of the two threads and selsects the thread with highest urgency value to execute on processor core
+
+Q: What is load balancing?
+A: In SMP, need to keep all CPUs loaded for efficiency. Important to keep workload balanced among all processors to fully utilize the benefits of having more than one processors. Load balancing attempts to keep workload even distributed across all processors in SMP system. 1. Only necessary on systems where each processor has its own private queue of eligible processes to execute. On systems with common run queue, load balancing is often unnecessary because once a processor becomes idle, it immediately extracts a runnable process from the common run queue 2. In most contemporary OSes supporting SMP each processor does have a private queue of eligible processes. 
+
+Q: What are the two approaches to load balancing (task migration)?
+A: Push migration and pull migration
+
+Q: What is push migration?
+A: Push migration - a specific task periodically checks load on each processor and if imbalance found, evenly distributes the load by moving (pushing) processes from overloaded to idle or less-busy processors. 
+
+Q: What is pull migration?
+A: Pull migration - idle processors pulls a waiting task from a busy processor
+
+Q: What are characteristics of load balancing approaches?
+A: Both approaches need not be mutually exclusive, and are in fact often implemented in parallel on load-balancing systems. Linux Scheduler and ULE Scheduler of FreeBSD. Load balancing often counteracts benefits of processor affinity. Pulling or pushing processor from affinity cpu removes that benefit. No absolute rule concering which policy is best. 
+
+Q: What is a soft real time system?
+A: A soft real time system provides no guarantee as to when a critical real-time process will be scheduled. Guarantee only that process will be given preference over noncritical processes. 
+
+Q: What is a hard real time systems?
+A: Hard real time systems provide stricter requirements. Task must be services by its deadline; service after the deadline has expired is the same as no service at all. 
+
+Q: How do even driven real time systems work?
+A: Even driven real time systems are typically waiting for an event in real time to occur. May arise in either software (timer expiring) or hardware (remote controlled vehicle detects it's approaching an obstacle). When event occurs, system must respond to and service it as quickly as possible
+
+Q: What is event latency?
+A: Event latency is amount of time that elapses from when an event occurs to when it is serviceed.Usually, different events have different latency requirements. 
+
+Q: What two type of latencies affect performance of real time systems?
+A: Interrupt latency and dispatch latency
+
+Q: What is interrupt latency?
+A: Interrupt latency is the time from arrival of interrupt to start of routine that services interrupt. 1. When interrupt occurs, the OS must first complete the instruction it is executing and determine the type of interrupt that occurred. Then must save the state of the current process before servicing the interrupt using the specific interrupt service routine (ISR). Total time required for these tasks is the interrupt latency. 2. Obviously crucial for real-time OSes to minimize interrupt latency to ensure that real time tasks receive immediate attention. For hard real time systems, interrupt latency must not simply be minimized, it must be bounded to meet the strict requirements of these systems. 3. One contributing factor is amount of time interrupts may be disabled while kernel data structures are being updated. Real time OSes require that interrupts be disabled for only short periods of time.
+
+Q: What is dispatch latency?
+A: Dispatch latency is amount of time recquired for the scheduling dispatcher to stop one process and start another. 1. Providing real time tasks with immediate access to CPU mandates that real time OS minimize this latency as well. 2. Most affective technique for keeping dispatch latency low is to provide preemptive kernels 3. Conflict phase of dispatch latency has two components: 3.1. Preemptino of any process running in the kernel. 3.2. Release by low priority processes of resources needed by a high priority process. 3.3. Example: Solaris, the dispatch latency with preemption enabled is over a hundred ms. With preemption enabled, it is reduced to less than ms. 
+
+Q: What kind of scheduling algorithm must a real time OS support?
+A: Scheduler for a real time OS must support a priority based algorithm with preemption. Providing preemptive, priority based scheduler only guarantees soft real time functionality. Hard real time systems must further guarantee that real time tasks will be serviced in accord with their deadline requirements, and making such guarantees requires additional scheduling features.
+
+Q: What ar ethe details for processes to be scheduled?
+A: First, processes are periodic. They require the CPU at constant intervals (periods). Once periodic process has acquired the CPU, it has a fixed processing time of t, a deadline d by which it must be serviced by CPU, and a period p. Relationship 0 <= t <= d <= o 2. Rate of a periodic task is 1/p. Schedulers can take advantage of characteristics of periodic processes and assigned priorities according o a process;s deadline or rate requirements. 3. For this form of scheduling, a proces may have to annouce its deadline requirements to the shceduler. Then using technique known as admission control algorithm, the scheduler does one of otwo things. Either admits the process, guaranteeing that the process will complete on time, or rejects the request as imposssible if it cannot guarantee that the task will be serviced by tis deadline
+
+Q: What is rate monotonic scheduling?
+A: Rate monotonic scheduling algorithm schedules periodic tasks using a static priority policy with preemption: 1. Lower priority process is running and a higher priority process becomes available to run, it will preempt the lower priority process. 2. Upon entering system, each periodic task is asigned a priority inversely based on its period. Shorter the period, higher the priority. Longer the period, lower the priority. Rationale is to assign a higher priority to asks that recquire the CPU more often. 3. Assumed processing time of a periodic process i sthe same for each CPU burst. That is, every time a process acquires the CPU, the duration of its CPU burst is the same. 
+
+Q: What is Earliest-Deadline-First-Scheduling (EDF)?
+A: EDFS dynamically assigns priorities according to deadline. Earlier the deadline, the higher the priority; the later the deadline, the lower the priority. Under EDF, when a process becomes runnable, it must announce its deadline requirements to the system. Priorities may hav eto be adjusted to reflect deadline of newly runnable process. Differs from rate monotonic where prioriities are fixed
+
+Q: What is Proportional Share Scheduling?
+A: Proportional share schedulers operate by allocating T shared among all apps. Applications can receive N shared of time, thus ensuring that the app will have N/T of total processor time. Must work in conjunction with an admission control policy to guarantee that an app receives its allocated share of time. Admission control policy will admit a client requesting a particular number of shares only if sufficient shares are available. 

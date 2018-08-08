@@ -1,0 +1,232 @@
+METHODS
+
+None - Just data type on parameter. Means parameter is passed by value.
+
+// Arguments are passed by value by default.
+static int Add(int x, int y)
+{
+int ans = x + y;
+// Caller will not see these changes
+// as you are modifying a copy of the
+// original data.
+x = 10000;
+y = 88888;
+return ans;
+}
+
+this - points to implicit parameter. reference. 
+
+this.mymethod();
+
+ref - treat parameter as a reference to variable in caller.
+
+void addAddresses(ref Address addr) {
+
+}
+
+// Reference parameters.
+public static void SwapStrings(ref string s1, ref string s2)
+{
+string tempStr = s1;
+s1 = s2;
+s2 = tempStr;
+}
+This method can be called as follows:
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Methods *****");
+...
+string str1 = "Flip";
+string str2 = "Flop";
+Console.WriteLine("Before: {0}, {1} ", str1, str2);
+SwapStrings(ref str1, ref str2);
+Console.WriteLine("After: {0}, {1} ", str1, str2);
+Console.ReadLine();
+}
+
+out - out parameters are only passed back to the calling function. Because definitite assignment rules. Methods that have been defined to take output parameters (via the out keyword) are under obligation to assign them to an appropriate value before exiting the method scope (if you fail to do so, you will receive compiler errors).
+
+Allows caller to obtain multiple outputs from a single method invocation. 
+
+Must use out modifer on arguments as well as parameters. 
+
+void modifyAddress(out Address addr) {
+        //Console.WriteLine("Name: {0}.", addr.name); // causes error!
+        addr = new Address();
+        addr.name = "Joe";
+        addr.address = "C# Station";
+}
+
+// Output parameters must be assigned by the called method.
+static void Add(int x, int y, out int ans)
+{
+ans = x + y;
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Methods *****");
+...
+// No need to assign initial value to local variables
+// used as output parameters, provided the first time
+// you use them is as output arguments.
+111Chapter 4 ■ Core C# Programming Constructs, Part II
+int ans;
+Add(90, 90, out ans);
+Console.WriteLine("90 + 90 = {0}", ans);
+Console.ReadLine();
+}
+
+// Returning multiple output parameters.
+static void FillTheseValues(out int a, out string b, out bool c)
+{
+a = 9;
+b = "Enjoy your string.";
+c = true;
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Methods *****");
+...
+int i; string str; bool b;
+FillTheseValues(out i, out str, out b);
+ 
+Console.WriteLine("Int is: {0}", i);
+Console.WriteLine("String is: {0}", str);
+Console.WriteLine("Boolean is: {0}", b);
+Console.ReadLine();
+}
+
+params - A very useful addition to the C# language is the params parameter, which lets you define a method that can accept a variable number of arguments. The params parameter must be a single dimension or jagged array. When calling viewAddresses(), we pass in four string arguments. The number of arguments is variable and will be converted to a string[] automatically. In viewAddresses() we use a foreachloop to print each of these strings. Instead of the list of string arguments, the input could have also been a string array. The paramsparameter is considered an input only parameter and any changes affect the local copy only.
+
+void viewAddresses(params string[] names)
+    {
+        foreach (string name in names)
+        {
+            Console.WriteLine("Name: {0}", name);
+        }
+    }
+
+this.viewAddresses("Cheryl", "Joe", "Matt", "Robert");
+
+// Return average of "some number" of doubles.
+static double CalculateAverage(params double[] values)
+{
+Console.WriteLine("You sent me {0} doubles.", values.Length);
+ 
+double sum = 0;
+if(values.Length == 0)
+return sum;
+for (int i = 0; i < values.Length; i++)
+sum += values[i];
+return (sum / values.Length);
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Methods *****");
+...
+// Pass in a comma-delimited list of doubles...
+double average;
+average = CalculateAverage(4.0, 3.2, 5.7, 64.22, 87.2);
+Console.WriteLine("Average of data is: {0}", average);
+ 
+// ...or pass an array of doubles.
+double[] data = { 4.0, 3.2, 5.7 };
+average = CalculateAverage(data);
+Console.WriteLine("Average of data is: {0}", average);
+ 
+// Average of 0 is 0!
+Console.WriteLine("Average of data is: {0}", CalculateAverage());
+Console.ReadLine();
+}
+
+Parameter Modifier Meaning in Life
+(None) 			If a parameter is not marked with a parameter modifier, it is assumed to be passed by
+				value, meaning the called method receives a copy of the original data.
+
+out 			Output parameters must be assigned by the method being called and, therefore, are
+				passed by reference. If the called method fails to assign output parameters, you are
+				issued a compiler error.
+
+ref 			The value is initially assigned by the caller and may be optionally modified by
+				the called method (as the data is also passed by reference). No compiler error is
+				generated if the called method fails to assign a ref parameter.
+
+params 			This parameter modifier allows you to send in a variable number of arguments as
+				a single logical parameter. A method can have only a single params modifier, and it
+				must be the final parameter of the method. In reality, you might not need to use the
+				params modifier all too often; however, be aware that numerous methods within the base
+				do make use of this C# language feature. 
+
+OPTIONAL PARAMETERS
+
+Optional parameters - allows caller to invoke a method with default values for arguments provided caller is ok with default values
+
+static void EnterLogData(string message, string owner = "Programmer")
+{
+Console.Beep();
+Console.WriteLine("Error: {0}", message);
+Console.WriteLine("Owner of Error: {0}", owner);
+}
+
+Optoinal parameters should be at end of parameter list. 
+
+NOTE: Optional parameters included to simplify interacting with COM objects, which were written long ago using optional parameters. 
+
+NAMED PARAMETERS
+
+named parameters - llo wyou to invoke a method by specifying parameter values in any order you choose. Can choose to specify each argument by name using a colon operator. Must come after any positional parameters. 
+
+static void DisplayFancyMessage(ConsoleColor textColor,
+ConsoleColor backgroundColor, string message)
+{
+// Store old colors to restore after message is printed.
+ConsoleColor oldTextColor = Console.ForegroundColor;
+ConsoleColor oldbackgroundColor = Console.BackgroundColor;
+ 
+// Set new colors and print message.
+Console.ForegroundColor = textColor;
+Console.BackgroundColor = backgroundColor;
+Console.WriteLine(message);
+ 
+// Restore previous colors.
+Console.ForegroundColor = oldTextColor;
+Console.BackgroundColor = oldbackgroundColor;
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Methods *****");
+...
+DisplayFancyMessage(message: "Wow! Very Fancy indeed!",
+textColor: ConsoleColor.DarkRed,
+backgroundColor: ConsoleColor.White);
+ 
+DisplayFancyMessage(backgroundColor: ConsoleColor.Green,
+message: "Testing...",
+textColor: ConsoleColor.DarkBlue);
+Console.ReadLine();
+}
+
+// This is OK, as positional args are listed before named args.
+DisplayFancyMessage(ConsoleColor.Blue,
+message: "Testing...",
+backgroundColor: ConsoleColor.White);
+ 
+// This is an ERROR, as positional args are listed after named args.
+DisplayFancyMessage(message: "Testing...",
+backgroundColor: ConsoleColor.White,
+ConsoleColor.Blue);
+
+Useful with optional paramters. Can just choose to pass the specific variable value and use defaults for rest. 
+
+static void DisplayFancyMessage(ConsoleColor textColor = ConsoleColor.Blue,
+ConsoleColor backgroundColor = ConsoleColor.White,
+string message = "Test Message")
+{
+...
+}
+
+DisplayFancyMessage(message: "Hello!");

@@ -1,0 +1,140 @@
+Q: What is a cooperating process?
+A: A cooperating process is one that can affect or be affected by other processes executing in the system. Can either share a logical address space (both code and data) or be allowed to share data only though files or message. Former achieved through use of threads. 
+
+Q: What is the importance of process sychronization?
+A: Concurrent access to shared data may result in inconsistency. Data consitency must be maintained. Processes running concurrently may only partially complete before another is scheduler. Also may be interrupted at any point, and procesing core may be assigned to execute another process. 
+
+Q: What is concurrent execution equivalent to?
+A: Concurrent execution is equivalent to sequential execution in which lower-level statement are interleaved in some arbitrary order. Can arrive at incorrect state
+
+Q: What is a race condition?
+A: A race condition is a situation when several processes access and manipulate the same data concurrently and outcome of execution depends on the particular order in which access takes plac
+
+Q: How to guard against race conditions?
+A: To guarge against race condition, need to ensure that oly one process at a time can be manipulating the shared variable. Required process synchronization
+
+Q: What is a critical section problem?
+A: Critical section problem happens in a system consisting of n processes. Each process has a segment of code called a critical section in which a process may be changin common variables, updating a table, writing a file, and so one. When one process is executing its critical sectino, no other process is allowed to execute in its critical section. No two processes are executing in their critical sections at same time. Critical section problem is to design a protocol that the processes can use to cooperate. Each process mus request permission to enter its critical section.
+
+Q: What are the four parts of a critical section problem?
+A: The entry section, the critical section, the exit section, and the remainder section
+
+Q: What requirements must be satisfied by solution to critical section problem?
+A: 1. Mutual exclusion - If process Pi is executing in its criical section, then no other processes can be executing in their critical sections. 2. Progress - If no process is executing in its critical section and some processes wish to enter their critical sections, then only those processes that are not executing in their remainder sections can participate in deciding which will enters its critical section next, and this selection cannot be postponed indefinitely. 3. Bounded waiting - exists a bound, or limit, on number of times that other processes ar eallowed to enter their critical sections after a process sections and before that request is granted.
+
+Q: What code is especially succesptible to race conditions?
+A: At a given poinnt in time, many kernel mode processes may be actie in th eOS. As a result, code implementing an veral possible race conditions. Other kernel structures prone to race conditions include structures for maintaining memory allocation, for maintaining process lists, and for interrupt handling. Up to kernel developers to ensure OSS is free from race conditions. 
+
+Q: What are the two general approaches used to handle critical sections in OSes?
+A: 1. preemptive kernels 2. nonpreemptive kernels.
+
+Q: What is a preemptive kernel?
+A: Preemptive kernels allow a process to be preempted while it is running in kernel mode. 1. Must be carefully designed to ensure that shared kernel data are free from race conditions. 2. Eecially difficult to design for symmetric multiprocssing (SMP) architectures since it is possible for two kernel mode processes to run simultaneously on different processors
+
+Q: What is a nonpremptive kernel?
+A: A nonpremptive kernel does not allow a process running in kernel mode to be preempted. Kernel mode process will run intil it exits kernel mode, blocks, or voluntarily yields control of the CPU. 1. Free from race conditions on kernel data structures, as only one process is active in the kernel at a time. 
+
+Q: What are the benefits of a preemptive kernel?
+A: A preemptive kernel may be more responsive. 1. Less risk that a kernel mode process will run for an arbitrarily long period before relinquishing the processor to waiting processes (of course, risk can also be minimized by designing code that does not behave in this way). 2. More suitable for real time programming, as it will allow a real-time process to preempt a process currently running in the kernel.
+
+Q: What is Peterson's solution?
+A: Peterson's solution is a classic software-based solution to the critical section problem. Restricted to two processe that alternate execution between their critical sections and remainder sections. Processes number P0 and P1. When presenting Pi, we use Pj to denote other process: that is j = i - 1; Requires two processes to share two data items: int turn; boolean flag[2];Variable turn indicates whose turn it is to enter its critical section. If turn == i, then process Pi is allowed to execute in its ciritcal section. Array flag is used to indicate if a process is ready to enter its critical section. If flag[i] is true, tihs indiactes Pi is ready to enter its critical section. To enter critical section, process Pi first sets flag[i] to be true and then sets turn to value j, thereby asserting that if other process wishes to enter critical section, it can do so. If both processes try to enter at same time, turn will be set of both i and j at roughly same time. Only one assignment will last, other will occur but will be overritten immediately. Eventual value of turn determines which of two processes allowed to enter its critical section first. 
+
+Q: \Implement Peterson's Solution
+A: Check code
+
+Q: What is locking?
+A: Locking is protecting critical regions through the use of locks. 
+
+Q: What are hardware locks?
+A: Many modern computer systems provide special hardware instructions that allow us either to test and modify the content of a word or to swap the contents of two words atomicaly -- as one uninterruptible unit.If two methods are executed simultaneouslyy, they will be executed sequenatially in some arbitrary order. 
+
+Q: Implement test_and_swap
+A: check code
+
+Q: implement compare and swap
+A: Check code
+
+Q: What is a mutex lock?
+A: Software locks built by OS designers are simpler than hardware based solutions and more readily available. Simplest of these is the mutex lock (short for mutual exclusion). Used to protect critical regions and prevent race conditions. 
+
+Q: How do mutex locks work?
+A: Process must acquire the lock before enterin a critical sectino and release it when it exits the critical section. Acquire() and release() functions. Has boolean variable available whos value indicates if lock is available. If lock is available, call to acquire succeeds and makes lock unavailable. A proces that attempts to acquire an unavailable lock is blocked until lock is released. Calls to acquire() or release() must be performed atomically. Thus mutex locks are often implemented using one of hardware mechanisms. 
+
+Q: What is the main disadvantage of mutex locks?
+A: The main disadvantage of mutex locks is that they require busy waiting
+
+Q: What is busy waiting?
+A: Busy waiting is when a process is in its cirical section, any other process that tries to enter its critical section must loop continuously in call to acquire(). Also called spinlock. Wastes CPU cycles that some process might be able to use productively. But also has advanof not requiring context switch when process must wait on a lock. 
+
+Q: When are spinlocks useful?
+A: Spinlocks are useful when locks are expected to be held
+
+Q: What is a semaphore?
+A: A semaphore S is an integer variable that, apart from initialization, is accesed only through two standard atomic operations: wait() and signal().
+
+Q: Implement wait and signal
+A: Check code
+
+Q: How do wait and signal functions get executed?
+A: All operations to the integer value of the semaphore in the wait() and signal() operation smust be executed indivisibly. That is, when one process modifies the semaphore value, no other process can simultaneously modify that same semaphore value. Also in test, wait(S), testing of integer value as well as its possible decrement must be executed without interruption. 
+
+Q: What is a counting semaphore?
+A: a counting semaphore value can range over an unrestricted domain
+
+Q: What is a binary semaphore?
+A: A binary semaphore value can range only between 0 and 1, thus are similar to mutex locks. 
+
+Q: What is the benefit of counting semaphores?
+A: Counting semaphors can be used to control access to a given resource consiting of a finite number of instances. Semaphore initialized to number of resources of available. If count goes to 0, all resources are being used, and any processes that wish to use a resource will block until count becomes greater than 0 again. Can also ensure that one statement executes only after another completes. Share common semaphore sync initialized to 0
+
+Q: Implement a semaphore
+A: Check code
+
+Q: How do semaphores work?
+A: When processes execute wait() and finds that semaphore value is not positive, it must wait. Rather than busy waiting, the process can block itself. The block operation places a process into a waiting queue associated with the smemaphore, and the state of the prwitched to the waiting state. Then control is transferred to CPU scheduler, which selects another process to execute. A process that is blocked, waiting on semaphore S, should be restarted when some other process executes a signal() operation. Process restarted yb a wakeup() operation, which changes the process from the waiting state to the ready state. Process is then placed in readyqueue (CPU may or may not be switched from running process to newly ready process depending on CPU scheduling algorithm). Definition of semaphore: typedef struct { int value; struct process *list; } semaphore; Has integer value and list of processes list. When process must wait on a semaphore, it is added to list of processes. A signal() operation removes one process from list of waiting processes and awakens that processes. wait() and signal() are redefined. The block() operation suspends the process that invokes it. The wakeup(P) operation resumes the execution of a blocked process P. Two operations are provided by OS as basic syscalls. Semaphore values may be negative. If a semaphore value is negative, its magnitude is number of processes waitin on that semaphore. Results from switching order of decrement and test in implementaon of wait(). List of waiting processes can be implemented by a link field in each PCB. Each semaphore contains an integer value and pointer to a list of PCBs. Can use Queue to add and remove processes from list to ensure bounded waiting. Critical that semaphore operations be executed atomically. Must guarantee no two processes can execute wait() and signal() on same semaphore at same time. In single processor environments can solve critical section problem by inhibiting interrupts during time of wait() and signal() operations are executing. Without interrupts, instruction from different processes cannot be interleaved. Only currently running process executes until interrupts ar ereenabled and scheduler can regain control. SMP systems therefore must provide alternative locking techniques such as compare_and_swap() or spinlocks to ensure wait() and signal() are performed atomically. This technique does not eliminate busy waiting but moves it to critical section of app programs. Limited busy waiting to critical sections of wait() and signal() operations, and these are short (if properly coded). Thus critical section is almost never occupied, and busy waiting occurs rarrely and then for only a short time. Entirely differnt when apps have critical sections that may be long (minutes/hours) or may almost always be occupied. In such cases, busy waiting is extremely inefficient.
+
+Q: What are deadlocks?
+A: Deadlocks are the implementatino of a semaphore with a waiting queue which results in a situation where two or more processes are waiting indefinitely for an event that can be caused only by one of the waiting proesses. Set of processes in a deadlocked state when every process in the set is waiting for an event that ca be caused only by another process in the set. 
+
+Q: What is starvation?
+A: Starvation, indefinite blocking, is a situation in which processes wait indefinitely within a semaphore. May occur if we remove processes from list associated with a semaphore in LIFO order. 
+
+Q: What is priority inversion?
+A: Scheduling challenges that arise when a higher priority process needs to read or modify kernel data that are currently being accessed by a lower priority process or a chain of lower priority processes. Process L, M, H were L < M < H. H requires resource R currently being used by process L. H would normally wait for L to finish using R, however suppose M becomes runnable and preempts proess L. Indirectly, lower priority process has affected how long process H must wait. Occurs only in systems with more than two priorities. 
+
+Q: How do systems solve the problem of priority inversion?
+A: Systems solve priority inversion by implementing a priority-inheritance protocol. According to protocol, all processes that are accessing resources needed by a higher-priority process inherit the high priority until they are finished with the resources in question. When finished, their priorities revert to their original values. L would temporarily have priority o fH preventing M from preempting it. When releases R, process H would run next sine R is available
+
+Q: What is the bounded buffer problem?
+A: Producer and consumer processes share following data: int n, semaphore mutex = 1; semahore empty = n; semaphore full = 0;. Assume pool consists of n buffers, each capable of holding one item. Mutex semaphore provides mutual exclusion for accesses to buffer pool and is initialized to value 1. Empty and full semaphores count number of empty and full buffer. 
+
+Q: Implement Bounded Buffer Problem
+A: Check code
+
+Q: What is the readers-writers problem?
+A: Suppose database is to be shared among several concurrent processes. Some may only want to read database. Others may want to update (read and write) database. If two readers access shared data simultaneously, nothing bad will happen. But if a writer and some other process (reader or writer) access database simultaneously, chaos may ensue. Must ensure writers have exclusive access to shared database while writing to the database. This problem is known as readers-writers problem. 
+
+Q: What is the first readers-writers problem?
+A: First readers-writers problem require that no reader be kept waiting unless a writer has already obtained permission to use the shared objcet. Other words, no reader should wait for other readers to finish simply because a writer is waiting
+
+Q: What is the second readers-writers problem?
+A: Second readers-writers problem requires that once a writer is ready, that writer performs its write as soon as possible. Other words, if writer is waiting to access the object, no new readers may start reading
+
+Q: What is the problem with solution to either readers-writers problem?
+A: Solution to either may result in starvation. In first case, writers may starve. In second case, readers may starve. Happen because relative priority reads and writes. If one happens quickly enough, other left to wait indefinitely. 
+
+Q: How to solve readers-writers problem?
+A: Reader processes share following data structures: semaphore rw_mutex = 1; semaphore mutex = 1; int read_count = 0;  semaphore rw_mutex is common to both reader and writer processes. Mutex used to ensure mutual exclusion when read_count updated. read_count keeps track of how many processes are currently reading the object. Semaphore re_mutex functions as mutual exclusion semaphore for writers. Also used by first or last reader that enters or exits the critical section. not used by readers who enter or exit while other readers are in their critical sections. 
+
+Q: Implement a program with mutex locks
+A: Check code
+
+Q: Implement a program with semaphore locks
+A: Check code
+
+Q: Implement a program using OpenMP
+A: Check code
+
+
+

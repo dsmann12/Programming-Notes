@@ -1,0 +1,485 @@
+WORKING WITH DATA
+
+Entity framework - for working with data
+
+ENTITY
+
+Entity - framwork used to access a database. An Object Relationap Mapper (ORM). Maps data from database into objects. 
+
+Old days had to open connection to database, executing commands, reading data, and remembering to close the connection. 
+
+DbContext - class providing gateway to database. Has one or more DbSets which represent tables in database. 
+
+DbSet - represents tables in database
+
+LINQ - framework used to query DbSets. 
+
+Entity tranforms LINQ queries to SQL queries at runtime. Opens connection, reads data, maps it to objects, and adds them to DbSets in DbContext. 
+
+As add, modify, and delete objects in DbSets, Entity keeps track of changes. Then ask it to persists changes, it generates SQL statements and executes them on the database. 
+
+WORKFLOWS
+
+Two workflows:
+Database First
+Code First
+
+Database First:
+
+Traditional. Design tables first and then have Entity generate corresponding domain classes. 
+
+Code First:
+
+Start with domain classes, then Entity generates database tables for you. 
+
+Increases productivity, 
+
+Also, when creating databases, must manually create chain script to deploy the database. Creating and managing these migration scripts are terious and error prone.
+
+Get full versioning of database. Can migrate to any version at any point in time. Can migrate database to earlier state. 
+
+Makes creating integration test database very simple. Can create some with only three lines of code. 
+
+Myths:
+
+-Only useful with greenfield (new) projects. False. Get full versioning of database from first time you use code first
+-Doesn't give full control over db. False. 
+
+Has Entity course
+
+CODE FIRST MIGRATIONS
+
+Code First. Start with code. 
+
+Every time we modify domain model by adding a class or modifying an existing one, we create a migration. 
+
+First go to package manager console
+
+Tools->NuGet Package Manager->Package Manager Console
+
+Must enable migrations
+
+enable-migrations
+
+Creates new folder called Migrations. One file in it calls Configuration.cs
+
+Create migration in packager manager console
+
+add-migration InitialModel
+
+Creates a new .cs class. 
+
+Has CreateTable method that creates tables. First parameter is name of table. 
+
+ASP.NET Identity - framework used to control authentication and authorization. 
+
+In Models, there's folder called IdentityModels.cs. 
+
+Two classes:
+
+ApplicatoinUser : IdenityUSer
+
+ApplicationDbContext: IdentityDbContext<ApplicationUser>
+
+DbContext - is database context. Inherits from IdentityDbContext and creates DbSets which reference classes in Identity (User, Role, etc)
+
+BUT
+
+No references for Movies, etc. Not referenced by DbContext.
+
+In IdentityModels, in ApplicationDbContext, 
+
+add a DbSet
+
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+{
+	public DbSet<Customer> Customers { get; set; }
+	public DbSet<Movie> Movies { get; set; }
+	...
+}
+
+Changes DbContext, so must recreate migrations
+
+cls -> clear
+
+add-migration InitialModel -force 
+
+-force (overwrites previous model)
+
+Now will add table
+
+CreateTable(
+	"dbo.Customers",
+	 c => new 
+		{
+		Id = c.Int(nullable: false, identity: true),
+		Name = c.String(),
+	})
+	.PrimaryKey(t => t.Id);
+
+Creates columns based on properties of class. 
+
+Now, must run migration and generate database
+
+Package Manager Console
+
+update-database
+
+Under App_Data, a database file is created. .mdf. Must show all files to see. 
+
+Database shows up in DataConnections in Server Explorer after clicking. 
+Shows tables.
+
+_MigrationHistory - table keeps track of migrations run on this databse. Keeps track of what version database is at.
+
+CHANGING THE MODEL
+
+Introduce new properties to Customer
+
+IsSubscribedToNewsletter
+MembershipType 
+
+Business Rule -> Can have many membership types
+
+Pay As You Go - no sign up fee. No discount. 
+Monthly - $30 sign up fee. 10% discount
+Quarterly - $90 sign up fee. 15% discount
+Annual - $300 sign up fee. 20% discount
+
+Need a new class. MembershipType
+
+MembershipType:
+	properties:
+		SignUpFee
+		Duration
+		DiscountRate
+
+To implement, do not make all changes in one go. Make small changes, create a migration, and run it on database. Big bang migration increases risk of things going wrong. 
+
+Create new property in class
+
+public class Customer {
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public bool IsSubscribedToNewsletter { get; set; }
+}
+
+Now create migration.
+
+Package manager console
+add-migration AddIsSubscribedToCustomer
+
+update-database
+
+Now it is changed. 
+
+Now for other changes.
+
+Create new class in Models
+
+namespace Vidly.Models {
+	public class MembershipType {
+		public byte Id { get; set; }
+		public short SignUpFee { get; set; }
+		public byte DurationInMonths { get; set; }
+		public byte DiscountRate{ get; set; }a
+}
+
+In Entity framework, every entity must have a key which will be mapped to primary key of corresponding table in database. 
+
+Must be called either Id or name of Type plus Id
+
+Now must add a new property to Customer
+
+public class Customer {
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public bool IsSubscribedToNewsletter { get; set; }
+	public MembershipType MembershipType { get; set; }
+}
+
+Called a navigation property. Allows us to navigate from one type to naother. Useful when want to load an object and its related object from database. 
+
+Sometimes, for optimization, you don't want to load entire MembershipType object. May only need the foreign key. 
+
+public class Customer {
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public bool IsSubscribedToNewsletter { get; set; }
+	public MembershipType MembershipType { get; set; }
+	public byte MembershipTypeId { get; set; }
+}
+
+Naming is by convention. <ObjectName>Id. MembershipTypeId - Entity knows it is a foreign key. 
+
+Since domain is updated, must add a migration
+
+add-migration AddMemberShipType
+
+update-database
+
+SEEDING THE DATABASE
+
+Need to populate MembershipType table in database. Should be consistent across different environments. Development database, testing database, and production database should have same MembershipTypes. 
+
+How to ensure this consistency. 
+
+Firstly, every change to database should be from a migration. Do not insert data into table directly. 
+
+Package Manager Console
+
+add-migration PopulateMembershipTypes
+
+Then creates a new class in Migrations. An empty migration. 
+
+Use Sql() function to run SQL statements.
+
+namespace Vidly.Migrations
+{
+	using System;
+	using System.Data.Entity.Migrations;
+
+	public partial class PopulateMembershipTypes : DbMigration
+	{
+		public override void up() {
+			Sql("INSERT INTO MembershipTypes 
+			(Id, SignUpFee, DurartionInMonths, DiscountRates) 
+			VALUES (1, 0, 0, 0)"
+	
+				
+			Sql("INSERT INTO MembershipTypes 
+			(Id, SignUpFee, DurartionInMonths, DiscountRates) 
+			VALUES (2, 30, 1, 10)"	
+			
+			Sql("INSERT INTO MembershipTypes 
+			(Id, SignUpFee, DurartionInMonths, DiscountRates) 
+			VALUES (3, 90, 3, 15)"	
+			
+			Sql("INSERT INTO MembershipTypes 
+			(Id, SignUpFee, DurartionInMonths, DiscountRates) 
+			VALUES (4, 300, 12, 20)"	
+		}
+	
+		public override void Down() {
+	
+		}
+
+	}
+}
+
+Now run migration
+
+update-database
+
+In Migrations folder, stores all migrations from beginning of time to current version of application. 
+
+When it comes to deployment, if first deployment, can get all these migrations and use a command in Package Manager Console asking Entity to generate a SQL script which would include all these changes. 
+
+If not first deployment (meaning we already have a database), can find the last migration run on database and create a new SQL from that migration to the last one. 
+
+OVERRING CONVENTIONS
+
+There are a few conventions in Entity to determine the schema of the database. 
+
+In C#, String type is nullable and can grow to any length. So Entity creates Schema column of nullable nvarchar(max) type. 
+
+Can override this. 
+
+Models. Go to Customer class.
+
+Add annotation before a property. Must import System.ComponentModel.DataAnnotation
+
+[Required] - makes property non nullable
+[StringLength(255)] = sets string legnth
+
+using System.ComponentModel.DataAnnotations;
+
+public class Customer {
+	public int Id { get; set; }
+	[Required]
+	[StringLength(255)]
+	public string Name { get; set; }
+	public bool IsSubscribedToNewsletter { get; set; }
+	public MembershipType MembershipType { get; set; }
+	public byte MembershipTypeId { get; set; }
+}
+
+
+Another approach is called Float (Fluent?) API. 
+
+Check entity course. 
+
+Need to create new migration because we have changed model
+
+add-migartion ApplyAnnotationToCustomerName
+
+update-database
+
+QUERYING DATA
+
+In old Index method,called GetCustomers() which included hardcoded list of customers.
+
+Instead, want to get customers from database.
+
+First, need a DbContext to access the database. Must initialize it in constructor
+
+DbContext is disposable object. Must properly dispose it by overriding Dispose() method of base Controller class.
+
+protected override void Dispose(bool disposing) {
+	_context.Dispose()
+}
+
+In Index(), initialize customers variable with _context.Customers. This Customers property is a DbSet defined in DbContext. So lets you get all Customers in database. 
+
+When this line is executed, Entity will not query database. 
+
+Deferred execution - query is executed when we iterate over Customers object. Like in the foreach() section of the cshtml View file. That is when query is actually executed. 
+
+Can immediately execute the query by calling ToList() method.
+
+var customers = _context.Customers.ToList();
+
+In Details action, replace hardcoded customers with Customers from database
+
+var customer = _context.Customers.SingleOrDefault( c => c.Id == id);
+
+SingleOrDefault() method tells query to execute immediately. 
+
+namespace Vidly.Controllers
+{
+	public class CustomersController : Controller
+	{
+		private ApplicationDbContext _context;
+		
+		public CustomersController() 
+		{
+			_context = new ApplicationDbContext();
+		}
+	
+		protected override void Dispose(bool disposing)
+		{
+			_context.Dispose();
+		}
+
+		public ViewResult Index()
+		{
+			var customers = _context.Customers.ToList();
+	
+			return View(customers);
+		}
+
+		public ActionResult Details(int id)
+		{
+			var customer = _context.Customers.SingleOrDefault( c => c.Id == id);
+	
+			if (customer == null)
+				return HttpNotFound();
+			
+			return View(customer);
+		}
+		...
+	}
+}
+
+Later, will learn how to delegate instantiating and disposing objects with dependency injection framework. 
+
+
+To test, populate Customer table with some data. Ok for this because it is not a reference table. Will have different number of customers in different databases and it's ok. 
+
+Right click on table, select view data, then add information to tables. 
+EAGER LOADING
+
+In current list, only displaying user name. What if we wanted another column displaying discount rate for each customer. 
+
+Go to Index view. Change table. Add a new header for discount rate. And when rendering information for customer in loop at a td with discount rate. 
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>Customer</th>
+			<th>Discount Rate</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var customer in Model)
+		{
+			<tr>
+				<td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+				<td>@customer.MembershipType.DiscountRate</td>
+		}
+	</tbody>
+</table>
+
+UH OH!! WON'T WORK!
+
+Because by default, Entity framework only loads the Customer objects, not their related objects. So MembershipType is null.
+
+To solve this, must load Customers and MembershipTypes together.
+
+This is called Eager Loading. 
+
+Go back to controller:
+
+In Index(), when referencing Customers, use Include() method and pass expression that determines custom property. Defined in System.Data.Entity and must be included. 
+
+_context.Customers.Include(c => c.MembershipType).ToList();
+
+CustomersController.cs
+
+using System.Data.Entity;
+
+public ViewResult Index()
+	{
+		var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+		return View(customers);
+	}
+
+Can also add % in view and Razor framework is smart enough to know it is not part of member name 
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>Customer</th>
+			<th>Discount Rate</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var customer in Model)
+		{
+			<tr>
+				<td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+				<td>@customer.MembershipType.DiscountRate%</td>
+		}
+	</tbody>
+</table>
+
+
+Shortcut to Package Control Manager
+
+Tools->Options->Environment->Keyboard
+
+Create keyboad shortcup
+
+EXCERCISES
+
+Replace Discount Rate with name of MembershipType
+
+Add name to membershiptype
+update dtabase
+create migration to update existing records
+
+Add birthdate to customers. Nullable
+Show birthdate and membership type in details page
+
+Display a list of movies from database
+
+Add Genre column and Table.
+
+Add release date, date added, and number in stock
+
+Hints:
+First Add Additional Properties To Movies
+Migrate
+Update Database
+Then Populate Genres table with a migration
+Then make changes in movies controller and views

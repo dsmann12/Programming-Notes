@@ -1,0 +1,207 @@
+FUNCTIONS
+
+Every rust program has at least one function: main
+
+fn main() {
+
+}
+
+fn -> defines a function
+
+Taking arguments:
+
+fn print_number(x: i32) {
+    println!("x is: {}", x);
+}
+
+Complete program that adds two numbers together and prints them:
+fn main() {
+    print_sum(5, 6);
+}
+
+fn print_sum(x: i32, y: i32) {
+    println!("sum is: {}", x + y);
+}
+
+Unlike let, you must declare the types of function arguments. This does not work:
+
+fn print_sum(x, y) {
+    println!("sum is: {}", x + y);
+}
+Run
+
+You get this error:
+
+expected one of `!`, `:`, or `@`, found `)`
+fn print_sum(x, y) {
+
+What about returning a value? Here’s a function that adds one to an integer:
+
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+Last line determines what value is returned but must not have a semicolon (;). 
+
+If add a semicolon, get an error:
+
+error: not all control paths return a value
+fn add_one(x: i32) -> i32 {
+     x + 1;
+}
+
+help: consider removing this semicolon:
+     x + 1;
+          ^
+Reveals two things:
+1. Rust is an expression-based language
+2. Semicolons are different from semicolons in C-style languages
+
+EXPRESSIONS vs STATEMENTS
+
+Rust is expression based. 
+
+Only two kids of statements. Everything else is an expresion.
+
+Two kinds of statements:
+1. declaration statements
+2. expression statements
+
+An expression returns a value, and statements do not. 
+
+In some languages, variable bindings can be written as expressions, not statements. 
+
+x = y = 5
+
+No in Rust. Using let to introuce a binding a binding is not an expression. 
+
+Following is an error:
+
+let x = (let y = 5); // Expected identifier, found keyword `let`.
+
+Compiler saying it was expecting beginning of expression and a let can only begin a statement. 
+
+Assigning to an already-bound variable (e.g. y = 5) is still an expression, although value not very useful.
+
+Unlike other languages where an assignment evalutaes to the assigned value (e.g. 5 in previous example), in Rust, the value of an assignment is an empty tuple () because asigned value can have *only one owner*, and other returned value would be too surprising
+
+let mut y = 5;
+
+let x = (y = 6);  // `x` has the value `()`, not `6`.
+
+Second kind of statement in Rust is *expression statement*. Purpose it to turn any expresion into a statement. In practical terms, Rust's grammar expects statements to follow other statements. 
+
+Means use semicolons to separate expressions from each other. 
+
+Exception is function return:
+
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+With a semicolon, function would return () instead. 
+
+EARLY RETURNS
+
+return keyword can be used for early returns. 
+
+fn foo(x: i32) -> i32 {
+    return x;
+
+    // We never run this code!
+    x + 1
+}
+
+Using a return as the last line of a function works, but is considered poor style:
+
+fn foo(x: i32) -> i32 {
+    return x + 1;
+}
+
+DIVERGING FUNCTIONS
+
+*Diverging functions* are functions that do not return.
+
+fn diverges() -> ! {
+    panic!("This function never returns!");
+}
+
+panic! is macro similar to pprintln!(). panic!() causes curent thread of execution to creash with given message. 
+
+Because function never returns, it has type '!' which is read 'diverges'
+
+If call diverges() in main:
+
+thread ‘main’ panicked at ‘This function never returns!’, hello.rs:2
+
+If want information, can get a backtrace by setting RUST_BACKTRACE environment variable. 
+
+$ RUST_BACKTRACE=1 ./diverges
+thread 'main' panicked at 'This function never returns!', hello.rs:2
+stack backtrace:
+   1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
+   2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
+   3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
+   4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
+   5:     0x7f4027738809 - diverges::h2266b4c4b850236beaa
+   6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
+   7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
+   8:     0x7f402773d1d8 - __rust_try
+   9:     0x7f402773f201 - rt::lang_start::ha172a3ce74bb453aK5w
+  10:     0x7f4027738a19 - main
+  11:     0x7f402694ab44 - __libc_start_main
+  12:     0x7f40277386c8 - <unknown>
+  13:                0x0 - <unknown>
+
+If need to override an already set RUST_BACKTRACE, in cases when you cannot just unset variable, then set it to 0 to avoid getting backtrace. Any other value turns on backtrace. 
+
+$ export RUST_BACKTRACE=1
+...
+$ RUST_BACKTRACE=0 ./diverges 
+thread 'main' panicked at 'This function never returns!', hello.rs:2
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+RUST_BACKTRACE also works in Cargo's run command:
+
+$ RUST_BACKTRACE=1 cargo run
+     Running `target/debug/diverges`
+thread 'main' panicked at 'This function never returns!', hello.rs:2
+stack backtrace:
+   1:     0x7f402773a829 - sys::backtrace::write::h0942de78b6c02817K8r
+   2:     0x7f402773d7fc - panicking::on_panic::h3f23f9d0b5f4c91bu9w
+   3:     0x7f402773960e - rt::unwind::begin_unwind_inner::h2844b8c5e81e79558Bw
+   4:     0x7f4027738893 - rt::unwind::begin_unwind::h4375279447423903650
+   5:     0x7f4027738809 - diverges::h2266b4c4b850236beaa
+   6:     0x7f40277389e5 - main::h19bb1149c2f00ecfBaa
+   7:     0x7f402773f514 - rt::unwind::try::try_fn::h13186883479104382231
+   8:     0x7f402773d1d8 - __rust_try
+   9:     0x7f402773f201 - rt::lang_start::ha172a3ce74bb453aK5w
+  10:     0x7f4027738a19 - main
+  11:     0x7f402694ab44 - __libc_start_main
+  12:     0x7f40277386c8 - <unknown>
+  13:                0x0 - <unknown>
+
+Diverging function can be used as any type:
+let x: i32 = diverges();
+let x: String = diverges();
+
+Function Pointers:
+
+Can create variable bindings which point to functions:
+let f: fn(i32) -> i32;
+
+f is variable binding which points to a function that takes an i32 argument and returns an i32. 
+
+fn plus_one(i: i32) -> i32 {
+    i + 1
+}
+
+// Without type inference:
+let f: fn(i32) -> i32 = plus_one;
+
+// With type inference:
+let f = plus_one;
+
+We can then use f to call the function:
+
+let six = f(5);

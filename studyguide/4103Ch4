@@ -1,0 +1,185 @@
+Q: What is the usefulnes of threads?
+A: Threads allow multiple tasks within apps to be implemented concurrently. Such as updaplay, fetching data, spell checking, or answering a network request.
+
+Q: Why are threads a better alternative than creating processes?
+A: Process creation is heavy-weight wihle thread creation is light-weight. Can simplify code and increase efficiency. 
+
+Q: What is a thread?
+A: A thread is a basic unit of CPU utilization. It comprises ofa thread ID, a program counter,  register set, and a stack. Shares with other threads belonging to same process its code section, data section and other OS resources, such as open files and signals. 
+
+Q: What is a single-threaded process?
+A: A single threaded process has a single thread of control. heavyweight.
+
+Q: What is a multithreaded process?
+A: If processor has multiples threads of control, it can perform more than one task at a time.
+
+Q: Explain the properties of threads.
+A: A thread is a flow of control within a process: 1. A basic unit of CPU utilization -- also alled a LWP -- in Linux. 2. Private to a thread: Thread ID, program counter, register, and stack. 3. All threads share same address space of their process
+
+Q: What do threads share with processes?
+A: Threads belonging to a given process share with each other code section, data section, and other resource e.g. open files. 
+
+Q: What are the benefits of threads?
+A: 1. Program can continue to run with other threads even if some parts are blocked or performing a lengthy operation in one thread. Especially useful in designed UIs. 2. Processes have to share resource through convoluted techniques. Thread sshare memory and resource of their process y default. Apps can have several different threads of activity within the same address space. 3. Less time-consuming to create and manage threads than processes as threads share resources. 4. Increases concurrency because different threads can run in parallel on different processors. Benefits from multiprocessor architecture. 
+
+Q: What is concurrency?
+A: Concurrency supports more than one task making progress (by allowing all tasks to make progress). In single core computer, concurrency merely means execution of threads is interleaved over time since processing core capable only of executing one thread at a time. On system with multiple cores, concurrency means threads can run in parallecheduler provides concurrenc. CPU schedulers desgined to provide illusion of parallelism by rapidly switching between processe in the system. 
+
+Q: What is parallelism?
+A: Parallelism implies a system can perform more than one task simultaneously. Need multple processing cores. 
+
+Q: What are some of the challenges of multithreaded programming?
+A: 1. Identifying tasks. Examining apps to find areas that can be devided into separate, concurrent tasks. 2. Balance - must ensure tasks perform equal work of equal value. Might lose efficiency. 3. Data splitting - data accessed an maniuplated by tasks must be divided to run on separate cores. 4. Data dependency = data access by takss must be examined for dependencies between two or more tasks. Must ensure synchrnozation. 5. Testing and debugging - Testing and debugging is inherently more difficult. 
+
+Q: What is data parallelism?
+A: Data parallelism distributes subsets of the same data across multople cores, performing same operation on each. 
+
+Q: What is task parallelism?
+A: Task parallelism is distributing threads (not data) across multiple cores, each thread performing unique operations. 
+
+Q: Do programs usually use data parallelism or task parallelism?
+A: Most programs use both, not either/or.
+
+Q: What is Amdahl's Law?
+A: Amdahl's Law is a forumal that identifies potential performance gains from adding additional computing cores to an app that has both serial and parallel components. speedup <= (1/(S+((1-S)/N))). S is serial portion in percentage. N is processing portion in percentage. As N approaches infinity, speed up appraoches 1/S
+
+Q: What are user threads?
+A: Usre threads are implemented at the user level by a thread library. Supported above the kernel and managed without kernel support. 1. Library provide support for thread creation, scheduling, and management. 2. User threads are fast to create and manage. 3. POSIX Pthread, Win32 thread, and Java thread. 
+
+Q: What are kernel threads?
+A: Kernel thrads are supported and managed directly by the OS. 1. Thread creation, scheduling, and management happen in kernel space. 2. Slower to create and manage. Windows XP, Solaris, Linux, UNIX, OS X
+
+Q: What are the strengths and weaknesses of user threads?
+A: User threads: are 1. faster for creating and managing. 2. Library can implement its own scheduler 3. Portable across OSes 4. But blocking issue - a thread calling blocking syscall could block other threads. 
+
+Q: What are the strengths and weaknesses of user threads?
+A: Kernel threads are: 1. Slower for creating and managing. 2. Each thead is individually schedulable. 3. No blocking issues
+
+Q: What are the three main multithreading models?
+A: Three common ways of establishinga relationship between user-level threads and k threads: 1. Many to one 2. One to one 3. Many to many
+
+Q: What is the many to one model?
+A: Many to one uses many user level threads mapped to single kernel thread: 1. One thread blocking causes all to block. Entire process will block if a thread makes a blocking syscall. Multiple threads may not run in prallel on multicore system because only one may access (be in) kernel at a time. 3. Thread management done by thread library in user space. Few systems use this moel because inability to take advantage of multiple processing cores. Solaris Green Threads. GNU Portable threads
+
+Q: What is the one to one model?
+A: One to one model has each user level thread map to a kernel thread: 1. Creating a user-leve thread craetes a kernel thread. 2. Drawback - overhead of creating kernel threads, one for each user thread. 3. Provides more concurrency than many-to-one model by allowing another thread. 4. No blocking problem. 5. Number of threads per process often restricted by system due to overhead. Allows multple threads to run in parallel on multiprocessors
+
+Q: What is the many to many model?
+A: The many to many model allows many user level threasd to be mapped to many kernel threads.  Multiplexes many user leel threasd to a smaller or equal number of kernel threads. Number of kernel threads may be specific to either a parictular app or particular machine (an app may be allocated more kernel threads on multiprocessor chip han single processor. Allow OS to create a sufficient number of kernel threads: 1. Users can create as many use threads as necessary, and corresponding kernel threads run in prallel on multiprocessor. 2. No blocking and concurrency problems. When thread performs blocking system call, the krenel can schedule another thread for execution. Solaris prior to version 9, Windows NT/2000 w/ ThreadFiber
+
+Q: What is the two-level model?
+A: The two level model is a variation of the many to many model. Still multiplexes many use leevel threads, to a smaller or equal number of kernel threads, but allows a user level thread to be bound to a kernel. Examples are IRIS, HP-UX, Tru 64 UNIX, Solaris 8 and earlier
+
+Q: How do the many to many and two level models maintain appropriate number of kernel threads allocated to the app?
+A: Both many to many and two level model require communication to maintain the appropriate number of kenerl threads allocated to the app. Use an intermediate data structure between user and kernel threads called a lightweight process (LWP)
+
+Q: What is a lightweight process (LWP)?
+A: A lightweight process is an intermediate data structure between user and kernel threads. 1. Appears to be a virtual processor on which process can schedule user thread to run. 2. Each LWP attahed to kernel thread. 3. Kernel threads blocks -> LWP blocks -> User threads on LWP block
+
+Q: What are upcalls?
+A: Upcalls are provided by scheduler activations. They are communication mechanism from kernel to upcall handler in thread library. Each app gets a set of virtual processors from OS: 1. App schedules threads on these processors. 2. Kernel informs an app about certain events issuing upcalls, which are handled by thread library. 3. One event that trigers and upcall occurs when an app is about to block(i/o). 4. Kernal then allocates a new LWP, and the a[[ runs the upcall handler on the new LWP to save thread state and relinquish LWP. 5. Upcall handler then schedules another thread to run on new LWP. 6. Kernel makes another upcall to thread library to inform it that previously blocked thread is eligible to run again.
+
+Q: What is a thread library?
+A: A thread library provides programmer with API for creating and managing threads
+
+Q: What are the two primary ways of implementing a thread library?
+A: Two primary ways ot implementing a threa library: 1. Library entirely in user space (all c/data in user space) wit no kernel support -- invoking lib API function results in a local function call rather than a syscall. 2. Kernel level library supported directly by the OS (all code/data in kernel space) -- invoking a lib API function results in a syscall to kernel
+
+Q: Are pthread a user-level or kernel-level library?
+A: Pthreads can be provided as iether a user level or kernel level library
+
+Q: What data is shared with POSIX and Windows threading?
+A: In POSIX and Windows threading, any data declared globally are shared among all threads belonging to same process. Data declared local to a function are typically stored on the stack. And since each thread s its own stack, each thread has its own copy of local data.
+
+Q: What is asynchronous threading?
+A: Asynchronous threading is: 1. Once parent create a child thread, parent resumes its execution so that parent and child execute concurrently. 2. Each thread runs independently of eery other thread, and parent thread need not know when its cihld terminates. 3. Typically little data sharing among threads
+
+Q: What is synchronous threading?
+A: Synchronous threading i s 1. parent thread creates one or more children and then must wait for all of its children to terminate before it resumes -- so callde fork-join strategy. 2. Threads created by parent perform work concurrently, but parent cannot continue work until this owrk has been completed. Once each thread finishes, it terminates, and joins with its parent. Only after all children have joined, can parent resume execution. 3. typically involves significant data sharing among threads. 4. Parent thread may combine results calculated by its various children.
+
+Q: How do pthread threads work?
+A: Pthread programs, separate threads begin exeuction in a specified function. runner() funtion. 
+
+Q: Where is pthread header?
+A: #include <pthread.h>.
+
+Q: Implement pthread program
+A: check code
+
+Q: What are steps of pthread?
+A: 1. pthread_t tid stores thread ID. Each thread has set of sttirbutes including stack size and scheduling information. pthread_attr_t attr; Set attribute in function call pthread_attr_init(&attr). Uses default attributes otherwise. Separate thread created with pthread_create() function call. Passes thread id and attributes. Also pass name of function where new thread will begin execution. Then pass argument if applicable. Parent thread can wait for thread to terminate by caling pthread_join() function. Summation thread will terminate when it calls function pthread_exit();.
+
+Q: What is implicit threading?
+A: Implicit threading is the strategy of transfering creation and management of threading from developers to compilers and run-time libraries. To better support design of multithreaded app
+
+Q: What is a thread pool? Why is it useful?
+A: A thread pool is to create a number of threads at process startup and place them into a pool, where they sit and wit for work. When server receives a request, it awakens a thread from pool if one is available and passes it request for service. Once thread completes its serice, it returns to pol and awaits more work. If pool contains no available thrad, srver waits until one becomes free. Useful because time required to create thread could be a potential problem and no bound on numbre of concurrent thrads could exhause system resources. Servicing a thread with existing thread is faster than creating thread Thread pools limit numbre of threads. Also separting task t be performed from mechanics of creating task allow use of different strategies for running task. E.g. could be scheduled to execute after delay etc. Number of threads in pool can be set heuristically based on factor such as number of CPUs in system, amount of physical memory, and expected number of concurrent requests. Sophisticated thread-pool architecctures can dynamically adjust number of threads in pool according to usage paters. Consume less memory when load is low. Apple's Grand Central Dispath. Windows API can use thread pools
+
+Q: What is OpenMP?
+A: OpenMP is a set of compiler directives as well as an API for programs written in C, C++, and FORTRAN that provides support for parallel programming in shared-memory environments. Identifies parallel regions as blocks of code that may run in parallel. Developed insert compiler directives into their code at prallel regions, and these directives instruct the OpenMP runtime library to execute region in parallel. 
+
+Q: How does OpenMP tell compiler to create threads?
+A: Directive #pragma omp parallel creates as many threads as there are processing cores in the system. All threads simultaneously execute the parallel region. As each thread exits parallel region it is terminated.
+
+Q: What is the OpenMP directive for executing each iteration of a for loop in parallel?
+A: #pragma omp parallel for
+
+Q: What extra capabilities does OpenMP give developers?
+A: OpenMP allows developers to se tnumber of threads manually or allow developers to identify whether data are shared between threads or are private to a thread
+
+Q: What is important to realize abour fork() and exec() when multhreading?
+A: If one thrad calls fork(), does new process duplicate all threads or is new process single threaded? Some UNIX systems have two versions of fork() for this case. One that duplicates all threads and another that duplicates only thread that invoked fork() syscall. Exec() syscall typcally works same. If thread invokes exec() syscall, program specified in parameter to exec() will replace entire process including all threads. If exec() is called immediately after forking, then duplicating all threads in unneccessary. Duplicating only calling thread is appropriate. If separate process does not call exec() after forking, the separate process should duplicate all threads.
+
+Q: What is a signal?
+A: A signal is used in UNIX to notify a process that a particular event has occured. May be received synchronously or asynchronously, depending on source of and reason for event being signaled. All follow same pattern: 1. signal is generated by occurrence of a particular event. 2. Signal is delivered to a process. 3. Once delivered, signal must be handled. 
+
+Q: What is a synchronous signal?
+A: A synchronous signal is a signal delivered to the same process that performed the operation that caused the signal
+
+Q: What is an asynchronous signal?
+A: An asynchronous signal is a signal generated by an event external to a running process. Such as terminating process with specific keystrokes. Typically is sent to another process
+
+Q: How may a signal be handled?
+A: A signal may be handled by 1. a default signal handler 2. user-defined signal handlers. Every signal has a default signal handler that kernel runs when handling a signal. Default action can be overriden by user-defined signal handler. 
+
+Q: What is the difference for signal handling of single threaded and multi threaded programs?
+A: Handling is straightforward in single-threaded prrograms. Signals always delivered to a process. However, in multithreaded programs, following option exist: 1. Deliver the signal to the thread to which the signal applies 2. Deliver the signal to every thread in the process 3. Deliver the signal to certain threads in the process 4. Assign a specific thread to receive all signals for the process. Synchronous signals need to be delivered to thread causing signal and not to other threads in process. Asycchronous signals not as clear. Some (such as terminating signal) should be sent to all threads. 
+
+Q: What is the standard unix function for delivering a signal?
+A: kill(pid_t pid, int signal); Specifies process to which particular signal should be delivered.
+
+Q: How can you send a signal to a specific thread?
+A: pthread_kill(pthread_t tid, int signal)
+
+Q: What is thread cancellation?
+A: Thread cancellation involves terminating a thread before it has completed. Can either cancel all threads or just specific threads (like button on web browser to stop web page loading. Only cancel threads loading web page.)
+
+Q: What is a target thread?
+A: A target thread is a thread that is to be cancelled. 
+
+Q: What is asynchronous cancellation?
+A: Asynchronous cancellation is when one thread immediately terminate the target thread.
+
+Q: What is deferred cancellation?
+A: With deferred cancellation, the target thread periodically checks whether it should terminate allowing it an opportunity to terminate itself in an orderly fashion. One thread indicates that a target thread is to be cancelled but cancellation occurs only after target thread has checked whether or not if should be cancelled. 
+
+Q: What is the difficulty of asynchronous cancellation.
+A: In situations where resources have been allocated to a cancelled thread or a thread is cancelled while in the midst of updating data it is sharing with other threads. Becomes especially troubling with asynchronous cancellation as often OS will reclaim system resource from a cancelled thread but will not reclaim all resources. Therefore, cancelling a thread asynchronously ay not free necessary system-wide resource. 
+
+Q: How to cancel a thread in pthreads?
+A: pthread_cancel(tid); Indicates only a request to cancel. Actual cancellation depends on how target thread is set up to handle request. Pthreads allow threads to disable or enable cancellation. When disabled, cancellation requests remain pending, thread can later enable cancellation and respond to request.
+
+Q: What are the three pthreads cancellation modes?
+A: 1. Mode: Off State: Disabled Type:- 2. Mode: Deffered State:Enabled Type:Deffered 3. Mode: Asynchronous State: Enabled Type: Asynchronous
+
+Q: What is the default cancellation in pthreads?
+A: Default cancellation type is deferred cancellation. Cancellation only occurs when a thread reaches a cancellation point. On way to establish a cancellation piont is to invoke pthread_testcancel() function. If cancellation is pending, function known as cleanup handler is invoked. Cleanup handler allows any resources a thread may hae acquired to be released before thread is terminated. 
+
+Q: Should asynchronous cancellation be usde in pthreads?
+A: Asynchronous cancellation is not recommended in pthreads
+
+Q: What is thread local storage (TLS)?
+A: In some circumstances, each thread might need its own copy of certain data, called TLS. TLS not equivalent to local variable as TLS data visible across all functoin invocations. TLS data are unique to each thread. 
+
+Q: How to make a thread in Linux?
+A: Linux provides the clone() syscall to create threads. Linux does not distinguish between proesses and threads. Uses term task when referring to a flow of control within a program. When clone() invoked, it's passed a st o fflags that determine how much sharing ti to take place between parent and children tasks. CLONE_FS is share file system information, CLONE_VM is share same memory space, CLONE_SIGHAND is share signal handlers, and CLONE_FILES is share set of open file. Therefore equivalent to creating a thread. If no flags invoked, no sharing takes place, resulting in functionality similar to fork(). Unique kernel data structure (struct task_struct) exists for each task in system. Instead of storing data for task, structure contains pointer to other data structures wher edata are stored, for example data structures that represent the list of open files, signal handling, and virtual memory. When fork() is invoked, a new task is created, along with a copy of all associated data structures of parent process. New task also crated when clone() sycall made. Rather than copying all data structures, however, new task points to data structures of parent task, depending on set of flags passed to clonse().

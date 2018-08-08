@@ -1,0 +1,13 @@
+Expressions are building block of programs. Computes a value from a number of operands.
+
+int length = 20; //expressions. literal integer used to initialize variable
+int width = 40;
+int area = length*width; //multiplication
+
+length = 99;
+
+Distinguish between length on left-hand side of an assignment or iniitialization 
+(the lvalue of length o rthe object named length) and legngth used on right hand side 
+of assignme dor initialization (the rvalue of length, the value of the object named length).
+
+As lvalue - length refers to box (object). As rvalue, length refers to value of box. 

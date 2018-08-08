@@ -1,0 +1,51 @@
+Pointers
+
+%p is format for pointers
+
+int n = 10;
+
+&n - & allows C to access memory address of the variable.
+
+Memory address stores value of variable. 
+
+Pointers are variables that store memory addresses. 
+
+int * p; //pointer to an integer variable. of type int *
+
+Dereference pointer to get the value stored in the memory address stored
+by the pointer. 
+
+int d = 20; // d = 20
+int * pd = &d;
+
+*pd = 21; // d = 21
+
+Array variables are actually pointers to first element of the array. CONSTANT!
+
+int fd[2]; //fd is pointer to first element of array 
+
+fd[0] = 100; //*fd = 100
+*fd = 200; //fd[0] = 200
+fd[1] = 300;
+int second = *(fd + 1); //300
+
+Array pointers are CONSTANTS! Cannot change them. Will mess up memory and code. 
+
+char movie[] = "Movie Title";
+
+movie 1 = "New Title" //WRONG. ERROR!. WILL NOT BE ABLE TO ACCESS ELEMENTS WITH 
+				DIFFERENT ADDRESS
+
+To change string, would have to access each element individually or use strcpy(). 
+
+char * movie2 = "The Best Movie"; //variable pointer
+
+puts(movie2); //outputs "The Best Movie" to stdout
+
+movie2 = "New Movie Title";
+
+puts(movie2); //outputs "New Movie Title" to stdout
+
+What if character pointer (string) tries to fit more characters than size of array
+fgets(char * buffer, int length, stream);
+fgets(movie, 20, stdin);

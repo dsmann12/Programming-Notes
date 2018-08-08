@@ -1,0 +1,66 @@
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Button.H>
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+class Foo : public Fl_Window {
+	private:
+		//callbacks always return a void
+		static void MyFunction(Fl_Widget *w, void *userdata) {
+			cout << "CALLBACK! USERNAME: " << (long)userdata << endl;
+		}
+
+		static void MyQuit(Fl_Widget *w, void *userdata) {
+			cout << "WINQUIT!\n";
+			exit(0);
+		}
+		
+	public:
+		int *data;
+		Foo(int w, int h, const char *name=0) :
+			Fl_Window(w, h, name)
+		{
+			data = (int *)1234;
+			
+			Fl_Button *but = new Fl_Button(10, 10, 100, 25, "Testing!");
+			but->callback(MyFunction, (void *)data);	
+			show();
+			callback(MyQuit);
+		}
+};
+
+
+/*
+//callbacks always return a void
+void MyFunction(Fl_Widget *w, void *userdata) {
+	cout << "CALLBACK! USERNAME: " << (long)userdata << endl;
+}
+
+void exitFunction(Fl_Widget *w, void *data) {
+	exit(0);
+}
+
+void stringFunction(Fl_Widget *w, void *data) {
+	cout << (char *)data << endl;
+}
+*/
+
+int main() {
+	Foo foo(400, 200, "Hello Program");
+
+	/*
+	Fl_Button but(10, 10, 100, 25, "Testing!");	
+	Fl_Button but1(120, 10, 100, 25, "Exit!");
+	Fl_Button but2(230, 10, 100, 25, "String!");
+	//anything can be sent to data but must b ea function
+	but.callback(MyFunction, (void *)1234); 
+	but1.callback(exitFunction, (void *)0);
+	but2.callback(stringFunction, (void *)"This is my message!");
+	
+	win.show();
+	*/
+	return (Fl::run());
+}

@@ -1,0 +1,18 @@
+Can create models for objects.
+
+Create file called:
+
+<component_name>.model.ts
+recipe.model.ts
+
+export class Recipe {
+	public name: string;
+	public description: string;
+	public imagePath: string;
+
+	constructor(name: string, desc: string, imapgePath: string) {
+		this.name = name;
+		this.description = desc;
+		this.imagePath = imagePath;
+	}
+}

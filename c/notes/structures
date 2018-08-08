@@ -1,0 +1,14 @@
+Structures - a way of grouping many varaible types together in same section of memory
+
+struct user {
+	int userID;
+	char firstname[20];
+	char lastname[50];
+	int age;	
+};
+
+struct user david;
+struct user emily;
+
+david.userID = 1;
+emily.userID = 2;

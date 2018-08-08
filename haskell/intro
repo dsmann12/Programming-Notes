@@ -1,0 +1,479 @@
+Haskell is a *purely functional programming language*. Developer tells computer what stuff is. E.g. factorial of a numbre is product of all numbers from 1 to that number, the sum of a list is first number plus sum of all other numbers, etc. 
+
+Variables are immutable. 
+
+Functions can only calculate something and return a result. If function is called twice with same parameters, it is guaranteed to return the same result. Referential transparency. Allows developers to prove that a function is correct and then built more complex functions by gluing simple functions together. 
+
+Haskell is *lazy*, unless specifically told otherwwise, Haskell won't execute functions and calculate until it is forced to show a result. 
+
+xs = [1, 2, 3, 4, 5, 6, 7, 8]
+
+E.g. (doubleMe(doubleMe(doubleMe(xs))))
+
+Typically (poorly) programmed imperative functoin may pass throug list once, make a copy, and return it, then pass through klist and anothe rtwo times and return result. 
+
+In laxy language, calling doubleMe function on list without forcing result tells programs to "do it later." Once a result it needed, first doubleMe tells second one it wants result now, second says to a third one it wanst result, and third gives back a doubled 1 (2), second one receives thta and doubles it to 4 for first one, and first one gets that value and doubles it to 8. Does only one pass through the list and only when needed. 
+
+In lazy language, developer can take some initial data and efficiently transform and mend it so it resembles what is required. 
+
+Allows developer to think of programs as a series of *transformations on data* and allows infinite data structures. 
+
+Haskell is *statically typed*, meaning compiler checks for errors based on type (cannot add a string and a number). Also has a good type system that has *type inference* so langauge can infer type based on operations. E.g. it knows a = 5 + 4 is a number. 
+
+If function takes two parameters and adds them together and developer does not explicitly set a type, the functoin will work on any two paramters that act like numbers. 
+
+Haskell uses high level conceptts to keep itself elegant and concise. Short programs easier to maintain. 
+
+Haskell Platform - GHC, Cabal, Stack
+
+ghci - interactive mode. Can load functioned defined in a file myfunctions.hs:
+
+:l myfunctions and then play with them
+
+If change .hs script, just run :l myfunctions again or do :r, which reloads current script. 
+
+Calculating Negative Numbers:
+5 * -3 //ERROR: WILL NOT WORK
+5 * (-3) //OK
+
+Booleans
+&&
+||
+not
+True
+False
+==
+/=
+
+> 5 /= 5
+False
+>5 /= 4
+True
+
+Infix function - operators like * or + are actually functions that take two arguments and act on them. Called by sandwhiching function between two types (numbers). 
+
+Prefix function - most functions are prefix. In most imperative languages, called by writing function name and then writing its parameters is parentheses In Haskell, functions are called by writing function name, a space, and then the parameters, seperated by spaces. 
+
+ghci> succ 8
+9
+
+succ function takes anything that has a defined successor and returns that successor. 
+
+min and max functions take two things that can be ordered and returns the lesser or greater
+
+ghci> min 9 10
+9
+ghci> min 3.4 3.2
+3.2
+ghci> max 100 101
+101
+
+Function application (calling function) has highest precedence of all.
+
+So these are equivalent:
+ghci> succ 9 + max 5 4 + 1  
+16  
+ghci> (succ 9) + (max 5 4) + 1  
+16  
+
+Must write
+
+ghci> succ 9 * 10 //ERROR. Will get 100. Evaluates succ 9 then multiplies result by 10
+ghci> succ (9 * 10) //OK
+
+If function takes 2 parameters, can call it as infix function by surrounding it with backticks. 
+
+div function takes two integers and does integral division between them. div 92 10 results in 9. 
+
+92 `div` 10 //9
+
+FUNCTIONS
+doubleMe x = x + x
+doubleUs x y = doubleMe x + doubleMe y
+
+Functions do not need to be declared in any order
+
+CONTROL FLOW
+
+doubleSmallNumber x = if x > 100
+						then x
+						else x*2
+
+ELSE is mandatory in Haskell. 
+
+Also if statement is an expression. Expression is a piece of code that returns a value. Because else if necessary, if statement will always return an expression. 
+
+ghci> doubleSmallNumber' x = (if x > 100 then x else x*2) + 1  
+
+If omit the parentheses, number added only when if statement fails. 
+
+The ' at end of function name. Does not have any special meaning in Haskell's syntax. Valid character to use in a function name. Usually used to denote a strict version of a function (one that isn't lazy) or a slightly modified version of a function or variable. 
+
+Therefore:
+
+gchi>     conanO'Brien = "It's a-me, Conan O'Brien!"   
+
+Cannot capitalize function name. 
+
+Also function that does not take any parameters (like above) is called a *definition*. Immutable. 
+
+String definition is definition?
+
+LISTS
+
+Most useful data structure and can be used in multitude of ways to model and solve a whole bunch of problms. 
+
+Lists are *homogenous* data structure. It stores several elements of the same type., 
+
+Can use let keyword to define a name in GHCI. 
+
+let a = 1 
+equivalent to
+a = 1 in a script and then loading it
+
+strings are just lists of characters. "hello" just syntactic sugar for ['h', 'e', 'l', 'l', 'o']. 
+
+Common task is putting two lists together. This done using ++ operator. 
+
+ghci> [1,2,3,4] ++ [9,10,11,12]  
+[1,2,3,4,9,10,11,12]  
+ghci> "hello" ++ " " ++ "world"  
+"hello world"  
+ghci> ['w','o'] ++ ['o','t']  
+"woot"  
+
+WARNING: when repeatedly using ++ on long strings. when put together two lists (even appending a singleton list to a list), internally, Haskell must walk through the whole list on the left side of ++. Structures like a singly linked list? Putting something at end of list takes n time. Putting something at beginning is O(1). 
+
+Use : to add to beginning of list. 
+
+ghci> 'A':" SMALL CAT"  
+"A SMALL CAT"  
+ghci> 5:[1,2,3,4,5]  
+[5,1,2,3,4,5] 
+
+[1,2,3] is actually just syntactic sugar for 1:2:3:[]. [] is an empty list. If we prepend 3 to it, it becomes [3]. If we prepend 2 to that, it becomes [2,3], and so on. 
+
+Note: [], [[]] and[[],[],[]] are all different things. The first one is an empty list, the seconds one is a list that contains one empty list, the third one is a list that contains three empty lists.
+
+Use !! to get element of out list by index. 
+
+ghci> "Steve Buscemi" !! 6  
+'B'  
+ghci> [9.4,33.2,96.2,11.2,23.25] !! 1  
+33.2   
+
+ghci> let b = [[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]  
+ghci> b  
+[[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]  
+ghci> b ++ [[1,1,1,1]]  
+[[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3],[1,1,1,1]]  
+ghci> [6,6,6]:b  
+[[6,6,6],[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]  
+ghci> b !! 2  
+[1,2,2,3,4]   
+
+Lists within a list can be different lengths but can't be different types. 
+
+Lists can be compared if elements they contain can be compared. 
+
+
+Comparators
+<
+<=
+>
+>=
+
+Compared in lexicographical order. First heads are compared, if they are equal, second elements are compared, etc. 
+
+    ghci> [3,2,1] > [2,1,0]  
+    True  
+    ghci> [3,2,1] > [2,10,100]  
+    True  
+    ghci> [3,4,2] > [3,4]  
+    True  
+    ghci> [3,4,2] > [2,4]  
+    True  
+    ghci> [3,4,2] == [3,4,2]  
+    True  
+
+Commands:
+
+head - takes list and returns its head. First element. 
+
+    ghci> head [5,4,3,2,1]  
+    5   
+
+tail takes a list and returns its tail. In other words, it chops off a list's head.
+
+    ghci> tail [5,4,3,2,1]  
+    [4,3,2,1]   
+
+last takes a list and returns its last element.
+
+    ghci> last [5,4,3,2,1]  
+    1   
+
+init takes a list and returns everything except its last element.
+
+    ghci> init [5,4,3,2,1]  
+    [5,4,3,2]   
+
+DO NOT USE THESE ON EMPTY LISTS. CAUSES ERROR> Cannot be caught in compile time. 
+
+length takes a list and returns its length, obviously.
+
+    ghci> length [5,4,3,2,1]  
+    5  
+
+null checks if a list is empty. If it is, it returns True, otherwise it returns False. Use this function instead of xs == [] (if you have a list called xs)
+
+    ghci> null [1,2,3]  
+    False  
+    ghci> null []  
+    True  
+
+reverse reverses a list.
+
+    ghci> reverse [5,4,3,2,1]  
+    [1,2,3,4,5]  
+
+take takes number and a list. It extracts that many elements from the beginning of the list. Watch.
+
+    ghci> take 3 [5,4,3,2,1]  
+    [5,4,3]  
+    ghci> take 1 [3,9,3]  
+    [3]  
+    ghci> take 5 [1,2]  
+    [1,2]  
+    ghci> take 0 [6,6,6]  
+    []  
+
+drop works in a similar way, only it drops the number of elements from the beginning of a list.
+
+    ghci> drop 3 [8,4,2,1,5,6]  
+    [1,5,6]  
+    ghci> drop 0 [1,2,3,4]  
+    [1,2,3,4]  
+    ghci> drop 100 [1,2,3,4]  
+    []   
+
+maximum takes a list of stuff that can be put in some kind of order and returns the biggest element.
+
+minimum returns the smallest.
+
+    ghci> minimum [8,4,2,1,5,6]  
+    1  
+    ghci> maximum [1,9,2,3,4]  
+    9   
+
+sum takes a list of numbers and returns their sum.
+
+product takes a list of numbers and returns their product.
+
+    ghci> sum [5,2,1,6,3,2,5,7]  
+    31  
+    ghci> product [6,2,1,2]  
+    24  
+    ghci> product [1,2,5,6,7,9,2,0]  
+    0   
+
+elem takes a thing and a list of things and tells us if that thing is an element of the list. It's usually called as an infix function because it's easier to read that way.
+
+    ghci> 4 `elem` [3,4,5,6]  
+    True  
+    ghci> 10 `elem` [3,4,5,6]  
+    False  
+
+Ranges:
+
+Ranges are way of making lists that are arithmetic sequences of elements that can be enumerated. 
+
+[1..20] - list of all natural numbers from 1 to 20.
+
+Can specify a step:
+
+    ghci> [2,4..20]  
+    [2,4,6,8,10,12,14,16,18,20]  
+    ghci> [3,6..20]  
+    [3,6,9,12,15,18]   
+
+To make a list with all the numbers from 20 to 1, you can't just do [20..1], you have to do [20,19..1].
+
+Watch out when using floating point numbers in ranges! Because they are not completely precise (by definition), their use in ranges can yield some pretty funky results.
+
+    ghci> [0.1, 0.3 .. 1]  
+    [0.1,0.3,0.5,0.7,0.8999999999999999,1.0999999999999999]  
+
+Ranges can also be used to make infinite lists. 
+
+List to get first 24 multiples of 13. 
+
+Could do:
+[13, 26..24*13]
+
+Better way:
+take 24 [13, 26..]
+
+Because Haskell is lazy, it won't try to evaluate the infinite list immediately because it would never finish. It waits to see what is wanted to get out of inifinte list. Here it sees user just wants the first 24 elements  and obliges. 
+
+Functions For Ifinite Lists:
+
+cycle takes a list and cycles it into an infinite list. If you just try to display the result, it will go on forever so you have to slice it off somewhere.
+
+    ghci> take 10 (cycle [1,2,3])  
+    [1,2,3,1,2,3,1,2,3,1]  
+    ghci> take 12 (cycle "LOL ")  
+    "LOL LOL LOL "   
+
+repeat takes an element and produces an infinite list of just that element. It's like cycling a list with only one element.
+
+    ghci> take 10 (repeat 5)  
+    [5,5,5,5,5,5,5,5,5,5]  
+
+Although it's simpler to just use the replicate function if you want some number of the same element in a list. replicate 3 10 returns [10,10,10].
+
+LIST COMPREHENSION
+
+Set Comprehensions - normally used for building more specific sets out of general sets. 
+
+A basic comprehension for a set that contains the first ten even natural numbers is S = {2 . x | x E N, x <= 10} . The part before the pipe is called the output function, x is the variable, N is the input set and x <= 10 is the predicate. That means that the set contains the doubles of all natural numbers that satisfy the predicate.  
+
+In Haskell can write it as:
+take 10 [2, 4..]
+
+But what if we didn't want doubles of the first 10 natural numbers but some kind of more complex function applied on them?
+
+[x*2 | x <- [1..10]]
+
+ghci> [x*2 | x <- [1..10]]  
+[2,4,6,8,10,12,14,16,18,20] 
+
+Can add conditions (or predicates) to comprehension. Go after binding parts and are seprated from them by a comma. 
+
+ghci> [x*2 | x <- [1..10], x*2 >= 12]  
+[12,14,16,18,20]
+
+    ghci> [ x | x <- [50..100], x `mod` 7 == 3]  
+    [52,59,66,73,80,87,94]   
+
+Called *filtering*. 
+
+What if wanted to replace each odd number greater than 10 with "BANG!" and each odd number less than 10 with "BOOM!". If number isn't odd, throw it out of list. 
+
+    boomBangs xs = [ if x < 10 then "BOOM!" else "BANG!" | x <- xs, odd x]   
+
+The function odd returns True on an odd number and False on an even one. The element is included in the list only if all the predicates evaluate to True. 
+
+    ghci> boomBangs [7..13]  
+    ["BOOM!","BOOM!","BANG!","BANG!"]   
+
+ci> [ x | x <- [10..20], x /= 13, x /= 15, x /= 19]  
+    [10,11,12,14,16,17,18,20]  
+
+Can draw from several lists. When drawing from several lists, comprehensions produce all combinations of the given lists and then join the, by the output function supplied. A list produced by a comprehensions that draws from two lists of length 4 will have length 16, provided they are not filtered. 
+
+ghci> [ x*y | x <- [2,5,10], y <- [8,10,11]]  
+[16,20,22,40,50,55,80,100,110]
+
+ghci> [ x*y | x <- [2,5,10], y <- [8,10,11], x*y > 50]  
+[55,80,100,110]  
+
+ci> let nouns = ["hobo","frog","pope"]  
+    ghci> let adjectives = ["lazy","grouchy","scheming"]  
+    ghci> [adjective ++ " " ++ noun | adjective <- adjectives, noun <- nouns]  
+    ["lazy hobo","lazy frog","lazy pope","grouchy hobo","grouchy frog",  
+    "grouchy pope","scheming hobo","scheming frog","scheming pope"]   
+
+length' xs = sum [1 | _ <- xs] 
+
+The _ means a variable name won't be used. Replaced every element of a list with 1 and then sums that up. 
+
+Because string are lists, can use comprehensios to process and produce strings. 
+
+    removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]   
+
+    ghci> removeNonUppercase "Hahaha! Ahahaha!"  
+    "HA"  
+    ghci> removeNonUppercase "IdontLIKEFROGS"  
+    "ILIKEFROGS"   
+
+    ghci> let xxs = [[1,3,5,2,3,1,2,4,5],[1,2,3,4,5,6,7,8,9],[1,2,4,2,1,6,3,1,3,2,3,6]]  
+    ghci> [ [ x | x <- xs, even x ] | xs <- xxs]  
+    [[2,2,4],[2,4,6,8],[2,4,2,6,2,6]]  
+
+TUPLES
+
+Tuples - like lists, way to store several values into a single value. Few differences. Used when user knows how many values they want to combine and its type depends on howmany compenents it has and type of components. Denoted with parentheses and their components separated by commas. 
+
+Don't have to be homogenous. May contain a combination of several types. 
+
+List comprehensions can be written across several lines. 
+
+Tuple of size two is its own type. So List of tuples ensures that each tuple has a fixed size. 
+
+Instead of surrounding the vectors with square brackets, we use parentheses: [(1,2),(8,11),(4,5)]. What if we tried to make a shape like [(1,2),(8,11,5),(4,5)]? Well, we'd get this error:
+
+    Couldn't match expected type `(t, t1)'  
+    against inferred type `(t2, t3, t4)'  
+    In the expression: (8, 11, 5)  
+    In the expression: [(1, 2), (8, 11, 5), (4, 5)]  
+    In the definition of `it': it = [(1, 2), (8, 11, 5), (4, 5)]  
+
+It's telling us that we tried to use a pair and a triple in the same list, which is not supposed to happen. You also couldn't make a list like [(1,2),("One",2)] because the first element of the list is a pair of numbers and the second element is a pair consisting of a string and a number. Tuples can also be used to represent a wide variety of data. For instance, if we wanted to represent someone's name and age in Haskell, we could use a triple: ("Christopher", "Walken", 55). As seen in this example, tuples can also contain lists.
+
+No such thing as a singleton tuple. 
+
+Also like lists, tuples can be compared with each other if their components can be compared. Cannot compare tuples of different sizes.
+
+Functions:
+
+fst takes a pair and returns its first component.
+
+    ghci> fst (8,11)  
+    8  
+    ghci> fst ("Wow", False)  
+    "Wow"  
+
+snd takes a pair and returns its second component. Surprise!
+
+    ghci> snd (8,11)  
+    11  
+    ghci> snd ("Wow", False)  
+    False  
+
+Note: these functions operate only on pairs. They won't work on triples, 4-tuples, 5-tuples, etc. We'll go over extracting data from tuples in different ways a bit later.
+
+A cool function that produces a list of pairs: zip. It takes two lists and then zips them together into one list by joining the matching elements into pairs. It's a really simple function but it has loads of uses. It's especially useful for when you want to combine two lists in a way or traverse two lists simultaneously. Here's a demonstration.
+
+    ghci> zip [1,2,3,4,5] [5,5,5,5,5]  
+    [(1,5),(2,5),(3,5),(4,5),(5,5)]  
+    ghci> zip [1 .. 5] ["one", "two", "three", "four", "five"]  
+    [(1,"one"),(2,"two"),(3,"three"),(4,"four"),(5,"five")]  
+
+What happens if the lengths of the lists don't match?
+
+    ghci> zip [5,3,2,6,2,7,2,5,4,6,6] ["im","a","turtle"]  
+    [(5,"im"),(3,"a"),(2,"turtle")]  
+
+The longer list simply gets cut off to match the length of the shorter one. Because Haskell is lazy, we can zip finite lists with infinite lists:
+
+    ghci> zip [1..] ["apple", "orange", "cherry", "mango"]  
+    [(1,"apple"),(2,"orange"),(3,"cherry"),(4,"mango")]  
+
+Here's a problem that combines tuples and list comprehensions: which right triangle that has integers for all sides and all sides equal to or smaller than 10 has a perimeter of 24? First, let's try generating all triangles with sides equal to or smaller than 10:
+
+    ghci> let triangles = [ (a,b,c) | c <- [1..10], b <- [1..10], a <- [1..10] ]   
+
+We're just drawing from three lists and our output function is combining them into a triple. If you evaluate that by typing out triangles in GHCI, you'll get a list of all possible triangles with sides under or equal to 10. Next, we'll add a condition that they all have to be right triangles. We'll also modify this function by taking into consideration that side b isn't larger than the hypothenuse and that side a isn't larger than side b.
+
+    ghci> let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]   
+
+We're almost done. Now, we just modify the function by saying that we want the ones where the perimeter is 24.
+
+    ghci> let rightTriangles' = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2, a+b+c == 24]  
+    ghci> rightTriangles'  
+    [(6,8,10)]  
+
+
+
+

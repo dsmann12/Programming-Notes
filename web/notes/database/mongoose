@@ -1,0 +1,58 @@
+MONGOOSE
+
+mongoose - mongodb object modeling for node.js
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/database');
+
+var catSchema = new mongoose.Schema({
+	name: String,
+	age: Number,
+	temperament: String
+});
+
+var Cat = mongoose.model("Cat", catSchema);
+
+Now can use Cat to make cats, find cats, etc. Usually the singular version of database name
+Creates new collection basically
+
+Cat.find()
+Cat.remove()
+
+var george = new Cat({
+    name: "George",
+    age: 11,
+    temperament: "Grouchy"
+});
+
+May be problem with database so blank save() could be bad. Therefore, use a callback function
+to determine things went ok
+
+george.save(function(err, cat) {
+    if(err) {
+        console.log("Something went wrong");
+    }
+    else {
+        console.log("Just saved cat to db");
+        console.log(cat);
+    }
+});
+
+app.post("/campgrounds", function(req, res) {
+   //get data from form  
+   //redirect back to /campgrounds
+   var name = req.body.name;
+   var image = req.body.image;
+   var newCampground = {name: name, image: image}
+   Campground.create(newCampground, function(err, newlyCreated) {
+      if(err)  {
+          console.log(err);
+      }
+      else {
+          res.redirect("/campgrounds");
+      }
+   });
+});
+
+
+

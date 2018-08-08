@@ -1,0 +1,122 @@
+OPENGL INTRO
+
+C++ needed. 
+
+Should have some knowledge of math, trigonometry and vector.
+
+Learn:
+Modern OpenGL techniques
+Create Windows and handle input
+Vertex, Fragment, and Geometry Shader
+Draw 3D models
+Use of GLM (OpenGL Maths) Library
+Translate, rotate, and scale models
+Uses of interpolation -> handy or textures and lighting
+Use Indexed Draws
+Different Types of Projection (Orthographic and Perspective)
+Camera control and movement
+Texture mapping
+Phong Lighting Model
+Directional, Point, and Spot Lights
+Importing Pre-Made models - Blender, Maya, etc
+Shadow Mapping (from multiple light sources) (directional and omnidirectional)
+Implement a Skybox
+Theory behind all this
+
+INTRO TO GLEW, GLFW, AND SDL
+
+GLEW - Open GL Extension Wrangler. Acts an interface for OpenGL Versions above 1.1
+
+Built in OpenGL libraries on systems usually only let you use version 1.1. Now, modern systems use versions above 3.0. 
+
+Also can load OpenGL Extension. Some extensions are platform specific. GLEW can check if they exist on that platform. 
+
+Alternatives: GL3W, glLoadGen, glad, glsdk, glbining, libepoxy, Glee
+
+Using GLEW
+
+#include <GL/glew.h>
+Some old programs use #include <gl.h> becuase this is old version. But GLEW does this itself.
+
+Must initialize OpenGLContex:
+After call this:
+glewExperimental = GL_TRUE; // lets you do modern and advanced features
+glewInit(); // initialized GLEW
+Should return GLEW_OK. If it fails, it returns an error
+Can read error with glewGetErrorString(result)
+
+Check extensions exist:
+
+if (!GLEW_EXT_framebuffer_object){}
+
+wglew.h - for Windows only functions
+
+Need library to handle creating windows. Doesn't really matter what library you use, should have same OpenGL API.
+
+GLFW 
+
+OpenGL FrameWork (probably)
+Handles window creation and control
+Pick up and process input from keyboard, mouse, joystick, and gamepad.
+Even allows multiple monitor support
+Uses OpenGL context for windows
+
+SDL 
+
+Simple DirectMedia Layer
+
+Can do almost everything GLFW can do
+And more (Audio, Threading, Filesystems, etc)
+Used in FTL, Amnesia, Starbound and Dying Light
+Even used in level editors for Source Engine and Cryengine
+Might be better for video games. GLFW for just graphics
+
+Alternatives: SFML (like SDl but even more features) but Open GL context very weak. Mostly for 2D. GLUT and not maintained anymore. Win32 is for purists. Lowest level for window creation. 
+
+SETTING UP GLEW AND GFLW
+
+Update graphics drivers
+
+Get glew and install it
+
+Have to unzip, untar many files. Move them to /usr/lib or some other location.
+
+Then go in them and find README or INSTALL file to install.
+
+Typically have make files
+
+make
+make install
+
+May have cmake
+
+In other directory:
+cmake <root directory>
+
+In Windows need to configure settings in visual studio to have files from graphics libraries. 
+
+#include <GL/glew.h>
+#include <GLFW/glfw.h>
+
+
+glfwWindowHint(GLFW_OPENL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+-sets the profile. Set profile to core profile. Means won't be backwards compatibile. Will not use deprecated features. 
+
+- allow forward compatibility
+// Allow forward compatibility
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+Create window
+
+GLFWwindow *mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
+    if (!mainWindow) {
+        std::cout << "GLFW Window creation failed\n";
+        glfwTerminate();
+        return 1;
+    } 
+
+Need to get bufer size information. Need dimensions of area in middle of window. Part that will hold opengl data as it is posting to window
+
+Then set context for GLEW
+

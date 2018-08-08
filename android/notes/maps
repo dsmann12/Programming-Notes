@@ -1,0 +1,58 @@
+MAPS AND GEOLOCATION
+
+Some features only work on Marshmellow (6.0) and higher.
+
+Use a MapsActivity instead of a blank activity. 
+
+Need to get a google maps api key. 
+
+Can follow link in example url to create an api key.
+
+Give key name and can restrict it to only work for a specific app. 
+
+Copy key and paste it in google_maps_api.xml where key is needed.
+
+CAn use ctrl-shift to imitate pinch to zoom in emulator.
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
+
+FragmentActivity is a generic activity that allows us to create any sort of activity
+
+OnMapReadyCallback allows us to do something when map is ready
+
+private GoogleMap mMap; // field that creates a google map
+
+OnCreate ->
+
+SupportMapFragment mapFragment = (SupportMapFragment) getSupportGragmentManager().findFragmentById(R.id.map); // creates mapFragment which finds map on the layout
+mapGragment.getMapAsync(this); // map fragment gets map in background
+
+onMapReady is code that decides where map is centered. Essentially a callback function called when map is ready. Creates coordinates
+Adds marker to map and then moves camera to center on marker. 
+
+@Override
+public void onMapReady(GoogleMap googleMap) {
+	mMap = googleMap;
+	
+	LatLng sydney = new LatLng(-34, 151);
+	mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney");
+	mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+}
+
+CUSTOMIZING MAPS
+
+Can customize marker color with .icon() on MarkerOptions().
+
+mMap.addMarker(new MarkerOptions().position(nola).title("New Orleans").icon(BitmapDescriptorFactory.defaultMarker(BitMapDescriptorFactory.HUE_AZURE));
+
+Can also zoom in on marker. Can zoom from number 1-20. 20 being most zoom if Google supports it in that location
+
+mMap.moveCamera(CameraUpdateFacotry.newLatLngZoom(everest, 15));
+
+Can also convert map from plain map to include sattelite imagery
+
+mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+GETTING USER LOCATION
+
+

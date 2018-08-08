@@ -1,0 +1,219 @@
+DOM: 
+
+JS meets HTML+CSS
+
+Allows interactivity:
+
+Games, Scrolling effects, Dropdown menus, animations, etc.
+
+Patatap.com
+
+DOM - Document Object Model
+
+DOM is interface between JS and HTML+CSS
+
+Bunch of special javascript objects, methods, functions that can be used to interact with HTML and CSS. 
+
+Browsers turns every HTML tag into JS object that can be manipulated. Everything stored inside document object. Gets very big very fast. Bunch of peroperties. 
+
+document - root object in JavaScript of HTML file. 
+
+document - returns the HTML text. Object of actual HTML page. 
+console.dir(document) - shows object syntax of document object
+
+SELECT AND MANIPULATE
+
+SELECT an element and then MANIPULATE it
+
+var h1 = document.querySelector("h1");
+
+Document - root object
+
+document.URL - gives URL of page
+document.links - list of all links of site
+document.body - body of
+document.head - head tag
+
+5 Main Methods:
+1. document.getElementById()
+2. document.getElementsByClassName() - returns list
+3. document.getElementsByTagName() - returns list
+4. document.querySelector()
+5. document.querySelectorAll()
+
+console.dir(var) //object representation of id
+
+getElementsByClassName - returns node list. Not an array. 
+
+querySelector() - can replicate all previous basic methods. Returns first element htat matches a CSS-style selector. 
+Must use CSS syntax. 
+
+var tag = document.querySelector("#highlight");
+
+Can then see object representation of selected by calling:
+console.dir(tag);
+
+var tag = document.getElementsByTagName("li");
+returns all li elements in list. 
+
+querySelectorAll() -- returns a list of elements that matches CSS-style selector
+
+document.querySelector("h1");
+//selects first h1
+
+DOM MANIPULATION
+
+Changing element's style
+Adding/removing classes
+Changing content of atag
+Changing attributes (src, href, etc)
+
+style - property is one way to manipulate an element's style
+
+var tag = document.getElementById("highlight");
+
+tag.style.color = "blue";
+tag.style.border = "10px solid red";
+tag.style.fontsize = "70px"
+tag.style.background = "yellow";
+tag.style.marginTop = "200px";
+
+Separation of Concerns - recommended for styles to be defined in a separate file or files. Style property allows for quick styling, for testing. 
+
+HTML, CSS, and JS responsible for its own dowmain and should be little overlap.
+
+More common to make CSS class like #highlight, and #highlight class will have many properties being changed. Can then use JS to add one class.
+
+Instead:
+
+//define class in CSS
+.some-class {
+	color: blue;
+	border: 10px solid red;
+} 
+
+var tag = document.getlementById("highlight");
+//add new class to selected element
+tag.classList.add("some-class");
+
+classList - a read-only leist that contains classes for a given element. NOT AN ARRAY
+
+//add class to element
+tag.classList.add("some-class");
+
+//remove a class
+tag.classList.remove("some-class");
+
+/toggle a class
+tag.classList.toggle("another-class");
+
+classList - property is not an array, but a list.
+Must use add, remove, and toggle methods. 
+
+MANIPULATING TEXT OR CONTENT
+
+textContent - returns a string of all text contained in a given element
+
+<p>
+	This is an <strong>awesome</strong> paragraph
+</p>
+
+//select the <p> tag:
+var tag = document.querySelector("p");
+
+//retrieve the textContent
+tag.textContent //"This is an awesome paragraph"
+
+//alter the textContent
+tag.textContent = "blah blah blah";
+
+Dangerous to update because may lose specialzied text tags. 
+
+innerHTML - similar to textContent except it returns a string of all the HTML contained ina given element;
+
+tag.innerHTML; //."This is an <strong>awesome</strong> paragraph"
+
+ATTRIBUTES
+
+Use getAttribute() and setAttribute() to read and write attributes like src or href
+
+<a href="www.google.com">I am a link</a>
+<img src="logo.png">
+
+var link = document.querySelector("a");
+link.getAttribute("href"); //"www.google.com"
+link.setAttribute("href", "www.dogs.com");
+
+var img = document.querySelector("img");
+img.setAttribute("src", "corgi.png");
+
+Change Google Homepage
+
+DOM Events - making things interactive
+
+Event everywhere:
+Clicking a button
+Hovering on a link
+Dragging and Dropping
+Presing the enter key
+
+The Process
+
+Select an element and then add an event listener
+
+Listen for a click on a button
+Listen for a hover eent on the hz
+Listen for a keypress event on text input
+
+The Syntax
+
+To add a listener, use method called addEventListener
+
+element.addEventListener(type, functionToCall);
+
+var button = document.querySelector("button");
+button.addEventListener("click", function() {
+	console.log("You clicked the button!");
+});
+
+Example:
+
+<button>Click me</button>
+<p>No One Has Clicked Me Yet</p>
+
+var button = document.querySelector("button");
+var paragraph = document.querySelector("p");
+
+//setup click listener
+button.addEventListener("click", function() {
+	paragraph.textContent = "Someone Clicked The Button!";
+});
+
+//adding listener to each li in a ul or ol:
+
+var lis = document.querySelectorAll("li");
+
+for (var i = 0; i < lis.length; i++) {
+	lis[i].addEventListener("click", function() {
+		this.style.color = "purple";
+	});
+}
+
+Don't need to use anonymous functions:
+
+var button = document.querySelector("button");
+var paragraph = document.querySelector("p");
+
+button.addEventListener("click", changeText);
+
+function changeText() {
+	paragraph.textContent = "Someone Clicked The Button!");
+}
+
+Can make more than one listener for an element, but they will execute sequentially.
+
+Events for mouseover:
+mouseover
+mouseout
+
+Change - event for getting input that changes. 

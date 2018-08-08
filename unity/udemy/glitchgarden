@@ -1,0 +1,518 @@
+GLITCH GARDEN
+
+Sprite sheets to use for assets and animations
+
+More animations. Using and making sprite animations
+
+CREATE SPLASH SCREEN
+
+Free version of unity requires Unity logo.
+
+Can add custom splash screen. 
+
+If we add music player on splash screen, because splash screen will never be loaded again, can use it without checking for duplicate instances.
+
+dafont - font
+freesound - audio
+
+Create Splash scene.
+
+Add UI - Image
+
+Import image as asset. Right clicking in Project folder.
+Then click image. Change Texture type to Sprite (2D and UI)
+Do not need to worry about Pixels Per Unit cause screen space texture. 
+
+Tell image ui element to preserve aspect ratio. And set native size.
+
+Leave canvas mode as Screen space overlay.
+
+Canvas Scaler tell to scale with screen size. If screen size is smaller than resolution, image should scale down. 
+
+Reference resolution should be resolution of image or set resolution.
+
+Screen Match Mode - is a new setting.
+
+Add Start Screen from other game. 
+
+Add background image.
+
+Add image UI element. Make it the first element on hierarchy so it is rendered first and therefore behind other objects.
+
+SCALING AND ASPECT RATIOS
+
+Game is going to be for mobile. Just tap and drag. 
+
+Aspect Ratios for mobile phones
+
+Aspect Ratio				Decimal				Example Devices
+4:3							1.3					ipad (1, 2, 3). Old android devices
+3:2							1.5					iphone (<= 4s). Some Android devices
+16:10						1.6					Android phones and tablets
+17:10						1.7					Android tablets
+16:9						1.8					iPhone 5/6. Andriod devices
+
+Width by Height of screen. 
+
+Handling other resolutoins
+
+Stretch - easy but ugly
+Black bars - appropriate in extreme cases
+crop edges - ok with care about what's lost. 
+
+Quiet zones are areas on image where if they are lose, it does not matter. No text or logos. Nothing very meaningful.
+
+Canvas
+
+Scale with screen size means canvas will scale with size of sceen. 
+
+Screen match mode:
+
+match width or height - can choose height or width. Will add blcak bars.
+expand - 
+shrink - will chop off sides 
+
+Can change aspect ratio on game screen to see how ui looks on different ratios. 
+
+ALTERNATIVE MUSIC MANAGER
+
+Can use array of AudioClips that correspond to each level.
+
+public AudioClip[] levelmusicChangeArray
+
+OnLevelWasLoaded(int level) - method called when level loaded
+
+void OnLevelWasLoaded(int level)
+{
+	AudioClip thisLevelMusic = levelMusicCangeArray[level];
+	if (thisLevelMusic)
+	{
+		audioSource.clip = thisLevelMusic;
+		audioSource.loop = true;
+		audioSource.Play();
+	}
+}
+
+MENUS, OPTIONS, ETC
+
+LevelManager - use as prefab. 
+
+Can prefab play and quit buttons. 
+
+ADDING FADE ANIMATIONS
+
+UI -> Panel
+
+Put it on canvas to render last. Then use script to change alpha. 
+
+Time.timeSinceLevelLoad - time since level load.
+float alphaChange = Time.deltaTime / fadeInTime;
+currentColor -= alphaChange;
+
+
+Make image Type simple. Change size of panel to fit screen. Remove image. 
+
+SCALING LEVEL BACKGROUNDS
+
+Import grass tile image. 
+Give it a Texture type because want it to repeat. 
+
+Give it correct width and height.
+
+Prefab canvas for use in other levels.
+
+PLAYER PREFS
+
+Player prefs - piece of persistent storage on device. No matter kind. These are for player preference and uncrpyted. Can be easy to lose track of what you are creating.
+
+Mapper class - all of your rights to player prefs go through series of constants that are defined in a single place. 
+
+Stores and accesses keys and values for player preferences. Float, Int, String.
+
+Can be slow to read and write. Max file size is 1 MB. 
+
+Use wrapper class. Centralizes all player prefs read and writing. Make static so available anywhere. Allows for checking/error handling. Safe and clear. 
+
+Make different preferences constants in the wrapper class.
+
+const float MASTER_VOLUME_KEY = "master_volume";
+
+pulic static void SetMasterVolume(float volume)
+{
+	if (volume > 0f && volume < 1f)
+	{
+		PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, volume);
+	}
+	else 
+	{
+		Debug.LogError("Master volume out of range");
+	}
+}
+
+public static float GetMasterVolume()
+{
+	PlayerPrefs.GetFloat(MASTER_VOLUME_KEY);
+}
+
+Can also unlock levels.
+Etc.
+
+UI SLIDERS
+
+musicManager = GameObject.FindObjectOfType<MusicManager>()
+
+SPRITE SHEET ANIMATION
+
+Sprite sheet are frames of an animation. If brain sees more than 24 then it fills it in and makes it animation. 
+
+Bone-based -> get sprites for each limb and appendage. Use pivot points and have bits of body move relative to one another. 
+
+Sprite sheets - frames of animation in a grid. 
+
+Import sprite sheet into project. Right click and import new asset. 
+
+First treated as single sprite. ake sure texture type is sprite and sprite mode is multiple.
+
+Click sprite edior. Top left, use slice type as grid. Figure out pixel size.
+
+Assuming grid sheet has no padding. 
+
+Grid width = image width / cols
+Grid height = image height / row
+
+Can do short cut and select all frames and drag into hierarchy. 
+
+To understand.
+
+Empty game objcet. Call it lizard. Don't really worry about where. 
+
+Manually add a sprite renderer onto game object. Grab simple sprite onto sprite renderer.
+
+Also need to add an Animator. 
+
+Make folder called Animations. 
+
+Create Animation Controller. 
+
+Then create animation state in animation controller. 
+
+Then see animation window. 
+
+Add animation clip to make things move. 
+
+Click on game objcet. Add Animation Clip in animation window. Name it. Select all of animation frames and drag them into new animation clip.
+
+Recording mode turned on automatically. Turn it off. 
+
+Preview animation. Click on Animator. lizard. And click play. 
+
+Samples in animation window changes how many frames animation should run. 30 samples in 30fps. 
+
+RATIO MATH PRIMER
+
+4:3 to 19:9
+
+If want to get smaller. 
+
+11 * 3/4 
+11 * 4/3 to make bigger if wanted to get ratio in 4:3. 
+
+WORLD SPACE UI CANVAS
+
+Want background canvas to world space. 
+
+Want each square grass blocks to be perfectly square, one world unit per block and coordinate system where bottom left grass square is at coordinate (1,1) up to 9. 
+
+Change world space to canvas for levels.
+Adjust tiling (using UV Rect)
+Add temporary "Core Game" panel
+Translate and scale level canvas
+Adjust and prefab the camera.
+
+To adjust grass tiling using UV rect
+
+Want 9 tiles in 4:3
+That's 9 * 4 / 3 in 16:9
+There are 2 grass squares per tile. Cause grass quare and on each side is half a square.
+Therefore want width = 12/2 = 6. 
+Height there fore H = 6 / 16 * 9 = 3.375
+
+Want 9 square wide in 4:3. So 9/4*3 = 6.75 squares tall
+6.75/9*16 = 12 squares wide in 16:9. So still 6.75 tall in 16:9
+
+UV mapping. How map image texture onto playspace. 
+
+If click set native size, the canvas will get bigger. Because grass tiles are 512 by 512. Image is actually bigger. But Unity snaps this to nearest power of 2. So it can scale texture resolution down quickly when looking from a distance. 
+
+Add a temporary Core Game panel.
+
+Set to 1600 / 4 * 3 = 1200 pixels wide
+Note it covers 9 columns as per GDD
+Adjust to 5 rows high, leaves nice space
+Center on the screen
+This is the world space coordinate system
+
+Add UI Panel. Give it 1200 width and figure out height. 
+Move grass y coordinate until grid is correct. And there are squares. 
+
+Translate and scale level canvas.
+
+1 grass square = 1m = 1 world unit
+Width is 1600 pixels and 12 world units wide
+"Pixels per world unit" = 1600/12 = 133.3333333
+Scale Level Canvas to 12/1600 = 0.0075 in X and Y
+
+Then can make animation world unit to 133.3333. Then moving it moves the object by 1 world unit will moe it by grid coordinates. 
+
+Orthographic camera - size of height / 2. Size to fit. 
+
+Canvas can make Event Camera the camera. 
+
+Can prefab camera and levels. 
+
+THE ANIMATION CONTROLLER. 
+
+Create Game Object
+Add Animator
+Add Animation States
+Add Animator Clip
+Set transitions
+And Use parameters to change transitions. 
+
+
+Add states. 
+
+Right click. Create empty animation state.
+
+Or add clip in Animation window. This will create new state. 
+
+Exit Time parameter is how many times animation will run before exiting and transitioning. 
+
+Add animation to an animator. Animators hold animations. 
+
+Create new animation. In animator, select state and add animation to motion field. 
+
+Tell animation to loop if needed. 
+
+TEXTURE SIZE AND COMPRESSION
+
+Animations can be made to look fuzzy. 
+
+Attacking sprite sheet is treated as texture. Texture is just a bunch of pixels that can be applied to a 2d surface. Sprite is just rectangular version. 
+
+Problem with animation is that Unity may have scaled animation frames down. 
+
+Have default max texture size and similar settings for specific platforms. 
+
+If change to 4096 will have better. 
+
+Warning. File size will grow. Problem is this will use more memory. 
+
+Different devices have different max texture sizes. 
+
+Format:
+compressed - good size and decent colors.
+16 bit - smaller size but less quality colors
+Truecolor - double size or more. But best quality colors. 
+
+Could optimize by tightly packing sprite sheet. To fit into smaller texture size. 
+
+shoebox, texturepacker are tools to do this
+
+MIP Mapping - techqnieu where an original high-resolution texture map is scaled and filtered into multiple resolutions within the texture file
+
+Takes up 33% mor espace but MUCH faster to render.
+Not needed if we're at a fixed distance. 
+
+How prevent fuzz:
+check sprite sheet size in pixels
+Look at max x or y diemsions
+Ensure texture max size is larger
+OR compact sprite sheet
+Can leave compression on though
+
+USING GIMP TO SLICE IMAGES
+
+Slicing Images in Gimp
+
+Image > Canvas Size...increase by 2 pixels
+Layer > Layer To Image Size for yellow box
+Tools > Selection Tools > Rectangle Select
+Cut and paste section 2 pixels lower.
+Save as PNG in Unity Assets folder
+
+Opent image in gimp. 
+Make image size 2 pixles more.
+Make layer image size.
+Cut bottom of image. Paste it two pixels lower. 
+The save.
+
+Import new image as multiple sprite. 
+Slice image. 
+Move pivot point of top part to where want animation to pivot from. 
+
+Then we can create empty game object for object.
+add child objects for each "limb" of sprite. 
+
+To create bone-based animations
+
+Create at least one sprite sheet for bone animation.
+Make sure there's a pixel or two gap around limbs
+Export with transparent background
+Import into Unity as multiple sprite
+Set pivot points appropriately. 
+
+2D BONE BASED ANIMATION
+
+Add animator to parent object.
+Add new animation and animatino controller. 
+Drop animation controller into object's animator. 
+
+Select key frames and change values to create animation. 
+
+
+GLITCH GARDEN
+
+Sprite sheets to use for assets and animations
+3. Convert sprite sheet into separate frames
+4. Add Sprite Renderer curve to Body object
+5. Adjust animation to taste and repeat
+
+PROJECTILE ANIMATION
+
+Change rotation in animation. 
+
+UNITY REMOTE
+
+Scripting. For what app will look like on mobile device.
+
+Edit Project Settings -> Editor. 
+
+Change device to Any Android Device.
+
+Install Unity Remote App.
+
+MOVING THINGS FROM SCRIPT
+
+Create new script. 
+
+[Range(-1f, 1.5f);
+public float speed;
+
+Makes a slider or min and max of this value.
+
+void Update()
+{
+	transform.translate(Vector3.left * speed * Time.deltaTime);
+}
+
+Can mute transitions. To debug one single animation.
+
+Then fiddle with speed. To see what looks like for animation. 
+
+COLLISION MATRIX SCRIPT
+
+Few checks, so might as well keep checks in same place. 
+
+If having to do many checks, it may not be wise to use collision matrix.
+
+Can make rigidbody kinematic in code
+
+rb.isKinematic = true;
+
+Ensure you need physics or not to decide whether or not to use collision engine. 
+
+ANIMATION EVENTS
+
+Allow you to call functions and pass parameters at a certain animation frame.
+
+Can only have certain parameters. Limited. Check docs. 
+
+COMPONENTS VS INHERITANCE
+
+Different approaches to abstraction. 
+
+Component pattern -> instead of sharing code between two classes by having them inherit from the same cclass, we do so by having them both own an instance of the same class.
+
+Extending code. 
+
+Add special behavior to specialized scripts and general behavior to general script. 
+
+Can see if an enemy is of certain type by detecting if it has certain specialized script. 
+
+USING HEALTH COMPONENT
+
+Why separate health component. 
+
+Attackers and defenders have health that work in similar way. 
+
+DEFENDERS AND PROJECTILES
+
+1. Different animation state for each start column
+2. Create/modify animation from script
+3. Do all translation from script
+
+Give sprites their own child object so they can be rotated without the whole object being rotated
+
+Has own class for extending Unity physics engine. 
+
+Use transform.translate(velocity * speed * time.deltaTime);
+
+HANDLING PROJECTILE DAMAGE
+
+Checking if object has health and attacker components. Can do other stuff.
+
+Checking tag or whatever I'd imagine. 
+
+ENEMY SPAWNING AND FLOR
+
+Method								Pros										Cons
+Manually Planned					Gives most design control					Can be very time consuming
+																				May miss interesting ideas
+Random/Procedural at design			Gives consistent experience					Takes more time than runtime
+									Can give best results
+
+Random/Procedural at rnutime		Very quick to set up.						Can lead to impossible play
+									Can help replayability						Harder to play-tune
+																				Less consistent/"unfair"
+
+Adaptive							Keeps player in the flow					Harder to implement
+
+[Tooltip ("Tip message for you")] - attribute that shows pop up to show what a variable does
+
+Use a method to spawn GameObjects
+
+Check if it is time to spawn, then call spawn.
+
+Fastest you can spawn is the framerate. 
+
+Can check spawn rates with a stop watch
+
+bool isTimeToSpawn(GameObject attackerGameObject) {
+	Attacker attacker = attackerGameObject.GetComponent<Attacker>();
+	
+	float meanSpawnDelay = attacker.seenEverySeconds;
+	float spawnsPerSecond = 1 / meanSpawnDelay;
+
+	if (Time.deltaTime > meanSpawnDelay) {
+		Debug.LogWarning("Spawn rate capped yb frame rate");
+	}
+
+	float threshold = spawnsPerSeond * Time.deltaTime;
+	
+	if (Random.value < threshold) {
+		return true;
+	} else {
+		return false;
+	}
+
+	return true;
+}
+
+For messing with spawn rates for each enemy. 
+
+Check each object in array
+
+If timeToSpawn then spawn. 
+
+

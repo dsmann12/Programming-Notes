@@ -1,0 +1,77 @@
+GENERATORS
+
+ITERATION vs GENERATION
+
+Generator functions allow us to write a function that can send back a value and then later resume to pick up where it left off. Allows us to generate a sequence of values over time. Main difference of syntax will be use of a a *yield* statement. 
+
+Mostly appear similar to regular function. Main difference is when a geneartor function is compoled they become an object that supports an iteration protocol. 
+
+When called in code, they do not return value and exit. They suspend and resume their execution and state around the last point of value generation. Main advantage if that instead of having to compute an entire series of values upfront, the generator functoins can be suspended. Known as *state suspension*
+
+Best for calculating very large sets of results. When don't want to allocate too much memory. 
+
+Many functions that returned lists in python 2 have been changed to return generator in Python3
+
+Examples
+
+def gencubes(n):
+	for num in range(n):
+		yield num**3
+
+for x in gencubes(10):
+	print(x)
+
+Fibonacci Example:
+
+def genfib(n):
+	a = 1
+	b = 1
+	
+	for i in range(n):
+		yield a
+		t = a
+		a = b
+		b = a+b
+		# a,b = b, a+b tuple unpacking. one line
+
+for num in genfib(10):
+	print(num)
+
+Key to fully understanding generators is next() function and iter() function
+
+def simple_gen():
+	for x in range(3):
+		yield x
+
+g = simple_gen()
+
+print next(g)
+# 0
+print next(g)
+# 1
+print next(g)
+# 2
+print next(g)
+# ERROR
+
+A for loop automatically catches this error
+
+iter() - transforms iterables into iterators
+
+s = 'hello'
+
+for let in s:
+	print let
+# h
+  e
+  l
+  l
+  0
+
+s_iter = iter(s)
+next(s_iter)
+# h
+next(s_iter)
+# e
+...
+Until StopIteration error

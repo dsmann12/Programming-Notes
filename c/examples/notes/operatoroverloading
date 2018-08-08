@@ -1,0 +1,18 @@
+Operating Overloading - allows you to take operators
+(+, -, *, /) and change how they will be applied to 
+certain objects (like + for concatenation when using strings).
+
+Declare new method in class. Must have return type equal
+to class. 
+
+All operators are method name operator and the symbol of operation.
+
+operator+
+operator-
+operator*
+
+class OpOverload {
+	public:
+		int num;
+		OpOverload operator+(OpOverload
+)

@@ -1,0 +1,47 @@
+WEB BASICS
+
+Understand how internet works at high level
+Understand difference between front end and back end
+Understand html and how to view html on any website
+
+PC asks server for a copy of a webpage. Sticks request in virtual "envelope" called a packet. 
+Wrapped with specific information about request including website's IP address.
+
+Computer sends packet via large underground wire, passing through regional networks before getting into main Internet hub. 
+IP address tells hub that server is somewhere. 
+
+Hub sends packet as light across fiber optic cables (even across ocean). 
+
+Packet ends up at other Internet hub. Sends packet through series of regional networks to server location.
+
+Server reads request and prepared to send webpage to pc. Web pages are large though and cannot be sent at once, made up of images and text. 
+
+Server is pulverized into thousands of tiny packets of data. Each wrapped with all info it needs to rebuild webpage. Sent to local hub. 
+
+Local hub checks traffic report before sending them off. Travel through miles of land checking in a different hubs. Must get to pc fast as possible.
+
+All happens in about a second. 
+
+Internet a network of networks.
+
+Findinf the Right Address:
+
+-Query is submitted to ISP
+-Whithin ISP, DNS takes the domain name and turns it into an IP Address 
+
+Going To The Address
+-A request is sent to desired IP address via HTTP
+-Request finds fastest path to sever with specified IP
+-Not a direct journey, requires hopping from sever to server
+
+Server Responds
+- Requestsed server figures out what user was exactly asking for.
+-Server builds us the right content, often pulling information from database
+-Server responds with any combination of HTML, CSS, and Javascript
+-Browser takes info and makes it easy to read for humans
+
+View Page Source
+-Can view underlying HTML, CSS, and Javascript on any webpage
+-In chrome, right click and select "ViewPage Source"
+-Or View > Developer > View Source
+-Or CTRL--U

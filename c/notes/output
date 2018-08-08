@@ -1,0 +1,13 @@
+Output
+
+FILE * fp; //File pointer to access files
+
+Use fopen to get file and open it for access in write more
+
+fp = fopen("intput.txt", "w");
+fprintf(fp, "This is one line\n");
+fprintf(fp, "this is another line\n");
+fputs(fp, "string"); //prints string as line to file at fp
+
+fclose(fp); //close and free memory
+

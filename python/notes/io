@@ -1,0 +1,13 @@
+I/O in Python
+
+input - in 2.x
+raw_input - Only one in 3.0. Difference is always interprets what is typed as a string
+
+y = int(raw_input('Enter a number: '))
+
+#y is an int
+
+y = raw_input('Enter a number: ')
+#y is a string
+
+

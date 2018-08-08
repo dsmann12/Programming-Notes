@@ -1,0 +1,41 @@
+Graphics
+
+Only direct supports for notion of graphical position are newline and tab characters. Can embed notions of color and two-dimentional positions in markup languages. But have limitatoins. 
+
+Alternative: Notion of graphics and GUIs that is directly aimed at a compuer screen. 
+
+Fundamental concepts are inherently graphical (two dimensional, adapted to rectangular area of a computer scrren) such as coordinates, lines, rectangles, and circles. 
+
+Aim from a programming POV is a direcyt correspondence between objects in memory and images on screen. 
+
+Basic model:
+
+Compose objects with basic objects provided by a graphics system, such as lines. We "attach" these graphics objects to a window object, representing our pysical screen. Program that we can think of as display itself, as "a display engine", as "our graphics llibrary", as "the GUI library" then takes objects we have attached to our window and draws them on the screen. 
+
+
+Example 1
+
+OS graphical and GUI facilities limit output to specific OSes and force programmer to deal directly with a lot of messy details. 
+
+Instead use a library: fltk - Fast Light Tool Kit (full tick). Code is portable wherever fltk is used. 
+
+
+Coordinates:
+
+Computer screen is a rectangular area composed of pixels. 
+
+A pixel is tiny spot that can be given some color. 
+
+Most commont way of modeling a screen in a program is a rectangle of pixels. Each pixel is identified by an x(horizontal) and a y(vertical) coordinate. 
+
+x coordinates start at o, indicating leftmost pixel and increase toward right to rightmost pixel. y coordinates start with 0 indicating topmost pixel and increase toward the bottom to lowest pixel. 
+
+Number of pixels available depends on screen resolution.
+
+In context of interacting with computer using a screen, winow is a rectangular region of screen devoted to some specific purpose and controlled by a program. Window is addressed exactly like a screen. Basically window is small screen.
+
+Area of a window you can draw on is commonly referred to as a canvas.
+
+Shapes:
+
+

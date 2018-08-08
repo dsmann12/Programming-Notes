@@ -1,0 +1,7 @@
+VIM
+
+Vim-Plug -> package manager
+Vim-syntactic -> checking syntax in vim
+vim-javascript -> syntax highlighting and auto indenting and such
+ctrl-p -> fuzzy file finder. Can search through files and tree and structure with CTRP-P
+nerd-tree -> explor efilesystem and open up files and directories

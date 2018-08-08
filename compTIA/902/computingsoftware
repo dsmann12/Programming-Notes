@@ -1,0 +1,290 @@
+COMPUTING SOFTWARE
+
+902 Exam covers lots of software but mostly OS tools rather than specific apps. 
+
+5 Windows Versions make up bulk:
+-Windows Vista
+-Windows 7
+-Windows 8
+-Windows 8.1
+-Windows Phont/Mobile. 
+-Windows 10 is important too
+
+Apple:
+-OS X
+-iOS
+
+Linux
+
+Android
+
+COMMON OS FUNCTIONS
+
+OS communicates or provides a method for other programs to communicate with hardware of the PC or dervice. OS run on specific hardware. Must install 32 bit OS on 32 bit hardware. 
+
+OS creates a user interface (UI) - a viual representation of the computer on the monitor that makes sense to people using the computer
+
+OS enables users to determine the available installed programs and run, use, and shut down the programs of their choice
+
+OS enables users to add, move, and delete the installed programs and data
+
+OS provides a method to secure a system from all sorts of threats, such as data loss or improper acess.
+
+WINDOWS VISTA/7
+
+GUI primarily. Background is Desktop. Internet Explorer is main browser. Windows Explorer navigates file structure. 
+
+Aero/Aero Glass - open applications demonstrate transparency, where edges of applications show blurred background images. 
+
+Start button - click to get access to applications, tools, files and folder. 
+
+Pinned Programs - enables user to launch a program with single left click. Pin to task bar. 
+
+Taskbar - shows running programs. 
+
+Notification Area - shows programs running in background. Also called system tray. 
+
+Interaction mostly requires mouse or touch pad to move cursor and either left-clicking or right-clicking. Left-clicking selects, double-clicing opens. Right-clicking opens a context-meny from which you can select various options. 
+
+VISTA
+
+Major difference from 7 is:
+
+Sidebar - enabled by default, Houses one or more *Gadgets*, such as Clock, Calendar, and speeds. 
+
+WINDOWS 8/8.1
+
+Significant changes. Borrowed from tablet OSes to createa graphical set of tiles for full screen programs, called apps. Screen shows pinned apps, the default programs and programs selected by the user, and not applications installed on computer. 
+
+Metro UI - name for Windows 8 interface.
+
+Start Screen - default Windows 8 interface. 
+
+Live tiles.
+
+Desktop does not havea visible Start button. Access screen by pressing Windows key. 
+
+8.1
+
+Series of updates, Microsoft brought back features such as Start button, easy access to a Close button for apps, and ability to boot directly to Desktop. 
+
+Easy to pin apps to Start screen. Select arrow in bottom left to bring up Apps pane where can sort and select apps and utilities. Right click to pin it.
+
+8/8.1 also offer lots of hidden interface components that activate when you place cursor in certain places on screen. Dropping cursor to bottom left corner activates Start button when in start screen. 
+
+Placing curosr in top or bottom right corner of screen reveals the Charm Bar,
+
+Charm bar - location for tools called charms. Search tool for searching computer ot internet. Share charm for sharing photos, email, and more. 
+
+Final version of 8.1 uses Desktop rather than Start Screen as default interface. 
+
+WINDOWS 10 
+
+Microsoft created OS that blends traditional Windows 7 style with some more progressive features of Windows 8.x Metro/Modern UI. 
+
+Brought Start menu back even more, removed Charm bar, incorporated essentials tools, like Search, into task bar. 
+
+Start menu - brought up with Windows key. Brings up useful tools and most used apps on left and pinned apps on right. Can clik link name dAll apps to open a list of installed app. Right click to pin any app to Start screen. 
+
+Windows App and right or left arrow stick windows to one side of screen.
+
+MAC OS X
+
+Desktop - backgroun of main scren. 
+
+Dock - Can access frequently used applications by clicking on their icons. Can add and remove apps from Dock with a rick click. Also shows running applications.
+
+Mission Control - enables you to switch between open applications, windows, and more. Also accessed by pressing Ctrl+Up Arrow. 
+
+Spaces - multiple desktops. Can have different backgrounds and programs. Press and hold CTRL Key + left or right arrow to move between. 
+
+LINUX
+
+Desktop Environments - user interfaces on Linux. Many differnt distributions offer a variety of them. 
+
+Ubutu Linux:
+
+Unity - DE for Ubuntu. 
+
+Launcher - frequently used utilities and apps are locked on the Laucnher on left side of screen. Top left icon - Ubuntu button - offer s powerful system/network/Internet searching, while next icon down enables you to access files and folder. 
+
+FILE STRUCTURES AND PATHS
+
+Almost every OS stores files in folders in a tree pattern. 
+
+Root - drive or disk. Usually given a drive letter, like C. 
+
+WINDOWS
+
+root - where OS is installed.
+
+Windows Explorer - tool that lets users access folders and files in Windows in Windows Vista/7. 
+
+File Explorer - Windows 8/8.1/10.
+
+View -> Folder Options, such as view hidden files, hide file extensions, general options, and other view options. 
+
+Local Disk (C:) > Users > Mike translates to:
+
+C:\Users\Mike
+
+C:\ProgramFiles - by default, most programs install some or all of their essential files into a subfolder of the Program Files folder. Should have its own folder here. Individual companies decide how to label their subfolders. 
+
+C:\Program Files (x86) - In 64 bit Windows. 32bit apps go in here. 
+
+Personal Documents:
+
+C:\Users\Mike\Desktop - stores files on user's Desktop. Deleting it causes all files on Desktop to be deleted.
+
+C:\Users\Mike\Documents - Only Windows 7 uses My Documents. 
+
+C:\Users\Mike\Downloads - Preferred download folder for apps to use. Some do not.
+
+C:\Users\Mike\Music - default location for music downloaded. 
+
+C:\Users\Mike\Pictures - Default location for images imported into PC. Pictures library can and does draw from many folder locations. 
+
+C:\Users\Mike\Videos - Videos is default location for movies and homebrewed videos. 
+
+MAC OS X
+
+Finder - holds keys to files and folders in OS X. Has functionally similar folders. 
+
+Desktop, Documents, Downloads, Music, Pictures, etc. 
+
+Each user account on Mac will have a unique Users folder that is inaccessible by other users on that computer. 
+
+
+LINUX
+
+Mostly simlar to Mac, but uses Home folder instead of Users
+
+TECH LAUNCH POINTS
+
+Every OS has two or three areas for tech-specific utilities. 
+
+Good for last minute cram!
+
+Windows Vista/7 
+
+Three launch points:
+1. Control Panel
+2. System Tools
+3. Command Line Interface
+
+Control Panel - handles most maintenance, upgrade, and configuration aspects of Windows. 
+
+Click Start button, and choose Control Panel from Start menu.
+
+Opens in Category view by default. Displays icons in groups like Hardware and Sound. Requires additional click and sometimes guess about which category includes a needed app. Many techs use Classic view. 
+
+Applets - populate Control Panel. Name and selection of applets vary depending on version of Windows and whether any installed programs have added applets. All have applets that enable user to control specific aspects of Windows, such as appearance, installed apps, and system settings. 
+
+System Tools - Start menu offers variety of tech utilities collected in one place.
+
+System Tools menu, you'll find commonly accessed tools such as System Information and Disk Defragmenter. 
+
+Start -> All Programs -> Accessories -> System Tools. 
+
+Each version of Windows shares many of sme tools, but each includes its own utilities as well. 
+
+Character Map - allows usre to copy any Unicode character into Clipboard and paste it into document. 
+
+Command Line - throwback to how Microsoft OSes worked a long time ago when text commands were entered at a command prompt. \
+
+Start -> cmd and press ENTER. 
+
+dir - lists contents of a folder. 
+
+Windows 8/8.1
+
+New Three:
+1. Control Panel
+2. Administrative Tools
+3. Command Line Interface
+
+Control Panel - serves same function as in previous versions. Can be accessed in several ways:
+-Tap down arrow on lower right of Start screen and scroll all the way right in list of apps. In Windows System category, click on Control Panel. 
+-Type Control Panel in Search field in the Apps list. 
+-Right click on Start button and select Control Panel fomr the menu. You can bring up the same menu by pressing WINDOWS KEY-X. Called *Tech Essentials* gives access to collection of tools that every tech relies on heavily. 
+-In Start screen, start typing control panel. Searches in charm. 
+
+Administrative Tools - Beefed up Administrative Tools starting in Windows 8, adding some of the tools found in System Tools menu in previous versions of Windows. Enables you to set up hard drives, manage devices, test system performance, and much more. 
+
+-In Start screen, click on down arrow to open the Apps list. Scroll a little to right to see list of Administrative Tools. 
+-Begin typing administrative tools in Start screen and Administrative Tools ill appear in Search charm. 
+-Rich click start button (or press WINDOWS KEY-X) and select Control Panel from context menu. 
+
+Command Line:
+
+-Tap down arrow on lower right of Start screen and scroll all the way to the right in the list of Apps. In Windows System category, click on Command Prompt. Can also start typing command prompt in the Search field in the Apps list. 
+-Right-click on the Start button (or press WINDOWS KEY-X) and select Command Prompt from context menu. 
+-In Start screen, start typing cmd or command prompt and Command Prompt will appear in the Search charm. 
+
+WINDOWS 10:
+
+Windows 10 keeps Control Panel and cmd but focuses on an expanded Settings app for day-to-day administration. 
+
+Control Panel - Two standard ways to get there.
+
+-Right click on Start buton to open the Tech Essentials menu and select Control Panel
+-Can click on Start button to open Metro/Modern UI interface, start typing Control Panel and Control Panel will come up. 
+
+Administrative Tools becomes a single Control Panel applet. Same options for accessing it as in Windows 8
+
+Settings App - Windows 10 Settings App combines a huge number of otherwise disparate utilities, apps, and tools traditionally spread out all over your computer into one fairly unified, handy, Windows app. Has taken more and more tasks from Control Panel. 
+
+-Press WINDOWS KEY to access the Start menu. Select Settings from lower left. 
+
+MAC OS X
+
+Two key launch points:
+
+1. System Preferences
+2. Utilties folder
+
+SYSTEM PREFERENCES
+
+Click on Apple (top left corner). Select System Preferences from permanent Apple menu to open the app. From there have access to almost all settings you will ned to administer a Mac OS X system. 
+
+UTILITIES FOLDER
+
+Located in Applications folder. 
+
+Shortcut. With Finder in focus, click on Go on the menu bar and select Utilities. 
+
+Hot key: COMMAND-SHIFT-U.
+
+Gives access to tools you need to perform services on a Mac beyond what's included in System Preferences, including Activity Monitor and Terminal. Latter is CLI for Mac OS X. 
+
+Linux:
+
+Command Line is essential for Linux. Called Terminal. CTRL-ALT-T. 
+
+Other launch points vary from distro to distro. 
+
+Unity:
+
+Similar to Mac OS X, UUnity has central application for managing common settings called System Settings. 
+
+Click on gear icon on far right of menu bar and select System Settings. 
+
+Can find settings and utilities not in the System Settings application with the rest of the applicatoins in the Dash. Click on Ubuntu button at top of the Launcher. From here can search or browse for handy apps such as the System Monitor or Terminal. 
+
+Gnome 3:
+
+Default for Fedora and Red Hat Enterprise Linux. 
+
+Launch Points:
+1. All Settings
+
+All Settings - practically same as System Settings in Unity. Click on down arrow icon on far right of menu bar nd select the wrench and screwdriver icon. 
+For other system utilities such as System Monitor or Terminal, click on the Activities button in far left of menu bar. From here can search for utility from the box at the top or select the Show Applications grid icon from bottom of Dash on left side of screen. Will open a menu showing all installed apps, and within this list os a folder for Utilities. 
+
+KDE Plasma Desktop:
+
+Default for OpenSUSE, Kubuntu
+
+Configuration utilities can vary among the different KDE-based distros. 
+
+In all KDE distros, everything you need to work on the system is accessible from the Kickoff menu on far left of the panel. Looks and works a lot like Start menu. From Kickoff menu, can search for a needed utility or select the applications tab at the bottom. 

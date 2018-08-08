@@ -1,0 +1,13 @@
+Header is the key to managing declarations of facilities defined elsewhere in C++.
+A header is a collection of delcarations, typically defined in a file, so header is also
+called a header file. Such headers are "included" via #include in source files. 
+
+Declarations are are in header such as token.h
+Definitions are in token.cpp
+
+#include "file.h" simply copies declarations from file.h ito file at point of #include
+
+#include is part of preprocessing. 
+
+#include header both in source files that use its declarations and in source files that
+provide definitions for those declarations. 

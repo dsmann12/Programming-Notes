@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What is RAM?</Question>
+					<Answer>Random Access Memory - temporary storage where programs run on system. Programs loaded in RAM to be processed by CPU. Isn&apos;t saved to hard drive until user saves data. 
+
+1.5, 2, 4, 8, 16, 32GBs. 
+
+Has capacity and speed. How much and how fast.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What is DRAM?</Question>
+					<Answer xml:space="preserve">DRAM - Dynamic Random Access memory. First ever used in computers. Means every bit is stored with little capacitor and little transistor. Number of changes over the yeras. 
+
+Like electronic spreadsheet. Each cell is special type of semiconductor that can hold a single bit by using microscopic capacitors and transistors. DRAM put semiconductors into chips that can hold a certain number of bits. Bits inside the chip are organized in rectangular fashion using rows and columns. Each chip has limit on number of lines of code it can contain. Also limit on width of data. One chip might handle 8 bit wide data and another might handle 16bit wide data. x8 and x16 respsectively. 
+
+Low cost, high speed, capability to contain a loft of data in a relatively small package. 
+
+Became standard in all oomputers. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+		<value2>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483651</id>
+				<data>
+					<Question>How did DRAM work with CPU and historically.</Question>
+					<Answer xml:space="preserve">Needed RAM that could store 8bit (1 byte) chunks so MCC could put 8 bit chunk on EDB when CPU asked for line of code. All DRAM back then had 1 bit width. So sizes such as 54k x 1 or 256k x 1. 
+
+Solution: Take eight 1 bit wide chips and use MCC to organize them electroincally to be 8 bit wide. 
+
+More complex command in 8088 were 2 bytes wide. MCC dealt with this by taking command 1 byte at a time. Took twice as long to handle command. 
+
+8086 - 16 bit frontside bus but otherwise identical to 8088. But no affordable MCC or RAM to handle 2 bytes, so IBM bought 8088. 
+
+As CPU data bus sizes increased, so did need for RAM wide enough to fill bus.
+
+DRAM stcisk.
+
+Intel 80386 had 32bit data bus. DRAM manufacturers created wider DRAM chips, such as x4, x8, and x`16 and putting multiples of them on a small circuilt board called a stick or module (Single Inline Memory Module)
+
+Modern CPUs have some commands that are 64bits wide. To optimize flow of data into and out of CPU, the modern MCC provides at least 64 bits of data every time CPU requests information from RAM. 
+
+Modern DRAM chips come in 32bit and 64bit wide data form factors with varying number of chips. x32 or x64. When CPU needs certain bytes of data, it requests those bytes via the address bus. MCC keeps trakc of RAM and how many DRAM chips work together to provide memory. Gives it to CPU. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value2>
+		<value3>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483652</id>
+				<data>
+					<Question>What is SDRAM?</Question>
+					<Answer xml:space="preserve">SDRAM - Synchronous DRAM. Synchronized with system clock, just like CPU and MCC, so MCC knows when data is ready to be grabbed from SDRAm and little time is wasted. 168 pin DIMM (Dual In-Line Memory Module). Two notches in it. Pins on either side of sick have different jobs. Has clock speed. Must get right spede for motherboard. Intel and other companies got together to create speed ratings fror RAM.6Mhz Motherboard - PC66. 100Mhz Motherboard - PC100 speed. PC ratings. Lasted a long time. Not in PCs so much now but in other equipment (printers).
+
+Laptops came in 68-pin, 144-pin, or 172-pin micro DIMM package. And 72-pin, 144-pin, or 200-pin small outline DIMM(SO-DIMM)
+
+SDRAM speed was tied to system clock so its clock speed matched the frontside bus. Five clock speeds were common: 66, 75,83,100, 133 MHz. RAM speed had to match or exceed system speed of computer or pc would not work. 
+
+For Pentium III with 100 MHz fontside bus, you need to buy SDRAM DIMMs rated at PC100 or PC133. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value3>
+		<value4>
+			<polymorphic_id>2147483650</polymorphic_id>
+			<polymorphic_name>ImageQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483653</id>
+				<data>
+					<Image>SDRAM</Image>
+					<Answer xml:space="preserve">SDRAM - Synchronous DRAM. Synchronized with system clock, just like CPU and MCC, so MCC knows when data is ready to be grabbed from SDRAm and little time is wasted. 168 pin DIMM (Dual In-Line Memory Module). Two notches in it. Pins on either side of sick have different jobs. Has clock speed. Must get right spede for motherboard. Intel and other companies got together to create speed ratings fror RAM.6Mhz Motherboard - PC66. 100Mhz Motherboard - PC100 speed. PC ratings. Lasted a long time. Not in PCs so much now but in other equipment (printers).
+
+Laptops came in 68-pin, 144-pin, or 172-pin micro DIMM package. And 72-pin, 144-pin, or 200-pin small outline DIMM(SO-DIMM)
+
+SDRAM speed was tied to system clock so its clock speed matched the frontside bus. Five clock speeds were common: 66, 75,83,100, 133 MHz. RAM speed had to match or exceed system speed of computer or pc would not work. 
+
+For Pentium III with 100 MHz fontside bus, you need to buy SDRAM DIMMs rated at PC100 or PC133. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value4>
+		<value5>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483654</id>
+				<data>
+					<Question>What is DDR SDRAM?</Question>
+					<Answer xml:space="preserve">DDR SDRAM - Dual Data Rate SDRAm. Wanted to go faster. 184 pin DIMM package. One notch. Took motherboard speed and doubled it so every click of system clock you got two RAM clocks. Copied Rambus, doubling the througput of SDRAM by making two processes for every clock cycle. Speed up RAM without having faster motherboards. 
+
+To calculate PC Rating and DDR SPed: Take motherboard speed and double it. That&apos;s DDR Speed. Then multiply that by 8. THat&apos;s PC Rating. 
+
+Copied Dual Channel Architecture from RDRAm. Using two sticks together to increase throughput. Must be identical sticks
+
+DDR Speed is for individual DDR chips. (8 chips on stick). PC is for DDR sticks. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value5>
+		<value6>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483655</id>
+				<data>
+					<Image>DDR SDRAM</Image>
+					<Answer xml:space="preserve">DDR SDRAM - Dual Data Rate SDRAm. Wanted to go faster. 184 pin DIMM package. One notch. Took motherboard speed and doubled it so every click of system clock you got two RAM clocks. Copied Rambus, doubling the througput of SDRAM by making two processes for every clock cycle. Speed up RAM without having faster motherboards. 
+
+To calculate PC Rating and DDR SPed: Take motherboard speed and double it. That&apos;s DDR Speed. Then multiply that by 8. THat&apos;s PC Rating. 
+
+Copied Dual Channel Architecture from RDRAm. Using two sticks together to increase throughput. Must be identical sticks
+
+DDR Speed is for individual DDR chips. (8 chips on stick). PC is for DDR sticks. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value6>
+		<value7>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483656</id>
+				<data>
+					<Question>What is the PC Rating of SDRAM with a motherboard of 66Hz, !00Mhz, or 133 Mhz?</Question>
+					<Answer>PC66, PC100, and PC133</Answer>
+				</data>
+			</ptr_wrapper>
+		</value7>
+		<value8>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483657</id>
+				<data>
+					<Question>What is the DDR Speed and PCRating or RAM on motherboard with 100MHz clock speed? 200Mhz? 166 Mhz? 300 Mhz?</Question>
+					<Answer>DDR Speed is for individual DDR chips. (8 chips on stick). PC is for DDR sticks. 
+
+Clock Speed                     DDR Speed                       PC Speed
+100 MHz                         DDR-200                         PC-1600
+133 MHz                         DDR-266                         PC-2100
+166 MHz                         DDR-333                         PC-2700
+200 MHz                         DDR-400                         PC-3200
+217 MHz                         DDR-433                         PC-3500
+233 MHz                         DDR-466                         PC-3700
+250 MHz                         DDR-500                         PC-4000
+275 MHz                         DDR-550                         PC-4400
+300 MHz                         DDR-600                         PC-4800</Answer>
+				</data>
+			</ptr_wrapper>
+		</value8>
+		<value9>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483658</id>
+				<data>
+					<Question>What is dual channel architecture and which RAM used it?</Question>
+					<Answer xml:space="preserve">Copied Dual Channel Architecture from RDRAm. Using two sticks together to increase throughput. Must be identical sticks
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value9>
+		<value10>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483659</id>
+				<data>
+					<Question>What is DDR2 RAM?</Question>
+					<Answer xml:space="preserve">DDR2 - Improved DDR. Enhancements enabled it to run faster than DDR while using less power. Big speed increase comes by clock doubling the input/output circuits on the chips. Does not speed up core RAM (part that holds data) but speeding up input/output and adding special buffer (like a cache) makes it run much faster. 240 pin DIMM. One notch. Different place than regular DDR. Gets more complicated. Take Motherboard speed and double that for DDR speed. Then to get DDR2 speed, must double DDR speed. Multiply by 8 to get PC Speed. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value10>
+		<value11>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483660</id>
+				<data>
+					<Image>DDR2</Image>
+					<Answer xml:space="preserve">DDR2 - Improved DDR. Enhancements enabled it to run faster than DDR while using less power. Big speed increase comes by clock doubling the input/output circuits on the chips. Does not speed up core RAM (part that holds data) but speeding up input/output and adding special buffer (like a cache) makes it run much faster. 240 pin DIMM. One notch. Different place than regular DDR. Gets more complicated. Take Motherboard speed and double that for DDR speed. Then to get DDR2 speed, must double DDR speed. Multiply by 8 to get PC Speed. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value11>
+		<value12>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483661</id>
+				<data>
+					<Question>What is the DDR, DDR2, and PC speed of DDR2 RAM on motherboard with 100Mhz clock? 133 MHz? 166 MHz? 200 Mhz?</Question>
+					<Answer xml:space="preserve">Core RAM Clock Speed                    DDR I/O Speed                   DDR2 Speed                      PC Speed
+100 MHz                                                 200 MHz                                 DDR2-400                        PC2-3200
+133 MHz                                                 266 MHz                                 DDR2-533                        PC2-4200
+166 MHz                                                 333 MHz                                 DDR2-667                        PC2-5300
+200 MHz                                                 400 MHz                                 DDR2-800                        PC2-6400
+266 MHz                                                 533 MHz                                 DDR2-1066                      PC2-8500
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value12>
+		<value13>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483662</id>
+				<data>
+					<Question>Describe DDR3 SDRAM?</Question>
+					<Answer xml:space="preserve">DDR3 - Most common today. 240 pin DIMM. Notch in different location than DDR2. Quadruples bus. Higher speeds, more efficient architecture, and around 30% lower power consumption than DDR2. Doubles buffer of DDR2 from 4 bits to 8 bits. Some also include feature called XMP (Extended Memory Profile) that enables power users to overclock their RAM reasily. Also uses higher-density memory chips up to 16 GB DDR3 modules. Some mobos also support triple-channel architecture or quadruple channel architecture, which is like dual channel but with 3 or 4 sticks. DDR3 quadruples clock speeds, thanks to increased buffer size which allows it to grab twice the data for every clock cycle than DDR2. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value13>
+		<value14>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483663</id>
+				<data>
+					<Image>DDR3</Image>
+					<Answer xml:space="preserve">DDR3 - Most common today. 240 pin DIMM. Notch in different location than DDR2. Quadruples bus. Higher speeds, more efficient architecture, and around 30% lower power consumption than DDR2. Doubles buffer of DDR2 from 4 bits to 8 bits. Some also include feature called XMP (Extended Memory Profile) that enables power users to overclock their RAM reasily. Also uses higher-density memory chips up to 16 GB DDR3 modules. Some mobos also support triple-channel architecture or quadruple channel architecture, which is like dual channel but with 3 or 4 sticks. DDR3 quadruples clock speeds, thanks to increased buffer size which allows it to grab twice the data for every clock cycle than DDR2. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value14>
+		<value15>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483664</id>
+				<data>
+					<Question>What is the DDR, DDR3, and PC Speed of a motherboard with 100 Mhz clock? 166 Mhz? 200 Mhz? 266 Mhz? 300 Mhz?</Question>
+					<Answer xml:space="preserve">Core RAM Clock Speed                    DDR I/O Speed                   DDR3 Speed                      PC Speed
+100 MHz                                                 400 MHz                                 DDR3-800                        PC3-6400
+133 MHz                                                 533 MHz                                 DDR3-1066                       PC3-8500
+166 MHz                                                 667 MHz                                 DDR3-1333                       PC3-10667
+200 MHz                                                 800 MHz                                 DDR3-1600                       PC3-12800
+233 MHz                                                 933 MHz                                 DDR3-1866                       PC3-14900
+266 MHz                                                 1066 MHz                                DDR3-2133                       PC3-17000
+300 MHz                                                 1200 MHz                                DDR3-2400                       PC3-19200
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value15>
+		<value16>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483665</id>
+				<data>
+					<Question>Describe DDR3L/DDR3U RAM</Question>
+					<Answer>DDR3L/DDR3U - L is low voltage DDR3 that provides substantial cost savings when used in massive RAM apps (like big data centers). Runs at 1.35 volt scompared to 1.5 or 1.65 for regular DDR3, providing up to 15% cost savings. U is ultra low voltage version, runs at 1.25 V. Lower voltage means less heat generated. In server farm or data center that can reduce air conditioning</Answer>
+				</data>
+			</ptr_wrapper>
+		</value16>
+		<value17>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483666</id>
+				<data>
+					<Question>Describe DDR4 SDRAM?</Question>
+					<Answer xml:space="preserve">DDR4 - Newest. 2014. Offers higher density and lower voltages than DDR3 and can handle faster data transfer rates. DIMMs running DDR4 top out at 16GB but run at only 1.2V. Performance versions tat run at 1.35 V and low voltage that handles 1.05V. Uses 288 pin DIMM. 
+
+With DDR4, most techs have switched from bit rate to megatransfers per second (MT/S. Way to descirbe the bandwidth as number of data operations happening at any given second. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value17>
+		<value18>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483667</id>
+				<data>
+					<Image>DDR4</Image>
+					<Answer xml:space="preserve">DDR4 - Newest. 2014. Offers higher density and lower voltages than DDR3 and can handle faster data transfer rates. DIMMs running DDR4 top out at 16GB but run at only 1.2V. Performance versions tat run at 1.35 V and low voltage that handles 1.05V. Uses 288 pin DIMM. 
+
+With DDR4, most techs have switched from bit rate to megatransfers per second (MT/S. Way to descirbe the bandwidth as number of data operations happening at any given second. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value18>
+		<value19>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483668</id>
+				<data>
+					<Question>What is the Bandwidth, DDR4 Speed, and PC Speed of motherboard with clock speed 200 Mhz? 300 Mhz? 400 Mhz?</Question>
+					<Answer>Clock Spede                     Bandwidth                       DDR4 Speed                      PC Speed
+200 MHz                         1600 MT/s                       DDR4-1600                       PC4-12800
+266 MHz                         2133 MT/s                       DDR4-2133                       PC4-17000
+300 MHz                         2400 MT/s                       DDR4-2400                       PC4-19200
+400 MHz                         3200 MT/s                       DDR4-3200                       PC4-25600</Answer>
+				</data>
+			</ptr_wrapper>
+		</value19>
+		<value20>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483669</id>
+				<data>
+					<Question>What is the capacity of ram?</Question>
+					<Answer>Capacity - different RAM sticks have different capacities depending on how much they hold. In general want to install same capacity into every slot. RAM is additive. Mobo manual will tell you highest capacity of RAM stick that can go in RAM slot.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value20>
+		<value21>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483670</id>
+				<data>
+					<Question>What is RDRAM?</Question>
+					<Answer xml:space="preserve">RDRAM - RAMBus DRAM - Two notches. Long gone. Came out around time of SDRAM. First double pumped RAM. Had 184 pin RIMM. Had to install it in twos. Any leftover slots had to be filled with CRIMM (Continuity RIMM). Every slot in mobo populated. Speeds up to 800MHz needed for Pentium 4. But not accepted because significant delays in development and price many times that o SDRAM. Stick of RDRAMM was a RIMM. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value21>
+		<value22>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483671</id>
+				<data>
+					<Question>What is single sided RAM?</Question>
+					<Answer xml:space="preserve">Single-Sided Ram - Memory on one side of stick. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value22>
+		<value23>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483672</id>
+				<data>
+					<Question>What is double sided RAM?</Question>
+					<Answer xml:space="preserve">Double-Sided Ram - memory storage on both sides of stick. Must have motherboard that supports it. Chips on both sides. Basically two sticks of RAM soldered onto one board. Some mobos can&apos;t use them or only in certain ways. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value23>
+		<value24>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483673</id>
+				<data>
+					<Question>What is Parity RAM?</Question>
+					<Answer>ECC or Parity RAM - memory that has extra chips designed for error correction. Usually only seen on big server systems. Can only be used on motherboard that accept them. Bank server, for example, must resist even smallest errors. 
+
+Parity RAM - stored an extra bit of data (called parity bit) that MCC used to verify whether dat awas correct. Wasn&apos;t perfect. Would&apos;t always detect an error and if MCC did find an error, it couldn&apos;t correct it.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value24>
+		<value25>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483674</id>
+				<data>
+					<Question>What is ECC RAM?</Question>
+					<Answer>ECC or Parity RAM - memory that has extra chips designed for error correction. Usually only seen on big server systems. Can only be used on motherboard that accept them. Bank server, for example, must resist even smallest errors. 
+
+Error Correction Code (ECC) RAM - major advance. First ECC detects any time a single bit is incorrect. Second, ECC fixes these errors on the fly. Checking and fixing come at price as ECC is always slower. Can find DDR2, DDR3, or DDR4 sticks thta come in 240-pin 72 bit versions. Extra 8 bits for error checking.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value25>
+		<value26>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483675</id>
+				<data>
+					<Question>What is a SODIMM?</Question>
+					<Answer xml:space="preserve">SODIMM (smal outline DIMM) - invented for laptops. SDRAM, DDR2, DDR3. Same speeds and have capacities. Same ram sticks but smaller and made for laptops. Must make sure size is correct for laptop.  Traditional sizes are 100, 144, and 200 pin. Unlike desktop memory, DDR can be in any of sizes. 204 pin SODIMMs pretty much unique to DDR3. Ensure right type of memory for system. 
+
+Know how many pins for each kind of SODIMM (DDR, DDR2, etc).
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value26>
+		<value27>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483676</id>
+				<data>
+					<Question>What is latency?</Question>
+					<Answer xml:space="preserve">RAM responds to electirical signals at varyingrates. When memory controller starts to grab a line of memory, a slight delay occurs. After RAM sends out requested line of memory, another slight delay before controller can ask for another line. 
+
+Latency - delay in RAM&apos;s response time. RAM with lower latency (CL6) is faster than RAM with higher latency (CL9). CL refers to clock cycle delays. 6 means memory delays 6 clock cycles before delivering data, etc. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value27>
+		<value28>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483677</id>
+				<data>
+					<Question>What does CAS describe?</Question>
+					<Answer xml:space="preserve">Column Array Strobe (CAS) latency of 11 not as good as CAS latency of 9.
+
+Can be deceptive when comparing generations of memory.
+
+DDR4 with higher latency is still performs as well as DDR3 at same clock speed. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value28>
+		<value29>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483678</id>
+				<data>
+					<Question>What is registered or buffered RAM?</Question>
+					<Answer xml:space="preserve">Registed and Buffered Memory - especially with ECC. Registered or Buffered RAM. Either term refers to a small register installed on some memory modules to act as a buffer between DIMM and memory controller. Extra bit of circuitry helps compensate for electrical problems that crop up in systems with lots of memory modules, such as servers. Motherboards will use either buffered or un-buffered (regular consumer RAM), not both. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value29>
+		<value30>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483679</id>
+				<data>
+					<Question>What are two indications that RAM was no properly installed?</Question>
+					<Answer xml:space="preserve">Most DDR Memory is Dual or Quad channel. Means must put in two or 4 sticks. Every stick in channel must be same speed and same capacity. 
+
+Two cases to see if messed up:
+
+1, Computer doesn&apos;t boot.
+2. Don&apos;t see RAM that was added. 
+
+Don&apos;t put different size RAM in same channel.
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value30>
+		<value31>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483680</id>
+				<data>
+					<Question>What shoud you check if you beliee there is a RAM problem?</Question>
+					<Answer>Check Windows to see how much RAM system asys it has. Click start, right click computer, select properties. Instal
+led Memory. 
+
+CPU-Z - SPD (Serial Presence Detect) - like CPU info but for RAM. Tells exactly type of RAM have, how big it is, i
+nformation for each slot. 
+
+Mean Time Between Failures (MTBF). Everything has MTBF. RAM has MTBF measured in decades. Assuming taken care of. 
+Blue Screen of Death symptom, reboots, freezes, melting screen. All errors point to bad RAM. 
+
+Either pull RAM out or use memory testing tools. 
+
+MemTest86 - older program but reliable. Tests memory. Very slow process. Takes hours to run. Boot into it, from IS
+O disc in optical media or flash drive. Reports something wrong in hex. Doesn&apos;t say &quot;that sticks bad&quot;. If it shows
+ an error, you know one stick is bad. Use process of elimination. 
+
+Windows 7 and later - comes with memory testing tool. Control Panel -&gt; Adminstrative Tools -&gt; Windows Memory Diagn
+ostic. Must run on its own, will restart computer.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value31>
+		<value32>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483681</id>
+				<data>
+					<Question>What are symptoms that show there may be a problem with RAM?</Question>
+					<Answer>Symptoms:
+
+General system sluggishness and excessive hard drive accessing. Programs take long time to load and seem to stall 
+and move slowly.
+
+Memory Errors show up in variety of ways on modern systems, including parity errors, ECC error messages, system lockups ,p[age faults, and other rror screens. Can indicate bad RAM but often point to something unrelated. 
+
+Real and phantom parity errors - Real parity errors are simply errors that MCC detects from parity or ECC chips. OS reports problem in  error message. &quot;Parity error at A5F2:004EEAB9). Almost always indicates you have a bad RAM stick. Phantom parity errors - show up on systems that don&apos;t have parity or ECC memory. If Windows generates parity erros with different addreseses, mostly likely do not have a problem with  RAM. Can occur for variety of reasons, including software proble,ms, heat or dust, etc. 
+
+System lockups and page faults can indicate problem wiht RAM.
+
+System lockup - when computer stops functioning. 
+
+Page fault - milder eroor that can be cause by memory issues but not necessarily system RAM problems. Look like RAM issues because Windows generates error messages with long hex digits. If same address repeats, then probably have problem with RAM otherwise problem is likely something else. 
+
+Non-maskable interrupt (NMI) - panic button in PC. Defined as an interruption the CPU cannot ignore. Manifests as a proprietary crash screen. Called Blue Screen of Death. 
+
+Intermittent memory errors can come from variety of sources, inclduing dying power supply, electrical interference, bugggy apps, buggy hardware, etc. Show up as lockups, general protection faults, page faults, and parity errors, but never have same address or happen with same applications.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value32>
+		<value33>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483682</id>
+				<data>
+					<Question>What is virtual memory?</Question>
+					<Answer xml:space="preserve">Virtual Memory - computers use a portion of hard drive as extension of system RAM, through what&apos;s called virtual m
+emory. Portion of hard drrive or solid state drive set aside as hat&apos;s called a *page file* or *swap file*. When co
+mputer starts running out of real RAM because too many program loaded, the system swaps programs from RAM to page 
+file, opening more space for programs currently active. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value33>
+		<value34>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483683</id>
+				<data>
+					<Question>How does virtual memory work in Windows?</Question>
+					<Answer xml:space="preserve">Windows virtual memory starts by creating a page file that resides on hard drive. Page file works like temporary s
+torage box. Windows rmeoves running programs temporarily from RAM into page file so other programs can load and ru
+n. Only used when RAM is full. Least used program typically taken from RAM and stored in page file. Program in pag
+e file when trying to be used will then be loaded back into RAM. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value34>
+		<value35>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483684</id>
+				<data>
+					<Question>What is disk thrashing?</Question>
+					<Answer xml:space="preserve">Swapping programs to and from page file and RAM takes time. Machine slows down. 
+
+Disk thrashing - using the page file too much. Reading and moving from hard drive too frequently. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value35>
+		<value36>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483685</id>
+				<data>
+					<Question>What are recommendations of RAM based on OS?</Question>
+					<Answer>Best RAM recommendations:
+
+32 bit - 2 GB to get by. 4 GB best.
+64 bit - 4 GB to get by, 8 GB for solid machine, 16 GB for serious work.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value36>
+		<value37>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483686</id>
+				<data>
+					<Question>How to determine current RAM in Windows?</Question>
+					<Answer>Determine Current RAM: CTRL-SHIFT-ESC and go to Performance.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value37>
+		<value38>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483687</id>
+				<data>
+					<Question>What is ReadyBoost?</Question>
+					<Answer xml:space="preserve">ReadyBoost - Windows Vista and later versions offer feature that enables use of flash media devices as super fast dedicated virtual memory. Performance gains over rtpical hard drive . Windows 7 and later can handle up to 8 flash devices, while Vista could only handle 1. Devices could be between 1 and 32 GB. Microsoft recommends 1-3x amount of system RAM. Most get out of a flash drive is 4GB without manually changing file system. 
+
+Plug ReadyBoost supported device itno USB port or flash memory card reader slot. Right click device in Computer and select properties. Click ReadyBoost tab and select radio button to either Dedicate this device to ReadyBoost or Use this device. Click Apply. 
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value38>
+		<value39>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483688</id>
+				<data>
+					<Question>Can you mix RAM with different speeds?</Question>
+					<Answer>Use RAM as identical as possible. Can mix speeds, but may not see performance improvements and must be as faster or faster than speed required by mobos.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value39>
+		<value40>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483689</id>
+				<data>
+					<Question>What is Serial Presence Detect?</Question>
+					<Answer>Serial Presence Detect (SPD) - mobo should detect and automatically set up and DIMM installed. RAM makers ad chip to modern sticks called SPD chip. SPD chip soters all information about DRAm including size, speed, ECC, or non-ECC, registered or unregistered and number of others bits of info. When PC boots, it queries SPD chip so that MCC knows how much RAM is on stick, how fast it runs, and other information. All new systems count on SPD to set RAM timings properly for system when it boots. RAM stick with bad SPD chip will get POST error message nd system won&apos;t boot.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value40>
+		<value41>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483690</id>
+				<data>
+					<Question>What are real and phantom parity errors?</Question>
+					<Answer xml:space="preserve">Memory Errors show up in variety of ways on modern systems, including parity errors, ECC error messages, system lockups ,p[age faults, and other rror screens. Can indicate bad RAM but often point to something unrelated. 
+
+Real and phantom parity errors - Real parity errors are simply errors that MCC detects from parity or ECC chips. OS reports problem in  error message. &quot;Parity error at A5F2:004EEAB9). Almost always indicates you have a bad RAM stick. Phantom parity errors - show up on systems that don&apos;t have parity or ECC memory. If Windows generates parity erros with different addreseses, mostly likely do not have a problem with  RAM. Can occur for variety of reasons, including software proble,ms, heat or dust, etc. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value41>
+		<value42>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483691</id>
+				<data>
+					<Question>What are system lockups?</Question>
+					<Answer xml:space="preserve">System lockups and page faults can indicate problem wiht RAM.
+
+System lockup - when computer stops functioning. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value42>
+		<value43>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483692</id>
+				<data>
+					<Question>What are page faults?</Question>
+					<Answer>System lockups and page faults can indicate problem wiht RAM.
+
+Page fault - milder eroor that can be cause by memory issues but not necessarily system RAM problems. Look like RAM issues because Windows generates error messages with long hex digits. If same address repeats, then probably have problem with RAM otherwise problem is likely something else.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value43>
+		<value44>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483693</id>
+				<data>
+					<Question>What is NMI?</Question>
+					<Answer>Non-maskable interrupt (NMI) - panic button in PC. Defined as an interruption the CPU cannot ignore. Manifests as a proprietary crash screen. Called Blue Screen of Death.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value44>
+	</value0>
+</cereal>
+

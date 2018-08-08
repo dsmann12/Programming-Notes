@@ -1,0 +1,121 @@
+Utilities
+
+*os* and *os.path* moduiles incude functions to interact with the file system. 
+
+The *shutil* module can copy files
+
+filenames = os.listdir(dir) -- list of filenames in that directoary path (no including . and ..). Filenames are just names in the directory, not their absolute path
+
+os.path.join(dir, filename) - given a filename from above list, use this to put dir and filename together to make a path
+
+os.path.abspath(path) -- given a path, return an absolute form (/home/david/foo/bar)
+
+os.path.dirname(path), os.path.basename(path) -- given dir/foo/bar.html return dirname "dir/foo" and basename "bar.html"
+
+os.path.exists(path) -- true if it exists
+os.mkdir(dir_path) -- makes on dir
+os.mkdirs(dir_path) -- makrs all needed dirs in this path
+
+shutil.copy(source-path, dest-path) == copy a file, dest path directories should exist)
+
+## Example pulls filenames from a dir, prints their relative and absolute paths
+def printdir(dir):
+  filenames = os.listdir(dir)
+  for filename in filenames:
+    print filename  ## foo.txt
+    print os.path.join(dir, filename) ## dir/foo.txt (relative to current dir)
+    print os.path.abspath(os.path.join(dir, filename)) ## /home/nick/dir/foo.txt
+
+Use help() and dir() funcions to explore a module.
+
+RUNNING EXTERNAL PROCESSES - commands
+
+The *commands* module is simple way to run an external command and capture its output. 
+
+(status, output) = commands.getstatusoutput(cmd) -- runs the command, waits for it to exit, and returns its status int and output text as a tuple. Command is run with its standard output and standard error combines into the one output text. Status will be non-zero is command failed. Since standard-err or command is captured, if its fails, need to print some indication of what happened. 
+
+output = commands.getoutput(cmd) -- as above but without status int
+
+commands.getstatus() -- but it does something else so don't use. Dumb bit of naming
+
+Want more control over sub-process? see:
+
+*popen2* module
+
+Also simple:
+
+os.system(cmd) -- runs command and dumps output onto your output and returns error code. Works if want to run command but do not need to capture its output into puthon data structures. 
+
+## Given a dir path, run an external 'ls -l' on it --
+## shows how to call an external program
+def listdir(dir):
+  cmd = 'ls -l ' + dir
+  print "Command to run:", cmd   ## good to debug cmd before actually running it
+  (status, output) = commands.getstatusoutput(cmd)
+  if status:    ## Error case, print the command's output to stderr and exit
+    sys.stderr.write(output)
+    sys.exit(1)
+  print output  ## Otherwise do something with the command's output
+
+EXCEPTIONS
+
+Exception represents a runtime error that halts the normal execution at a particular line and transfers control to error handling code.
+
+Might be that variable used in program does not hava value (ValueError), or a file open operation error because file does not exist (IOError). 
+
+Without error handling code, runtime exception halts program with an error message. 
+
+Can add "try/except" structure to code to handle exceptions:
+
+  try:
+    ## Either of these two lines could throw an IOError, say
+    ## if the file does not exist or the read() encounters a low level error.
+    f = open(filename, 'rU')
+    text = f.read()
+    f.close()
+  except IOError:
+    ## Control jumps directly to here if any of the above lines throws IOError.
+    sys.stderr.write('problem reading:' + filename)
+  ## In any case, the code then continues with the line after the try/except
+
+Can get a pointer to exception object itself with syntax "except IOError, e: .. (e points to exceptoin object)"
+
+HTTP -- urllib and urlparse
+
+Module *urllib* provides url fetching -- making url look like a file you can read from. The *urlparse* module can take apart and put together urls. 
+
+ufile = urllib.urlopen(url) -- returns a file like object for that url
+
+text = ufile.read() -- can read from it, like a file (readlines(), etc, also work)
+
+info = ufile.info() -- the meta info for that request. info.gettype() is the mime time, e.g. 'text/html'
+
+baseurl = ufile.geturl() -- get the "base" url for the request, which may be different from the original because of redirects
+
+urllib.urlretrieve(url, filename) -- downloads the url data to the given file path
+
+urlparse.urljoin(baseurl, url) -- given a url that may or may not be full and the baseurl of the page it comes from, return a full url. Use geturl() above to provide the base url. 
+
+## Given a url, try to retrieve it. If it's text/html,
+## print its base url and its text.
+def wget(url):
+  ufile = urllib.urlopen(url)  ## get file-like object for url
+  info = ufile.info()   ## meta-info about the url content
+  if info.gettype() == 'text/html':
+    print 'base url:' + ufile.geturl()
+    text = ufile.read()  ## read all its text
+    print text
+
+Works but does not include error handling if a url does not work for some reason. Here's version which adds try/except logic:
+
+## Version that uses try/except to print an error message if the
+## urlopen() fails.
+def wget2(url):
+  try:
+    ufile = urllib.urlopen(url)
+    if ufile.info().gettype() == 'text/html':
+      print ufile.read()
+  except IOError:
+    print 'problem reading url:', url
+
+

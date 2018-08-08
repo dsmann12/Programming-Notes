@@ -1,0 +1,253 @@
+DIRECTIVES
+
+Attribute vs Structural
+
+Attribute Directives - sit on elements like attributes. Never add or remove elements from DOM. Only affect element they are added to
+
+Structural Directives - also change structure of DOM around element. Have leading *. Affect whole area in DOM.
+
+INTRODUCTION
+
+Cannot have more than one structural directive on the same element. 
+
+
+Structural:
+
+*ngIf
+
+*ngFor
+
+Attribute: 
+
+ngClass
+
+ngStyle
+
+CUSTOM ATTRIBUTE DIRECTIVES
+
+Create a file with .directive.ts extension:
+
+basic-highlight/basic-highlight.directive.ts
+
+import { Directive, ElementRef, OnInit } from '@angular/core';
+
+@Directive({
+    selector: '[appBasicHighlight]'
+})
+
+export class BasicHighlightDirective implements OnInit {
+    constructor(private elementRef: ElementRef) {
+
+    }
+
+    ngOnInit() {
+        this.elementRef.nativeElement.style.backgroundColor = 'green';
+    }
+}
+
+Giving selector a name with [] means don't have to use brackets in HTML. 
+
+Must inform Angular a new directive was created by adding it to app.module
+
+app.module.ts
+
+import { BasicHighlightDirective } from './basic-highlight/basic-highlight.directive';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    BasicHighlightDirective
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Then can add it to html:
+
+<p appBasicHighlight>Style me with basic directive!</p>
+
+USING RENDERER TO BUILD CUSTOM ATTRIBUTE DIRECTIVE
+
+Should not directly access and change elements. So can use Renderer. 
+
+ng genreate directive <directive-name>
+ng g d <directive-name>
+
+ng g d better-highlight
+
+Must import Renderer2 from @angular/core
+
+better-highlight/better-highlight.directive.ts
+
+import { Directive, ElementRef, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appBetterHighlight]'
+})
+export class BetterHighlightDirective {
+
+  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
+
+  ngOnInit() {
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+}
+
+app.component.html
+
+<p appBetterHighlight>Style me with better directive!</p>
+
+Renderer - better. Angular not limited to browser, so if using something where DOM doesn't exist then trying to modify the element directly will cause an error. Should use for any DOM manipulations.
+
+HOSTLISTENER TO CHANGE STYLES
+
+@HostListener - directive can be used to change styles depending on a event
+
+import { Directive, ElementRef, Renderer2, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appBetterHighlight]'
+})
+export class BetterHighlightDirective {
+  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
+
+  ngOnInit() {
+   // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+
+  @HostListener('mouseenter') mouseover(eventData: Event) {
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+
+  @HostListener('mouseleave') mouseleave(eventData: Event) {
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+  }
+}
+
+HOSTBINDING
+
+@HostBinding - Can bind a style property to a variable so that it can be changed easily
+
+import { Directive, ElementRef, Renderer2, HostListener, HostBinding } from '@angular/core';
+
+@Directive({
+  selector: '[appBetterHighlight]'
+})
+export class BetterHighlightDirective {
+  @HostBinding('style.backgroundColor') backgroundColor: string = 'transparent';
+
+  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
+
+  ngOnInit() {
+   // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+  }
+
+  @HostListener('mouseenter') mouseover(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+    this.backgroundColor = 'blue';
+  }
+
+  @HostListener('mouseleave') mouseleave(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+    this.backgroundColor = 'transparent';
+  }
+}
+
+BINDING TO DIRECTIVE PROPERTIES
+
+Property values are hard coded. What if want property values to be dynamic? Color should change depending on context. 
+
+How does Angular know if we want to bind to property of HTML element or if want to bind to property of directive? It just figures it out on its own. 
+
+Can bind to the directive if want. 
+
+import { Directive, ElementRef, Renderer2, HostListener, HostBinding, Input } from '@angular/core';
+
+@Directive({
+  selector: '[appBetterHighlight]'
+})
+export class BetterHighlightDirective {
+  @Input() defaultColor: string = 'transparent';
+  @Input() highlightColor: string = 'blue';
+  @HostBinding('style.backgroundColor') backgroundColor: string;
+
+  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
+
+  ngOnInit() {
+   // this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+   this.backgroundColor = this.defaultColor;
+  }
+
+  @HostListener('mouseenter') mouseover(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+    this.backgroundColor = this.highlightColor;
+  }
+
+  @HostListener('mouseleave') mouseleave(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+    this.backgroundColor = this.defaultColor;
+  }
+}
+
+BEHIND THE SCENES IN STRUCTURAL DIRECTIVE
+
+* - indicates a structural directives
+
+Behind the scenes, it basically transforms code behind the scenes into an attribute property that is applied to each element created. 
+
+Create a directive normally. ng g d <name>
+
+Implement method with @Input property. set keyword. Just setter that implements method whenever property changes. Changes whenever condition passed changes. 
+
+unless.directive.ts
+
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[appUnless]'
+})
+export class UnlessDirective {
+  @Input() set appUnless(condition: boolean) {
+    if(!condition) {
+      this.vcRef.createEmbeddedView(this.templateRef);
+    }
+    else {
+      this.vcRef.clear();
+    }
+  }
+
+  constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) { }
+
+}
+
+
+app.component.html
+
+<div *appUnless="onlyOdd">
+          <li
+            class="list-group-item"
+            [ngClass]="{odd: even % 2 !== 0}"
+            [ngStyle]="{backgroundColor: even % 2 !== 0 ? 'yellow' : 'transparent'}"
+            *ngFor="let even of evenNumbers">
+            {{ even }}
+          </li>
+        </div>
+
+UNDERSTANDING ngSwitch
+
+Imagine app.component.ts has a variable with a value. Now, there is place in template where value changes. And want to display something different depending on value. 
+
+<div [ngSwitch]="value">
+        <p *ngSwitchCase="5">Value is 5</p>
+        <p *ngSwitchCase="10">Value is 10</p>
+        <p *ngSwitchCase="100">Value is 100</p>
+        <p *ngSwitchDefault>Value is Default</p>
+      </div>
+
+

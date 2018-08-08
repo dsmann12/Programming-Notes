@@ -1,0 +1,23 @@
+Heap
+
+Variables reserve memory on computer. That's what program has access to. 
+Up to this point, memory that program allowed to use was limited by variables
+declared. 
+
+What if you need more memory than variables reserve?
+
+Heap is leftover memory that computer is not using. Like extra memory you can
+borrow. Can access it with program, do what you want to do with it, then give
+it back to computer when done with it. 
+
+sizeof(basic type) -- returns number of bytes basic type holds on a system
+sizeof(int) = 4 in 32 bit systems. = 8 in 64 bit systems
+
+malloc - allocate memory from heap
+
+int * points;
+points = (int *) malloc(5 * sizeof(int)); //convert to int* so it will store ints
+
+free(points); //frees memory back to heap. Otherwise it will continue to store values
+
+can use it to expand arrays

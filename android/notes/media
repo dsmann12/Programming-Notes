@@ -1,0 +1,250 @@
+IMAGES, VIDEO, & SOUND
+
+LAYOUT
+
+Flexible layouts allow you to design for multiple screensizes and resolution
+
+Can also see the XML code and edit it to change design
+
+XML is more powerful.
+
+Linear Layout -> for laying things out in horizontal line
+Can make width wrap to content 
+
+Linear layout can exist inside relative layout
+
+ANIMATIONS
+
+Fading Animatinos -> fade away
+
+Image
+
+ImageView
+
+src -> source of image. Put in drawable.
+layout -> can set layout to align to edges of activity. 
+onClick() -> fade()
+
+public void fade(View view) {
+	ImageView image = (ImageView) findViewAsId(R.id.bart);
+	ImageView homer = (ImageView) findViewAsId(R.id.homer);
+	bart.animate().alpha(0f).setDuration(2000);
+	home.animation.alpha(1f).setDuration(2000);
+	
+}
+
+Other Animations
+
+Translations
+
+bart.animate().translationYBy(1000f).setDuration(2000);
+bart.animate().translationXBy(-1000f).setDuration(2000);
+
+Moves up and down. Left and right
+
+Or maybe want object to slide in from off screen.
+
+Only time I think I would want that is for sliding menu
+
+Rotations
+
+// rotate by set number of degrees
+bart.animate().rotation(180f).setDuration(2000);
+bart.animate().rotation(1800).setDuration(2000);
+
+Scale
+
+// scale toward the center
+// shrinks image width and height
+bart.animate().scaleX(0.5f).scaleY(0.5f).setDuration(2000);
+
+Can chain animations to do many things in one animation
+
+Can set coordinates for an image in OnCreate()
+
+bart.setTranslationX(-1000f);
+bart.setTranslationY(-1000f);
+
+
+Then animate
+
+bart.animate()
+	.translationXBy(1000f)
+	.translationYBy(1000f)
+	.rotation(3600)
+	.setDuration(2000);
+
+GAME CONNECT
+
+Grid Layout
+
+Column Count, Row Count
+
+User an int[] to hold game state. -1 for each area in grid
+
+Can add a tag to each imageView. A string. Tells which imageView it is
+
+Can add layouy, give it 0 alpha, and have it appear with animation. Change its visibility. 
+
+LinearLayout layoug = (LinerayLayout)findViewById(R.id.layout);
+layout.setvisibility(View.VISIBLE);
+
+Can get grid layout
+
+GridLayout grid = (GridLayout) findViewById(r.id.grid);
+
+grid.getChildCount() -> how many views inside layout
+grid.getChildAt(i) -> get view at index i
+
+for (int i = 0; i < grid.getChildCount(); i++) {
+	((ImageView) gridLayout.getChildAt(i)).setImageResource(0); // set image to nothing
+}
+
+VIDEO
+
+Need to put video where android can access it. Usually in res folder. 
+
+Within res folder, create raw folder. 
+
+Drag video into raw folder. 
+
+In properties of raw can tell folder to synchronize so it updates when files are changed. 
+
+VideoView view. Take note of id. 
+
+in onCreate
+
+VideoView vidView = (VideoView) findViewById(R.id.videoView);
+vidView.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.demovideo);
+vidView.start();
+
+android.resource:// -> like www, but for android resources
+
+This will only play video but will not have any controls. Running video on emulator is not great. 
+
+Add controls with a media controller
+
+To define a controller, we need a session which is combination of context and session id. Can get with this keyword.
+
+MediaController controller = new MediaController(this);
+
+Then must attach media controller to video view.
+
+controller.setAnchorView(vidView);
+vidView.setMediaController(controller);
+vidView.start();
+
+Can also play online videos with an http url. May not work in emulator
+
+AUDIO
+
+Also use a raw folder in res. Place audio file in raw folder. 
+
+In MainActivity, in OnCreate
+
+MediaPlayer mplayer = MediaPlayer.create(this, R.raw.fart);
+mplayer.start();
+
+mplayer.pause() -> pauses audio. 
+
+mplayer.start() -> restarts audio if paused if you create a new instance in the play button. If not it will continue. Create instance in OnCreate(). 
+
+mplayer.stop() -> stops audio
+
+AUDIO VOLUME SEEKING
+
+Sliders to change volume and to seek audio.
+
+Add seek bar widget to layout.
+
+SeekBar volumeControl = (SeekBar) findViewById(R.id.seekBar); 
+volumeControl.setOnSeekBarChangeListener(new SeekBar.onSekBarChangeListener() {
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromuser) {
+		// seekBar is seekbar widget, progress is number representing where seekBar was moved to, fromUser tells whether it was user that changed seekBar or code
+		Log.i("SeekBar value", progress);
+	}
+
+	// to know when user starts tracking seekBar
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+
+	}
+
+	// to know when user stops tracking seekBar. Doesn't give value
+	@Override
+	public void onStoptrackingTouch(SeekBar seekBar) {
+
+	}
+
+}); -> listens for event where seekbar if changes. Overrides onProgressChanged command.
+
+To integrate seekBar with volume, must use an AudioManager
+
+AudioManager audioManager;
+
+In OnCreate() -> set up AudioManager
+
+audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC); //STREAM_MUSIC is for media volume. Instead of alarm or ring. 
+int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+volumeControl.setMax(maxVolume); // sets max volume for seekBar to the max volume
+volumeControl.setProgress(curVolume); //sets seek bar to current volume
+
+Then in onProgressChanged() ->
+
+audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0); 
+
+For scrubbing audio track
+
+Add a new seekbar and give it an new id (scrubber)
+
+SeekBar scrubber = (SeekBar) findViewById(R.id.scrubber);
+scrubber.setMax(mplayer.getDuration());
+
+// simplest way to update audio location is with a timer
+
+new Timer().scheduleAtFixedRate(new TimeTask() {
+	@Override
+	public void run() {
+		scrubber.setProgress(mplayer.getCurrentPosition());
+	}	
+}, 0, 1000); // Creating a schedule to run a certain task at a fixed rate (1 second). Number of seconds before it runs for first time, and number of ms before next iteration
+
+scrubber.setOnSeekBarChangeListener(new SeekBar.onSekBarChangeListener() {
+ 
+     @Override
+     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromuser) {
+         // seekBar is seekbar widget, progress is number representing where seekBar was moved to, fromUser tells whether it was user that changed seekBar or code
+         Log.i("SeekBar value", progress);
+     }
+ 
+     // to know when user starts tracking seekBar
+     @Override
+     public void onStartTrackingTouch(SeekBar seekBar) {
+ 
+     }
+ 
+     // to know when user stops tracking seekBar. Doesn't give value
+    @Override
+     public void onStoptrackingTouch(SeekBar seekBar) {
+
+    }
+ 
+});
+
+GRID LAYOUTS
+
+A layout in a grid pattern. Can set height and width to match parent (constraint). See XML code to see exactly what is happening. 
+
+If you add buttons, it takes up a row and column in the grid. Can set this in XML
+
+android:layou_column="0"
+android:layout_row="0"
+android:layout_gravity="fill" -> fills wohle hting horizonally and vertically as much as it can.
+android:layout_columnWeight="1"
+android:layout_rowWeight="1" // row and columns are same size in grid
+
+Will scale size of buttons by grid. 0,0. 0,1. 1,0. 1,1. 2,0. 2,1.

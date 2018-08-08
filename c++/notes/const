@@ -1,0 +1,62 @@
+Const
+
+Use on variable, it remains constant throughout program. Value cannot be changed. Must
+be immediately initialized. 
+
+const int x = 3;
+
+x = 5; //error!
+
+Constant objects
+
+const Sally constObj;
+constObj.printCrap(); //error. Not const method
+
+Const objects can only call const methods. 
+
+void Sally::printCrap2() const {
+
+}
+
+void printCrap2() const; //prototype
+
+constObj.printCrap2(); //ok
+
+Member Initializers
+
+If const variable declared in class, then member list must be used to 
+initialize its value in a constructor
+
+Sally::Sally(int a, int b)
+: regVar(a),
+constVar(b)
+{
+}
+
+Handles cases where value of variable that is initialized with a value that is not known at compile time but never changes after initialization. 
+
+constexpr int max = 100;
+void use(int n) {
+	constexpr int c1 = max+7; //ok
+	constexpre int c3 = n+7; //error: n is variable
+	const int c2 = n+7; //ok but don't change c2
+	c2 = 7; //error
+}
+
+const member function tells compiler that it will not modify the object. 
+
+class Date {
+	public:
+		//...
+		int day() const; //const member: can't modify object
+		Month month() const;
+		int year() const;
+
+		void add_day(int n);	//non-const: can modify object
+	private:
+		int y;
+		Month m;
+		int d;
+}
+
+So const members can read const objects. Use const right after argument list in member function declaration to indicate that the member function can be called for a const object, Cannot modify object in a const member function, 

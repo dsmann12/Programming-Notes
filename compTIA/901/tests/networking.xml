@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What are server?</Question>
+					<Answer>Servers - systems with resources</Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What are clients?</Question>
+					<Answer xml:space="preserve">Clients - those who want access to resources
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+		<value2>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483651</id>
+				<data>
+					<Question>What is a simple network?</Question>
+					<Answer>Small Example. Two computers connected to a hub through wires.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value2>
+		<value3>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483652</id>
+				<data>
+					<Question>What is a frame?</Question>
+					<Answer>Frame - data moved from one device to a another in discrete chunks called frames. Chunks stored roughly about 1500 bytes of data each. Data must be broken up into individual frames to send. Nothing but a series of 1s and 0s. First flashes tell device that frame is coming. Then data. Ending tells device that&apos;s all there is. Really binary data. On fiber optic, it&apos;s 1s and 0s. In copper, its voltages going up and down. If wireless, its frequencies being changed</Answer>
+				</data>
+			</ptr_wrapper>
+		</value3>
+		<value4>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483653</id>
+				<data>
+					<Question>What is a HUB?</Question>
+					<Answer>HUB - repeater. Device sends frame into hub. Hub reads frame and makes copies for every connection in hub. Sends copies down wires to every other computer i network.
+
+HUB - 10Mbps, 100Mbps, 1Gbps, 10Gbps. Problem is every two computers talking to each other on same HUB will eat the bandwidth. If have 2 pairs of computers talking to each other in 100Mbps speed, bandwidth drops to 50Mbps.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value4>
+		<value5>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483654</id>
+				<data>
+					<Question>How did networking work with hubs, frames, and MAC Addresses?</Question>
+					<Answer>At beginning of frame put destination MAC address (where want data to go to) and source MAC address (where its coming from). 
+
+HUB still makes copy for all computers on network. Every computer gets copy of that frame. When computer receives incoming frame, it looks at two-part MAC address. If its for device, it sends it to OS. Otherwise, it erases it.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value5>
+		<value6>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483655</id>
+				<data>
+					<Question>What is listen mode?</Question>
+					<Answer>Can set network card to a mode to listen to all connections even if not for specific network card.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value6>
+		<value7>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483656</id>
+				<data>
+					<Question>What is broadcast address?</Question>
+					<Answer>Broadcast Address - FF FF FF FF FF FF - A little different than regular address. When comes into a computer, device sends it up to OS automatically. Never deleted.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value7>
+		<value8>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483657</id>
+				<data>
+					<Question>What is broadcast domain?</Question>
+					<Answer>Broadcast Domain - Anytime have group of computers that are connected in such a way they can hear eachother&apos;s broadcast.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value8>
+		<value9>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483658</id>
+				<data>
+					<Question>What is a switch?</Question>
+					<Answer>Switch - replaced HUBs. Switches are very smart. Look like HUBs. Keeps track of MAC addresses of computers hooked to it based on ports. Takes frame, checks MAC Address, sends it to port with device with that MAC address. Other connections do not see frame at all. Other devices are able to work at full bandwidth of switch. 
+
+Can still broadcast. Handle broadcasts like HUB. Switch throws notations out window and acts like a HUB.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value9>
+		<value10>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483659</id>
+				<data>
+					<Question>What is structured cabling?</Question>
+					<Answer xml:space="preserve">Set of standards. TIA/EIA set standards from type of cabling to use to standard on running cables in walls and position of wall outlets. 
+
+Idea is to create a safe, reliable cabling infrastructure for all of the devices that may need interconnection. Applies to copmuter networks but also to telephone, video, anything that might need low power, distributed cabling. 
+
+Successful structure cabling requires three essential ingredients: a telecommunications room, horizontal cabling, and a work area. 
+
+Telecommunications room: - all cabling runs from individual workstations to a central location. All cables concentrate in this one area. 
+
+Equipment racks - devices that fit in racks use standard height measurement called U. A U is 1.75 inches. So device that fits in 1.75 inch space is 1U. Device that takes 3.5 inches is 2U, etc. 
+
+Horizontal cabling - all cables run horizontally for most part from telecom rom to workstations. Single piece of installed horizontal cabling is called a run. 
+
+Work area - opposite end of horizontal cabling from telecom room. Often simly an office or cublicle.
+
+Physically connecting computers together to make a network is straight forward process. However some issues that motivate people to use structured cabling. 
+
+Where to put cables? 
+
+Wall outlet - uses a special jack designed to plug into a network cable
+
+Patch panel - oter end of *horizontal run*. Usually near switch. Once in place, horizonal run is never touched for years. As a result, can count on it to work and be safe. Simply a box wit ha row of female connectors (ports) in front and permanent connections in the back to which you connect horizontal cables. 
+
+Most common uses a special type of connector called a 110 block or a 110 punchdown block. Connect to a 110block using a punchdown tool.  
+
+Available in wide variety of configurations that include different types of ports nad number of ports. Can get UTP, STP, or fiber ports. Come with CAT ratings. 
+
+Patch cables - runs from patch panel into switch. Then another patch cable runs from wall outlet into computer.  Short (two to five foot) UTP cables. Stranded rather than solid. 
+
+
+
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value10>
+		<value11>
+			<polymorphic_id>2147483650</polymorphic_id>
+			<polymorphic_name>ImageQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483660</id>
+				<data>
+					<Image>Wall outlet</Image>
+					<Answer>Wall outlet - Uses a special jack designed to plug into network cable.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value11>
+		<value12>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483661</id>
+				<data>
+					<Image>Patch panel</Image>
+					<Answer>Patch Panel - other end of the *horizontal run*. Usually near switch. Once in place, horizontal run is never touched for years. As result, can count on it to work and be safe.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value12>
+		<value13>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483662</id>
+				<data>
+					<Image>Patch cables</Image>
+					<Answer>Patch cables - runs from patch panel into switch. Then another patch cable runs from wall outlet into computer.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value13>
+		<value14>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483663</id>
+				<data>
+					<Question>What is modem?</Question>
+					<Answer>Modem - cable modem takes internet from cable. Usually very close to switch. Can plug ethernet from modem into switch. Therefore any computer plugged into switch has internet. 
+
+Usually found in equipment closet or room.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value14>
+		<value15>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483664</id>
+				<data>
+					<Question>What are Ethernet Cable - UTP?</Question>
+					<Answer xml:space="preserve">Ethernet Cable - Unshielded Twisted Pair (UTP) - Always going to have 4 pairs in order to work on Network. 2 pairs used for telephone systems and things. 40 year old standard.
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value15>
+		<value16>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483665</id>
+				<data>
+					<Image>Ethernet Cable - UTP</Image>
+					<Answer xml:space="preserve">Ethernet Cable - Unshielded Twisted Pair (UTP) - Always going to have 4 pairs in order to work on Network. 2 pairs used for telephone systems and things. 40 year old standard.
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value16>
+		<value17>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483666</id>
+				<data>
+					<Question>Decribe Cat 5</Question>
+					<Answer>CAT 5 - CAT levels are important because different qualities of UTP cable can handle larger amounts of data. Need right type of UTP for speed of network you have. All other pieces get CAT rating as well, such as patch panels. 
+
+CAT 5 - designed to run 100Mbps Ethernet networks. Was great, but problem was that patch panels and little crimps didn&apos;t.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value17>
+		<value18>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483667</id>
+				<data>
+					<Question>Decribe Cat 3</Question>
+					<Answer xml:space="preserve">CAT 3 - designed to run 10Mbps Ethernet networks. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value18>
+		<value19>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483668</id>
+				<data>
+					<Question>Decribe Cat 5e</Question>
+					<Answer>CAT 5e - improved 100Mbps. Can actually run 1000Mbps and 1Gbps ethernet for shorter distances on same cable.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value19>
+		<value20>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483669</id>
+				<data>
+					<Question>Describe Cat 6</Question>
+					<Answer>CAT 6 - Supports 1000Mbps up to 100m. Movitation after 10Gbps networks coming. Designed to run 10Gpbs Ethernet over short distances. Supports 10Gbps up to 55 m.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value20>
+		<value21>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483670</id>
+				<data>
+					<Question>Describe Cat 6A</Question>
+					<Answer>CAT 6A - designed to run 100m of 10Gbps segments</Answer>
+				</data>
+			</ptr_wrapper>
+		</value21>
+		<value22>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483671</id>
+				<data>
+					<Question>Describe the TIA/EIA 568 standards</Question>
+					<Answer>IA/EIA 568 Standards
+
+TIA/EIA 568 A
+
+TIA/EIA 568 B - 
+
+Difference between A and B. If punching into jack or patch panel, there is color coding on it that makes things simple. 
+
+When making own patch cables, gets more copmlicated. 
+
+Stripping off insulation from cable, can see all 4 pairs of cabling.
+
+Blues and Browns never move. Brown usually oriented to one side (facing away, the right side. Looking at it, the left). The blue always stays in center. The split oranges or split greens. Oranges split between blue. Green comes before orange so A (alphabetical). Always something white, solid, something white, solid, etc. Kevlar in wire to give tension strength. 
+
+Make it flat shape, then cut. 
+
+Crimp - the plastic connection at end of wire. Make sure crimp is on bottom. Make sure its all in right order, and make sure all wires have gone all the way up into the top.
+
+Crimper - Use crimper. And should have made first real connection. 
+
+For B, orange stays in front and split the greens. 
+
+110 Punchdown Tool - used to punch down all 8 wires individually. A says start with green, then orange, then brown, then blue. But doesn&apos;t matter cause internal people will make sure wires are correct.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value22>
+		<value23>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483672</id>
+				<data>
+					<Image>TIA/EIA 568 standards</Image>
+					<Answer>IA/EIA 568 Standards
+
+TIA/EIA 568 A
+
+TIA/EIA 568 B - 
+
+Difference between A and B. If punching into jack or patch panel, there is color coding on it that makes things simple. 
+
+When making own patch cables, gets more copmlicated. 
+
+Stripping off insulation from cable, can see all 4 pairs of cabling.
+
+Blues and Browns never move. Brown usually oriented to one side (facing away, the right side. Looking at it, the left). The blue always stays in center. The split oranges or split greens. Oranges split between blue. Green comes before orange so A (alphabetical). Always something white, solid, something white, solid, etc. Kevlar in wire to give tension strength. 
+
+Make it flat shape, then cut. 
+
+Crimp - the plastic connection at end of wire. Make sure crimp is on bottom. Make sure its all in right order, and make sure all wires have gone all the way up into the top.
+
+Crimper - Use crimper. And should have made first real connection. 
+
+For B, orange stays in front and split the greens. 
+
+110 Punchdown Tool - used to punch down all 8 wires individually. A says start with green, then orange, then brown, then blue. But doesn&apos;t matter cause internal people will make sure wires are correct.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value23>
+		<value24>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483673</id>
+				<data>
+					<Question>Explain use of PVC, Rise, or Plenum in wires</Question>
+					<Answer xml:space="preserve">If fire, what will happen to outer cord.
+
+PVC - no fire rating at all. Lots of noxious smoke. Don&apos;t put in walls.
+
+Riser - meant to run cables up floors in building. 
+
+Plenum - standard best type of fire protection. Standard for every horizontal run. Mostly required by law to use plenum. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value24>
+		<value25>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483674</id>
+				<data>
+					<Question>What are fiber optic cables?</Question>
+					<Answer>Not as commong as UTP but very important. 
+
+Fiber Optic - Uses light instead of electricity. Can be very long. Can be 40KM. Depending on standard. Impervious to Electromagnetic interference. Laser light version (laser diodes genreate laser light) and regular light that use light-emitting diodes (LEDs generate visible and infrared light). Different cable for each. 
+
+Single mode - designed specifically for transmitting lasers
+
+Multi-mode - transmits regular light. More common, cheaper, and slower. 
+
+Not just plugging one cable into network card or into switch. Always come in pairs. One connector for sending and one for receiving.
+
+Duplex cable - two cables fused together. 
+
+Hundreds of fiber optics connectors. A+ covers three.
+
+ST - round connector. Stick in and twist it. One of oldest
+
+SC - Stick it in and click. Squareish connector. 
+
+Both around for decades. Because always running duplex, the connectors were very large.
+
+LC - Local connector - Alot smaller and takes less space</Answer>
+				</data>
+			</ptr_wrapper>
+		</value25>
+		<value26>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483675</id>
+				<data>
+					<Image>ST Fiber Optic Cable</Image>
+					<Answer xml:space="preserve">ST - round connector. Stick in and twist it. One of oldest
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value26>
+		<value27>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483676</id>
+				<data>
+					<Image>SC Fiber Optic Cable</Image>
+					<Answer xml:space="preserve">SC - Stick it in and click. Squareish connector. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value27>
+		<value28>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483677</id>
+				<data>
+					<Image>LC Fiber Optic Cable</Image>
+					<Answer>LC - Local connector - Alot smaller and takes less space</Answer>
+				</data>
+			</ptr_wrapper>
+		</value28>
+		<value29>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483678</id>
+				<data>
+					<Question>What is coaxial cable?</Question>
+					<Answer xml:space="preserve">Coaxial - Around for very long time. Called coax because more than one connection that shared an access. So conductor, then insulator that separates it from another conductor. At least 2 conductors. Can be more. Consists of center cable (core) surrounded by insulation. This in turn i scovered with a shield of braided cable. Center core carried signal and shield effectively eliminated outside interference.
+
+RG value (radio grade) - different RG talk about different types of coax.
+
+RG6 - used to connect cable to cable modem
+
+RG59 - used to connect old TV boxes. Thinner and doesn&apos;t carry data quite as far.
+
+Both impedence set to 75 ohms. 
+
+Britich Naveal Connector/Bayonette, Niell-Concelman (BNC) connector - round, meta. Used on video a lot and old types of network connections. 
+
+F Connector - Round. typical cable conncetion. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value29>
+		<value30>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483679</id>
+				<data>
+					<Image>RG6 coaxial cable</Image>
+					<Answer>RG6 - used to connect cable to cable modem</Answer>
+				</data>
+			</ptr_wrapper>
+		</value30>
+		<value31>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483680</id>
+				<data>
+					<Image>RG9 coaxial cable</Image>
+					<Answer>RG9 - used to connect old TV boxes</Answer>
+				</data>
+			</ptr_wrapper>
+		</value31>
+		<value32>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483681</id>
+				<data>
+					<Image>BNC coaxial cable</Image>
+					<Answer xml:space="preserve">Britich Naveal Connector/Bayonette, Niell-Concelman (BNC) connector - round, meta. Used on video a lot and old types of network connections. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value32>
+		<value33>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483682</id>
+				<data>
+					<Image>F coaxial cable</Image>
+					<Answer xml:space="preserve">F Connector - Round. typical cable conncetion. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value33>
+		<value34>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483683</id>
+				<data>
+					<Question>What is a cable tester?</Question>
+					<Answer>Cable Tester - Flashes green and does so in order. Green shows pairs on in proper positions. Also checks order. Also all lights come on. If not working ,wouldn&apos;t blink or order wrong or not green
+
+Two big issuesL
+1. Wire map - is rigth wire plugged into #2 and #3, etc.
+2. Wire continuity - is connected? Is it actually broke in some place?</Answer>
+				</data>
+			</ptr_wrapper>
+		</value34>
+		<value35>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483684</id>
+				<data>
+					<Question>What is a microscanner?</Question>
+					<Answer xml:space="preserve">Microscanner - Tests everything all at once. 12345678 - says all wires in right place and none are missing. Wrong order if order wrong or number doesn&apos;t show up if connection bad. Can also show length. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value35>
+		<value36>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483685</id>
+				<data>
+					<Question>What is a tone generator?</Question>
+					<Answer xml:space="preserve">Tone Generator - doesn&apos;t fix anything but helps find things. When network coming from many devices to one closet in bundle of wires. Sometimes you wnt one wire and which wire connects to it. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value36>
+		<value37>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483686</id>
+				<data>
+					<Question>What is a tone probe?</Question>
+					<Answer>Tone Probe - listens for tones generated by tone generator. Makes noise when near correct wire. Can use multiple testers to find multiple cables at once.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value37>
+		<value38>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483687</id>
+				<data>
+					<Question>What is the popular serving software for Linux? Windows?</Question>
+					<Answer>Popular Server Software:
+Apache HTTPS
+Internet Information Services (IIS)</Answer>
+				</data>
+			</ptr_wrapper>
+		</value38>
+		<value39>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483688</id>
+				<data>
+					<Question>What is a NIC?</Question>
+					<Answer xml:space="preserve">NIC - Network Interface Controller. Boths clients and servers need them. Define or label machine on the network. Also breaks files into smaller data units to send across the network and resaambles the units it receives into whole files. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value39>
+		<value40>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483689</id>
+				<data>
+					<Question>What is Ethernet?</Question>
+					<Answer xml:space="preserve">Ethernet - hardware protocol that dominates networking. Most employ one of three speeds: 10BaseT, 100BaseT, or 1000BaseT (10 Mbps, 100 Mbps, 1000 Mbps or 1 Gbps). All use a star bus topology and connect via a type of cable called unshieled twisted pair (UTP). </Answer>
+				</data>
+			</ptr_wrapper>
+		</value40>
+		<value41>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483690</id>
+				<data>
+					<Image>What is a MAC address?</Image>
+					<Answer>MAC Address - Media Access Control - burned in to network card. Comes from manufacturer. Always 12 hex values separated into pairs. First half of address, so first 6 values, assigned to particular manufacturer. Every device has unique MAC address. 48 bits long, so 6 bytes. 
+
+At beginning of frame put destination MAC address (where want data to go to) and source MAC address (where its coming from). MAC Addresses are for NICs. 
+
+Also need type of data check to verify data was received correctly. Cyclic Redundancy Check - CRC. Math algorithms to check data.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value41>
+		<value42>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483691</id>
+				<data>
+					<Question>What is Cat 1?</Question>
+					<Answer>Cat 1 - standard telephone line</Answer>
+				</data>
+			</ptr_wrapper>
+		</value42>
+		<value43>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483692</id>
+				<data>
+					<Question>What is solid core?</Question>
+					<Answer>Solid Core - uses a single solid wire. Better conductor but stiff and will break if handled too roughly.TIA/EIA specified to use solid core in horizontal run.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value43>
+		<value44>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483693</id>
+				<data>
+					<Question>What is stranded core?</Question>
+					<Answer>Standard core - each wire is actually a bundle of tiny wire strands. Not as conductive, but more flexible.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value44>
+		<value45>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483694</id>
+				<data>
+					<Question>What is RJ-45?</Question>
+					<Answer>RJ-45 - the connector for cables. Have CAT levels too. Registered Jack. 4 pairs.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value45>
+		<value46>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483695</id>
+				<data>
+					<Question>What is RJ-11?</Question>
+					<Answer>RJ-11 - connects telephone to telephone jack in wall. Supports up to two pairs of wires. Most phone lines use one with other reserved for another phone line.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value46>
+		<value47>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483696</id>
+				<data>
+					<Question>What is a shielded twisted pair?</Question>
+					<Answer>Shielded Twisted Pair -STP. Consists of twisted pairs of wires surrounded by shielding to protect them from EMI. Rare because little need for shielding unless in area with excessive electronic noise.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value47>
+		<value48>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483697</id>
+				<data>
+					<Question>What is a 110 punchdown tool?</Question>
+					<Answer>110 Punchdown Tool - used to punch down all 8 wires individually. A says start with green, then orange, then brown, then blue. But doesn&apos;t matter cause internal people will make sure wires are correct.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value48>
+		<value49>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483698</id>
+				<data>
+					<Question>What is a crossover cable?</Question>
+					<Answer>Crossover Cable - can hook two computers directly using this special UTP cable. RJ-45 connector with T568A on one end and T568B on other. Reverse the signal between sending and receiving wires and thus does job of hub or switch.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value49>
+		<value50>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483699</id>
+				<data>
+					<Question>What is ca WAN?</Question>
+					<Answer xml:space="preserve">WAN - widespread group of copmuters connected using long distance technologies. Connect LANs int oa a WAN with a r
+outer. Internet is a WAN
+
+Can connect multiple smaller networks into a bigger network turing a group of LANs into one big WAN. 
+
+Computer needs powerful, flexible addressing to address a frame so that it goes to a copmuter within its own LAn or to a computer on another LAN on the same WAN. This process is routing, requires routig and routing-capable protocol. 
+
+Routers destroy any incoming broadcast frames by design. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value50>
+	</value0>
+</cereal>
+

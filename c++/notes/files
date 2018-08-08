@@ -1,0 +1,41 @@
+Files - used to save data on computer permanently. 
+
+Must include the fstream class.
+
+#include <fstream>
+
+ofstream -- object for files for output. Only for outputting data. 
+
+ofstream davidsFile;
+
+open(String s) -- method used to open file with path equal to 
+string S. If file does not exist, it is created. 
+
+davidsFile.open("input.txt"); //Now input.txt is associated with object
+
+Also can use:
+ofstream davisFile("input.txt");
+
+Use << and >> to output and input data into file.
+
+davidsFile << "This is david's file!\n";
+
+Must use close() method after opening a file.
+
+is_open() -- used on file objects. Will return true if object
+is currently associated a file
+
+EOF - is CTRL-Z in Windows. Enter key to quit program. 
+
+while(cin >> idNumber >> name >> money) {
+	theFile << idNumber << " " << name << money << endl;
+}
+
+Reading 
+
+ifstream -- file object that takes input from file
+
+Files work with File pointers. Like cursors in a word document. Starts at
+beginning then continues until EOF. 
+
+

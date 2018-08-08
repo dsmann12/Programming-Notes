@@ -1,0 +1,42 @@
+PART 3 LOTTERY
+
+Contract will have a prize pool and a list of people who have enetered
+
+Imagine player1, player2. Both can send in some amount of money as contract. As soon as they have, they will be recorded as players.
+
+Ether will be held in prize pool of sorts. 
+
+A third party (manager) will tell contract to pick a winner. Contract is picking. Contract will pick winner, send money, and reset. 
+
+LOTTERY DESIGN
+
+Variables:
+
+Name			Purpose
+manager			address of person who created the contract
+players			array of addresses of people who have entered
+
+Functions:
+Name			Purpose
+enter			Eners a player into the lottery
+pickWinner		Randomly picks a winner and sends them the prize pool
+
+BASIC SOLIDITY TYPES
+
+address -> type for address meant for storing addresses.
+string -> string type
+bool -> boolean value
+int -> integer, positive or negative
+uint - unsigned int.
+fixed/ufixed - fixed point number. decimal. Like float
+
+int is int256. Same with uint. Can use different factors of 8 to determine precision.
+
+int8 - int256
+uint8 - uint256
+
+Pay for storage so using larger sizes costs more. 
+
+
+
+

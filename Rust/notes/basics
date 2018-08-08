@@ -1,0 +1,134 @@
+fn main() {
+	println!("Hello World!");
+}	
+
+Statement indented by 4 spaces not tabs*
+
+println!() is calling a Rust macro, which is how metaprogramming is done in Rust. 
+
+If calling a function, it wold look like println() (no !)
+
+Strings are surprisingly complicated topic in a systems programming language. "Hello World" in this example is a *statically allocated* string. 
+
+Line ends in ;
+
+Rust is an *expression-oriented language* which means that most things are expresions rather than statements. ; indicates expression is over and next one is ready to begin. 
+
+Compiler is rustc.
+
+Rust is *ahead-of-time-compiled language* (not like Python). Can compile a program, give it to someone else, and they can run it even without Rust isntalled. 
+
+.py or .js extensions on the other hand need Python or JavaScript implementration installed but only need on command to both compile and run program. 
+
+CARGO
+
+Cargo is Rust's build system and package manager. Used to manage Rust projects:
+
+Cargo manages three things:
+1. Building code
+2. Downloading libraries code depends on
+3. Building those libraries. 
+
+Dependencies - libraries code needs
+
+To cargo-fy a project must do three things:
+1. Put source file in right directory (src)
+2. Remove old executable
+3. Make a Cargo config file
+
+Cargo expects source files to live in side a "src" directory. Leaves top-level project directory for READMEs, license info, and anything else not related to code. 
+
+If wanted to make library, use name lib.rs
+
+Convention is used by Cargo to successfully compile projects, but can be overridden. 
+
+CREATING A CONFIG FILE
+
+In parent top-level project directory, create a new file called:
+Cargo.toml
+
+*Make sure to capitalize C*
+
+File is in TOML (Tom's Obvious, Minimal Language) format. Similar to INI.
+
+Inside type:
+
+[package]
+
+name = "hello_world"
+verion = "0.0.1"
+authors = [ "David Scheuermann <dsmann1212@gmail.com>" ]
+
+First line, [package] indiacates following statements are configuring a package. 
+
+Other three lines set three bits of configuration that Cargo needs to know to compile progrm:
+1. it's name
+2. what version
+3. who wrote ti
+
+BUILDING AND RUNNING A CARGO PROJECT
+
+Run following commands:
+
+$ cargo build
+   Compiling hello_world v0.0.1 (file:///home/yourname/projects/hello_world)
+$ ./target/debug/hello_world
+Hello, world!
+
+Can build and run project in one step:
+
+$ cargo run
+     Running `target/debug/hello_world`
+Hello, world!
+
+If file hasn't changed, cargo will know and will not rebuilt, just run. 
+
+Cargo uses "crates", library or package. 
+
+BUILDING FOR RELEASE
+
+When project ready for release, can use:
+
+cargo build --release
+
+to compile project with optimizations. Make code run faster, but program can take longer to compile. That's why best for release not development. 
+
+WHAT IS Cargo.lock?
+
+cargo build creates Cargo.lock file. Looks like:
+
+[root]
+name = "hello_world"
+version = "0.0.1"
+
+Virtually all Rust projects start with some variation on following commands:
+
+t clone someurl.com/foo
+$ cd foo
+$ cargo build
+
+MAKING A NEW CARGO PROJECT THE EASY WAY
+
+Cargo can make a bare-bones project directory:
+
+"cargo new" command:
+
+$ cargo new hello_world --bin
+
+--bin argument goal is to get straight to making an excutable app, as opposed to a library. Executables often called binaries. 
+
+Generates two files and one directory:
+1. Cargo.toml
+2. src directory containing main.rs
+
+Cargo.toml will look like:
+
+[package]
+
+name = "hello_world"
+version = "0.1.0"
+authors = ["Your Name <you@example.com>"]
+
+[dependencies]
+
+Cargo also initialzes directory as git repo. 

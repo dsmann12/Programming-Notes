@@ -1,0 +1,209 @@
+ENUM
+
+enum - a custom data type of name-value pairs. Enumerator is different; a class or structure that implements a .NET interface
+named IEnumerable. Typically, this interface is implemented on collectoin classes and System.Array class. Also support the
+foreach loop.
+
+// A custom enumeration.
+enum EmpType
+{
+Manager,
+// = 0
+Grunt,
+// = 1
+Contractor,
+// = 2
+VicePresident // = 3
+}
+
+// Begin with 102.
+enum EmpType
+{
+Manager = 102,
+Grunt,
+// = 103
+Contractor,
+// = 104
+VicePresident // = 105
+}
+
+// Elements of an enumeration need not be sequential!
+enum EmpType
+{
+Manager = 10,
+Grunt = 1,
+Contractor = 100,
+VicePresident = 9
+}
+
+By default, storage type used to hold values of an enumeration is a System.Int32 (C# int). However, you are free to change
+this. 
+
+// This time, EmpType maps to an underlying byte.
+enum EmpType : byte
+{
+Manager = 10,
+Grunt = 1,
+Contractor = 100,
+VicePresident = 9
+}
+
+Cannot use invalid values of compiler error will occur. 
+
+Declaring Enum:
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("**** Fun with Enums *****");
+// Make an EmpType variable.
+EmpType emp = EmpType.Contractor;
+AskForBonus(emp);
+Console.ReadLine();
+}
+
+// Enums as parameters.
+static void AskForBonus(EmpType e)
+{
+switch (e)
+{
+case EmpType.Manager:
+Console.WriteLine("How about stock options instead?");
+break;
+case EmpType.Grunt:
+Console.WriteLine("You have got to be kidding...");
+break;
+case EmpType.Contractor:
+Console.WriteLine("You already get enough cash...");
+break;
+case EmpType.VicePresident:
+Console.WriteLine("VERY GOOD, Sir!");
+break;
+}
+}
+}
+
+// Enums as parameters.
+static void AskForBonus(EmpType e)
+{
+switch (e)
+{
+case EmpType.Manager:
+Console.WriteLine("How about stock options instead?");
+break;
+case EmpType.Grunt:
+Console.WriteLine("You have got to be kidding...");
+break;
+case EmpType.Contractor:
+Console.WriteLine("You already get enough cash...");
+break;
+case EmpType.VicePresident:
+Console.WriteLine("VERY GOOD, Sir!");
+break;
+}
+}
+}
+
+THE SYSTEM.ENUM TYPE
+
+System.Enum class defines a number of methods that allow you to interrogate and transform a given enumeration. 
+
+ststic Enum.GetUnderlyingType() - returns data type used to store values of enumerated type. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("**** Fun with Enums *****");
+// Make a contractor type.
+EmpType emp = EmpType.Contractor;
+AskForBonus(emp);
+// Print storage for the enum.
+Console.WriteLine("EmpType uses a {0} for storage",
+Enum.GetUnderlyingType(emp.GetType()));
+Console.ReadLine();
+}
+
+Or use typeof operator:
+
+// This time use typeof to extract a Type.
+Console.WriteLine("EmpType uses a {0} for storage",
+Enum.GetUnderlyingType(typeof(EmpType)));
+
+DYNAMICALLY DISCOVERING ENUM NAME/VALUE PAIRS
+
+Enums all supprot a method named ToString() which returns string name of current enumeration's value. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("**** Fun with Enums *****");
+EmpType emp = EmpType.Contractor;
+AskForBonus(emp);
+ 
+// Prints out "emp is a Contractor".
+Console.WriteLine("emp is a {0}.", emp.ToString());
+Console.ReadLine();
+}
+
+To get value of a given enumeration variable, can simply cast the enum variable against the underlying storage type.
+
+static void Main(string[] args)
+{
+Console.WriteLine("**** Fun with Enums *****");
+EmpType emp = EmpType.Contractor;
+...
+ 
+// Prints out "Contractor = 100".
+Console.WriteLine("{0} = {1}", emp.ToString(), (byte)emp);
+Console.ReadLine();
+}
+
+The static System.Enum.Format() method provides a finer level of formatting optoins specifying a desired format flag. 
+
+// This method will print out the details of any enum.
+static void EvaluateEnum(System.Enum e)
+{
+Console.WriteLine("=> Information about {0}", e.GetType().Name);
+ 
+Console.WriteLine("Underlying storage type: {0}",
+Enum.GetUnderlyingType(e.GetType()));
+ 
+// Get all name/value pairs for incoming parameter.
+Array enumData = Enum.GetValues(e.GetType());
+Console.WriteLine("This enum has {0} members.", enumData.Length);
+ 
+// Now show the string name and associated value, using the D format
+// flag (see Chapter 3).
+for(int i = 0; i < enumData.Length; i++)
+{
+Console.WriteLine("Name: {0}, Value: {0:D}",
+enumData.GetValue(i));
+}
+Console.WriteLine();
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("**** Fun with Enums *****");
+...
+EmpType e2 = EmpType.Contractor;
+ 
+// These types are enums in the System namespace.
+DayOfWeek day = DayOfWeek.Monday;
+ConsoleColor cc = ConsoleColor.Gray;
+ 
+EvaluateEnum(e2);
+EvaluateEnum(day);
+EvaluateEnum(cc);
+Console.ReadLine();
+}
+
+=> Information about DayOfWeek
+Underlying storage type: System.Int32
+This enum has 7 members.
+Name: Sunday, Value: 0
+Name: Monday, Value: 1
+Name: Tuesday, Value: 2
+Name: Wednesday, Value: 3
+Name: Thursday, Value: 4
+Name: Friday, Value: 5
+Name: Saturday, Value: 6

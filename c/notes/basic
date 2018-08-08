@@ -1,0 +1,101 @@
+main() function essential to every program. Whenever program is run, computers looks for main().
+Starts and stops in brackets of main. Every line can contain an instruction. Each instruction 
+ends in (;).
+
+int main() {} 
+
+return 0; -- main functions specifies it must return an int. Return function returns int 0.
+
+Pre-Processor Directives:
+
+#include -- C has many built-in functions. Standard libraries. This tells program to include 
+those files to get these functions. Linker links all code together for executable.
+
+whitespace is ignored. Only for readability.  
+
+// -- comments. Ignored by compiler. Used for explaining code. Only comments one line
+/* */ -- comments all text between the special characters
+
+Variables are placeholders for another value. Compiler sets of memory and stores value in an 
+address. Must have name. Name cannot start with underscore or number. No spaces. Also do not name
+ variables same name as function. Must have a type. 
+
+int age; // age is variable that stores an int value  
+age = 24; // = is assignment operator. Assigns value 24 to int variable age
+age = 2016 - 1992; // age is result of 2016 - 1992 converted to int
+
+Basic Types
+
+int
+char
+float
+double
+long
+long long
+
+unsigned
+signed
+
+int can hold char values, etc.
+
+isalpha(int) //checks if value is a letter
+isdigit(int) //checks if value is a digit 
+
+Strings - An array of characters (char) values.Must end will a null terminator. Tells compiler that reached the end of string. 
+
+"String\0"
+
+Array length must include whitespace and null character.
+
+Array is a series of data of the same type. Stored in memory sequentially. Can be accessed with integer offset index. 
+Index multipled by starting memory location of array to find correct memory sequence containing valye. 
+Index begins at 0 and goes to n - 1 with n being the size of the array. Must set size of array upon initialization if it
+does not have an initial value. If it does have initial value, then size does not need to be delcared. 
+
+int array[1];
+array[0] = 0;
+
+char string[] = "String"; //automatically generates correct size array. (7 -- 6 letters + null character)
+string[0]; // 'S'
+
+String has its own functions. Own header called String.h
+
+strcpy(dest string, source string); 
+strcpy(string, "NewString!"); //string now equals "NewString!"
+
+Math Operators:
+
+
+Integer Math
+
+Conditionals:
+
+if-else statements
+
+Ternary operator:
+
+(test) ? trueCode: falseCode; //if (test) == true then trueCode, else falseCode
+
+loops
+
+break // keyword that lets you break out of loop before it is finished
+continue // keyword that stops loops execution, and returns to beginning of loop
+
+switch: //If condition met, then go to certain block of code to execute
+
+
+switch() {
+	case 1:
+		printf("1!\n");
+		break;
+	case 2:
+		printf("2!\n");
+		break;
+	case 2:
+		printf("3!\n");
+		break
+	default:
+		printf("Not from 1-3!\n");
+	
+}
+

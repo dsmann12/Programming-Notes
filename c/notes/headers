@@ -1,0 +1,7 @@
+Headers
+
+Can define code in separate file with .h extension. 
+
+In C, when filename for #include is surrounded by <>, compiler looks for file in standard include paths (/usr/include/).
+
+If filename is surrounded by quotes, compiler looks in current directory. 

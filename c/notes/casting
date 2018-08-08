@@ -1,0 +1,12 @@
+Casting:
+
+Converting from one type to another.
+
+float avg;
+
+int price  = 10;
+int sale = 59;
+int days = 7;
+
+ave = (price * float) / days; //incorrect. Integer division stored in float. Truncated result
+avg = ((float) price * (float) sale) / (float) days; //correct

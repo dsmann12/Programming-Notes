@@ -1,0 +1,234 @@
+INDEXERS
+
+Indexers - allow class to be used like an array. On inside of class, you manage a collection of values any way you want. Objects could be a finite set of class members, another array, or some complex data structure. Regardless os internal implementation, its data can be obtained consistently through use of indexers. 
+
+[] - index operator
+
+Indexer created in its simplest form using this[] syntax
+
+using System;
+
+/// <summary>
+///     A simple indexer example.
+/// </summary>
+class IntIndexer
+{
+    private string[] myData;
+
+    public IntIndexer(int size)
+    {
+        myData = new string[size];
+
+        for (int i=0; i < size; i++)
+        {
+            myData[i] = "empty";
+        }
+    }
+
+    public string this[int pos]
+    {
+        get
+       {
+            return myData[pos];
+        }
+        set
+       {
+            myData[pos] = value;
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        int size = 10;
+
+        IntIndexer myInd = new IntIndexer(size);
+
+        myInd[9] = "Some Value";
+        myInd[3] = "Another Value";
+        myInd[5] = "Any Value";
+
+        Console.WriteLine("\nIndexer Output\n");
+
+        for (int i=0; i < size; i++)
+        {
+            Console.WriteLine("myInd[{0}]: {1}", i, myInd[i]);
+        }
+    }
+}
+
+The IntIndexer class has a string array named myData. This is a private array that external users can’t see. This array is initialized in the constructor, which accepts an int size parameter, instantiates the myData array, and then fills each element with the word “empty”.
+
+The next class member is the Indexer, which is identified by the this keyword and square brackets, this[int pos]. It accepts a single position parameter, pos. As you may have already guessed, the implementation of an Indexer is the same as a Property. It has get and setaccessors that are used exactly like those in a Property. This indexer returns a string, as indicated by the string return value in the Indexer declaration.
+
+OUTPUT:
+
+Indexer Output
+
+myInd[0]: empty
+myInd[1]: empty
+myInd[2]: empty
+myInd[3]: Another Value
+myInd[4]: empty
+myInd[5]: Any Value
+myInd[6]: empty
+myInd[7]: empty
+myInd[8]: empty
+myInd[9]: Some Value
+
+Using an integer is a common means of accessing arrays in many languages, but the C# Indexer goes beyond this. Indexers can be declared with multiple parameters and each parameter may be a different type. Additional parameters are separated by commas, the same as a method parameter list. Valid parameter types for Indexers include integers, enums, and strings. Additionally, Indexers can be overloaded.
+
+Overloaded Indexers:
+
+using System;
+
+/// <summary>
+///     Implements overloaded indexers.
+/// </summary>
+class OvrIndexer
+{
+    private string[] myData;
+    private int         arrSize;
+
+    public OvrIndexer(int size)
+    {
+        arrSize = size;
+        myData = new string[size];
+
+        for (int i=0; i < size; i++)
+        {
+            myData[i] = "empty";
+        }
+    }
+
+    public string this[int pos]
+    {
+        get
+       {
+            return myData[pos];
+        }
+        set
+       {
+            myData[pos] = value;
+        }
+    }
+
+    public string this[string data]
+    {
+        get
+       {
+            int count = 0;
+
+            for (int i=0; i < arrSize; i++)
+            {
+                if (myData[i] == data)
+                {
+                    count++;
+                }
+            }
+            return count.ToString();
+        }
+        set
+       {
+            for (int i=0; i < arrSize; i++)
+            {
+                if (myData[i] == data)
+                {
+                    myData[i] = value;
+                }
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        int size = 10;
+        OvrIndexer myInd = new OvrIndexer(size);
+
+        myInd[9] = "Some Value";
+        myInd[3] = "Another Value";
+        myInd[5] = "Any Value";
+
+        myInd["empty"] = "no value";
+
+        Console.WriteLine("\nIndexer Output\n");
+
+        for (int i=0; i < size; i++)
+        {
+            Console.WriteLine("myInd[{0}]: {1}", i, myInd[i]);
+        }
+
+        Console.WriteLine("\nNumber of \"no value\" entries: {0}", myInd["no value"]);
+    }
+}
+
+Listing 11-2 shows how to overload Indexers. The first Indexer, with the int parameter, pos, is the same as in Listing 11-1, but there is a new Indexer that takes a string parameter. The get accessor of the new indexer returns a string representation of the number of items that match the parameter value, data. The set accessor changes each entry in the array that matches the data parameter to the value that is assigned to the Indexer.
+
+The behavior of the overloaded Indexer that takes a string parameter is demonstrated in the Main() method of Listing 11-2. It invokes theset accessor, which assigns the value of “no value” to every member of the myInd class that has the value of “empty”. It uses the following command: myInd[“empty”] = “no value”;. After each entry of the myInd class is printed, a final entry is printed to the console, indicating the number of entries with the “no value” string. This happens by invoking the get accessor with the following code: myInd[“no value”]. Here’s the output:
+
+OUTPUT:
+
+Indexer Output
+
+myInd[0]: no value
+myInd[1]: no value
+myInd[2]: no value
+myInd[3]: Another Value
+myInd[4]: no value
+myInd[5]: Any Value
+myInd[6]: no value
+myInd[7]: no value
+myInd[8]: no value
+myInd[9]: Some Value
+
+Number of "no value" entries: 7
+
+The reason both Indexers in Listing 11-2 can coexist in the same class is because they have different signatures. An Indexer signature is specified by the number and type of parameters in an Indexers parameter list. The class will be smart enough to figure out which Indexer to invoke, based on the number and type of arguments in the Indexer call. An indexer with multiple parameters would be implemented something like this:
+
+    public object this[int param1, ..., int paramN]
+    {
+        get
+
+       {
+            // process and return some class data
+        }
+        set
+
+       {
+            // process and assign some class data
+        }
+    }
+
+While creating indexer methods is quite commonplace when you are building custom collections,
+do remember that generic types give you this functionality out of the box.
+
+INDEXERS WITH MULTIPLE DIMENSIONS
+
+Can create indexer for multi-dimensional functions. 
+
+public class SomeContainer
+{
+private int[,] my2DintArray = new int[10, 10];
+ 
+public int this[int row, int column]
+{ /* get or set value from 2D array */ }
+}
+
+INDEXER DEFINITIONS ON INTERFACES
+
+Indexers can be defined on .NET interface types. 
+
+public interface IStringContainer
+{
+string this[int index] { get; set; }
+}
+
+class SomeClass : IStringContainer
+{
+private List<string> myStrings = new List<string>();
+ 
+public string this[int index]
+{
+get { return myStrings[index]; }
+set { myStrings.Insert(index, value); }
+}
+}

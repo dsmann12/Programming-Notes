@@ -1,0 +1,129 @@
+COLLECTIONS
+
+Useful for data structures that need to grow and shrink dynamically as new items are inserted and removed. 
+
+Many offer increased type safety and are highly optimized to process the contained data in a memory-efficient manner. 
+
+Non-generic collections - found in System.Collections namespace. Generally designed to operate on System.Object types and are thus loosely typed 
+containers. However, some do operatore only on a specific type of data, such as string objects. 
+
+Generic collections - found in System.Collections.Generic namespace. Much more typesafe. Must specify the type of type they contain upon creation. 
+
+SYSTEM.COLLECTIONS NAMESPACE
+
+System.Collections Class 				Meaning in Life															Key Implemented Interfaces
+ArrayList 								Represents a dynamically sized collection of							IList, ICollection, IEnumerable,
+										objects listed in sequential order										ICloneable
+
+BitArray 								Manages a compact array of bit values, which are 						ICollection, IEnumerable,
+										represented as Booleans, where true indicates that	 					ICloneable
+										the bit is on (1) and false indicates the bit is off (0)
+
+Hashtable 								Represents a collection of key-value pairs that are 					IDictionary, ICollection,
+										organized based on the hash code of the key								IEnumerable, and ICloneable
+
+Queue 									Represents a standard first-in, first-out (FIFO)						ICollection, IEnumerable, 
+										collection of objects													ICloneable
+
+SortedList 								Represents a collection of key-value pairs that are 					IDictionary, ICollection,
+										sorted by the keys and are accessible by key and 						IEnumerable, and ICloneable
+										by index
+
+Stack 									A last-in, first-out (LIFO) stack providing push						ICollection, IEnumerable
+										and pop (and peek) functionality										ICloneable
+
+
+The interfaces implemented by these collection classes provide insights into their overall functionality.
+
+System.Collections Interface 				Meaning in Life
+ICollection 								Defines general characteristics (e.g., size, enumeration, and thread
+											safety) for all nongeneric collection types
+
+ICloneable 									Allows the implementing object to return a copy of itself to the caller
+
+IDictionary 								Allows a nongeneric collection object to represent its contents using
+											key-value pairs
+
+IEnumerable 								Returns an object implementing the IEnumerator interface (see next
+											table entry)
+
+IEnumerator 								Enables foreach style iteration of collection items
+
+IList 										Provides behavior to add, remove, and index items in a sequential list of
+											objects
+
+SYSTEM.COLLECTIONS.SPECIALIZED
+
+System.Collections.Specialized - defines a number of specialized collection types.
+ 
+System.Collections.Specialized Type Meaning in Life
+HybridDictionary This class implements IDictionary by using a ListDictionary
+while the collection is small and then switching to a Hashtable
+when the collection gets large.
+ListDictionary This class is useful when you need to manage a small number of
+items (ten or so) that can change over time. This class makes use
+of a singly linked list to maintain its data.
+StringCollection This class provides an optimal way to manage large collections of
+string data.
+BitVector32 This class provides a simple structure that stores Boolean values
+and small integers in 32 bits of memory.
+
+PROBLEMS WITH NONGENERIC COLLECTIONS
+
+1. System.Collections and System.Collections.Specialized classes can result in poorly performing code, especially when manipulating numerical data. 
+
+CLR must perform a number of memory transfer operations when storing structures in any nongeneric collection class prototyped to opreator on 
+System.Objects. 
+
+2. Most are not type safe because they were developed to operate on System.Objects and could therefore contain anything at all. If .NET developer needed 
+to create a highly type-safe collection (e.g. a container that can hold objects implementing only a certain interface), only real choice was to create a 
+new collection by hand. 
+
+PERFORMANCE
+
+Reference variables and value variables
+
+sometimes may need to repsent a variable of one category as variable of other. 
+
+boxing - store data in a value type within reference variable. When box a value, CLR allocates a new object on heap and copies the value type's value 
+into that instance. Returns a reference to newly allocated heap-based object. 
+
+unboxing - process of converting value held in object reference back into a corresponding value type on stack. Looks like normal casting operation. 
+
+static void SimpleBoxUnboxOperation()
+{
+// Make a ValueType (int) variable.
+int myInt = 25;
+ 
+// Box the int into an object reference.
+object boxedInt = myInt;
+ 
+// Unbox the reference back into a corresponding int.
+int unboxedInt = (int)boxedInt;
+}
+
+static void WorkWithArrayList()
+{
+// Value types are automatically boxed when
+// passed to a member requesting an object.
+ArrayList myInts = new ArrayList();
+myInts.Add(10);
+myInts.Add(20);
+myInts.Add(35);
+ 
+// Unboxing occurs when an object is converted back to
+// stack-based data.
+int i = (int)myInts[0];
+ 
+// Now it is reboxed, as WriteLine() requires object types!
+Console.WriteLine("Value of your int: {0}", i);
+}
+
+Boxing causes performance problems. 
+
+1. A new object must be allocated on managed heap
+2. The value of the stack-based data must be transferred into that memory location
+3. When unboxed, the value stored on the heap-based object must be transferred back to the stack
+4. The now unused object on heap will (eventually) be garbage collected. 
+
+No type safety means you need to implement a type-safe class yourself if you want one. 

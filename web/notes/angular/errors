@@ -1,0 +1,7 @@
+ERRORS
+
+Can access source from browser. In sources. main.bundle.js. 
+
+Can find TS files in webpack folder under src folder. 
+
+Augury - debugger for angular. Shows up in developer tools. 

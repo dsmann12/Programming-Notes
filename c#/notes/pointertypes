@@ -1,0 +1,280 @@
+POINTER TYPES
+
+Pointer types = allow you to get specific operators and keywords that allow you to bypass the CLR's memory-management
+scheme and take matters into your own hands. 
+
+Operator/Keyword 			Meaning in Life
+* 							This operator is used to create a pointer variable (i.e., a variable that represents
+							a direct location in memory). As in C++, this same operator is used for pointer
+							indirection.
+
+&	 						This operator is used to obtain the address of a variable in memory.
+
+-> 							This operator is used to access fields of a type that is represented by a pointer (the
+							unsafe version of the C# dot operator).
+
+[] 							This operator (in an unsafe context) allows you to index the slot pointed to by a
+							pointer variable (if you’re a C++ programmer, you will recall the interplay between
+							a pointer variable and the [] operator).
+
+++, -- 						In an unsafe context, the increment and decrement operators can be applied to
+							pointer types.
+
++, - 						In an unsafe context, the addition and subtraction operators can be applied to
+							pointer types.
+
+==,!=, <, >, <=, => 		In an unsafe context, the comparison and equality operators can be applied to
+							pointer types.
+
+stackalloc 					In an unsafe context, the stackalloc keyword can be used to allocate C# arrays
+							directly on the stack.
+
+fixed 						In an unsafe context, the fixed keyword can be used to temporarily fix a variable
+							so that its address can be found.
+
+Two common situations for using pointers in C#:
+•			You are looking to optimize select parts of your application by directly manipulating
+			memory outside the management of the CLR.
+
+•			You are calling methods of a C-based .dll or COM server that demand pointer
+			types as parameters. Even in this case, you can often bypass pointer types in favor of
+			the System.IntPtr type and members of the System.Runtime.InteropServices.
+			Marshal type.
+
+If using this, must inform C# compiler. 
+
+csc /unsafe *.cs
+
+THE UNSAFE KEYWORD
+
+Must specifically declare a block of "unsafe code" using unsafe keyword. 
+
+class Program
+{
+static void Main(string[] args)
+{
+unsafe
+{
+// Work with pointer types here!
+}
+ 
+// Can't work with pointers here!
+}
+}
+
+// This entire structure is "unsafe" and can
+// be used only in an unsafe context.
+unsafe struct Node
+{
+public int Value;
+public Node* Left;
+public Node* Right;
+}
+ 
+// This struct is safe, but the Node2* members
+// are not. Technically, you may access "Value" from
+// outside an unsafe context, but not "Left" and "Right".
+public struct Node2
+{
+public int Value;
+ 
+// These can be accessed only in an unsafe context!
+public unsafe Node2* Left;
+public unsafe Node2* Right;
+}
+
+Can define methods as unsafe as well. 
+
+unsafe static void SquareIntPointer(int* myIntPointer)
+{
+// Square the value just for a test.
+*myIntPointer *= *myIntPointer;
+}
+
+static void Main(string[] args)
+{
+unsafe
+{
+int myInt = 10;
+ 
+// OK, because we are in an unsafe context.
+SquareIntPointer(&myInt);
+Console.WriteLine("myInt: {0}", myInt);
+}
+ 
+int myInt2 = 5;
+// Compiler error! Must be in unsafe context!
+SquareIntPointer(&myInt2);
+Console.WriteLine("myInt: {0}", myInt2);
+}
+
+If you would rather not force the caller to wrap the invocation within an unsafe context, you could
+update Main() with the unsafe keyword. In this case, the following code would compile:
+unsafe static void Main(string[] args)
+{
+int myInt2 = 5;
+SquareIntPointer(&myInt2);
+Console.WriteLine("myInt: {0}", myInt2);
+}
+
+WORKING WITH * AND &
+
+// No! This is incorrect under C#!
+int *pi, *pj;
+ 
+// Yes! This is the way of C#.
+int* pi, pj;
+
+unsafe static void PrintValueAndAddress()
+{
+int myInt;
+ 
+// Define an int pointer, and
+// assign it the address of myInt.
+int* ptrToMyInt = &myInt;
+ 
+// Assign value of myInt using pointer indirection.
+*ptrToMyInt = 123;
+ 
+// Print some stats.
+Console.WriteLine("Value of myInt {0}", myInt);
+Console.WriteLine("Address of myInt {0:X}", (int)&ptrToMyInt);
+}
+
+UNSAFE VS SAFE SWAP FUNCTION
+
+unsafe public static void UnsafeSwap(int* i, int* j)
+{
+int temp = *i;
+*i = *j;
+*j = temp;
+}
+
+public static void SafeSwap(ref int i, ref int j)
+{
+int temp = i;
+i = j;
+j = temp;
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Calling method with unsafe code *****");
+ 
+// Values for swap.
+int i = 10, j = 20;
+ 
+// Swap values "safely."
+Console.WriteLine("\n***** Safe swap *****");
+Console.WriteLine("Values before safe swap: i = {0}, j = {1}", i, j);
+SafeSwap(ref i, ref j);
+Console.WriteLine("Values after safe swap: i = {0}, j = {1}", i, j);
+ 
+// Swap values "unsafely."
+Console.WriteLine("\n***** Unsafe swap *****");
+Console.WriteLine("Values before unsafe swap: i = {0}, j = {1}", i, j);
+unsafe { UnsafeSwap(&i, &j); }
+ 
+Console.WriteLine("Values after unsafe swap: i = {0}, j = {1}", i, j);
+Console.ReadLine();
+}
+
+FIELD ACCESS VIA POINTERS (THE -> OPREATOR)
+
+unsafe static void UsePointerToPoint()
+{
+// Access members via pointer.
+Point point;
+Point* p = &point;
+p->x = 100;
+p->y = 200;
+Console.WriteLine(p->ToString());
+ 
+// Access members via pointer indirection.
+Point point2;
+Point* p2 = &point2;
+(*p2).x = 100;
+(*p2).y = 200;
+Console.WriteLine((*p2).ToString());
+}
+
+THE STACKALLOC KEYWORD
+
+May need to declare a local varialble that allocates memory directly from the call stack (and therefore not subject to .NET
+garbage collection). 
+
+C# provides stackalloc keyword which is equivalent to C _alloca function.
+
+unsafe static void UnsafeStackAlloc()
+{
+char* p = stackalloc char[256];
+for (int k = 0; k < 256; k++)
+p[k] = (char)k;
+}
+
+PINNING A TYPE VIA THE FIXED KEYWORD
+
+By nature of stackalloc, the allocated memory is cleaned up as soon as the allocating method has returned (as memory is 
+acquired from the stack). 
+
+class PointRef // <= Renamed and retyped.
+{
+public int x;
+public int y;
+public override string ToString()
+{
+return string.Format("({0}, {1})", x, y);
+}
+}
+
+If caller declares a variable of type Point, the memory is allocated on the garbage-collected heap. Then "What if an unsafe 
+context wants to interact with this object (or any object on the heap)?" Problems could occur if Point is cleaned by garbage
+collection when tried to be accessed. 
+
+To lock a reference type variable in memory from an unsafe context, C# provides the fixed keyword. The fixed statement sets a
+pointer to a managed type and "pins" that variable during the execution of the code. Without fixed, pointers to managed variables
+would be of little use since garbage collection could relocate variable unpredictably. 
+
+C# compiler will not allow you to set a pointer to a managed variable except in a fixed statement. 
+
+unsafe public static void UseAndPinPoint()
+{
+PointRef pt = new PointRef ();
+pt.x = 5;
+pt.y = 6;
+ 
+// Pin pt in place so it will not
+// be moved or GC-ed.
+fixed (int* p = &pt.x)
+{
+// Use int* variable here!
+}
+ 
+// pt is now unpinned, and ready to be GC-ed once
+// the method completes.
+Console.WriteLine ("Point is: {0}", pt);
+}
+
+fixed - allows you to build a statement that locks a reference variable in memory, such that its address remains constant for the
+duration of the statement (or scope block). Any time you interact with a reference type from within context of unsafe code, pinning
+the reference is a must.
+
+THE SIZEOF KEYWORD
+
+sizeof - used to obtain size in bytes of an intrinsic data type, but not a custom type, unless iwthin an unsaf econtext. 
+
+static void UseSizeOfOperator()
+{
+Console.WriteLine("The size of short is {0}.", sizeof(short));
+Console.WriteLine("The size of int is {0}.", sizeof(int));
+Console.WriteLine("The size of long is {0}.", sizeof(long));
+}
+
+unsafe static void UseSizeOfOperator()
+{
+...
+Console.WriteLine("The size of Point is {0}.", sizeof(Point));
+}
+
+
+

@@ -1,0 +1,112 @@
+API
+
+Opens up possibilities of what can be built using other applications. 
+
+Application Programming Interface - interface for programs to talk to one another. 
+
+Example, FaceBook has API that allows a developer to get information from Facebook. 
+
+WEB APIs - generally communicate via HTTP. 
+
+Twitter API - get all tweets that mention Ice cream
+Facebook API - get current user's profile picture
+Weather API - what is weather in New Orleans, LA
+Reddit API - what is current top post
+GooglePlace API - what gas stations are near the user
+Yelp API - give 10 restaurants in zip code 70130
+
+ifttt.com (if this, then that) - way to connect APIs. Have visual interface. 
+
+ProgrammableWeb.com -> API directory. 
+
+Can make HTTP request to an API to get some data back in a format
+
+Search for Beatles songs
+https://itunes.apple.com/search?term=beatles&entity=song
+
+Search podcasts about code
+https://itunes.apple.com/search?term=code&entity=podcast
+
+Two main formats for web APIs:
+1. XML
+2. JSON
+
+XML - extended markup langauge. Similar to HTML in syntax. <></>. All it does is encode key-value pairs.
+
+<person>
+	<age>21</age>
+	<name>Travis</name>
+	<city>Los Angeles</city>
+</person>
+
+JSON - Javascript Object Notation. Looks like JS objects, but everything is a string
+
+{
+	"person: {
+		"age" : "21",
+		"name" : "Travis",
+		"city" : "Los Angeles"
+	}
+}
+
+JSON has become more popular. Since JS used to make API calls. Easier to convert. 
+
+JSONView -> for browser to make JSON more readable. 
+
+Can write JS to retrieve information from API. 
+
+curl -> make API request from command line. 
+
+request - package for simplified HTTP requests. 
+
+npm install request --save
+
+var request = require("request");
+
+request('http://www.google.com', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+            console.log(body);
+    }
+});
+
+Usually want to request an API not HTML.
+
+Must parse JSON string into JSON object. 
+
+var data = JSON.parse(body);
+
+var request = require("request");
+
+request('http://www.google.com', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+		var data = JSON.parse(body);
+		console.log(data["query"]["results"]["channel"]["astromnomy"]["sunsert"]);
+    }
+});
+
+OMDB - Open Movie Database. Contains movie information from IMDB
+
+http://www.omdbapi.com/? -> URL for api requests.
+
+i - movie ID
+t - movie title
+s - search
+
+http://www.omdbapi.com/?s=star ->searches for star in database. 
+
+http://www.omdbapi.com/?i=tt0076759&plot=full
+
+var express = require("express");
+var app = express();
+var request = require("request");
+
+app.get("/results", function(req, res) {
+    request("http://www.omdbapi.com/?s=louisiana", function(error, response, body) {
+       if(!error && response.statusCode == 200) {
+           var results = JSON.parse(body);
+           res.send(results["Search"][0]["Title"]);
+       }
+    });
+});
+
+app.listen(process.env.PORT, process.env.IP);

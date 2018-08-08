@@ -1,0 +1,218 @@
+GENERICS
+
+Generic collections rectify issues of boxing/unboxing and lack of type safety. 
+
+List<T> class:
+
+static void UseGenericList()
+{
+Console.WriteLine("***** Fun with Generics *****\n");
+ 
+// This List<> can hold only Person objects.
+List<Person> morePeople = new List<Person>();
+morePeople.Add(new Person ("Frank", "Black", 50));
+Console.WriteLine(morePeople[0]);
+// This List<> can hold only integers.
+List<int> moreInts = new List<int>();
+moreInts.Add(10);
+moreInts.Add(2);
+int sum = moreInts[0] + moreInts[1];
+ 
+// Compile-time error! Can't add Person object
+// to a list of ints!
+// moreInts.Add(new Person());
+}
+
+Benefits:
+-Generics provide better performance because they do not result in boxing or unboxing penalities when storing value types
+-Generics are type safe because they can contain only the type of type you specify
+-Generics greatly reduce need to built custom collection types because you specify the "type of type" when creating the generic container
+
+List<T>, IEnumerable<T> 
+
+<T> -> the type parameter. Specifies the type that will be used. 
+
+// A partial listing of the List<T> class.
+namespace System.Collections.Generic
+{
+public class List<T> :
+IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyList<T>
+IList, ICollection, IEnumerable
+{
+...
+public void Add(T item);
+public ReadOnlyCollection<T> AsReadOnly();
+public int BinarySearch(T item);
+public bool Contains(T item);
+public void CopyTo(T[] array);
+public int FindIndex(System.Predicate<T> match);
+public T FindLast(System.Predicate<T> match);
+public bool Remove(T item);
+public int RemoveAll(System.Predicate<T> match);
+public T[] ToArray();
+public bool TrueForAll(System.Predicate<T> match);
+public T this[int index] { get; set; }
+}
+}
+
+SYSTEM.COLLECTIONS NAMESPACE
+
+System.Collections.Generic 				Interface Meaning in Life
+ICollection<T> 							Defines general characteristics (e.g., size, enumeration, and
+										thread safety) for all generic collection types
+
+IComparer<T> 							Defines a way to compare to objects
+
+IDictionary<TKey, TValue> 				Allows a generic collection object to represent its contents using
+										key-value pairs
+
+IEnumerable<T> 							Returns the IEnumerator<T> interface for a given object
+
+IEnumerator<T> 							Enables foreach-style iteration over a generic collection
+
+IList<T> 								Provides behavior to add, remove, and index items in a sequential
+										list of objects
+
+ISet<T> 								Provides the base interface for the abstraction of sets
+
+Generic Class 				Supported Key Interfaces 					Meaning in Life
+Dictionary<TKey, TValue> 	ICollection<T>, IDictionary<TKey,			This represents a generic collection
+							TValue>, IEnumerable<T> 					of keys and values.
+
+LinkedList<T> 				ICollection<T>, IEnumerable<T> 				This represents a doubly linked list.
+
+List<T> 					ICollection<T>, IEnumerable<T>,IList<T> 	This is a dynamically resizable
+																		sequential list of items.
+
+Queue<T> 					ICollection (Not a typo! This is the       	This is a generic implementation of
+							nongeneric collection interface),			a first-in, first-out (FIFO) list.
+							IEnumerable<T>
+
+SortedDictionary<TKey,  	ICollection<T>, IDictionary<TKey,			This is a generic implementation of
+TValue>						TValue>, IEnumerable<T> 					a sorted set of key-value pairs.
+
+SortedSet<T> 				ICollection<T>, IEnumerable<T>,				This represents a collection of
+							ISet<T> 									objects that is maintained with no
+																		duplication
+
+Stack<T> 					ICollection (Not a typo! This is the       	This is a generic implementation of
+							nongeneric collection interface),			a LIFO list
+							IEnumerable<T>
+
+Also defines many axuiliary classes and structures that work in conjunction with a specific container. 
+
+LinkedListNode<T>, KeyNotFoundException, etc. 
+
+mscorlib.dll and System.dll are not the only assemblies that add new types to the System.Collectoins.Generics
+namespace. 
+
+System.Core.dll adds the HashSet<T> class to mix. 
+
+COLLECTION INITIALIZATION SYNTAX
+
+// Init a standard array.
+int[] myArrayOfInts = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+ 
+// Init a generic List<> of ints.
+List<int> myGenericList = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+ 
+// Init an ArrayList with numerical data.
+ArrayList myList = new ArrayList { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+List<Point> myListOfPoints = new List<Point>
+{
+new Point { X = 2, Y = 2 },
+new Point { X = 3, Y = 3 },
+new Point(PointColor.BloodRed){ X = 4, Y = 4 }
+};
+
+DICTIONARY INITIALIZATION SYNTAX
+
+// Populate with dictionary initialization syntax.
+Dictionary<string, Person> peopleC = new Dictionary<string, Person>()
+{
+["Homer"] = new Person { FirstName = "Homer", LastName = "Simpson", Age = 47 },
+["Marge"] = new Person { FirstName = "Marge", LastName = "Simpson", Age = 45 },
+["Lisa"] = new Person { FirstName = "Lisa", LastName = "Simpson", Age = 9 }
+};
+
+SYSTEM.COLLECTIONS.OBJECTMODEL NAMESPACE
+
+System.Collections.ObjectModel - additional collection-centric namespace. 
+
+System.Collections.ObjectModel Type 		Meaning in Life
+ObservableCollection<T> 					Represents a dynamic data collection that provides notifications
+											when items get added, removed, or when the whole list is
+											refreshed
+
+ReadOnlyObservableCollection<T> 			Represents a read-only version of ObservableCollection<T>
+
+// A generic Point structure.
+public struct Point<T>
+{
+// Generic state date.
+private T xPos;
+private T yPos;
+ 
+// Generic constructor.
+public Point(T xVal, T yVal)
+{
+xPos = xVal;
+yPos = yVal;
+}
+ 
+// Generic properties.
+public T X
+{
+get { return xPos; }
+set { xPos = value; }
+}
+ 
+public T Y
+{
+get { return yPos; }
+set { yPos = value; }
+}
+ 
+public override string ToString()
+{
+return string.Format("[{0}, {1}]", xPos, yPos);
+}
+ 
+// Reset fields to the default value of the
+// type parameter.
+public void ResetPoint()
+{
+xPos = default(T);
+yPos = default(T);
+}
+}
+
+THE default KEYWORD
+
+In generics, can be used to set a type parameter to its default value; 
+
+-Numerica values have a default value of 0
+-Reference types havea default value of null
+-Fields of a structure are set to 0 for value types and null for reference types. 
+
+CONTRAINING TYPE PARAMETERS
+
+Generic Constraint 				Meaning in Life
+where T : struct 				The type parameter <T> must have System.ValueType in its chain of
+								inheritance (i.e., <T> must be a structure).
+
+where T : class 				The type parameter <T> must not have System.ValueType in its chain of
+								inheritance (i.e., <T> must be a reference type).
+
+where T : new() 				The type parameter <T> must have a default constructor. This is helpful if
+								your generic type must create an instance of the type parameter because
+								you cannot assume you know the format of custom constructors. Note
+								that this constraint must be listed last on a multiconstrained type.
+
+where T : NameOfBaseClass 		The type parameter <T> must be derived from the class specified by
+								NameOfBaseClass.
+
+where T : NameOfInterface 		The type parameter <T> must implement the interface specified by
+								NameOfInterface. You can separate multiple interfaces as a comma-
+								delimited list.

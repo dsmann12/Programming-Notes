@@ -1,0 +1,98 @@
+Widgets
+
+Buttons:
+
+Fl_Button - standard push button
+Fl_Check_Button - button with check box
+Fl_Light_Button - Button with a light
+Fl_Repeat_Button - push button that repeats when held
+Fl_Return_Button - push button activated by Enter key
+Fl_Round_Button - button with radio circle
+
+All just need corresponding header file:
+<FL/Fl_xyz_Button.H>
+
+Constructor takes bounding box of button and optionally a label string:
+Fl_Button *button = new Fl_Button(x, y, width, height, "label");
+Fl_Light_Button *lbutton = new Fl_Light_Button(x, y, width, height);
+Fl_Round_Button *rbutton = new Fl_Round_Button(x, y, width, height, "label");
+
+Each button has associated type() which allows it to behave as push, toggle, radio button, etc
+
+button->type(FL_NORMAL_BUTTON);
+lbutton->type(FL_TOGGLE_BUTTON);
+rbutton->type(FL_RADIO_BUTTON);
+
+For toggle and radio buttons, value() method returns current button state (0=off, 1=on). The set() and clear() methods can be used on toggle buttons to turn a toggle button on or off, respectively. Radio buttons can be turned on with setonly() method; will also turn off other radio button in same group.
+
+TEXT
+
+Fl_Input - one line text input field
+Fl_Output - one line text output field
+Fl_Multiline_Input - multi line text input field
+Fl_Multiline_Output - multi line output field
+Fl_Text_Display - multi line text display widget
+Fl_Text_Editor - multi line text editing widget
+Fl_Help_View - HTML text display widget
+
+Fl_Output and Fl_Multiline_Output widgets allow user to copy text from output field but not change it
+
+value() method is used to get or set string that is displayed
+
+Fl_Input *input = new Fl_Input(x, y, width, height, "label");
+input->value("Now is the time for all good men...");
+
+The string is copied to widget's own storage when set the value() of widget. The Fl_Text_Display and Fl_Text_Editor widgets use an associated Fl_Text_Buffer class for vlaue, instead of a single string.
+
+VALUATORS
+
+Keep track of numbers instead of strings. 
+
+Fl_Counter - widget with arrow buttons that shows the current value
+Fl_Dial - round knob
+Fl_Roller - SGI-like dolly widget
+Fl_Scrollbar - A standard scrollbar widget
+Fl_Slider - A scrollbar with a knob
+Fl_Value__Slider - slider that shows current value
+
+
+CALLBACKS
+
+Callbacks are functions that are called when value of a widget changes. Callback function sent a FL_Widget pointer of widget that changed and pointer to data provided:
+
+void xyz_callback(Fl_Widget *w, void *data) {
+
+}
+
+callback() method sets callback function for a widget. Can optionally pass a pointer to some data needed for callback:
+
+int xyz_data;
+
+button->callback(xyz_callback, &xyz_data);
+
+Normally callbacks only performed when value of widget changes. Can change using Fl_Widget::when() method:
+
+button->when(FL_WHEN_NEVER);
+button->when(FL_WHEN_CHANGED);
+button->when(FL_WHEN_RELEASE);
+button->when(FL_WHEN_RELEASE_ALWAYS);
+button->when(FL_WHEN_ENTER_KEY);
+button->when(FL_WHEN_ENTER_KEY_ALWAYS);
+button->when(FL_WHEN_CHANGED | FL_WHEN_NOT_CHANGED);
+
+Note: 
+
+Cannot delete widget inside callback, as widget may still be accessed by FLTK after callback is completed. Instead use Fl::delete_widget() method to mark widget for deletion when it is safe. 
+
+Hint:
+
+Many programmer new to FLTK or C++ try to use non-static class method instead of static class method or functoin for callback. Since callbacks are done outside a C++ class, the this pointer is not initialized for class methods. 
+
+To work around this, define a static method in class that accepts a pointer to call, and then have static method call class methods as needed. The data pointer you provide to the callback() method of the widget can be a pointer to instance of your class.
+
+class Foo {
+	void my_callback(Fl_Widget *w);
+	static void my_static_callback(Fl_Widget *w, void *f) { ((Foo *) f)->my_callback(w);}
+};
+
+w->callback(my_static_callback, (void *) this);

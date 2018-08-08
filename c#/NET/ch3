@@ -1,0 +1,1063 @@
+CORE C# PROGRAMMING
+
+class Program
+{
+static void Main(string[] args)
+{
+// Display a simple message to the user.
+Console.WriteLine("***** My First C# App *****");
+Console.WriteLine("Hello World!");
+Console.WriteLine();
+ 
+// Wait for Enter key to be pressed before shutting down.
+Console.ReadLine();
+}
+}
+
+Every executable C# program must have a a class defining a Main() method. 
+
+Class defining the Main() method is termed the *application object*. 
+
+public static void Main(string[] args) {}
+
+Can also have other forms:
+
+// int return type, array of strings as the parameter.
+static int Main(string[] args)
+{
+// Must return a value before exiting!
+return 0;
+}
+ 
+// No return type, no parameters.
+static void Main()
+{
+}
+ 
+// int return type, no parameters.
+static int Main()
+{
+// Must return a value before exiting!
+return 0;
+}
+
+Can use to specify error codes. 
+
+On Windows OSes, application's return value is stored ithin a system environment variable called %ERRORLEVEL%. 
+
+If you create an app that programmatically lanuchs another executable, can obtain value of %ERRORLEVEL% using staic System.Diagnostics.Process.ExitCode property.
+
+Can read it by creatinga batch file in the app's directory:
+
+@echo off
+ 
+rem A batch file for SimpleCSharpApp.exe
+rem which captures the app's return value.
+ 
+SimpleCSharpApp
+@if "%ERRORLEVEL%" == "0" goto success
+ 
+:fail
+echo This application has failed!
+echo return value = %ERRORLEVEL%
+goto end
+:success
+echo This application has succeeded!
+echo return value = %ERRORLEVEL%
+goto end
+:end
+echo All Done.
+
+PARSING COMMAND LINE ARGUMENTS
+
+static int Main(string[] args)
+{
+...
+// Process any incoming args.
+for(int i = 0; i < args.Length; i++)
+Console.WriteLine("Arg: {0}", args[i]);
+ 
+Console.ReadLine();
+return -1;
+}
+
+Or can use the foreach() method to loop through an array.
+
+// Notice you have no need to check the size of the array when using "foreach".
+static int Main(string[] args)
+{
+...
+// Process any incoming args using foreach.
+foreach(string arg in args)
+Console.WriteLine("Arg: {0}", arg);
+ 
+Console.ReadLine();
+return -1;
+} 
+
+Can also access command-line arguments using the static GetCommandLineArgs() method of the System.Environment type. Return value of this method is an array of strings. First index identifies name of app itself while remaining strings contain individual command-line arguments. When usingthis approach, no longer necessary to define Main() as taking a string array as input aparameter. 
+
+static int Main(string[] args)
+{
+...
+// Get arguments using System.Environment.
+string[] theArgs = Environment.GetCommandLineArgs();
+foreach(string arg in theArgs)
+Console.WriteLine("Arg: {0}", arg);
+ 
+Console.ReadLine();
+return -1;
+}
+
+THE SYSTEM.ENVIRONMENT CLASS
+
+Environment class exposes a number of helpful methods. 
+
+Allow you to obtain a number of details regarding OS currently hosting .NET app using various static members. 
+
+Create method called ShowEnvironmentDetails();
+
+static int Main(string[] args)
+{
+...
+// Helper method within the Program class.
+ShowEnvironmentDetails();
+ 
+Console.ReadLine();
+return -1;
+}
+
+Then define method with this code:
+
+static void ShowEnvironmentDetails()
+{
+// Print out the drives on this machine,
+// and other interesting details.
+foreach (string drive in Environment.GetLogicalDrives())
+Console.WriteLine("Drive: {0}", drive);
+ 
+Console.WriteLine("OS: {0}", Environment.OSVersion);
+Console.WriteLine("Number of processors: {0}",
+Environment.ProcessorCount);
+Console.WriteLine(".NET Version: {0}",
+Environment.Version);
+}
+
+Environment.GetLogicalDrives() - Gets the logical drives and prints each one with a foreach command
+
+Environment.OSVersion - property defining the OS version
+Environment.ProcessorCounter - property defining number of processors
+Environment.Version - property defining version of .NET
+
+Environment Members:
+
+Property Meaning in Life
+ExitCode Gets or sets the exit code for the application
+Is64BitOperatingSystem Returns a bool to represent whether the host machine is running a 64-bit OS
+MachineName Gets the name of the current machine
+NewLine Gets the newline symbol for the current environment
+SystemDirectory Returns the full path to the system directory
+UserName Returns the name of the user that started this application
+Version Returns a Version object that represents the version of the .NET platform
+
+THE SYSTEM.CONSOLE CLASS
+
+Console class encapsulates input, output, and error-stream manipulations for console-based apps. Include ability to change bacground and foreground colors and issue beep noises in various frequences:
+
+Member Meaning in Life
+Beep() This method forces the console to emit a beep of a specified frequency and
+duration.
+BackgroundColor These properties set the background/foreground colors for the current output.
+ForegroundColor They may be assigned any member of the ConsoleColor enumeration.
+BufferHeight These properties control the height/width of the console’s buffer area.
+BufferWidth
+Title This property gets or sets the title of the current console.
+WindowHeight These properties control the dimensions of the console in relation to the
+established buffer.
+WindowWidth
+WindowTop
+WindowLeft
+Clear()
+This method clears the established buffer and console display area.
+
+Basic Input and Output
+
+Console type defines set of methods to capture input and output, all of which are static and therefore called by prefixing name of class to method name. 
+
+Console.WriteLine() - pumps text string including a carriage return to output stream
+Console.Write() - pumps text ot output stream without carriage return
+Console.ReadLine() - allows you to receive information from input stream up until Enter key is pressed. 
+Console.Read() used to capture a single character from input stream. 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Basic Console I/O *****");
+GetUserData();
+Console.ReadLine();
+}
+ 
+private static void GetUserData()
+{
+}
+}
+
+static void GetUserData()
+{
+// Get name and age.
+Console.Write("Please enter your name: ");
+string userName = Console.ReadLine();
+Console.Write("Please enter your age: ");
+string userAge = Console.ReadLine();
+ 
+// Change echo color, just for fun.
+ConsoleColor prevColor = Console.ForegroundColor;
+Console.ForegroundColor = ConsoleColor.Yellow;
+ 
+// Echo to the console.
+Console.WriteLine("Hello {0}! You are {1} years old.",
+userName, userAge);
+ 
+// Restore previous color.
+Console.ForegroundColor = prevColor;
+}
+
+{0}. {1} - defining string literal that contains segments of dat awhose value is not known until runtime, able to specify a placeholder within the literal using this curly-baracket syntax. 
+
+// John says...
+Console.WriteLine("{0}, Number {0}, Number {0}", 9);
+
+// Prints: 20, 10, 30
+Console.WriteLine("{1}, {0}, {2}", 10, 20, 30);
+
+Formatting Numerical Data
+
+Placeholders can contain various format characters:
+
+String Format Character Meaning in Life
+C or c Used to format currency. By default, the flag will prefix the local cultural
+symbol (a dollar sign [$] for U.S. English).
+D or d Used to format decimal numbers. This flag may also specify the minimum
+number of digits used to pad the value.
+E or e Used for exponential notation. Casing controls whether the exponential
+constant is uppercase (E) or lowercase (e).
+F or f Used for fixed-point formatting. This flag may also specify the minimum
+number of digits used to pad the value.
+G or g Stands for general. This character can be used to format a number to fixed or
+exponential format.
+N or n Used for basic numerical formatting (with commas).
+X or x Used for hexadecimal formatting. If you use an uppercase X, your hex format
+will also contain uppercase characters.
+
+// Now make use of some format tags.
+static void FormatNumericalData()
+{
+Console.WriteLine("The value 99999 in various formats:");
+Console.WriteLine("c format: {0:c}", 99999);
+Console.WriteLine("d9 format: {0:d9}", 99999);
+Console.WriteLine("f3 format: {0:f3}", 99999);
+Console.WriteLine("n format: {0:n}", 99999);
+ 
+// Notice that upper- or lowercasing for hex
+// determines if letters are upper- or lowercase.
+Console.WriteLine("E format: {0:E}", 99999);
+Console.WriteLine("e format: {0:e}", 99999);
+Console.WriteLine("X format: {0:X}", 99999);
+Console.WriteLine("x format: {0:x}", 99999);
+}
+
+The value 99999 in various formats:
+ 
+c format: $99,999.00
+d9 format: 000099999
+f3 format: 99999.000
+n format: 99,999.00
+E format: 9.999900E+004
+e format: 9.999900e+004
+X format: 1869F
+x format: 1869f
+
+Formatting Numerical Data bEyond Console Applications
+
+.NET string formatting not limited to console programs. 
+
+Same syntax formatting can be used when calling static string.Format() method.
+
+Can be helpful when sneed to compose textual data at runtime for use in any app type (e.g. GUI app, ASP.NET web app, etc). 
+
+string.Format() - returns a new string object, which is formatted according to the provided flag.s After this, free to ues textual data as you see fit. 
+
+Note: Example code wil not compile until you reference the PresentationFramewor.dll assembly
+
+static void DisplayMessage()
+{
+// Using string.Format() to format a string literal.
+string userMessage = string.Format("100000 in hex is {0:x}", 100000);
+ 
+// You need to reference PresentationFramework.dll
+// in order to compile this line of code!
+System.Windows.MessageBox.Show(userMessage);
+}
+
+SYSTEM DATA TYPES
+
+C# Shorthand CLS
+System Type
+Compliant?
+Range
+Meaning in Life
+bool Yes System.Boolean true or false sbyte No System.SByte –128 to 127 Signed 8-bit number
+byte Yes System.Byte 0 to 255 Unsigned 8-bit number
+short Yes System.Int16 –32,768 to 32,767 Signed 16-bit number
+ushort No System.UInt16 0 to 65,535 Unsigned 16-bit number
+int Yes System.Int32 –2,147,483,648 to 2,147,483,647 Signed 32-bit number
+uint No System.UInt32 0 to 4,294,967,295 Unsigned 32-bit number
+long Yes System.Int64 –9,223,372,036,854,775,
+808 to
+9,223,372,036,854,775,807 Signed 64-bit to number
+ulong No System.UInt64 0 to 18,446,744,073,709,551,615 Unsigned 64-bit number
+char Yes System.Char U+0000 to U+ffff Single 16-bit Unicode
+character
+float Yes System.Single -3.4 10 38 to +3.4 10 38 32-bit floating-point
+number
+double Yes System.Double ±5.0 10 –324 to ±1.7 10 308 64-bit floating-point
+number
+decimal Yes System.Decimal (-7.9 x 10 28 to 7.9 x 10 28 )/(10 0 to 28 ) 128-bit signed number
+string Yes System.String Limited by system memory Represents a set of
+Unicode characters
+Object Yes System.Object Can store any data type in an
+object variable The base class of all types
+in the .NET universe
+
+INTRINSIC DATA TYPES AND NEW OPERATOR
+
+All intrinsic dat atypes support what is known as *default constructor*. A
+
+•	 bool variables are set to false.
+•	 Numeric data is set to 0 (or 0.0 in the case of floating-point data types).
+•	 char variables are set to a single empty character.
+•	 BigInteger variables are set to 0.
+•	 DateTime variables are set to 1/1/0001 12:00:00 AM.
+•	 Object references (including strings) are set to null.
+
+static void NewingDataTypes()
+{
+Console.WriteLine("=> Using new to create variables:");
+bool b = new bool();
+// Set to false.
+int i = new int();
+// Set to 0.
+double d = new double();
+// Set to 0.
+DateTime dt = new DateTime();
+// Set to 1/1/0001 12:00:00 AM
+Console.WriteLine("{0}, {1}, {2}, {3}", b, i, d, dt);
+Console.WriteLine();
+}
+
+Data Type Class Hierarchy
+
+Even primitive .NET dat atypes arranged in class hierarchy. 
+
+pg.78
+
+Each type ultimately derives from System.Object whiwhc defines a est of methods (e.g. ToString(), Equals(), GetHashCode()) common to all types in the .NET base class libraries. 
+
+Note that many numerical data types derive from class named System.ValueType. Descendants of this type are automatically allocated on the stack and therefore have a predictable lifetime and are quire efficient.y 
+
+Types that do not have System.ValueType in their inheritance chain (such as System.Type, System.String, System.Array, System.Exception, and System.Delegate) are not allocated on stack but on garbage collection heap. 
+
+static void ObjectFunctionality()
+{
+Console.WriteLine("=> System.Object Functionality:");
+ 
+// A C# int is really a shorthand for System.Int32,
+// which inherits the following members from System.Object.
+Console.WriteLine("12.GetHashCode() = {0}", 12.GetHashCode());
+Console.WriteLine("12.Equals(23) = {0}", 12.Equals(23));
+Console.WriteLine("12.ToString() = {0}", 12.ToString());
+Console.WriteLine("12.GetType() = {0}", 12.GetType());
+Console.WriteLine();
+}
+
+=> System.Object Functionality:
+ 
+12.GetHashCode() = 12
+12.Equals(23) = False
+12.ToString() = 12
+12.GetType() = System.Int32
+
+Members of Numerical Data Types:
+
+Numerical types of .NET support MaxValue and MinValue properties that provide information regarding range a given type can store. 
+
+Given data type may define further useful members.
+
+System.Double provides members to obtain values of epsilon and infinity. 
+
+static void DataTypeFunctionality()
+{
+Console.WriteLine("=> Data type Functionality:");
+ 
+Console.WriteLine("Max of int: {0}", int.MaxValue);
+Console.WriteLine("Min of int: {0}", int.MinValue);
+Console.WriteLine("Max of double: {0}", double.MaxValue);
+Console.WriteLine("Min of double: {0}", double.MinValue);
+Console.WriteLine("double.Epsilon: {0}", double.Epsilon);
+Console.WriteLine("double.PositiveInfinity: {0}",
+double.PositiveInfinity);
+Console.WriteLine("double.NegativeInfinity: {0}",
+double.NegativeInfinity);
+Console.WriteLine();
+}
+
+Members of System.Boolean
+
+Supports TrueString.FalseString which yields string "True" and "False" respectively.
+
+Console.WriteLine("bool.FalseString: {0}", bool.FalseString);
+Console.WriteLine("bool.TrueString: {0}", bool.TrueString);
+
+Members of System.Char
+
+System.String and System.Char are both Unicode under the hood. 
+
+Determine whether given character is alphabetical, numerical, a point of punctuation, etc. 
+
+static void CharFunctionality()
+{
+Console.WriteLine("=> char type Functionality:");
+char myChar = 'a';
+Console.WriteLine("char.IsDigit('a'): {0}", char.IsDigit(myChar));
+Console.WriteLine("char.IsLetter('a'): {0}", char.IsLetter(myChar));
+Console.WriteLine("char.IsWhiteSpace('Hello There', 5): {0}",
+char.IsWhiteSpace("Hello There", 5));
+Console.WriteLine("char.IsWhiteSpace('Hello There', 6): {0}",
+char.IsWhiteSpace("Hello There", 6));
+Console.WriteLine("char.IsPunctuation('?'): {0}",
+char.IsPunctuation('?'));
+Console.WriteLine();
+}
+
+PARSING VALUES FROM STRING DATA
+
+.NET data types providfe ability to generate a variable of their underlying type given a textual equivalent. Extremely helpful when wanting to convert some user iput data (such as selection from GUI based element) into a numerical value. 
+
+static void ParseFromStrings()
+{
+Console.WriteLine("=> Data type parsing:");
+bool b = bool.Parse("True");
+Console.WriteLine("Value of b: {0}", b);
+double d = double.Parse("99.884");
+Console.WriteLine("Value of d: {0}", d);
+int i = int.Parse("8");
+Console.WriteLine("Value of i: {0}", i);
+char c = Char.Parse("w");
+Console.WriteLine("Value of c: {0}", c);
+Console.WriteLine();
+}
+
+System.DateTime and System.TimeSpan
+
+System namespace defines a few useful data types for which there are no C# keywords:
+
+DateTime and TimeSpan structures. 
+
+DateTime - contains data that reprseents a sepecific date (month, day, year) and time valye, both of which may be formatted in a variety of ways using the supplied members. 
+
+TimeSpan - allows you to easily define and transform units of time using various members. 
+
+static void UseDatesAndTimes()
+{
+Console.WriteLine("=> Dates and Times:");
+ 
+// This constructor takes (year, month, day).
+DateTime dt = new DateTime(2015, 10, 17);
+ 
+// What day of the month is this?
+Console.WriteLine("The day of {0} is {1}", dt.Date, dt.DayOfWeek);
+ 
+// Month is now December.
+dt = dt.AddMonths(2);
+Console.WriteLine("Daylight savings: {0}", dt.IsDaylightSavingTime());
+// This constructor takes (hours, minutes, seconds).
+TimeSpan ts = new TimeSpan(4, 30, 0);
+Console.WriteLine(ts);
+ 
+// Subtract 15 minutes from the current TimeSpan and
+// print the result.
+Console.WriteLine(ts.Subtract(new TimeSpan(0, 15, 0)));
+}
+
+System.Numerics.dll Assmebly
+
+System.Numerics namespace defines a structure named BigInteger. Data type  an be used when nede to represent huge numerical values which are not constrained by a fixed upper or lower limit. 
+
+Also defined a second structure named Complex, which allows you to mathematically model complex numerical data (e.g. imaginary units, real data, hyperbolic tangents). 
+
+While many .NET apps might never need to make use of BigInteger, if you do need it, firs tstep is to reference the System.Numerics.dll assembly into your project. 
+
+1. Select the Project -> Add Reference meny option of Visual Studio. 
+2. Locate and select the System.Numerics.dll assembly within the list of presented libraries found inthe Frameowrk tab on the left side
+3. Click OK
+
+Then add following using directive to file:
+
+// BigInteger lives here!
+using System.Numerics;
+
+static void UseBigInteger()
+{
+Console.WriteLine("=> Use BigInteger:");
+BigInteger biggy =
+BigInteger.Parse("9999999999999999999999999999999999999999999999");
+Console.WriteLine("Value of biggy is {0}", biggy);
+Console.WriteLine("Is biggy an even value?: {0}", biggy.IsEven);
+Console.WriteLine("Is biggy a power of two?: {0}", biggy.IsPowerOfTwo);
+BigInteger reallyBig = BigInteger.Multiply(biggy,
+BigInteger.Parse("8888888888888888888888888888888888888888888"));
+Console.WriteLine("Value of reallyBig is {0}", reallyBig);
+}
+
+Best to use a string to represent value and use Parse() to get BigInteger value. Also includes methods to apply basic mathematical expressions (such as adding and multiplying). Data type also responds to c# instrinsic math opreators (+, *, /). Therefore can just say:
+
+BigInteger reallyBig2 = biggy * reallyBig;
+
+STRINGS
+
+System.String provides number of methods, including those that return length of character data, find substrings within current string, and convert toand from uppercase/lowercase. 
+
+String Member Meaning in Life
+Length This property returns the length of the current string.
+Compare() This static method compares two strings.
+Contains() This method determines whether a string contains a specific substring.
+Equals() This method tests whether two string objects contain identical character data.
+Format() This static method formats a string using other primitives (e.g., numerical data, other
+strings) and the {0} notation examined earlier in this chapter.
+Insert() This method inserts a string within a given string.
+PadLeft() These methods are used to pad a string with some characters.
+PadRight()
+Remove()
+These methods are used to receive a copy of a string with modifications (characters
+removed or replaced).
+Replace()
+Split() This method returns a String array containing the substrings in this instance that are
+delimited by elements of a specified char array or string array.
+Trim() This method removes all occurrences of a set of specified characters from the beginning
+and end of the current string.
+ToUpper() These methods create a copy of the current string in uppercase or lowercase format,
+respectively.
+ToLower()
+
+Basic Manipulation
+
+static void BasicStringFunctionality()
+{
+Console.WriteLine("=> Basic String functionality:");
+string firstName = "Freddy";
+Console.WriteLine("Value of firstName: {0}", firstName);
+Console.WriteLine("firstName has {0} characters.", firstName.Length);
+Console.WriteLine("firstName in uppercase: {0}", firstName.ToUpper());
+Console.WriteLine("firstName in lowercase: {0}", firstName.ToLower());
+Console.WriteLine("firstName contains the letter y?: {0}",
+firstName.Contains("y"));
+Console.WriteLine("firstName after replace: {0}", firstName.Replace("dy", ""));
+Console.WriteLine();
+}
+
+***** Fun with Strings *****
+ 
+=> Basic String functionality:
+Value of firstName: Freddy
+firstName has 6 characters.
+firstName in uppercase: FREDDY
+firstName in lowercase: freddy
+firstName contains the letter y?: True
+firstName after replace: Fred
+
+String Concatenation
+
+static void StringConcatenation()
+{
+Console.WriteLine("=> String concatenation:");
+string s1 = "Programming the ";
+string s2 = "PsychoDrill (PTP)";
+string s3 = s1 + s2;
+Console.WriteLine(s3);
+Console.WriteLine();
+}
+
+The C# + concatenation symbol is processed by compiler to emit a cll to the static String.Concat() method. 
+
+static void StringConcatenation()
+{
+Console.WriteLine("=> String concatenation:");
+string s1 = "Programming the ";
+string s2 = "PsychoDrill (PTP)";
+string s3 = String.Concat(s1, s2);
+Console.WriteLine(s3);
+Console.WriteLine();
+}
+
+Escape Characters:
+
+Character Meaning in Life
+\' Inserts a single quote into a string literal.
+\" Inserts a double quote into a string literal.
+\\ Inserts a backslash into a string literal. This can be
+quite helpful when defining file or network paths.
+\a Triggers a system alert (beep). For console programs,
+this can be an audio clue to the user.
+\n Inserts a new line (on Windows platforms).
+\r Inserts a carriage return.
+\t Inserts a horizontal tab into the string literal.
+
+Verbatim Strings 
+
+When prefix a string literal with the @ symbol, craeted a verbatim string. Using these ,you disable the processing of a literal's escape characters and print out string as is. Can be useful with strings representing directory and network paths. 
+
+// The following string is printed verbatim,
+// thus all escape characters are displayed.
+Console.WriteLine(@"C:\MyApp\bin\Debug");
+
+Using verbatim strings, you can also directly insert a double quote into a literal string by doubling
+the " token.
+Console.WriteLine(@"Cerebus said ""Darrr! Pret-ty sun-sets""");
+
+String and Equality
+
+Reference type - object allocated on garbage collected managed heap. By default, when perform a test for equality on referenced types via == or != operators oyou will be returned true if references are pointing to same object inmemory. 
+
+However, even though string data type is indeeed a reference type, the equality opreators have been redefined to compare the *value* of string objects, not object in memory to which they refer. 
+
+static void StringEquality()
+{
+Console.WriteLine("=> String equality:");
+string s1 = "Hello!";
+string s2 = "Yo!";
+Console.WriteLine("s1 = {0}", s1);
+Console.WriteLine("s2 = {0}", s2);
+Console.WriteLine();
+ 
+// Test these strings for equality.
+Console.WriteLine("s1 == s2: {0}", s1 == s2);
+Console.WriteLine("s1 == Hello!: {0}", s1 == "Hello!");
+Console.WriteLine("s1 == HELLO!: {0}", s1 == "HELLO!");
+Console.WriteLine("s1 == hello!: {0}", s1 == "hello!");
+Console.WriteLine("s1.Equals(s2): {0}", s1.Equals(s2));
+Console.WriteLine("Yo.Equals(s2): {0}", "Yo!".Equals(s2));
+Console.WriteLine();
+}
+
+C# equality operators perform a case-sensitive character-by-character equality test on string objects. 
+
+String are Immutable
+
+System.String - after assign a string object with its initial value, the character data cannot be changed. Methods of String usually return a new string object in a modified format. 
+
+Also applies to assignment. 
+
+Therefore, String useful when need to represent basic character data such as names, usernames, user accounts, or simple bits of text. 
+
+However, if building app that makes heavy use of offrequently changing textual data (such as word processing program), it would be bad idea to represent word processign data using string objects. 
+
+System.Text.StringBuilder
+
+.NET base clas libraries provide System.Text namespace because string can be inefficient. 
+
+Within lives class named StringBuilder. 
+
+StringBuilder define methods that llow you to replace or format segments. 
+
+// StringBuilder lives here!
+using System.Text;
+
+With StringBuilder, when call members of this type, you are directly modifying the object's internal character data not obtaining a copy of data in modified format. 
+
+the following usage of StringBuilder:
+static void FunWithStringBuilder()
+{
+Console.WriteLine("=> Using the StringBuilder:");
+StringBuilder sb = new StringBuilder("**** Fantastic Games ****");
+sb.Append("\n");
+sb.AppendLine("Half Life");
+sb.AppendLine("Morrowind");
+sb.AppendLine("Deus Ex" + "2");
+sb.AppendLine("System Shock");
+Console.WriteLine(sb.ToString());
+sb.Replace("2", " Invisible War");
+Console.WriteLine(sb.ToString());
+Console.WriteLine("sb has {0} chars.", sb.Length);
+Console.WriteLine();
+}
+
+By default StringBuider is only able ot initially hold a string of 16 characters or fewer but will expand auotmatically if necessary. However, default starting value can be changed via an additional constructor argument. 
+
+// Make a StringBuilder with an initial size of 256.
+StringBuilder sb = new StringBuilder("**** Fantastic Games ****", 256);
+
+If append more characters than specified limit, the StringBuilder object will copy its data into a new isntance and grow the buffer by specified limit. 
+
+String Interpolation
+
+Curly bracket ({0}, {1}) syntax been around since .NET 1.0. 
+
+Now can use string interpolation - allternative syntax to build string literals that contain placehlders for variables. New approach allow syou to directly embed the variables themselves, rather than tacking them on as comma delmited list.
+
+static void StringInterpolation()
+{
+// Some local variables we will plug into our larger string
+int age = 4;
+string name = "Soren";
+ 
+// Using curly bracket syntax.
+string greeting = string.Format("Hello {0} you are {1} years old.", name, age);
+ 
+// Using string interpolation
+string greeting2 = $"Hello {name} you are {age} years old.";
+}
+
+Notice string being with $ prefix. 
+
+string greeting = string.Format("Hello {0} you are {1} years old.", name.ToUpper(), age);
+string greeting2 = $"Hello {name.ToUpper()} you are {age} years old.";
+
+string greeting = string.Format("\tHello {0} you are {1} years old.", name.ToUpper(), age);
+string greeting2 = $"\tHello {name.ToUpper()} you are {age} years old.";
+
+CONVERSION
+
+Implicit: 
+Widening conversion - OK
+Narrowing conversion - Not ok if data is lost
+
+Must do explicit casting. Can lost data.
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with type conversions *****");
+short numb1 = 30000, numb2 = 30000;
+ 
+// Explicitly cast the int into a short (and allow loss of data).
+short answer = (short)Add(numb1, numb2);
+ 
+Console.WriteLine("{0} + {1} = {2}",
+numb1, numb2, answer);
+NarrowingAttempt();
+Console.ReadLine();
+}
+
+static int Add(int x, int y)
+{
+return x + y;
+}
+ 
+static void NarrowingAttempt()
+{
+byte myByte = 0;
+int myInt = 200;
+ 
+// Explicitly cast the int into a byte (no loss of data).
+myByte = (byte)myInt;
+Console.WriteLine("Value of myByte: {0}", myByte);
+}
+}
+
+The checked Keyword
+
+By default, if take no corrective actions, overflow/underflow conditoins occur without error. 
+
+To handle overflow/underflow, two options:
+
+1. Leverage wits and programming skills to handle all overflow/underflow manually.
+2. checked keyword 
+
+checked - c# provided. When warap a statement or block of statements within scope of checked keyword, the C# compiler emits aditional CIL instructions that test for overflow conditions that may result when using arithmetic on two numerical data types. If overflow has occurred will receive a runtime exception: System.OverflowException. 
+
+static int Add(int x, int y)
+{
+return x + y;
+}
+ 
+static void NarrowingAttempt()
+{
+byte myByte = 0;
+int myInt = 200;
+ 
+// Explicitly cast the int into a byte (no loss of data).
+myByte = (byte)myInt;
+Console.WriteLine("Value of myByte: {0}", myByte);
+}
+}
+
+Setting Project-Wide Overflow Checking:
+
+C# compiler supports /checked flag. 
+
+When enabled, all arithmetic will be evaluated for overflow without need to make use of C# checked keyword. 
+
+The unchecked Keyword
+
+If have enabled project wide setting, how do you make data loss (overflow/underflow) acceptable?
+
+unchecked - keyword to disable the throwing of an overflow exceptin on a case-by-case basis. Identical to that of checked keyword. 
+
+// Assuming /checked is enabled,
+// this block will not trigger
+// a runtime exception.
+unchecked
+{
+byte sum = (byte)(b1 + b2);
+Console.WriteLine("sum = {0} ", sum);
+}
+
+IMPLICITLY TYPED VARIABLES
+
+C# provides implicitly typed variables using var keyword. Can be used in place of specifying a specific data type. Compiler will automatically infer the underlying data type based on the inital value used to 
+
+static void DeclareImplicitVars()
+{
+// Implicitly typed local variables
+// are declared as follows:
+// var variableName = initialValue;
+var myInt = 0;
+var myBool = true;
+var myString = "Time, marches on...";
+}
+
+Note: var not actuallty a C# keyword. When used as data type, var token is contextually treated as keyword by compiler. 
+
+reflection - act of detmering the composition of a type at runtime. 
+
+static void DeclareImplicitVars()
+{
+// Implicitly typed local variables.
+var myInt = 0;
+var myBool = true;
+var myString = "Time, marches on...";
+ 
+// Print out the underlying type.
+Console.WriteLine("myInt is a: {0}", myInt.GetType().Name);
+Console.WriteLine("myBool is a: {0}", myBool.GetType().Name);
+Console.WriteLine("myString is a: {0}", myString.GetType().Name);
+}
+
+***** Fun with Implicit Typing *****
+ 
+myInt is a: Int32
+myBool is a: Boolean
+myString is a: String
+
+Restrictions on Implicitly Typed Variables
+
+1. Applies only to local variables in a method or property scope. Illegal to use var keyword to define return values, parameters, or field data of a custom type. 
+2. Local variables declared with var keyword must be assigned an initial value at exact time of declaration and cannot be assigned the initial value of null. Permissible to assigne null after variable is declared provided it is a reference type. Permissible to assign value of an implicitly typed local variable to value of other variables. Permissible to return an implicitly typed local variable to called provided method return type is same underlying type as var defined data point. 
+
+Implicitly Typed Data Is Strongly Typed Data
+
+Still strongly typed. Not like Python of JS. Must retain type that is given during declration. 
+
+NOTE: C# does allow for dynamic typing with dynamic keyword
+
+Usefulness
+
+LINQ makes use of *query expressions* that uield dynamically created results based on format of query itself. In these cases, implicit typicing is helpful because do not need to explicitly define type that query may return. 
+
+static void LinqQueryOverInts()
+{
+int[] numbers = { 10, 20, 30, 40, 1, 2, 3, 8 };
+ 
+// LINQ query!
+var subset = from i in numbers where i < 10 select i;
+ 
+Console.Write("Values in subset: ");
+foreach (var i in subset)
+{
+Console.Write("{0} ", i);
+}
+Console.WriteLine();
+ 
+// Hmm...what type is subset?
+Console.WriteLine("subset is a: {0}", subset.GetType().Name);
+Console.WriteLine("subset is defined in: {0}", subset.GetType().Namespace);
+}
+
+LOOPS
+
+For Loop
+
+foreach Loop
+
+// Iterate array items using foreach.
+static void ForEachLoopExample()
+{
+string[] carTypes = {"Ford", "BMW", "Yugo", "Honda" };
+foreach (string c in carTypes)
+Console.WriteLine(c);
+ 
+int[] myInts = { 10, 20, 30, 40 };
+foreach (int i in myInts)
+Console.WriteLine(i);
+}
+
+Can use implicit typing with foreach loop:
+
+static void LinqQueryOverInts()
+{
+int[] numbers = { 10, 20, 30, 40, 1, 2, 3, 8 };
+ 
+// LINQ query!
+var subset = from i in numbers where i < 10 select i;
+Console.Write("Values in subset: ");
+ch (var i in subset)
+{
+Console.Write("{0} ", i);
+}
+}
+
+while LOOP
+
+static void WhileLoopExample()
+{
+string userIsDone = "";
+ 
+// Test on a lower-class copy of the string.
+while(userIsDone.ToLower() != "yes")
+{
+Console.WriteLine("In while loop");
+Console.Write("Are you done? [yes] [no]: ");
+userIsDone = Console.ReadLine();
+}
+}
+
+do/while LOOP
+
+static void DoWhileLoopExample()
+{
+string userIsDone = "";
+ 
+do
+{
+Console.WriteLine("In do/while loop");
+Console.Write("Are you done? [yes] [no]: ");
+userIsDone = Console.ReadLine();
+}while(userIsDone.ToLower() != "yes"); // Note the semicolon!
+}
+
+CONDITOINAL BRANCHING
+
+if/else STATEMENTS
+
+Equality and Relational Operators:
+
+C# Equality/Relational Operator Example Usage Meaning in Life
+== if(age == 30) Returns true only if each expression is the same
+!= if("Foo" != myStr) Returns true only if each expression is different
+< if(bonus < 2000) Returns true if expression A (bonus) is less than,
+greater than, less than or equal to, or greater
+than or equal to expression B (2000)
+> if(bonus > 2000) <= if(bonus <= 2000) >= if(bonus >= 2000)
+
+C and C++ programmers should not that trick of testing a condition for a value not equal to 0 will not work in C#. 
+
+Conditional Operators:
+
+Operator Example
+Meaning in Life
+&& if(age == 30 && name == "Fred") AND operator. Returns true if all expressions are true.
+|| if(age == 30 || name == "Fred") OR operator. Returns true if at least one expression is true.
+! if(!myBool)
+NOT operator. Returns true if false, or false if true.
+
+switch STATEMENT
+
+Allows handling of program flow based on predefined set of choiced. 
+
+// Switch on a numerical value.
+static void SwitchExample()
+{
+Console.WriteLine("1 [C#], 2 [VB]");
+Console.Write("Please pick your language preference: ");
+ 
+string langChoice = Console.ReadLine();
+int n = int.Parse(langChoice);
+switch (n)
+{
+case 1:
+Console.WriteLine("Good choice, C# is a fine language.");
+break;
+case 2:
+Console.WriteLine("VB: OOP, multithreading, and more!");
+break;
+default:
+Console.WriteLine("Well...good luck with that!");
+break;
+}
+}
+
+C# can evaluate stwing data as well as numeric data in switch statement. 
+
+tatic void SwitchOnStringExample()
+{
+Console.WriteLine("C# or VB");
+Console.Write("Please pick your language preference: ");
+ 
+string langChoice = Console.ReadLine();
+switch (langChoice)
+{
+case "C#":
+Console.WriteLine("Good choice, C# is a fine language.");
+break;
+case "VB":
+Console.WriteLine("VB: OOP, multithreading and more!");
+break;
+default:
+Console.WriteLine("Well...good luck with that!");
+break;
+}
+
+Also possible to base switch on an enum data type. 
+
+static void SwitchOnEnumExample()
+{
+Console.Write("Enter your favorite day of the week: ");
+DayOfWeek favDay;
+ 
+try
+{
+favDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), Console.ReadLine());
+}
+catch (Exception)
+{
+Console.WriteLine("Bad input!");
+return;
+}
+ 
+switch (favDay)
+{
+case DayOfWeek.Friday:
+Console.WriteLine("Yes, Friday rules!");
+break;
+case DayOfWeek.Monday:
+Console.WriteLine("Another day, another dollar");
+break;
+case DayOfWeek.Saturday:
+Console.WriteLine("Great day indeed.");
+break;
+case DayOfWeek.Sunday:
+Console.WriteLine("Football!!");
+break;
+case DayOfWeek.Thursday:
+Console.WriteLine("Almost Friday...");
+break;
+case DayOfWeek.Tuesday:
+Console.WriteLine("At least it is not Monday");
+break;
+case DayOfWeek.Wednesday:
+Console.WriteLine("A fine day.");
+break;
+}
+}

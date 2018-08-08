@@ -1,0 +1,309 @@
+JOINS
+
+AS
+
+Allows us to rename columns or table selections with an alias
+
+SELECT payment_id as my_payment_column
+FROM payment;
+
+Most useful with group by
+
+SELECT customer_id, SUM(amount) AS total
+FROM payment
+GROUP BY customer_id
+
+JOINS
+
+Allows you to relate data in one table to the data in other tables. 
+
+INNER JOINS
+
+Suppose want to get table from two tables A and B
+
+B table has fka field that relates to primary key of A table
+
+A (customer)	
+pka: INTEGER
+c1: varchar(0)
+
+B (payments)
+pkb: INTEGER
+c2: varchar(255)
+fka: INTEGER
+
+To get data from both tables, you use the INNER JOIN clause in the SELECT statement
+
+SELECT A.pka, A.ci, B.pkb, B.c2
+FROM A
+INNER JOIN B ON A.pka = B.fka
+
+A.pka -> specifies table and column name. Like an object
+
+First, specify column in both tables from which you want to select data in SELECT clause
+Second, you specify the main table (A)
+Third, you specify the table that the main table joins to. Put JOIN condition after ON keyword. 
+
+For each row in A table, PostgreSQL scans B table to check if there is any row that matches the condition
+
+If it find a match, it combines columns of both rows into one row and add the combined row to the returned result set. 
+
+Sometimes A and B have sae column name, so must use table.column notation. 
+
+If name of table is long, you can use a table alias. Using AS statement. 
+
+INNER JOIN - retuns rows in A table that have corresponding rows in b table. 
+
+Each customer has 0 or many payments and each payment belongs to one and only one customer. 
+
+Join customer table to payment table. If column only exists in one table, don't need to prefix the table.
+
+Gets information from both tables
+
+SELECT 
+customer.customer_id, 
+first_name,
+last_name,
+email,
+amount,
+payment_date
+FROM customer
+INNER JOIN payment ON payment.customer_id = customer.customer_id;
+
+What if want to order by?
+
+Order by customer id
+
+SELECT 
+customer.customer_id, 
+first_name,
+last_name,
+email,
+amount,
+payment_date
+FROM customer
+INNER JOIN payment ON payment.customer_id = customer.customer_id
+ORDER BY customer.customer_id;
+
+Order selection result by first_name.
+
+SELECT 
+customer.customer_id, 
+first_name,
+last_name,
+email,
+amount,
+payment_date
+FROM customer
+INNER JOIN payment ON payment.customer_id = customer.customer_id
+ORDER BY first_name;
+
+Only results where customter_id = 2;
+
+SELECT 
+customer.customer_id, 
+first_name,
+last_name,
+email,
+amount,
+payment_date
+FROM customer
+INNER JOIN payment ON payment.customer_id = customer.customer_id
+WHERE customer.customer_id = 2;
+
+EXAMPLES OF INNER JOINS
+
+Get staff information and payment information
+
+SELECT payment_id, amount, first_name, last_name
+FROM payment
+INNER JOIN staff ON payment.staff_id = staff.staff_id;
+
+In most sql, don't have to specify inner join. Using JOIN will work as inner join. 
+
+SELECT payment_id, amount, first_name, last_name
+FROM payment
+JOIN staff ON payment.staff_id = staff.staff_id;
+
+
+Join inventory and film 
+
+SELECT store_id, title FROM inventory
+INNER JOIN film on inventory.film_id = film.film_id;
+
+How many copies of movie in store_id 1?
+
+SELECT title, COUNT(title) AS copies_at_store1
+FROM inventory
+INNER JOIN film on inventory.film_id = film.film_id
+WHERE store_id = 1
+GROUP BY title
+ORDER BY title;
+
+Can use AS to change things
+
+SELECT title, name as movie_language
+FROM film
+JOIN language AS lan ON lan.language_id = film.language_id
+
+Don't have to use AS statement. Can just use space
+
+SELECT title, name movie_language
+FROM film
+JOIN language lan ON lan.language_id = film.language_id
+
+Different joins may come into play where fields do not exist in table B. 
+
+OVERVIEW OF JOIN TYPES
+
+Useful to reference joins as VENN diagram figure. 
+
+LEFT and RIGHT signify what you use SELECT on vs what you're joining ON. 
+
+SELECT -> LEFT table
+JOIN ON -> RIGHT table
+
+TABLE A
+id	name
+--	----
+1	Pirate
+2	Monkey
+3	Ninja
+4	Spaghetti
+
+TABLE B
+id	name
+--	----
+1	Rutabaga
+2	Pirate
+3	Darth Vader
+4	Ninja
+
+INNER JOIN - produces only set of records that match in both table A and table B.
+
+FULL OUTER JOIN - prouces the set of all records in table A and table B, with matching records from both sides where available. If there is no match, the missing side will contain null.
+
+SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.name = TableB.name
+
+id		name		id		name
+--		----		--		----
+1		Pirate		2		Pirate
+2		Monkey		null	null
+3		Ninja		4		Ninja
+4		Spaghetti	null	null
+null	null		1		Rutabaga
+null	null		3		Darth Vader
+
+LEFT OUTER JOIN - produces a complete set of records form table A with the matching records (where available) in table B. If there is no match, the right side will contain null
+
+SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+On TableA.name = TableB.name
+
+id		name		id		name
+--		----		--		----
+1		Pirate		2		Pirate
+2		Monkey		null	null
+3		Ninja		4		Ninja
+4		Spaghetti	null	null
+
+RIGHT OUTER JOIN - same as left outerjoin, but opposite. So will not show Monkey, Spaghetti but Rutabaga and Darth Vader
+
+LEFT OUTER JOIN with WHERE - produces the set of records only in TableA but not in Table B. Performs same left outer join then excludes the records we don't want from the right side via a WHERE clause. 
+
+SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+On TableA.name = TableB.name
+WHERE TableB.id IS null;
+
+FULL OUTER JOIN with WHERE - to produce set of records unique to Table A and Table B, perform full outer join then exclude records we don't want via a WHERE clause.
+
+SELECT * FROM TableA
+FULL OUTER JOIN TableB
+On TableA.name = TableB.name 
+Where TableA.id IS null
+OR TableB.id IS null
+
+OUTER JOINS
+
+LEFT OUTER JOIN - return all rows in left table that are combined with rows in right table, even if not match.
+
+Can also be simply written as LEFT/RIGHT JOIN. 
+
+SELECT film.film_id, film.title, inventory_id
+FROM film
+LEFT OUTER JOIN inventory ON inventory.film_id = film.film_id;
+
+What if film in database but no stores have it in inventory? Will have null for inventory_id. Blank or null statement.
+
+SELECT film.film_id, film.title, inventory_id
+FROM film
+LEFT OUTER JOIN inventory ON inventory.film_id = film.film_id
+WHERE inventory.film_id IS NULL
+ORDER BY film.film_id;
+
+UNION
+
+UNION operator combines result sets of two or more SELECT statements into a single result set. 
+
+SELECT column1, column2
+FROM table1
+UNION
+SELECT column1, column2
+FROM table2
+
+*Both queries must return same number of columns
+*Corresponding columns in queries must have same data types
+
+UNION operator removes all duplicate rows unless the UNION ALL is used
+
+UNION operator may place te rows in the first query before, after, or between the rows in the result set of the second query.
+
+To sort the rows in the combined result set by a specified column, you use the ORDER BY clause.
+
+Often use UNION operator to combine data from simliar tables that are not perfectly normalized. Often found in reporting or data warehouse system.s
+
+Image 2 tables:
+sales2007q1: stores sales data in Q1 2007
+sales2007q2: stores sales data in Q2 2007
+
+Both have name and amount columns
+
+sales2007q1
+name		amount
+Mike		150000.25
+Jon			132000.75
+Mary		100000
+
+sales2007q2
+name		amount
+Mike		120000.25
+Jon			142000.75
+Mary		100000
+
+SELECT * FROM sales2007q1
+UNION
+SELECT * FROM sales2007q2
+
+name		amount
+Jon			132000.75
+Jon			142000.75
+Mary		100000
+Mike		120000.25
+Mike		150000.25
+
+Mary only listed once because she has the same value in both tables. To get all results use UNION ALL
+
+SELECT * FROM sales2007q1
+UNION ALL
+SELECT * FROM sales2007q2
+
+name		amount
+Jon			132000.75
+Jon			142000.75
+Mary		100000
+Mary		100000
+Mike		120000.25
+Mike		150000.25

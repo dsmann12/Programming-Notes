@@ -1,0 +1,102 @@
+Q: What is a tree?
+A: A tree is an abstract data type that stores elements hierarchically. Besides the topmost element, each element has a parent and zero or more children. The top element is called the root
+
+Q: Why are trees important?
+A: Allow developers to implement a host of algorithms much faster than when using linear data structures, such as arrays and lists. Also provide a natural organization for data, and have thus become common in file system,s GUIs, databases, websites, and other systems.
+
+Q: What is the formal definition of a tree?
+A: A tree T is a set of nodes storing elements such that the nodes have a parent-child relationship that satisfies the following properties: 1. If T is nonempty, it has a special node called the root of T that has no parent. 2. Each node v of T different from the root has a unique parent node w; every node with parent w is a child of w
+
+Q: What are sibling nodes?
+A: Sibling nodes are nodes that are children of the same parent
+
+Q: What is an external node?
+A: An external node is a node with no children
+
+Q: What is an internal node?
+A: An internal node is a node with one or more children
+
+Q: What is the recursive definition of a tree?
+A: For a tree T a subtree of T rooted at node V is the tree consisting of v's children with v as the root
+
+Q: What is the edge of a tree?
+A: An edge of a tree is a pair of nodes (u,v) such that u is the parent of v, or vice versa.
+
+Q: What is a path of a tree?
+A: A path of a tree is a sequence of nodes such that any two consecutive nodes in the sequence form an edge.
+
+Q: What is an ordered tree?
+A: An tree is ordered if there is a linear ordering defined for the children of each node, that is each can be first, second, etc. Visually defined from left to right
+
+Q: What is a node?
+A: A node is a position on a tree. It stores an element and can access parent and children nodes if any. 
+
+Q: What is the depth of a tree?
+A: The depth of a node v is the number of ancestors of v excluding v itself. Can be recursively defined.
+
+Q: What is the height of a node in a tree?
+A: Height of a node v in a tree T is the max depth of an external node of T. Defined recurively. If v is external, then height of v is 0. Otherwise it is one plus the max height of its children nodes
+
+Q: What is preorder traversal?
+A: Preorder traversal is the systermic way of accessing (visiting) all ndoes of T where Root is visited first and then subtrees rooted at its children are traversed recursively. If tree is ordered, then subtrees are traversed recursively. Specific actiion during visit will depend on application of this traversal. 
+
+Q: What is preorder traversal useful?
+A: Preorder traversal is useful when parents must always come before children in ordering. 
+
+Q: What is postorder traversal?
+A: Postorder traversal is opposite of preorder. Recursively traverse the subtrees rooted at children of root first, then visits root. 
+
+Q: What is Breadth-First Traversal?
+A: BFT traverses a tree so that all positoins at depth d are visited before positions at depth d+1. Common for decision trees in video games representing choices that might be made
+
+Q: What is inorder traversal?
+A: Inorder traversal is specific for binary trees. Visit node between recursive traversal of left tree and then recursive travel of the right tree. 
+
+Q: What is a binary tree?
+A: A binary tree is an ordered tree with three properties. 1. Each node ha2. being either left child or right child. 3. A left child precedes a right child in the ordering of children. Subtree rooted at left or right child of internal node is the left subtree or right subtree
+
+Q: What is a proper binary tree?
+A: A binary tree is proper if each node has either zero or two children. Otherwise it is improper.
+
+Q: What is a decision tree?
+A: A decision tree is a binary tree that can be used to figure out arithmatic (external nodes are value of variable or constant and internal node is defined by applying its operation to children. 
+
+Q: Describe the properties of binary trees.
+A: Check properties
+
+Q: Explain the array-based representation of a binary tree.
+A: An array-based binary tree is an alternative representation of a binary tree T based on a way of numbering the positions of T. For every position p of T, let f(p) be the integer defined as follows: 1. if p is the root of T, then f(p) = 0. 2. If p is the left child of position q, then f(p) = 2f(q) + 1. 3. If p is the right child of position q, then f(p) = 2f(q) + 2
+
+Q: What is level numbering?
+A: Level numbering numbers the positions on each level of T in increasing order from left to right. Based on potential positions within a tree, not the actual shape of a specific tree, so are not necessarily consecutive. 
+
+Q: What is a binary search tree?
+A: A binary search tree is a proper binary tree such that for each internal position p of T: 1. Position p stores an element of S, denoted as e(p) 2. Elements stored in the left subtree of p (if any) are less than e(p) 3. Elements stored in the right subtree of p (if any) are greater than e(p)
+
+Q: Implement a tree node
+A: Implement a node
+
+Q: Check code
+A: Implement a tree
+
+Q: Check code
+A: Implement a height function
+
+Q: Check code
+A: Implement a depth function
+
+Q: Check code
+A: Implement preorder traversal
+
+Q: Check code
+A: Implement postorder traversal
+
+Q: Check code
+A: Implment Breadth-First Traversal
+
+Q: Check code
+A: Implement inorder traveral
+
+Q: Check code
+A: Implement a binary tree
+

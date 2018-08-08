@@ -1,0 +1,107 @@
+Q: What is machine language? What is its weakness?
+A: Machine langauge is the sequence of bits that directly controls a processor, causing it to add, compare, move data from one place to another, and so forth at appropriate times. It is hard for humans to understand and tedious to control program in this language. Very error prone. 
+
+Q: What is assembly language?
+A: Assembly language a step higher level than machine language. Invented to allow operations to be expressed with mnemonix abbreviations. Originally deesigned with a one-to-one correspondence between mnemonics and machine language instructions. Needs as assembler.
+
+Q: What is an assembler?
+A: An assembler is a systems program that translates mnemonics to machine language. Eventually augmented with "macro expansion" facilities to permit programmers to define paramterized abbreviations for common sequences of instructions. Correspondence between assembly and machine language remained obvious and explicit, however, 
+
+Q: What is the weakness of assembly languages?
+A: Each different kind of computer had to be programmee. Reqriting programs for each new machine became frustrating and increasingly difficult. People began wanting machine-independent languages, particularly one in which computatoins could be expressed  using something more closely resembling math
+
+Q: What is Fortran?
+A: Fortran was created in mid 1950s and first arguably high-level programming language. Was slow to catch on at first because human programmers could write faster assembly programand Algol followed. 
+
+Q: What is a compiler?
+A: A compiler is a systems program that translates a high-level language to assembly or machine language. Substantially more complicated than assembler. One to one correspondence between source and target operations no longer exists when source is a high-level language. 
+
+Q: Why did compiled languages become dominant?
+A: Over time, performance gap between compilers and assembly narrowed and eventually reversed. Increases in hardware complexity and continuous improvements in compiler tech have led to a ation ni which a state-of-the-art compiler will usually generate better code than a humang will
+
+Q: What are there so many languages with different uses?
+A: Evolution, Languages with Special Purposes, and Personal Preference?
+
+Q: How did languages come about from language evolution?
+A: Programmers were constantly finding better ways to do things. 60s and 70s saw revolution in structure programming, in which goto based control flow of langauges like Fortan, Cobol, and Basic gave way to while loops, case(switch) statements and similar high level constructs. Late 80s, nested block structure languages like Algol, Pascal, and Ada gave way to object-oriented structure of Smalltalk, C++, Eiffel, and the like.
+
+Q: How did special purposes contribute to growth and diversity of languages?
+A: Some languages are designed for specific problem domains. Most can be used for a wide range of tasks, but still have emphasis on a speciality. Lisp good for manipulating symbolic data and complex data structures. Icon and Awk good for manipulating character strings. C is good for low-level systems programming, and Prolog good for reasoning about logical relationships among data.
+
+Q: What are some application domains and their respective dominant languages?
+A: 1. Scientific apps (Fortran, TCE) 2. Business apps (Cobol) 3. Artificial Intelligence (Lisp) 4. Systems Programming (C, C++) 5. Web Service Programming (Java, C#) 6. Scripting Languages (perl, Python) 7. Specific Purpose Language (make, sh)
+
+Q: How does personal preference lead to growth and diversity of languages?
+A: Some programmers just like certiain styles. May like syntax more, or using loops instead of recursion, or using pointers vs recursive data types. 
+
+Q: What makes a language succeeed?
+A: 1. Expressive power. 2. Ease of Use For Novice 3. Standardization (Ease of Implementation) 4. Open Source 5. Availability of Compilers, Libraries 6. Economics, Patronage, and Inertia 7. Syntax that Looks Like C
+
+Q: How does expressive power help a language succeed?
+A: Expressive power - In formal mathematical sense, all languages are Turing Complete (each can be used, if awkwardly, to implement arbitrary algorithms. Language features can have huge impact on ability to write clear, concise, and maintainable code, especially for large systems. Abstraction facilities in particular and other factors contribute to expressive power
+
+Q: How does ease of use for novice help a language succeed?
+A: If language is easy to pick up, it will gain more users. Basic very successful for low learning curve. Logo can be taught to elementary children. Psacal was taught as intro language for many years because it is compact and easy to learn. Java is modern language, being much simpler than say C++. 
+
+Q: How does standardization help a language succeed?
+A: Almost every widely used language has an official international standard or a single canonical implementatin (scripting languages), and language the canonical implementation is almost always written in a langauge that has a standard. *Standardization of both the language and a broad set of libraries is only truly effecitve way to ensure protability of code across platforms*
+
+Q: How does open source help a language succeed?
+A: Most languages have at least one open source compiler or interpreter. C grew from Dennis Ritchie in Bell Labs to work in Conjunction with Unix. Linux, leading open source OS, is written in C. As of 2008, C and its descendants account for 2/3 or projects hosted at sourceforge.
+
+Q: How does availability of compilers and libraries help a language succeed?
+A: Good compilers ensure that code runs fast. More tools that exist for developers allow work to be done quicker and language to be more powerful. Fortran benefited from being first, as companies invested in making compilers that produce very fast code. Common Lisp and others like it are successful because their compilers and tools help programmers manage very large projects. 
+
+Q: How do economics, patronage, and inertia contribute to language success?
+A: Backing of powerful sponsor can help a language. PL/I owes life to IBM, Cobol and Ada owe life to DoD, C# owes popularity to Microsoft. Languages that gain success often remain widely used afer better alternatives are available because the huge base of installed software and programmer expertise. 
+
+Q: How does C-like syntax help a language succeed?
+A: Many programmers began with C or C-like language, so similar syntax helps programmers learn a new language quicker. 
+
+Q: What are some language design issues?
+A: 1. Readability 2. Abstractions (functions, classes) 3. Orthogonality (no special cases). 4. Reliability (type checking) 5. Cost (training programmers)
+
+Q: What are the two families programming languages can be classified as based on their model of computation?
+A: Declarative languges and imperative languages
+
+Q: What is a declarative languges?
+A: A declarative language focuses on what the computer is to do. "Higher level", more in tune with programmer's point of view and less the implementor's. 
+
+Q: What is an imperative language?
+A: An imperative language focuses on how computer should do something. Predominate, mainly for performance reasons. C, Pascal, etc. 
+
+Q: What is an object oriented language?
+A: Object oriented languages are closely related to von neumann languages, but have a much mre structured and distributed model of both memory and computation. Rather than picture compuation as opreation of a monolithic processor on a monolithic memory, OO languages picture computation as interactions among semi-independent objects, each of which has boths its own intstat and subroutines to manage that state. Smalltalk is purest, C++ and Java most widely used. All trace roots to Simula67. 
+
+Q: What is a functional language?
+A: A functional language employs a computatoin model based on recursive definition of functions. Take inspiration from lambda calculus, a formal computation model developed by Alonzo Church in 1930s. A program is considered a function from inputs to outputs, defined in simpler functions through a process of refinement. Lisp, ML, Haskell
+
+Q: What is a dataflow language?
+A: A dataflow language models computation as flow of information (tokens) among primitive functional *nodes*. Provide an inherently parallel model: node are triggered by arrival of input tokens, and can operate concurrently. Id, Val.
+
+Q: What is a logic (constraint-based) language?
+A: A logic (constraint-based) language takes inspiration from predicate logic. Models computation as an attempt to find values that satisfy certain specified relationships, using goal directed search through a list of logical rules. Prolog, SQL, XLST, and programmable aspects of spreadsheets such as Excel.
+
+Q: What is a Von Neumann language?
+A: A von neumann language is most familiar and successful. Fortran, C,others in which basic means of computation is modification of variables. Whereas functional languages are based on expressions that have values, von Neumann languages are based on statements (assignments in particular) that influence subsequent computation via side effect of changing the value of memory.
+
+Q: What is a scripting language?
+A: Scripting languages are a subset of von neumann langauges distinguished by their emphasis on "gluing" together component that were originally developed for specific purposes. csh and bash are input languages of job control (shell) programs. Awk was intended for report generation. PHP and JavaScript primarily for generation of web pages with dynamic content (with execution onf server and client, respectively). Others (Perl, Python, Ruby, and Tcl) are more deliberately general purpose. Most place emphasis on rapid prototyping, with bias toward ease of expression over speed of execution.
+
+Q: What is it important to study programming languages?
+A: A good understanding of language design and implementation can help one choose the most appropriate langauge for any given task. Also help in learning a new language. Makes it easier to assimilate the syntax (form) and semantics (meaning) of new languages. Helps 1. Understand obscure features 2. Choose among alternative ways to express things 3. Make good use of debuggers, assemblers, linkers, and related tools. 4. Simulate useful features in languages that lack them 5. Make better use of language technology whereever it appears 6. Learn new languages faster 7. Design new languages
+
+Q: What does a compiler do?
+A: A compiler translates the high level source program into an equivalent taret program (typically in machine language) and then goes away. At some later time, user tells OS to run target program. Compiler is locus of control during compilation, but target program is locus of control during its own execution. Usually compiler is itself a machine language program, probably created by compiling some other high-language program. Object code is file written in machine langguage that can be understood by OS
+
+Q: What is interpretation?
+A: Interpretation is an alternatie style of implementation for high-level languages. Interpreter is active for execution of application. It is locus of control during execution. In effect, interpreter implements a virtual machine whose "machine language" is high-level programming language. Reads statements int that langauge more or less one at atime, executing them as it goes. 
+
+Q: What are the benefits of interpretation?
+A: Leads to greater flexibility and better diagnostics than compilation. Can include excellent source level debugger bcause source code being executed directly. Late binding is delaying decisions about program implementation until run time. However, may need to look for variable x in table every time it is accessed to find its location.
+
+Q: What is the benefit of compilation?
+A: Compilation generally leads to better performance. In general, decision made at compile time is a decision that does not need to be made at run time. Can guarantee variable x is at a specific memory location always. Since program is compiled once, but executed many times, savings can be substantial. 
+
+Q: Describe a hybrid of compilation and interpretation?
+A: Most languages include a mixture of compilation and interpretation 

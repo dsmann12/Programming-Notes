@@ -1,0 +1,337 @@
+FORMS
+
+Add and Edit Data
+
+First need an action that returns a View that holds the form.
+
+CustomersController.cs
+
+public ActionResult New()
+{
+	return View();
+}
+
+Add View. Partial or full. Name is New.cshtml
+
+HTML helper methods used for form.
+
+@Html.BeginForm("Create", "Customers") -> first argument is action
+
+Form is like a container that contains data. BeginForm just renders the <form> beginning tag. Not the closing. So how to render closing tab. Since this method returns a disposable object, so can add using and wrap call in its block. Closing tag is rendered in Dispose method. 
+
+@using (Html.BeginForm("Create", "Customers"))
+{
+
+}
+
+If using Bootstrap, use form-group inside block
+
+Inside div, need label and input field. Can write raw html:
+
+<label></label>
+
+Or use:
+
+@Html.LabelFor() -> pass lambda specifying name of target property in model of this form. Must remember to set the model in the page.
+
+@model Vidly.Models.Customer
+@using (Html.BeginForm("Create", "Customers"))
+{
+	<div class="form-group">
+		@Html.LabelFor(m => m.Name)
+		@Html.TextBoxFor(M => m.Name)
+	</div>
+}
+
+If inspect input element in browser, will see many attributes
+
+data-val - means validation needed for this field
+data-val-length - states max length of field
+data-
+
+TextBoxFor() - figures out validation automatically based on model. 
+If want to give elements a class or attribute, can use anonymous object
+
+@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+
+@model Vidly.Models.Customer
+@using (Html.BeginForm("Create", "Customers"))
+{
+	<div class="form-group">
+		@Html.LabelFor(m => m.Name)
+		@Html.TextBoxFor(M => m.Name, new { @class = "form-control"})
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Birthdate)
+		@Html.TextBoxFor(M => m.Birthdate, new { @class = "form-control"})
+	</div>
+	<div class="checkbox">
+		<label>
+			@Html.CheckBoxFor(m => m.IsSubscribedToNewsletter)
+			Subscribed to Newsletter?
+		</label>
+	</div>
+}
+
+Must follow markup for css still. 
+
+LABELS
+
+What if don't want to display name of property in model, but want to give it another name.
+
+Go to model class, apply data annotation Display to property and set name to desired name
+
+[Display(Name = "Date of Birth")]
+public DateTime? Dirthdate { get; set; }
+
+Problem is that every time want to change data, must recompile code. 
+
+Can just mannually add a label with standard HTML. Don't forget to add the for attribute to correct property. But must match the name of property.
+
+DROP DOWN LISTS
+
+Want a drop down of different membership types.
+
+First need list of membership types form database. 
+
+MUST REMEMBER TO ADD DbSet TO CONTEXT TO GET DATA
+
+Then can add a variable to controller.
+
+public ActionResult New()
+{
+	var membershipTypes = _context.MembershipTypes.ToList();
+	
+	return View();
+}
+
+Must pass object to view, but will not work later when implement editing a customer. Because need to pass a customer object too.
+
+This is the case for a ViewModel. 
+
+Need a list of MembershipTypes. Can use List<>, but better to use IEnumerable<>, because we don't need properties of List class (adding, removing, searching). Just need to iterate over them. If in future we replace list with another collection, no need to change this as long as collection implementes IEnumerable. 
+
+Also need Customer object. 
+
+Can use regular Customer information from domain model
+
+public Customer Customer {get; set;}
+
+Sometimes, in large projects, how you present an entity in a view may be very different from how it is stored in the domain. Should not pollute the domain model with info only needed in View. 
+
+Should keep this separate. 
+
+In this case, the simple version is ok.
+
+namespace Vidly.ViewModels
+{
+	public class NewCustomerViewModel
+	{
+		public IEnumerable<MembershipType> MembershipTypes {get;set;}
+		public Customer Customer {get;set;}
+	}
+}
+
+public ActionResult New()
+{
+	var membershipTypes = _context.MembershipTypes.ToList();
+	var viewModel = new CustomerViewModel
+	{
+		MembershipTypes = membershipTypes,
+	};
+	
+	return View(viewModel);
+}
+
+Don't forget to change model in the view!!!!
+
+To use a dropdown list, use @Html.DropDownListFor()
+
+First argument is the id property, second argument is a new instance of SelectList() class which contains lists for dropdowns. Next argument is string for first element in dropdown. Can be empty "" or can be something like "select membership type"
+
+SelectList() -> firs targument is the list, second if the id containing the value in the list, and third argument is the column containing text referenced by value in list.
+
+new SelectList(Model.MembershipTypes, "Id", "Name")
+
+@model Vidly.ViewModels.NewCustomerViewModel
+@using (Html.BeginForm("Create", "Customers"))
+{
+	<div class="form-group">
+		@Html.LabelFor(m => m.Customer.Name)
+		@Html.TextBoxFor(M => m.Customer.Name, new { @class = "form-control"})
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Customer.Birthdate)
+		@Html.TextBoxFor(M => m.Customer.Birthdate, new { @class = "form-control"})
+	</div>
+	<div class="checkbox">
+		<label>
+			@Html.CheckBoxFor(m => m.Customer.IsSubscribedToNewsletter)
+			Subscribed to Newsletter?
+		</label>
+	</div>
+	<div class="form-group">
+		@Html.LabelFor(m => m.Customer.MembershipTypeId)
+		@Html.DropDownListFor(m => m.Customer.MembershipTypeId, new SelectList(Model.MembershipTypes, "Id", "Name"), "Select Membership Type", new { @class = "form-control"})
+	</div>
+}
+
+MODEL BINDING
+
+Add a button to the form
+
+<button type="submit" class="btn btn-primary">Save</button>
+
+Since action for form was "Create", we must create a Create action in the controller. 
+
+CustomersController.cs
+
+[HttpPost]
+public ActionResult Create(NewCustomerViewModel viewModel)
+{
+	return View()
+}
+
+Make sure to give it HttpPost attribute.
+
+Because model in view is NewCustomerViewModel then can use this type as a parameter. MVC will automatically bind the input data submitted with the form to this Model type. 
+
+Because we are only submitting the id of the membership type, the MembershipType of the Customer property will be null. 
+
+If we changed the parameter type to Customer, MVC is smart enough to bind the correct properties since the NewCustomerViewModel has a property called Customer.
+
+[HttpPost]
+public ActionResult Create(Customer customer) {
+	...
+}
+
+SAVING DATA
+
+Can add by referencing the correct table from the DbContext and using the Add method
+
+_context.Customers.Add(customer);
+
+However, any time you add or modify object in _context, it will be marked in memory as added, modified, or delted. But still must persist changes
+
+_context.SaveChanges(); - Persists and modified objects. Either all changes get persisted together or nothing gets persisted.
+
+
+[HttpPost]
+public ActionResult Create(Customer customer)
+{
+	_context.Customers.Add(customer);
+	_context.SaveChanges();
+
+	return RedirectToAction("Index", "Customers");
+}
+
+EDITING DATA
+
+Change a link to go to an edit form
+
+<td>@Html.ActionLink(customer.Name, "Edit", "Customer", new { id = customer.Id }, null)</td>
+
+Set action to "Edit", and tell which controller to search for Edit action with "Customers"
+
+Then create action
+
+CustomersController.cs
+
+public ActionResult Edit(int id)
+{
+	var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+	if (customer == null)
+		return HttpNotFound();
+	
+	var viewModel = new CustomerFormViewModel // CHANGE NewCustomerViewModel name
+	{
+		Customer = customer,
+		MembershipTypes = _context.MembershipTypes.ToList()
+	};
+
+	return View("CustomerForm", viewModel);
+}
+
+Must return a the New view so you do not need to create an Edit view. Can use the same one. Also should change the view to CustomerForm.cshtml
+
+What if you don't want time component to show up in text box?
+
+Can pass a format string to @Html methods.
+
+@Html.TextBoxFor(m => m.Customer.Birthdate, "{0:d MMM yyyy}", new { @ class = "form-control" })
+
+UPDATING DATA
+
+In customer form, target action is set to CREATE.
+
+Can either rename target action to SAVE and reuse it both for adding or saving customer. Or creating another action to update, and set target action dynamically depending on whether there is an id or not. 
+
+He renames to Save
+
+CustomersController.cs
+
+public ActionResult Save(Customer customer)
+{
+	if (customer.Id == 0)
+		_context.Customers.Add(customer);	
+	else 
+	{
+		// must get object first
+		// calling Single. If null will throw exception, but should never be null
+		var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+
+		// now need to update properties based on data in form
+		//TryUpdateModel(customerInDb)
+		customerInDb.Name = customer.Name;
+		customerInDb.Birthdate = customer.Birthdate;
+		customerInDb.MembershipTypeId = customer.MembershipTypeId;
+		
+	}
+}
+
+Two ways to update object properties based on values in form.
+
+TryUpdateModeL(cutomserInDb) - properties of this customer object will be update based on key-value pairs in request data. Opens up a number of issues. Opens security holes. Maybe some properties should never be changed or only certain users should be able to change them. This example is common in .Net tutorials. Malicious users could modify request data and add additional key-value pairs and form data. 
+
+Workaround is even worse. Can impose which properties will be updated in a string array. 
+
+TryUpdateModel(customerInDb, "", new String[] { "Name", "Email" });
+
+But now have magic strings. If properties ever change, the code will break. 
+
+Can also just set them with customInDb
+
+customerInDb.Name = customer.Name;
+customerInDb.Birthdate = customer.Birthdate;
+
+Could use a library called the Mapper. 
+
+Could also create a new object called UpdateCustomerDto (Data transfer object) to have only specified paramters. 
+
+No id is in form so must add it as hidden form element
+
+@HiddenFor(m -> m.Customer.Id) - sends the hidden id along with form data
+
+EXERCISES
+
+Movies/Index
+Add button to create a new movie
+Form
+title
+release date
+genre (dropdown)
+number in stock
+
+Next modify the link under each movie to populate the movie form. 
+
+To debug, may need a try and catch block.
+
+try
+{
+	_context.SaveChanged();
+}
+catch (DbEntityValidationException e)
+{
+	Console.WriteLine(e);
+}

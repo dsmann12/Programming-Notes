@@ -1,0 +1,207 @@
+Needed to look ahead in program. 
+
+Problems with calculator.cpp
+
+1. Don't require expression to be on one line:
+1
++
+2
+is valid.
+
+2. How do we search for * or / among digits, plusses, minuses, and parentheses on
+several lines of input
+
+3. How rememeber where a * was?
+4/ How handle evaluation that's not strictly left to right?
+
+Conventional way of reading data from input and storing it in a way that lets us look at 
+it in conventient ways. Tokenize: first input characters are read and assembled into tokens. 
+
+Token is a sequence of characters that represents something we consider a unit, such
+as number or operator. 
+
+Tokenizing of some form or anothe ris way most analysis of text astarts. 
+
+3 kinds of tokens needed for calculator:
+1. Flaoting point literals (3.14, 0.247e2, and 42);
+2. operators: +, -, *, /, %
+3. Parentheses: (, )
+
+Obvious, conventional solution is to represent each token as a (kind, value) pair.
+Kind tells whether token is number, operator, parenthesis. For number, use its numerical
+value as its value. 
+
+Define type Token to represent tokens. 
+
+types upsupported by STL: Matrix and Date, and infinite precision integers (Bignum). 
+
+Escape problem of needing types by allowing (User-defined types).
+
+Member access notation:
+objectname.membername
+Token t;
+t.kind = '8';
+
+Write grammar defining syntax of input then write a program that implements
+the rules of that grammer. 
+
+Expression:
+	Term
+	Expression "+" Term
+	Expression "-" Term
+
+Term:
+	Primary
+	Term "*" Primary
+	Term "/" Primary
+	Term "%" Primary
+
+Primary:
+	Number
+	"(" Expression ")"
+
+Number:
+	floating-point-literal
+
+Reading a string of tokens according to a grammar is called parsing. A program that does
+that is often called a parser or syntax analyzer. 
+
+E.g.: 2
+1. Expression must be a term or end with a term. Term must be a primary or end in a primary.
+Primary must start with a ( or be a Number. 2 is floating-point-literal, which is a Number,
+which is a Primary.
+2. That primary is not preceded by a /, *, or % so it is a complete Term, rahter than end of
+a expression
+3. That Term isn't preceded by a + or -, so it is a complete expression, rather than end of
++ or - expressions.
+
+Writing a grammar:
+1. Distinguishin a rule from a token
+2. Put one rule after another (sequencing)
+3. Express Alternative Patterns (alternation)
+4. Express a repeating pattern (repetition)
+5. Recognize the grammer rule to start with
+
+Some call tokens terminals and rules non-terminals or productions. 
+
+List:
+	"{" Sequence "}"
+Sequence:
+	Element
+	Element "," Sequence
+Element:
+	"A"
+	"B"
+
+Turning Grammar Into Code:
+Many ways. Simplest one: simply write one function for each grammar rule and use type Token
+to represent tokens. Program that implements a grammer is often called a parser. 
+
+Implementing Grammar Rule:
+4 Functions: one to read tokens plus one for each rule in grammar
+
+Token get_token() //read chars and compose tokens. uses cin
+
+double expression() //deal with + and -. calls term() and get_token()
+
+double term()	//deals with *,/,and %. calls primary() nad get_token()
+
+double primary() //deal with numbers and parentheses. calls expression() and get_token()
+
+Each function should call other grammer functions according to the grammar rule it is 
+implementing and get_token where a token is requirec in a rule. 
+
+Expression:
+
+Loop
+
+double expression() {
+	double left = term();
+	Token t = get_token();
+	while(true) {
+		switch(t.kind) {
+			case '+':
+				left += term();
+				t = get_token();
+				break;
+			
+			case '-':
+				left -= term();
+				t = get_token();
+				break;
+			
+			default:
+				return left;
+		}
+	}
+}
+
+Term() -- cannot use % with floats. Must eliminate modulo for now. Also, cannot divide
+by 0 so must ensure there are checks
+
+double term() {
+	double left = primary();
+	Token t = get_token();
+	while(true) {
+		switch(t.kind) {
+			case '*':
+				left *= primary();
+				t = get_token();
+				break;	
+			
+			case '/': {
+				double d = primary();
+				if (d==0) error("divide by 0");
+				left /= d;
+				t = get_token();
+				break;
+			}
+			default:
+				return left;
+		}
+	}
+}
+
+//Why a block in switch statement? Compiler insists. If want to define and want to initialize
+variables within a siwtch statement, must place them inside a block. 
+
+Primary expressions:
+
+double primary() {
+	Token t = get_token();
+	switch(t.kind) {
+		case '(': {
+			double d = expression();
+			t = get_token();
+			if(t.kind != ')') {
+				error("')' expected");
+			}
+			return d;
+		}
+		
+		case '8':
+			return t.value;
+		
+		default:
+			error("primary expected");
+	}
+}
+
+These functions eat tokens though. What to do with token t when program doesn't need it?
+Token is going to be usd by some other function that is reading tokens from input, so let's
+put token back into input stream so that it can be read again by some othre function! Can
+put characters back into an istream, but that's not really what we want. We want to deal with
+tokens not chars. Want input stream that deals with tokens and that can put already read
+token back into. 
+
+Assume have Token_stream (stream of tokens) called ts. Assume further that Token_stream has 
+member function get() that returns next token and member function putback(t) that puts a 
+token back into the stream. Given Token_stream, can rewrite expression() so that it puts a
+token that it does not use back into the Token_stream:
+
+
+Still problem:
+Program doesn't see token until hit return after next expression. One solution is to
+require a print command, so let's accept a semicolon after an expression to terminate it and
+trigget output. And while we are at is, let's add an exit command to allow graceful exit. 
+Char q would do nicely for exit command.  

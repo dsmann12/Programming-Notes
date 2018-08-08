@@ -1,0 +1,127 @@
+ANONYMOUS METHODS
+
+When caller wants to listen to incoming events, it must define a custom method in a class (or struct) that 
+mathes the signature of the associated delegate. 
+
+class Program
+{
+static void Main(string[] args)
+{
+SomeType t = new SomeType();
+ 
+// Assume "SomeDelegate" can point to methods taking no
+// args and returning void.
+t.SomeEvent += new SomeDelegate(MyEventHandler);
+}
+ 
+// Typically only called by the SomeDelegate object.
+public static void MyEventHandler()
+{
+// Do something when event is fired.
+}
+}
+
+However, methods like MyEventHandler() are seldom intended to be called by any part of program other than 
+invoking deelgate. Bit of a bother to manually define a separate method to be called by delegate object. 
+
+Possible to associate an event directly to a block of code statements at time of event registration. Such code
+is known as an *anonymouse method*. 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Anonymous Methods *****\n");
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Register event handlers as anonymous methods.
+c1.AboutToBlow += delegate
+{
+Console.WriteLine("Eek! Going too fast!");
+};
+ 
+c1.AboutToBlow += delegate(object sender, CarEventArgs e)
+{
+Console.WriteLine("Message from Car: {0}", e.msg);
+};
+c1.Exploded += delegate(object sender, CarEventArgs e)
+{
+Console.WriteLine("Fatal Message from Car: {0}", e.msg);
+};
+ 
+// This will eventually trigger the events.
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.ReadLine();
+}
+}
+
+Anonymous Function Psuedocode
+
+class Program
+{
+static void Main(string[] args)
+{
+SomeType t = new SomeType();
+t.SomeEvent += delegate (optionallySpecifiedDelegateArgs)
+{ /* statements */ };
+}
+}
+
+Notice, you don't have to specify arguments sent by specific event:
+
+c1.AboutToBlow += delegate
+{
+Console.WriteLine("Eek! Going too fast!");
+};
+
+However, if want to make use of possible incoming arguments, you will need to specify the parameters 
+prototyped by the delegate type:
+
+c1.AboutToBlow += delegate(object sender, CarEventArgs e)
+{
+Console.WriteLine("Critical Message from Car: {0}", e.msg);
+};
+
+ACCESING LOCAL VARIABLES
+
+Anonymous methods are able to access the local variables of the method that defines them. Formally, such 
+variables are called outer variable of the anonymous methods. 
+
+A few important points about interaction between anonymous method scope and scope of defining method:
+-An anonymous method cannot access ref or out parameters of defining method
+-An anonymous method cannot have a local variable with the same name as a local variable in the outer method
+-An anonymous method can access instance variables (or static variables) in outer class scope
+-An anonymous method can declare local variables with same name as outer class member variables, the inner
+variables will hide the outer variables
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Anonymous Methods *****\n");
+int aboutToBlowCounter = 0;
+ 
+// Make a car as usual.
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Register event handlers as anonymous methods.
+c1.AboutToBlow += delegate
+{
+aboutToBlowCounter++;
+Console.WriteLine("Eek! Going too fast!");
+};
+ 
+c1.AboutToBlow += delegate(object sender, CarEventArgs e)
+{
+aboutToBlowCounter++;
+Console.WriteLine("Critical Message from Car: {0}", e.msg);
+};
+ 
+// This will eventually trigger the events.
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.WriteLine("AboutToBlow event was fired {0} times.",
+aboutToBlowCounter);
+Console.ReadLine();
+}

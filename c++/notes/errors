@@ -1,0 +1,308 @@
+Errors
+
+Errors found by compiler are called compile-time errors. 
+-Syntax errors
+-Type errors 
+
+Errors found by linker when trying to combine object files into executable 
+are called link-time errors. 
+
+Errors found by checks in running program called run-time errors
+-Errors detected by computer (hardware or OS)
+-Errors detected by library (STL)
+-Errors detected by user code
+
+Logic errors - errors found by programmer looking for causes of erroneous results
+
+Generally, compile time errors easier to understand and fix than link-time errors, and 
+link time errors easier to find and fix than run-time and logic errors.
+
+Is program supposed to detect that error?
+Program should:
+1. Should produce desried results for all legal inputs
+2. Should give reasonable error messages for all illegal inputs
+3. Need not worry about misbehaving hardware
+4. Need not worry about misbehaving system software
+5. Is allowed to terminate after finding an error
+
+Avoiding, finding, and correcting errors takes 90% or more of effort when developing serious software. 
+
+1. Organize software to minimize errors
+2. Eliminate most of errors made through debugging and testing
+3. Make sure the remaining errors are not serious
+
+Sources of Errors:
+1. Poor specification - If unsure about what program should do, unlikely to 
+adequately examine the "dark corner" and make sure that all cases are handled
+(that every input gives a correct answer or adequate error message)
+2. Incomplete programs - Obvious cases during development that haven't yet taken
+care of. 
+3. Unexpected arguments - Functions take arguments. If function given argument 
+not handled, there is a problem. 
+4. Unexpected input - programs typically read data (from keyboard, files, GUIs, network
+connections, etc). Program makes many assumptions about such input for example that 
+user will input a number. 
+5. Unexpected state - most programs keep a lof of data (state) around for use by
+different pars of the system. What if such data incomplete or wrong? Various parts
+of program must still manage.
+6. Logical errors - That is, code that simply doesn't do what it was supposed to do; we'll just have to find and fix such problems. 
+
+Compile-time errors - compiler anaylzes code to detect syntax errors and type errors. Only
+if program completely conforms to language specification will it allow you to proceed. 
+
+-Syntax errors - code that is not well formed according to C++ grammer
+	Int n = 7; //Int not type
+	int n = area(7;//missing )
+	int n = area(7) //missing ;
+-Type errors - Mismatches between types declared (or forgot to declare) for variables,
+functions, etc and type of values or expressions assigned to them, passed as function
+arguments, etc. 
+	int x0 = arena(7); //undeclared function arena
+	int x1 = area(7); //error wrong number of args
+	int x2 = area("seven", 2); //error 1st argument of wrong time
+	int x3 = area(7, 4); //ok
+
+Non-Errors -> compiler may accept some code that will give incorrect results
+	int x4 = area (10, -7); //ok but incorrect. No negative sides
+	int x5 = area(10.7, 9.3); //ok but calls area (10, 9)
+	char x6 = area(100, 9999); //ok but truncates result
+
+Link-time Errors - Program consists of several compiled parts, called translation units.
+Every function in a program must be declared with exactly the same type in every 
+translation unit in which it is used. Every function must also be defined exactly once
+in a program. Use header files to ensure this. If either rule violated, linker will
+give an error. Function definitions must have exactly same types (both return type and 
+argument type). Function with same name but different types will not match. Linkage rules
+for functions also hold for other entities, like variables and types. Has to be exactly
+one definition of an entity with a given name, but there can be many declarations, and all
+have to agree exactly on its type. 
+	int x = area(2, 3); //area not defined in program
+
+Run-Time Errors - If program has no compile-time errors and no link-time errors, it will run.
+Still can be errors. Like wrong answers. 
+
+Two obvious alternatives:
+1. Let caller of function deal with bad arguments
+2. Let called function deal with bad arguments
+
+Caller Deals With Errors - must be chosen for code that can't be modified and is most common
+approach. 
+
+//Calls function error() which assume will do something sensible. Terminates program with a
+system error message plus string passed as argument to error()
+if(x<=0) error("Non-positive x");
+if (x<=0) error("Non-positive y");
+
+If prefer to write custom error message or take other action, can catch runtime_error.
+
+Detecting errors in previous way can be messy and can break if something in code changes:
+e.g. if someone modified program to subtract 1 instead of 2, they would have to look
+at every call of framed_area() and modify error checking code. 
+
+Such code is called "brittle" because it breaks easily. Also example of magic constant. 
+Could make code less brittle by giving value subtracted by function a name and 
+making it constant. 
+
+Callee Deals With Errors:
+No longer need to write test for every call of function. All values that must be checked
+are there locally in function. 
+
+Is best generally, but occasions when can't be done:
+1. Can't modify function definition - functoin is in a library that can't be changed. 
+2. Called function doesn't know what to do in case error - typically case for library
+functions. Library writer can detect the error, but only you know what is to be done
+when error occurs. 
+3. Called function doesn't know where it was called from - sometimes want error message to 
+be more specific than telling just that something is wrong. Wants to know how program got to
+that point. 
+4. Performance - For small function, cost of check can be more than cost of calculating
+result. 
+
+Error Reporting - what should be done after an error found
+
+Sometimes can return an error value. But has problems:
+1. Now both called function and all callers must test. Caller has simple test to do, but
+must still write that test and decide what to do if it fails. 
+2. Caller can forget to test, can lead to unpredictable behavior along in program.
+3. Many functions do not have "extra" return value that they can use to indicate error. 
+For example, function that reads integer from input can return any int value, so there is
+no int that it could return to indicate failure. 
+
+Another solution to dealing with problems: Exceptions
+
+Exceptons: Like most modern programming languages, C++ provides a mechanism to help
+deal with errors: exceptions. Fundamental idea is to separate detechtion of any error
+from handling of an error. Detection of error should be done in called function. Handling
+of error should be done in calling function. Ensuring that detected error cannot be ignored;
+that is, exceptions provide a mechanism that allows us to combine best of various approaches to error handling we have explored so far. 
+
+If dunction finds an error that it cannot handle, it does not return normally; instea it
+throws an exception indicating what went wrong. 
+
+Any direct or indirect caller can catch the exception, that is, specify what to do if called
+code used throw.
+
+Use try-catch blocks. If no caller catches an exception, the program terminates. 
+
+class Bad_area {};
+
+int area(int length, int width) {
+	if(length <= 0 || width <= 0) throw Bad_area{};
+	return length*width;
+}
+
+If arguments are OK, return area. If not, get out area() using throw, hoping some catch will
+provide appropriate response.
+
+Bad_area is new type defined with no other purpose than to provide somethig unique to throw
+from area() so that some catch can recognize it as kind of exception thrown. 
+
+Notation Bad_area{} means "Make an object of type Bad_area with default value"". So:
+throw Bad_area{} means make object of type Bad_area and throw it.
+
+int main() {
+	try {
+		int x = -1;
+		int y = 2;
+		int z = 4;
+		//...
+		int area1 = area(x, y);
+		int area2 = framed_area(1, z);
+	}
+	catch(Bad_area) {
+		cout << "Oops, bad arguments in area()!\n";
+	}
+}
+
+Handles all calls to area(), both in main() and through framed_area(). Error handling
+also cleanly separated from detection of error: main() knows nothin about which function did 
+a throw Bad_area{}, and area() knows nothing about which function (if any) cares to catch
+the Bad_area exceptions it throws. 
+
+Range-Error - or off-by-one error, because index (subscript) wasn't in range required by
+vector [0, v.size()).
+
+Bounds error - index not within limits (bounds) of vector. 
+
+Subscript operation of vector knows size of vector, so it can check. If that fails, 
+subscript operation throws an exception of type:
+
+out_of_range. So if off-by-one code above had been part of program that caught excptions,
+we would have at least gotten error message. 
+
+Bad Input - detailed in chapter 10
+
+double d =0;
+cin >> d;
+
+Can test last input operation succeeded by testing cin:
+if(cin) {
+	//all is well can can try reading again
+}
+else {
+	//last read didn't succeedd so take some other action
+}
+
+Several possible reasons for input failure. One is that no double for >> to read. 
+
+Standard library defined a few types of exceptions:
+out_of_range - thrown by vector
+runtime_error - holds a string that can be used by an error handler:
+
+void error(string s) {
+	throw runtime_error(s);
+}
+
+To deal with runtime_error, simply catch it. For simple programs, catching in main()
+is ideal. 
+
+int main() {
+	try {
+		//
+		return 0; //success
+	}
+	catch (runtime_error &e) {
+		cerr << "runtime error: " << e.what() << endl;
+		keep_window_open();
+		return 1; //incidate failure
+	}
+}
+
+e.what() extracts error message from runtime_error. The & is an indication
+that we want to pass the exception by reference. 
+
+cerr is stderr. Prints to screen like cout but meant for error output. cerr isn't optimized
+so is more resilient to errors, and on some OS it can be diverted to a different target, such as a file. Using cerr also has simple effect of documenting that what we write relates
+to errors. 
+
+catch can be used to deal with many exceptions
+
+catch(runtime_error& e) {
+
+}
+
+Both out_of_range and runtime_error are "exceptions", so can catch exception to deal with
+both:
+
+int main() {
+	try {
+		//program
+		return 0; //succes
+	}
+	catch(exception &e) {
+		cerr << "error: " << e.what() << endl;
+		keep_window_open();
+		return 1; //failure
+	}
+	catch(...) {
+		cerr << "Unknown exception!\n";
+		keep_window_open();
+		return 2; //failure
+	}
+}
+
+catc(...) - handles exception of any type whatsoever
+
+Deadling with exceptions through single common type (supertype) of both is most useful
+and general technique.
+
+Return value from main() is passed to system. Some systems, such as Unix. use value, whereas others (Windows) typically ignore it. A zero indicates successful completion, and nonzero return value from main() indicates some sort of failure. 
+
+When using error(), may often wish to pass two pieces of info to describe problem. Can 
+concatenate two strings. 
+
+Another version of error:
+void error(string s1, string s2) {
+	throw runtime_error(s1+s2);
+}
+
+Narrowing Errors:
+Given exceptions (and templates), can write a function that tests and throwa a runtime_error
+exception if an assignment or initialization would lead to changed value:
+	int x1 = narrow_cast<int>(2.9); //throws
+	int x2 = narrow_cast<int>(2.0); //OK
+	char c1 = narrow_cast<char>(1066); throws
+	char c2 = narrow_cast<char>(85); //OK
+
+<...> used when need to specify a type rather than a value. Called template arguments. 
+narrow_cast used when need to convert a value and nont sure if "it will fit". 
+Cast means type conversion. 
+
+Logic Errors - If program runs, but no output produced or program produces something
+wrong. Usually most difficult to find. Problem with code itself. 
+
+Debugging - finding and removing errors from code. 
+1.Get program to compile
+2.Get program to link
+3. Get program to do what it is supposed to
+
+Precondition - requirement of a function upon its argument. Must be true for funtion
+to perform its action correctly. Two choices:
+1. Ignore it (hope/assume all callers give correct arguments)
+2. Check it (and report error somehow).
+
+Always document pre-conditions in comments (so caller can see what a function expects.
+
+Post-conditions - checking return value is valid
+
+Testing - executing a program with a large an systematically slected set o finputs and comparing the results to what was expected/

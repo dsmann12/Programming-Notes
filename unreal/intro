@@ -1,0 +1,674 @@
+UNREAL ENGINE
+
+Select C++.
+
+Basic Code
+
+No Starter Content
+
+Window -> Reset Layout : resets the layout
+
+Modes
+
+Basic->Cube. Can then move cube with arrows.
+
+When you save, you are saving the level/scene. 
+
+If you quit IDE, the level/scene will not show up unless you double click the level.
+
+Can change that to load a level on open
+
+Edit->Project Settings
+
+Maps & Modes 
+
+Edit Startup Map  -> select level
+
+Can move layouts. 
+
+If want default, can reset layout.
+
+GAME DESIGN
+
+What is the problem?
+What are the concepts, rules, and requirements?
+What is the architecture?
+Copy as much as possible into code.
+Document may change
+
+Problem?
+
+-I want a mental challenge
+-I want to feel smart/prove myself
+-I miss owrd puzzles
+-I want a challenge
+-Etc
+
+Concept and Rules?
+-Guess the isogram game. Isogram is word with no repeating letters
+-User has limited number of guesses
+- After each guess computer outputs
+	-Bull = right letter in right place
+	-Cow - right letter in wrong place
+-Win by guessing word within max tries
+
+Requirements?
+-What will inputs be? In what format?
+	-Text
+-What will outputs be?
+	-Text
+-What tasks will user be asked to do?
+	-Input text
+-Any performance limits worth mentioning?
+-What assets (art, sound, story text) do we need?
+
+So requirements are:
+-Plain text instructions for all interactions
+-Code to help the player make a valid guess
+-Code to check numbre of Bulls and Cows
+-Code to keep track of number of valid guesses
+
+Possible Future Ideas
+-Give feedback on every key press
+-Have a large dictionary of hidden words
+-Have a selectable word length, and difficulty
+-Checking the user's guess is a dictionary isogram
+-PRoviding a time limit for guesses
+-A hint system, spend a turn for a hint
+
+SOLUTIONS AND PROJECTS
+
+Solutions -> like a group of projects. Solution is the house. Project is room in the house. 
+
+Will need a main.cpp file in Visual Studio
+
+Solution -> Section 02
+Project -> BullCowGame
+
+Create EmptyProject
+
+Go to Edit, Properties, Linker, Subsystem -> Console
+
+UNREAL
+
+Do not use int. Because int may have different size on different machines.
+
+int32
+
+FText -> Used for user output
+
+FString -> Mutable string
+
+using int32 = int;
+using FText = std::string; //Just for normal C++ files
+
+UNREAL EDITOR
+
+Focus on escaping a building. Building interiors, several meters wide, trigger volumes and environmental cues to give you a static mesh based puzzle
+
+static mesh -> no animations or skeletal meshes
+
+Use C++ and Blueprint
+
+Some things easier in Blueprint. Like curve animation of a door. 
+
+GAME DESIGN DOCUMENT
+
+Concept
+
+-Escape the room
+-Awaken in locked room, unable to escape
+-Use environmental clues such as light and sound to determine what to do next
+-Trigger pressure plates and solve puzzles to progress toward the exit
+
+Rules
+-No lose condition
+-Allowed to do anything you can do
+-Win by exiting the Room
+
+Requirements
+-Unreal's provided Starter Content pack
+-C++ code and Blueprint to encode behavior
+-Various sound effects to enhance atmosphere
+-sketches for how puzzles work
+
+Sketch your room
+-Sketch one lard room, or a few smaller ones
+-Annotate where puzzles will be
+-Can change mind later
+-Create a more detailed sketch of one puzzle
+
+ESCAPE ROOM
+
+Have pressure plate, that needs certain weight for doors to open.
+
+Have doors close at speed so can't get out after standing on plate unless weight remains
+
+Create room. Have furnisher. 
+
+Pick things up, create a physics grabber
+
+Blueprint -> used to map sound effects to events and objects. 
+
+Version Control 101
+
+Git, Svn, Mercurial, etc.
+
+Use git
+
+SourceTree - GUI for git
+
+DERIVED FILES
+
+Ignore them
+
+Derived files can be easily rebuilt. Used to speed up opening of unreal or playing of game
+Other files (code, assets, level layout, etc) can't
+Ignore more derived files for version control
+
+Build 1+GB of stuff.
+
+Intermediate folder
+Content folder
+
+Binaries -> 
+Build ->
+DerivedDataCash ->
+Intermediate ->
+Saved ->
+
+These do not need to be kept. Can safely delete these folders. Unreal will build them if missing. 
+
+Can see a full list of derived files in Unreal Data Structure 
+
+Also can delete the .db file. Database file
+
+If need to regenerate file, right click unreal project file and tell it to generate
+
+In Visual Studio, the Engine folder has engine code. The Game folder has code for your game 
+
+UNREAL EDITOR
+
+Maps and Modes. 
+
+Minimal_Default -> in StarterContent. First map shown when open new project. 
+
+If ignored in git, changes won't show up. Startup content can be ignored. Causing this problem.
+
+Make new level.
+
+Can save level.
+
+Then can tell new map to be the one for game and editor to start with. The defaults. 
+
+Can get something's focus with F
+
+Content > Starter Content > Props
+
+Things like chairs and stuff.
+
+F+ALT, can rotate around object with left mouse button and zoom in and out with right mouse button
+
+Objects have snap values that correspond to centimeters
+
+10 -> movies object 10 cm every time you move it with arrows
+100 -> moves object 1m every time you move it with arrows
+
+Can set position, rotation, or scale. 
+
+Can switch between these tools with W, E, and R keys
+
+Click top left to see FPS
+
+Can get different perspectives
+
+Top right, 4 way viewport. So can see 4 viewports simultaneously
+
+Lit menu -> lets you show other views. Like wireframe and lighting. 
+
+Show -> lets you turn on and off various things, 
+
+UNREAL CLASSES
+
+Very powerful class system
+
+Class Viewer -> let's you view a class. 
+
+Inheritance for a "is a" relationsihp
+
+Can make it hard to refactor code if use incorrectly.
+
+Components for a "has a" relationship
+
+Objects become rich through many componnents. Can be flexible if used properly.
+
+Window -> Developer Tools -> Class Viewer
+
+Filters, Unclikc actors only. ALso collapse all.
+
+Can explore inheritance tree. 
+
+Pawn is base kind of Actor. 
+
+Details -> Add Component -> Add New C++ Component
+
+Actor Component -> because component of an actor
+
+PositionReport
+
+Will add U to class name for components
+
+Can find them in source folder.
+
+UPositionReport
+
+Uses a directive to create classes. Header Tool Directives and Macros
+
+UCLASS( ClassGroup-(Custom), meta=(BlueprintSpawnableComponent) )
+class BUILDINGESCAPE_API UPositionReport : public UActorComponent
+{
+	GENERATED_BODY()
+	
+public:
+	// Sets default values for this component's properties
+	UPositionReport();
+
+protected:
+	//Called when the game starts
+	virtual void BeginPlay() override;
+
+public:
+	//Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+};
+
+BeingPlay() -> to put code that runs onces ata start of the gamr
+
+TickComponent -> to put code that runs every frame
+
+CopyRight Notice Description
+
+Unreal -> Settings -> Project Settings -> Company Name, Copyright Notice
+
+Ticks run every frame. Things that tick run every frame.
+
+// called when the game starts
+void UPositionReport::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	FString ObjectName = GetOwner()->GetName();
+}
+
+void UPositionReport::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) 
+{
+	Super::TickCOmponent(DeltaTime, TickType, ThisTickFunction);
+	// ...
+}
+
+BUILDS
+
+Build runs from Binaries
+
+Binaries generated based on *.sln or *.xcodeproj files. Define how to build these binaries.
+
+Unreal build systems made to build to either xcode or vs (sln). Target.cs, *.Build.cs, 
+
+These files generate xcode or vs files depending on Windows or Mac.
+
+LOG
+
+Use UE_LOG to print to the Output Console.
+
+UE_LOG(LogTemp, Warning, TEXT("Position Report reporting for duty!");
+
+Warning -> determines color of text in log
+
+Macros and Decorators happen before compilation. Kind of a black box. 
+
+TEXT -> macro that takes a string. Does formatting?
+
+Can build in Visual Studio by choosing to build. OR can click compile in Unreal Editor if saved. 
+
+Windows -> Developer Tools -> Output Log
+
+Can search componentes in Details
+
+If lighting has been broken and needs to be rebuilt, can do that by clicking build.
+
+COMPONENTS METHODS
+
+GetOwner() -> find component's owner. Returns a pointer to an Actor
+
+AActor* -> pointer to an actor
+
+GetName() -> get object's name. Returns Object's name as an FString
+
+Can click on PlayerStart object and move it to change orientation.
+
+Must "dereference" FStrings to use with printed text. UE_LOG expected a TCHAR* array, and * operator converted FString
+
+FString ObjectNae = GetOwner()->GetName();
+
+Must use format operator. FString operator is overloaded. 
+
+UE_LOG(LogTemp. Warning, TEXT("Position report for %s"), *ObjectName);
+
+UNREAL 4.17 INCLUDE WHAT YOU USE
+
+For converting projects before 4.17 to new version.
+
+IWYU
+
+Change to make compile times quicker. Just means you need to include what you use now. Now must be more specific about what you want to include.
+
+Look in <Game Name>Build.cs file
+
+First step is to set a PCHUsage to enable ICWU
+
+PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs'
+
+Then <GameName> Editor.Target.cs
+
+bUseUnityBuild = false;
+bUsePCHFiles = false;
+
+Do not have monolithic header like Engine.h from Game .h file
+
+To find headers
+
+Look to see what type error is looking for.
+
+Might want to re order headers.
+
+AActor. Then look in Unreal docs. 
+
+All the way at the bottom, get the header. If part of path called Classes or Public, can usually ignore everything before Classes or Public directory in path. 
+
+Need to include what is needed. 
+
+TRANSFORMATIONS
+
+FVector -> 
+
+FString ObjectName = GetOwner()->GetName();
+FString ObjectPos = GetOwner()->GetTransform().GetLocation().ToString();
+UE_LOG(LogTemp, WArning, TEXT("%s is at %s"), *ObjectName, ObjectPos);
+
+FTransform -> represents a transform of an object
+
+Has a Rotation, Translation, and Scale
+
+MOVING WITH C++
+
+Can eject from perspective of player to look at player from third person location. .
+
+Content > StartContent > Props
+
+Uses a Door.
+
+FRotator -> struct to represent rotation
+
+Can force object to the floor. End key. Or right click -> transform -> snap/align -> snap to floor
+
+Transform window has location. Can modify location there.
+
+Create component to change use rotation programatically. 
+
+Add component to object.
+
+Add Component > New C++ Component > Actor Component 
+
+OpenDoor()
+
+GetOwner(), store it in Owner(), Try and access the owner's rotation. 
+
+Rotation has signature that takes pitch, yaw, and roll
+
+AActor* Owner = GetOwner();
+FRotator NewRotation = FRotator(0.0f, 60.0f, 0.0f);
+Owner->SetActorRotation(NewRotation);
+
+GEOMETRY
+
+BSP vs Static Meshes
+
+Static Mesh -> meshes. A series of vertices. 
+
+Can click an object. Click to edit. Will open up an editing window. 
+
+Can click to show wire frame and see all the triangles that make the object. 
+
+Can also look at vertices.
+
+Static means its non skeletal. 
+
+Doesn't move.
+
+BSP -> Binary Space Partitioning. Technical name for how the geometry is stored so pc can work out the scene. Can flesh out levels with this. Has some advantages. Can do face editing, can move faces. Can squish cubes. However, it does not run as fast. Old way of doing things. 
+
+Can be more flexible with geometry.
+
+If hold down shift when moving, the camera will move as well
+
+Can also change grid movement size to move objects differently.
+
+To copy an object, can hold alt key and move it.
+
+CAn scale objects to fit. 
+
+Can add folder to World Outliner to organize objects. 
+
+Clicking in top right corner shows 4 views of the level so you can see objects from different perspective.
+
+Go to Build > Build Lighting Only to fix any lighting issues in meshes.
+
+Hold shift down + L key and double click to put a "work light"
+
+APPLYING MATERIALS
+
+A Material is comprised of texture(s) and shader(s).
+
+Textures are image files, shaders are GPU code. 
+
+Unreal has some impressive examples it ships with
+
+Unreal has powerful material editing tools
+
+Content > Materials 
+
+Applying materials to room interior
+
+Materials in the Starter Park
+
+Clicking on one shows something similar to BluePrint Editor
+
+Just drag material onto an object for it to apply
+
+Can edit properties of these marterials. 
+
+Under Details tab. 
+
+Can mess with material by clicking on magnifyer then clicking on the material you want to edit.
+
+The ball is the material mapped to a sphere. Possible to map it to an object. 
+
+Can change values of parameters in editor. Like changing colors of seats. 
+
+MACROS
+
+Macro is a programmed cut and paste
+Happens before code is compiled. 
+CAn unlock powerful functionality but we don't get code complete as standard.
+
+Can also create really weird build errors
+
+Can explose ATriggerVolume* to Details window
+
+In OpenDoor.h
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	float OpenAngle = 90.0f;
+
+Makes property show up in inspector (but not editable if private)
+
+UPROPERTY(EditAnywhere)
+ATriggetVolume* PressurePlate
+
+ATriggerVolume -> In modes, there are things called valumes. Volumes are a thing in 3D space. An invisible volume in the game world that can tell game to do something. 
+
+Can just drag it into scene. 
+
+Now can look at these propeties in the editor. 
+
+PressurePlate is trigger volume. If you click its editable spot in the editor,it will search for TriggerVolumes to link to. Can choose there.
+
+USING TRIGGER VOLUMES
+
+Very powerful, versatile tool.
+
+3D volume that detects thing entering and leaving. 
+
+Can create a pressure plate and specify what objects respond to it. 
+
+IsOverlapping Actor() on ATriggerVolume
+
+Polling vs Using events
+
+Need to link trigger with actor
+
+Default actor is an APawn which derives from AActor
+
+Have an actor in the priate variable for component
+
+AActor* ActorOpensDoor;
+
+Refactor code for opening door into its own function.
+
+For every tick, check if ActorOpensDoor is in the TriggerVolume
+
+if (PressurePlate->IsOverlappingActor(ActorOpensDoor))
+{
+	OpenDoor();
+}
+
+Can then set DefaultPawn to that actor by ejecting from game, clicking door, clicking component OpenDoor, and selecting DefaultPawn from list in ActorOpensDoor
+
+Must make the door removable.
+
+Go to transform in its details and change it from static to moveable. Under mobility.
+
+UNREALS PLAYERS CONTROLLER
+
+GetOwner() has been used to go bottom up
+
+GetWorld() -> used to search top down. 
+
+Game Mode specifies the Default Pawn Class. 
+
+Default Pawn is basically your body. Transient. Maye 
+
+Found in Project Settings, Default Pawn Class
+
+Means it instantiated everytime you start game.
+
+Also deault Player Controller.
+
+Player COntroller is your mind. Even if body disappears it is there
+
+GetPawn() -> method of PlayerController class. 
+
+DefaultPawn only instantiated when you start playing the game. 
+
+In settings, there is default game mode in Maps and Modes. Can set DefaultPawn and Default PLayerController. PlayerController is mind. DefaultPawn is body. 
+
+Before, we were looking up to find things. Going from component to find owner.
+
+Now, loook from the world. 
+
+GetWorld() returns pointer to UWorld 
+
+GetWorld()->GetPlayerController()->GetPawn()
+
+Make sure in play you're getting SelectedViewpoint not Simulated or player won't be created. 
+
+Can get player controller loaded in scene to get pawn in that scene
+
+ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+A Pawn is a type of Actor
+
+If you selected Simulate mode you may have problem with default pawn. Maybe. Maybe needs to be other mode.
+
+USING COLLISION VOLUMES
+
+AKA Colliders
+
+Tells physics engine what hits what. 
+
+Has Collision Presets
+
+Go to edit window for object.
+
+Collision > Add * Collision
+
+TriggerVolume just triggers code.
+
+A Collider actually has physics simulated. 
+
+Exploring how to add collisoin volumes
+
+Prevent players from going through doors
+
+Collision settings in defaults.
+
+Must put a collision volume in the door. 
+
+Right click and edit object. There is a collisoin menu, can add collisions sphere, box, etc) and toggle collision mesh. 
+
+Collision boxes add polygons and will add to memory. 
+
+If we use the actual mesh of the object, it will make the game slow because it is costly to check for collisions
+
+USING GETTIMESECONDS
+
+GetWorld()->GetTimeSeconds()
+
+Making game highly play tunable
+
+Refacoring for simplicity
+
+Using a spotlight to provide "affordance"
+
+Play testing tto ensure game is annoying
+
+Affordance in indication to the player
+
+Can add a spotlight
+
+Modes->Lights->SPotlight
+
+GetWorld()->GetTimeSeconds() returns time since game started in float. Resets upon certain conditions.
+
+Compare time to last time and if it is greater than delay, close door.
+
+GRABBING SYSTEM OVERVIEW
+
+Add a Grabber Component to the player. 
+
+Player is a temporary actor that appears on play
+
+Game Mode sets which default pawn to use.
+
+We need to mess with game mode and default pawn
+
+So must createa default pawn and game mode in BluePRINTS
+
+Better than hardcoding. 
+
+Then we will specify our modified DefaultPawn to the game mode. 
+
+Game Mode -> Anything from what inventory items a player starts with or how many lives available, to time limits or score needed to end the game
+
+
+

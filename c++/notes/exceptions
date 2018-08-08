@@ -1,0 +1,36 @@
+Exceptions - Handle errors
+
+Try - Catch statements -- specify code to TRY. If an error
+occurs, then catch statements handles the error
+
+try {
+
+}
+catch() {
+
+}
+
+throw keyword throws an exception when an error occurs. Throws
+an exception number.
+
+throw 99; //throws 99
+
+try {
+	if (sonsAge > parentsAge) {
+		throw 99;
+	}
+}
+catch(int x) {
+	x == 99;
+}
+
+Any type of value can be thrown. An int, a char, a double, etc.
+
+If you want a catch statement to catch any and all execption use
+
+catch(...) { //handles all exceptions. Catch seen most often
+	
+}
+
+Can also pass in objects to be caught. Inheriting from exception 
+classes. Default messaging, etc. 

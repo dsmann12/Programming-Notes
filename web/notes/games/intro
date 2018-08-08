@@ -1,0 +1,142 @@
+INTRO
+
+canvas -> HTML5 tag. More complicated than laying out text and images. Use JS to bring to life. 
+
+DRAWING
+
+window.onload = function() {
+	console.log("Hello World!");
+}
+
+Function runs after window finishes loading. So code doesn't activate until window loads. 
+
+Add canvas
+
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+
+id is label to display graphics on. 
+
+Script:
+
+var canvas;
+var canvasContext;
+
+window.onload = function() {
+	console.log("Hello World!");
+	canvas = document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+	canvasContext.fillStyle = 'black';
+	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+Self explanatory. 
+
+x axis goes right in canvas
+y axis goes down
+
+How to center? Must do math.
+
+y axis start must be (CanvasWidth/2) - (Width/2)
+x axis start must be (CanvasWidth/2) - (Height/2)
+
+Objects drawn later will overlap over older objects if they share space in the canvas. 
+
+setInterval(function, interval) -> run function every interval milliseconds
+
+The lower the interval, the smoother motio will seem. 
+
+Motion is just drawing a pixel in a new coordinate at a certain framerate. 
+
+To draw for a certain FPS.
+
+var framesPerSecond = 60;
+setInterval(drawEverything(), 1000/framesPerSecond);
+
+Should separate move code and draw code
+
+Create a variable to change speed changes. 
+
+Draw a circle
+canvasContext.beginPath();
+canvasContext.arc(ballX, 100, 10, 0, Math.Pi*2, true);
+canvasContext.fill();
+
+
+arc() -> first two are coorinates of circle. x, y. Except it describes the center of circle, then radius, then angles in radians. 2*PI is circumference of circle
+
+
+True or false value determines what direction circle is drawn. If it fills negative or positive space based on radian angles
+
+Can put circle statements into their own function.
+
+Move Vertically
+
+Add a y movement and speed
+
+ballY = 50
+speedY = 4
+
+So ball is constantly dropping or raising by 4 while also moving horizontally. 
+
+Basically a slope. 
+
+So how much more for game to work?
+
+Need to detect whether it touches padded, or whether it gets through the wall. Need to draw reset
+
+Now get player paddle to move depending on mouse
+
+Define labels for pattern position and size
+
+Find mouse position relative to the canvas
+
+function calculateMousePos(evt) {
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		x:mouseX,
+		y:mouseY
+	};
+}
+
+Event fires everytime mouse moves. Will call this function every time mouse moves. 
+
+Event will hand the mouse coordinates it receives as data. 
+
+canvas.getBoundingClientRect() -> canvas element on page
+
+document.documentElement -> element for HTML page
+
+Need to do arithmetic to get relative mouse position value
+
+Accounting for where on the page is the canvas element and how far we've scrolled in the browser. 
+
+Now must set paddle position value whenever mouse moves
+
+Add event listener
+
+window.onload {
+	...
+	canvas.addEventListener('mouesmove', (evt) => {
+		var mousePos = calculateMousePos(evt);
+		paddle1Y = mousePos.y;
+	})
+}
+
+The use paddle's position var in paddle's draw code
+
+This aligns top of paddle to mouse.
+
+If want to align center of paddle to moues
+
+Just set the Y position to account for paddle height
+
+paddle1Y = mousePost.y - (PADDLE_HEIGHT)/2;
+
+AI
+
+Give ball control based on where it hits the paddles
+
+

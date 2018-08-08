@@ -1,0 +1,34 @@
+PIPELINE
+
+Modern GPUs do three things
+1. Draw filled triangles
+2. Interpolate between two existing values
+3. Execute lots of code in parallel
+
+Next part is divided into two parts, can do either in either order. Shaders and Meshes. 
+
+Starts with data. Binary data. 
+
+Processes data. Coverts data into a standard form that GPUs can make sense of. Takes data in parallel. GPU can be told how much a unit of data is. Does all units in parallel. 
+
+Processed into dots, points that will be used that can be connected to make a triangle. This is vertex shader.
+
+Rasterization -> Takes all points and generates triangles and fills them
+
+More processing. Takes pixels from triangle and processes them. For every pixel it will do some sort of processing such as generating colors. Called the fragment shader. 
+
+Output image is created from processing,
+
+This pipeline is done in parallel by large numbers. Eventually all pipelines are done and  output image is fully processed. 
+
+That is when image is sent to display. 
+
+Sort of two things we're gonna need to give this pipeline to produce the image. 
+
+First is data. Must have data in some form. 
+
+Next is processing stages. GPU doens't know how to handle all data. Also doesn't know what final pixels should be.
+
+Have to create vertex shader and fragment shader. 
+
+Have to figure out how to program GPU and how to send code to GPU

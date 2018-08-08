@@ -1,0 +1,10 @@
+JAVA
+
+HashMap -> a map. 
+
+map.put("Father", "Rob");
+
+map.get("Father") => returns "Rob"
+map.remove("Father");
+
+

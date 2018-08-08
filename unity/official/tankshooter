@@ -1,0 +1,313 @@
+TANK SHOOTER
+
+SCENE SETUP
+
+Window - Lighting
+
+Lighting bake - bakes lighting in level for objects that are static and will stay still. 
+
+Remove Baked GI. Use real time lighting so shells all have lighting and light environment.
+
+Precomputer Realtime GI
+
+Realtime resolution = 0.5. Low resolution art work means low resolution art is ok. 
+
+Ambient light - lighting supplied by skybox, color, or gradient. Can just set to color. Set ambient color to (72, 62, 113)
+
+Click build on lighting panel. 
+
+Change position of Camera to (-43, 42, -25)
+Change rotation to 40, 60, 0
+Change projection to Orthographic. 
+
+Orthographic gives flattened view. No change in scale over distance. 
+
+Change clear flags from sky box to solid color and choose color for background to match desert.
+
+(80, 60, 50)
+
+TANK MODEL AND CONTROL
+
+Tank needs RigidBody, Box Collider, AudioSources. 
+
+Add Layer. Shell will explode and expand a sphere collider as a blast radius. Want to only hurt tanks. 
+
+Can constraint RigidBody to make sure it can't rotate certain ways or fall off floor. 
+
+Kinematic means physics forces do not affect object but still want physics. 
+
+Use Quaternions and Euler to make them from Vector3.
+
+CAMERA
+
+Want to zoom out when Tanks go away from each other. 
+
+Frustum - shame of camera's view.
+
+In standard camera there is a near clip plane and a far clip plane. Things get smaller when they move away.
+
+Orthographic - near clip plane and far clip plane have same size. 
+
+16:9 aspect. So aspect is 1.778. 1920 x 1080.
+
+Canera should follow tanks and zoom out 
+
+Find average of tanks positoins.
+Set camera rig to that position each frame. Main camera is a transform position relative to camera rig. 
+
+Height to center is size. Width to center is size * aspect ratio.
+
+size is distance in y axis to camera rig. Distance in y axis is same as size. distance in x axis for camera is size * aspect. 
+
+Know where tanks are relative to each other.
+
+Camera.orthographicSize = Mathf.SmoothDamp(Camera.orhtographicSize, requiredSize, ref ZoomSpeed, DampTime);
+
+Desired position of camera is 
+
+Vector3 desiredLocalPos = transform.InverseTransformPoint(DesiredPosition);
+
+Find target in local position of camera space. Should be largest of size or desiterd positoin to target
+
+Vector3 targetLocalPos = transform.InverseTransformPoint(targets[i].position);
+Vector3 desiredPosToTarget = targetLocalPos - desiredLocalPos;
+
+size = Mathf.Maz(size, Mathf.Abs(desiredPosToTarget.y));
+size = Mathf.Max(size, Mathf.Abs(desiredPosToTarget.x) / Camera.aspect);
+
+size += ScreenEdgeBuffer
+
+size = Mathf.Max(size, MinSize)
+
+return size;
+
+UI TANK HEALTH
+
+Health bar under tank. A slider. But a circular slider.
+
+Tweam Event System. Event System handles input into UI. 
+
+Axes are same as Input in InputManager. Type UI at end of them so they can be programatically changed.
+
+Horizontal Axis - HorizontalUI
+Vertical Axis - VeritcalUI
+
+Canvas Scaler - help develop for multiple resolutions.
+
+Make Reference Pixels Per Unit to 1 to make UI size more manageanle.
+
+In Canvas, set mode to World Space so that fields can be edited in world. 
+
+Make canvas a child of tank. 
+
+Change position to 0, 0.1, 0
+
+Make width and height to be 3.5. 
+
+Canvas near size of tank.
+
+Change rotation to 90, 0, 0 so it faces up. 
+
+Alt-Click expands all in Hierarcy view. 
+
+Use rect transform anchor presets to set it to stretch full width and height of canvas.
+
+Slider is just made of images. Background and foreground. 
+
+Set background image to health wheel pixel art given by assets. Wans to make alpha low.
+
+Fill is foreground. Unity anything at bottom is rendered on top. 
+
+Make fill image the health wheel. 
+
+Script will handle coloring. Set image type to filled and use radial 360 method. And Fill origin should be Left. 
+
+Set alpha to 150. Uncheck clockwise. 
+
+Add script to do color. 
+
+public bool UserRelativeRotation = true;
+private Quaternion relativeRotation;
+
+private void Start()
+{
+	RelativeRotation = transform.parent.localRotation;
+}
+
+private void Update()
+{
+	if (useRelativeRotation)
+		transform.rotation = relativeRotation;
+}
+
+Color.Lerp can be used to transform from one color to another smoothly. 
+
+FillImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, currentHealth / startingHealth);
+
+Can deactivate particles and such until death, where you activate them and play them. 
+
+CREATING SHELL
+
+Overlap sphere - like raycast. Used to detect things inside a sphere
+
+Can destroy after set time by calling destory in Start()
+
+private void Start()
+{
+	Destroy(gameObject, maxLifeSpan);
+}
+
+private void OnTriggerEnter(Collider other)
+{
+	Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, tankMast); // tankMast is a layer
+
+	for (int i = 0; i < colliders.Length; i++)
+	{
+		Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidody>();
+
+		if (!targetRigidbody)
+			continue;
+
+		targetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius); // used to calculate explosion force
+		TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth>();
+
+		if (!targetHealth)
+			continue;
+		
+		float damage = CalculateDamage(targetRigidbody.position);		
+		targetHealth.TakeDamage(damage);
+	}
+
+	// remove shell from scene, but do not remove audio or particles
+	explosionParticles.transform.parent = null;
+	explosionParticles.Play();
+
+	explosionAudio.Play();
+	
+	Destroy(explosionParitcles.gameObject, explosionParticles.duration);
+	Destroy(gameObject);
+}
+
+private float CalculateDamage(Vector3 targetPosition)
+{
+	// calculate damage target should take based on its position
+
+	Vector3 explosionToTarget = targetPosition - transform.position; // distance from target to center of explosion
+
+	float explosionDistance = explosionToTaget.magnitude; // somewhere between 0 and radius
+
+	float relativeDistance = (explosionRadius - explosionDistance) / explosionRadius; // number between 0 and 1. 1 if close to explosion, 0 if far. 
+
+	float damage = relativeDistance * maxDamage;
+
+	damage = Mathf.Max(0f, damage); // if damage negative make damage 0. Can happen if collider is in overlap sphere but target's position is outside of the radius. 
+
+	return damage;
+}
+
+FIRING SHELLS
+
+Slider to show how much force giving shell. 
+
+Create empty game object for location where shell will spawn. 
+
+Sprite for arrow. Has beginning, and end, and small area in middle that can be stretched and added. Using Unity sprite editor. 
+
+Can edit slider in scene to make it same width as tank, move its position in front tank, and stretch it out. 
+
+Charge speed is (maxLaunchForce - minLaunchForce) / maxChargeTime
+
+private void Update()
+{
+	// track current state of fire button and make decisions based on current launch force
+	aimSlider.value = minLaunchForce;
+
+	if (currentLaunchForce = maxLaunchForce && !fired)
+	{
+		// at max charge, not yet fired
+		currentLaunchForce = maxLaunchForece;
+		Fire();
+	}
+	else if (Input.GetButtonDown(fireButton)
+	{
+		// have we pressed fire for first time?
+		fired = false;
+		currentLaunchForce = minLaunchForce;
+		
+		shootingAudio.clip = chargingClip;
+		shootingAudio.Play();
+	}
+	else if (Input.GetButton(fireButton) && !fired)
+	{
+		// holding fire button ubt not yet fired
+		currentLaunchForce += chargeSpeed * Time.deltaTime;
+		aimSlider.value = currentLaunchForce;
+	}
+	else if (Input.GetButtonUp(fireButton) && !fired)
+	{
+		// button released and not yet fired
+		Fire();
+	}
+}
+
+private void Fire()
+{
+	// instantiate and launch shell
+	fired = true;
+	
+	// creating shell in scene but also getting rigidbody from which we can add velocity
+	Rigidbody shellInstance = Instantiate(shell, fireTransform.position, fireTransform.rotation) as Rigidbody;
+
+	shellInstance.velocity = currentLaunchForce * fireTransform.forward;
+
+	shootingAudio.clip = fireClip;
+	shootingAudio.Play();
+	
+	// safety catch
+	currentLaunchForce = minLaunchForce;
+}
+
+GAME MANAGERS
+
+Create spawn points. Use empty game objects.
+
+Screen space canvas. 
+
+UI - Canvas. 
+
+Can set scene view to 2D mode. Click on canvas and press F to select frame. OR edit -> frame selected. 
+
+GameManager controls game. Creates TankManager instances which handle Tanks.
+
+SOUND MIXING
+
+AudioMixer is a type of game object.
+
+Each group of sounds needs its own group.
+
+Master is where all sounds end up. 
+
+Can add new group.
+Can add group for music, effect, etc. 
+
+In audio source component, Output determines which audio mixer group to add sound to. 
+
+Ducking - can use one source to decrease volume of another.
+
+Add duck volume effect on volume control in mixer. 
+
+Add send to group that wants to to send signal to other volume. 
+
+Send entire volume level. And tell it what to receive which is duck volume.
+
+Duck volume is basically using one signal to subtract from another. Threshold determines how much signal is required to decrease it. 
+
+Can push threshold line (white line) so that volume is pulled down at a particular volume of signal being sent though. 
+
+Can change other settings. Ratio, which curves the volume.
+
+Attack time to 0, which means as how long to reduce volume when signal crosses threshold. If turned down to 0, then volume reduces to level immediately when signal crosses threshold. 
+
+
+
+

@@ -1,0 +1,769 @@
+ASP
+
+MVC
+
+Model-View-Controller - architectural pattern for implementing UIs.
+-Designed in 1970s for desktop apps.
+-Widely adopted for the web
+-RubyonRails, Express also use MVC
+
+Model - application data ad behavior in terms of its problem domain, and independent of the ui. Representation of an object in the application. 
+
+View - The HTML markup displayed to the user
+
+Controller - responsible for handling an http request. 
+
+When http://vidly.com/movies request is made, a controller will be selected. Controller will get the movie model (object) from the database and send it in a view to the client.
+
+A separation of concerns. Modularity. 
+
+Router - selects the right controller for the request. Also part of the framework. 
+
+CREATING A PROJECT
+
+New->Project
+
+Choose C#/Web/ASP.NET Project
+
+Then choose MVC for MVC. Uncheck source control if don't want to use git or something. Also can check for Azure cloud upload. 
+
+Folders Under References in Project Folder. 
+
+App_Data - where database file will be stored
+
+App-Start - classes called when application started. 
+
+RouteConfig.cs - confif of routing rules
+
+RouteCollection routes
+
+routes.MapRoute(
+	name: "Default",
+	url: "{controller}/{action}/{id}",
+	defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+)
+
+Route name is default. url is url pattern. First part of url assumed to be controller, second the action, and third the id of some object in database. 
+
+Allows for this:
+
+/movies/popular
+
+Grabs MoviesController and execture Popular() method. 
+
+/movies/edit/1
+
+Grabs MoviesControllers and executed Edit(1) method. 
+
+Has default values. id is optional parameter. 
+
+/movies will run Index action. 
+
+Content - store CSS files images and other clientside assets. 
+
+Controllers - holds the controller objects. 3 by default.
+
+AccountController.cs -> has actions for signup login, and log out
+HomeController -> for home page
+ManageController.cs -> numbre of actions for handling requests around user profile, like changing password, enabling two factor authentication, or using social logins
+
+fonts - folder for fonts
+
+Models - all database classes
+
+Scripts - to store js files
+
+Views - Contain folders named after controllers in applications. Uses actual name of model, controller. 
+
+favicon.ico - icon of app displayed in browser. 
+
+Global.asax - traditional files of .Net. Provides hooks for various events in app lifecycle. 
+
+Runs Applicatoin_Start() when application started. Then runs methods at start up. Registers routes and bundles. 
+
+packages.config - used by Nouget package manaer. Like npm or bower. Use to manage dependencies. 
+
+Startup.cs - new approach for startup in .Net. For net ASP version. 
+
+Web.congif - xml that includes configuration information.
+
+connectionStrings - where specify database connection strings
+
+appSettings - where define configuratoin settings for app
+
+JUMPING IN
+
+When creating a model, crease a file with model name. 
+
+Movie.cs
+
+namespace Vidly.Models
+{
+	public class Movie
+	{
+		public int Id { get; set; }
+		public String Name { get; set; }
+	}
+}
+
+To Create a controller, right-click on Controllers and select add Controller. 
+
+MoviesController.cs
+
+namespace Vidly.Controllers
+{
+	public class MoviesController : Controller
+	{
+		// GET: Movies
+		public ActionResult Index()
+		{
+			return View();
+		}
+	}
+}
+
+Controller is parent object. Index() relates to the Index action. 
+
+
+
+To have random action, add method Random()
+
+
+
+public ActionResult Random()
+
+{
+
+	var movie = new Movie() { Name = "Shrek!" };
+
+	
+
+	return View(); 
+
+}
+
+
+
+However, must have a View file created in Views folder under Movies. 
+
+Add a view (right click Views/Movies and select add View) and give it name Random.
+
+Can use templates or create it as a partial view. 
+
+Can also select a layout. Gives views a specific look and feel. 
+
+Default in Views/Shares/_layout.cshtml
+
+
+
+View is mixture of html and c# code.
+
+
+
+@{
+
+	ViewBag.Title = "Random";
+
+	Layout = "~/Views/Shared/_Layout.cshtml"'
+
+}
+
+
+
+<h2>Random</h2>
+
+
+
+ViewBag.Title - basically title in page shown in browser.
+
+Layout selects layout.	
+
+
+
+Can pass an object to the model.
+
+
+
+MoviesController.cs
+
+
+
+return View(movie);
+
+
+
+Then can access object in cshtml View code.
+
+
+
+Need to use @model directive to specify type of object passed to view. 
+
+
+
+@model Vidly.Models.Movie 
+
+@{
+
+	ViewBag.Title = "Random";
+
+	Layout = "~/Views/Shared/_Layout.cshtml"'
+
+}
+
+
+
+<h2>@Model.Name</h2>
+
+
+
+ADDING A THEME
+
+
+
+Can get themes from bootstrap templates. 
+
+
+
+Look at bootswatch.com. Get css theme. 
+
+
+
+Add css file to Content folder. 
+
+
+
+Then must change references. 
+
+
+
+App_Start/BundleConfig.cs -> defines various bundles of clientside assets. For example, can combine or compress multiple JS files into a bundle. Reduce number of http requests required to get these assets. 
+
+
+
+Default has one for jquery, jquery.Validate, modernizr, bootstrap, and css files. 
+
+
+
+FUNDALMENTALS
+
+
+
+ActionResult - base class for all action results in ASP.MVC. Returned from action method. Index. Delete.
+
+
+
+View() -> method inherited from Controller class. Allows us to create a ViewResult. 
+
+
+
+Also could do:
+
+return new ViewResult();
+
+
+
+Can set return type to ViewResult and good practice. But sometimes, action may have different execution paths and may return different ActionResults. 
+
+
+
+Action Results
+
+
+
+Type				Helper Method
+
+ViewResult			View()
+
+PatrialViewResult		PartialView()
+
+ContentResult()			Content() -> return simple text
+
+RedirectResult			Redirect() -> redirect to url
+
+RedirectToRouteResult		RedirectToAction() -> redirect to an action instead of url
+
+JsonResult			Json() -> return serialized json object
+
+FileResult			File() -> return a file
+
+HttpNotFoundResult		HttpNotFound() -> return not found or 404 error
+
+EmptyResult			-> for when action doesn't need to return any values, like void. 
+
+
+
+RedirectToAction - specify name of action, controller, and arguments using anonymous object. 
+
+RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" });
+
+Values in anonymous object are put in query string. 
+
+
+
+Action Parameters -> Inputs for actions. 
+
+
+
+MVC framework looks for parameters in data with same name. 
+
+
+
+Parameter can be:
+
+
+
+Embedded in URL: /movies/edit/1
+
+In Query String: /movies/edit?id=1
+
+In form data: id=1
+
+
+
+Can have optional parameters for query string
+
+
+
+//optional parameters
+
+        public ActionResult Index(int? pageIndex, string sortBy)
+
+        {
+
+            if (!pageIndex.HasValue)
+
+            {
+
+                pageIndex = 1;
+
+            }
+
+
+
+            if (String.IsNullOrWhiteSpace(sortBy))
+
+            {
+
+                sortBy = "Name";
+
+            }
+
+
+
+            return Content(String.Format("pageIndex={0}&sortBy={1}", pageIndex, sortBy));
+
+        }
+
+
+
+Can manipulate parameters with query string
+
+
+
+/movies?pageIndex=2&sortBy=Rating
+
+
+
+To get it from url, must create a new route
+
+
+
+ROUTES
+
+
+
+Maybe need a route with multiple parameters
+
+
+
+/movies/released/2015/05	
+
+
+
+Routes created in RouteConfig.cs 
+
+
+
+Order of routes matters. Most specific must be first, or generic one will catch first. 
+
+
+
+Has a few overloads. Most often use three parameters (name, url, defaults);
+
+
+
+routes.MapRoute(
+
+                "MoviesByReleaseDate",
+
+                "movies/released/{year}/{month}",
+
+                new { controller = "Movies", action = "ByReleaseDate"}
+
+            );
+
+
+
+Must create action to go with route. Create inside controller. 	
+
+
+
+public ActionResult ByReleaseDate(int year, int month)
+
+        {
+
+            return Content(year + "/" + month);
+
+        }
+
+    }
+
+
+
+Can see results in: /movies/released/2015/4
+
+
+
+Can also apply constraints to route and specify how parameters.	
+
+
+
+routes.MapRoute(
+
+                "MoviesByReleaseDate",
+
+                "movies/released/{year}/{month}",
+
+                new { controller = "Movies", action = "ByReleaseDate"},
+
+                new { year = @"\d{4}", month = @"\d{2}"}
+
+            );
+
+
+
+But adding custom routes will create a mess. Also must go back and forth from actions to custom routes. 
+
+
+
+If rename a controller or action, you must rename in all places. 
+
+
+
+Microsoft introduced cleaner way to create custom route in MVC 5. Can use an attribute to reference custom action. 	
+
+
+
+Must enable attribute routes. 
+
+
+
+Delete all previous custom routes and add code before default route:
+
+routes.MappMvcAttributeRoutes();
+
+
+
+In controller:
+
+
+
+[Route("movies/released/{year}/{month:regex(\\d{4}:range(1, 12)}")]
+
+        public ActionResult ByReleaseDate(int year, int month)
+
+        {
+
+            return Content(year + "/" + month);
+
+        }
+
+
+
+Can specify many constraints to parameters and including regex() and range(). 
+
+
+
+Many constraints:
+
+
+
+min
+
+max
+
+minlength
+
+maxlength
+
+int
+
+float
+
+guid
+
+
+
+VIEWS
+
+
+
+Earlier, created action to pass model to a view by passing it as argument to view method.
+
+
+
+Another way is to use the ViewData	
+
+
+
+public ActionResult Random() {
+
+	var movie = new Movie() { Name = "Shrek!" };
+
+	ViewData["Movie"] = movie;	
+
+	return View();
+
+}	
+
+
+
+In View (.cshtml)
+
+
+
+@model Vidly.Models.Movie
+
+@{
+
+	ViewBag.Title "Random";
+
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+ViewData holds object of type Object though so must be casted to use specific object properties
+
+
+
+<h2>@( ((Movie) ViewData["Movie"]).Name )</h2>
+
+
+
+This is ugly. Also the magic string is a problem. 
+
+
+
+Otherwise can use ViewBag. Creates a magic property
+
+
+
+In controller:
+
+
+
+ViewBag.Movie = movie;
+
+
+
+In View
+
+
+
+@ViewBag.Movie.Name
+
+
+
+But because magic property, must remember to rename it everywhere if changed. 
+
+
+
+View Models
+
+
+
+What if wanted to display list of customers who rented movie. May not be relationship between Movie class and customers class. 
+
+
+
+Must pass more than one class to model.
+
+
+
+View Model is model specifically made for view. 
+
+
+
+Must create new ViewModels folder in root directory. 
+
+
+
+Create ViewModel classes in here. 
+
+
+
+Create RandomMovieViewModel.cs
+
+
+
+namespace Vidly.ViewModels
+
+{
+
+    public class RandomMovieViewModel
+
+    {
+
+        public Movie Movie { get; set; }
+
+        public List<Customer> Customers { get; set; }
+
+    }
+
+}	
+
+
+
+Razor Views 
+
+
+
+Can use C# code in View by using @and {}
+
+
+
+So can render Customres by using a foreach
+
+
+
+Using the @ symbol to execute C# code in model.
+
+
+
+How to render customers. 
+
+
+
+If customers.count is 0, it should say no one has rented the movie. Otherwise it should list the customers who have rented it. 
+
+
+
+@if (Model.Customers.Count == 0)
+
+{
+
+	<text>No one has rented this movie before.</text>
+
+}
+
+else {
+
+	<ul>
+
+		@foreach (var customer in Model.Customers)
+
+		{
+
+			<li>customer.Name</li>
+
+		}
+
+	</ul>
+
+}
+
+
+
+What if want to dynamically add a class or attribute?
+
+
+
+@{
+
+	var className = Model.Customers.Count > 0 ? "popular" : null;
+
+}
+
+
+
+<h2 class="@className">@Model.Movie.Name</h2>
+
+
+
+@* This is a comment *@
+
+
+
+Partial Views
+
+
+
+Layout in Views/Shared/_layout.cshtml
+
+
+
+@RenderBody() -> views are rendered here. 
+
+
+
+Partial Views allow you to break down larger views into smaller parts. 
+
+
+
+Can put navigation bar in a partial view.
+
+
+
+By convention, they are named with an _ prefix. _NavBar
+
+
+
+Like components in angular. 
+
+
+
+Create class in shared or in special folder. 
+
+
+
+To render in view:
+
+
+
+_Layout.cshtml
+
+
+
+@Html.Partial("_NavBar);
+
+
+
+Html -> HtmlHelper object that assist with Html. 
+
+
+
+Can also pass optional model. 
+
+
+
+@model Vidly.ViewModels.RandomMovieViewModel
+
+@Html.Partial("_NavBar, Model.Movie);
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+

@@ -1,0 +1,134 @@
+METHODS AND FUNCTIONS
+
+METHODS
+
+Act on objects and can take arguments. 
+
+l = list(range(6))
+
+l.append(6);
+l.count(3) # returns 1
+
+Python has many built in functions. len(), list(), etc
+
+User-Defined Functions
+
+#define a repeat function that takes 2 arguments
+
+def repeat(s, exclaim):
+	"""
+	Returns the string 's' repeated 3 times.
+	If exclaim is true, add exclamation marks
+	"""
+
+	result = s + s + s #can also use s*3 which is faster
+	
+	if exclaim:
+		result = result + '!!!'
+	return result
+
+Notice that blocks are defined by indentation. 
+
+Also, the * operator is Python's repeat operator.
+
+So '-' * 10 gives '----------'. Useful for creating onscreen line
+
+* is faster because it calculates the size of resulting object once whereas + calculates it three times. 
+
+Both + and * are overloaded operators. They mean different things for number vs strings vs other data types. 
+
+def keyword defined funtion with its parameters within praentheses and its code idented. 
+
+First line can be a documentation string ("docstring" that describes what the function does. Use """ to signify. 
+
+Variables have limited scope. return statement returns value back to caller. 
+
+At run time, functions must be defined before they are called. Typical to def a main() function at ottom with functions it calls above it
+
+#Check if number is prime
+def is_prime(num):
+	"""
+	INPUT: A number
+	OUTPUT: A print statement indicating whether number is prime
+	"""
+	for n in range(2, num):
+		if num % n == 0:
+			print('Not prime')
+			break
+		else:
+			print('The number is prime')
+
+# a more efficient functio
+def is_primt(num):
+	"""
+	INPUT: A number
+	OUTPUT: A primt statement indicating whether number is prime
+	"""
+
+	if (num % 2 == 0) and (num > 2):
+		return False
+	for i in range(3, int(math.sqrt(num)) + 1, 2):
+		if (num % i == 0):
+			return False
+	return True
+
+LAMBDA EXPRESSIONS
+
+Allow you to create anonymous functions. Ad hoc functions that do not need to be defined elsewhere. Just a single expression. 
+
+Use lambda for coding simple functions
+
+Normal function
+
+def square(num):
+	return num**2
+
+Lamba 
+
+lambda num: num**2
+
+lambda (input): (return expression)
+
+Can assign to a variable, but usually don't
+
+square = lambda num: num**2
+
+square(3) # 9
+
+lambda x,y: x + y
+
+Useful for built in functions map, filter, and reduce
+
+SCOPE AND NESTED 
+
+Name references search 4 areas
+
+LEGB
+
+Local - names assigned in afunctoin
+Enclosing - name in local scope of any and all enclosing functions from inner to outer
+Global (module) - names assigned at top level of module file or decalred global in a def within the file
+Built-In (python) - names presassigned in built-in module: open, range, SyntaxError, etc
+
+
+If want to use a global variable in function, use the global statement
+
+x = 50
+
+def func()
+	global x
+	print('This function is now using the global x!')
+	print('Because of global x is: ', x)
+	x = 2
+	print('Ran func(), changed global x to', x)
+
+print('Before calling func(), x is: ', x)
+func()
+print('Value of x (outside of func()) is: ', x)
+
+globals() - built in function to list global variables
+locals() - built in function to list local variables
+
+Everything in Python is an object
+
+

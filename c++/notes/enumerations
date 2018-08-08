@@ -1,0 +1,51 @@
+Enumerations
+
+An enum is a very simple user-defined type, specifying its set of values as symbolic constants.
+
+enum class Month {
+	jan=1; feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+};
+
+Body of an enum is simply a list of its enumerators. The class in enum class means eumerators are part of scope of enumeration. To refer to jan, must say Month::jan. 
+
+Can give specific representation value for an enumerator or leave it to compiler to pick. Compiler will give each enumerator the value of previous enumerator plus one. So in example, jan = 1, then dec=12. Otherwise, count starts with 0. 
+
+Month m = Month::feb;
+
+Month m2 = feb; //error: feb not in scope
+m = 7; //error can't assign an int to a Month
+int n = m; //error can't assign a Month to an int
+Month mm = Month(7); //convert into to month unchecked
+
+Trivial to write simple checking function
+
+Mont int_to_month(int x) {
+	if(x<int(Month::jan) || int(Month::dec)<x) error("Bad month");
+	return Month(x);
+}
+
+int(Month::jan) gives in representation of Month::jan. 
+
+Enumeration is useful whenever we need a set of related named integer constants. Often in when representing sets of alternatives (up, down; yes, no, maybe; on, off) or distinctive values (red, blue, green, yellow, maroon, crimson, black).
+
+Plain enums differ from enum classes (scoped enums) by explicitly exporting their enumerators to scope of enumeration and allowing implcit conversion to int.
+
+enum Month {
+        jan=1; feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+};
+
+Month m = fed; //ok feb in scope
+Month m2 = Month::feb; //also ok
+m = 7; //error can't assign int to a month
+int n = m; //OK can assigned month to an int
+Month mm = Month(7); //convert into to Month (unchecked) 
+
+Plain enums are less strict. Can lead to strange errors. dec may cclash with dec in iostream. 
+
+if (m==17) //huh 17th month
+if (m==monday) //huh compare month to monday?
+
+If monday is enumerator of plain enum rather than enum class, comparison will succeed, most likely to undesireable results. 
+
+enum classes new to C++11
+

@@ -1,0 +1,76 @@
+Functions
+
+When function is called, language implementation sets aside a data structure containing
+a copy of all its parameters and local variables. 
+
+When function first called, compiler creates a structure like this
+
+Call of expression
+ ____________________
+|ts                  |
+|--------------------|
+|left		     |
+|--------------------|
+|t		     |
+|--------------------|
+|Implementation Stuff|
+---------------------
+
+Implementation stuff varies from implementation to implementation, but that's basically the information that the function needs to return to its caller and to return a value to its caller. Data structure is called a function activation record, and each function has its own detailed layout of its activation record. From implementation's point of view, a parameter is just another local variable.
+
+Now expression calls term():
+
+Call of expression
+ ____________________
+|ts                  |	Call of expression()
+|--------------------|
+|left                |
+|--------------------|
+|t                   |
+|--------------------|
+|Implementation Stuff|
+---------------------|
+|ts                  |	Call of term()
+|--------------------|
+|left                |
+|--------------------|		| Direction of stack growth
+|t                   |		|
+---------------------|		|
+|d		     |		v
+|--------------------|
+|Implementation Stuff|
+---------------------
+
+
+Variable d is given space even if it may never be initialized and used. 
+
+Call stack is a data structure that grows and shrinks at one end according to LIFO. 
+
+contexpr functions
+
+Function represents a calculation, and sometimes we want to do a calculation at compile time. Reason of wanting a calculation to be evaluated by compiler is usually to avoid having same calculation done millions of times at run time. 
+
+constexpr decalres that function can be evaluated by compiler if it is given contexprs as arguments.
+
+Assume Point is simple struct with members x and y representing 2D coordinates. 
+
+constexpr double xscale = 10;
+constexpr double yscale = 0.8;
+
+constexpr Point scale(Point p) {return {xscale*p.x, yscale*p.y}; };
+
+A constexpr function behaves like an ordinary function until used where a constant is needed. Then it is calculated at compile time provided its arguments are constant expression and gives an error if they are not.
+
+A constexpr function must be so simple that compiler can evaluate it. In C++11, that means that a constexpr function must have a body consisting of a single return statement; in C++14 we can also write simple loops. 
+
+A constexpr function may not have side effects; that is, it may not change the value of variables outside its own body, except those it is assigned to or uses to initialize. 
+
+Error Example:
+
+int gob = 9;
+constexpr void bad(int &arg) { //error: no return value
+	++arg; //error modifies caller through argument
+	gob = 7; //error: modifies nonlocal variable
+}
+
+If compiler cannot determine that constexpr function is simple enough, the function is considered an error.  

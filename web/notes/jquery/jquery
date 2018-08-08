@@ -1,0 +1,290 @@
+INTRO
+
+What is JQuery?
+
+jQuery is a DOM manipulation library. Most popular tool for JavaScript. Most popular JS library.
+
+Makes things like HTML document traversal and manipulatoin, event handling, animation and Ajax much simpler with an easy-tp-use API that works across multitude of browsers. 
+
+Library - code that someone else wrote and add it to own project to use. 
+
+Helps:
+-Select elements
+-Manipulate Elements
+-create elements
+-add event listeners
+-animate elements
+-add effects
+-make HTTP requests (AJAX)
+
+Some Reasons to Use jQuery:
+
+-Fixes "broken" DOM api
+-Brevity and Clarity
+-Ease of Use
+-Cross-Browser Support
+-AJAX
+-Lots of people use it
+
+Some Reasons to Not Use jQuery:
+
+youmightnotneedjquery.com
+-DOM API is not broken anymore
+-Doesn't do anything you can't do on your own
+-An unneccessary dependency
+-Performance
+-Lots of people are moving away from it
+
+ADDING jQuery
+
+Download and link to it locally:
+<script type="text/javascript" src="jquery.js"><script>
+
+Or 
+
+Link to CDN (hosted copy)
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+Can type jQuery in the console or $ and if no error then it is installed. 
+
+QUICK PREVIEW
+
+//when user clicks button with id 'trigger'
+$('#trigger').click(function() {
+	//change body's background to yellow
+	$('body').css("background", "yellow");
+	//fade out all imgs over 3 seconds
+	$('img').fadeOut(3000, function() {
+		..remove imgs from page when fadeOut is done
+		$(this).remove();
+	});
+});
+
+SELECTING ELEMENTS
+
+-Learning how to selec t elements with $()
+-using .css() to style elements
+
+Selecting with jQuery:
+$("selectorGoesHere")
+
+Selecting with jQuery is very similar to querySelectorAll in that we provide a CSS style selector and jQuery returns all matching elements. 
+
+//to select all img tage
+$('img')
+
+//to select all elements with class 'sale'
+$(".sale")
+
+//to select element with id 'bonus'
+$("#bonus")
+
+//to select all tags inside a list
+$("li a")
+
+MANIPULATING STYLE
+
+The .css() method is jQuery's interface to styleing
+
+$("selector").css("property", "value");
+
+Can change css styles of multiple elements with a broad selector. 
+
+COMMON jQuery METHODS:
+
+val()
+text()
+attr()
+html()
+addClass()
+removeClass()
+toggleClass()
+
+text() - returns the text content of the element, not the HTML
+
+<h1>HEADING</h1>
+h1.text(); //"HEADING"
+
+h1.text("NEW TEXT");
+
+html() - gets HTML of first element
+
+<ul>
+	<li>Skittles</li>
+	<li>Starbursts</li>
+	<li>Twix</li>
+</ul>
+
+$("ul").html();
+"<li>Skittles</li> <li>Starbursts</li> <li>Twix</li> "
+
+$("ul").html("<li>I hacked your list"</li> <li>I am the best</li>");
+
+attr() - retrieve value of an attribute for first element in set of matched elements or set one or more attributes for every matches element. 
+
+<img id="photo" src="image.jpg" alt="alternative">
+$("#photo").attr("src", "image1.jpg");
+
+Cann add new attributes to element. 
+$("#photo").attr({
+	alt: "alt1",
+	src: "image2.jpg",
+	title: "This is an added title"
+});
+
+<input type="text" placeholder="name">
+
+$("input").attr(); //"text"
+$("input").attr("type", "color"); //now input is a color picker
+
+.last() - returns last element from a list of selectors
+
+val() - get current value of first element in set of matched elements or set the value of every matched element
+ option:checked" ).val();
+ 
+// Get the value from a dropdown select directly
+$( "select#foo" ).val();
+ 
+// Get the value from a checked checkbox
+$( "input[type=checkbox][name=bar]:checked" ).val();
+ 
+// Get the value from a set of radio buttons
+$( "input[type=radio][name=baz]:checked" ).val();
+
+
+<select>
+	<option>Ostrich</option>
+	<option>Turtle</option>
+	<option>Toad</option>
+</select>
+
+$("select").val(); //gets user selected value
+
+MANIPULATING CLASSES
+
+addClass() - adds a class to an  element
+
+removeClass() - removes a class from an element
+
+toggleClass() - toggles a class on and off
+
+.first() - gets first element in a list of selectors
+
+jQuery EVENTS
+
+-click()
+-keypress()
+-on() - can be used 90% of the time
+
+click() - quickly and easily add click listener to element or list of elements
+
+$("#submit").click(function() {
+	console.log("Another click");
+});
+
+//allerts when any button is clicked
+$("button").click(function() {
+	alert("Someone clicked a button");
+});
+
+$(this) - jQuery version of this
+
+keypress() - quick and easy way to add keypress listener to elements.
+
+keydown() and keyup() - different than keypress. keydown() fired any time press a key right after press it down. keyup() fired when released a key. keypress() fires usually in between keydown() and keyup(). 
+
+keydown() and keyup() provide a code indicating which key is pressed while keypressed() indicates which character was entered. 
+
+Capital A - keydown and keyup will run for shift and a key. keypress() will give capital A. 
+
+$( "#target" ).keypress(function() {
+  console.log( "Handler for .keypress() called." );
+});
+
+returns object many properties
+
+charCode, keyCode, which - keyboard code number
+
+JavaScript character codes - look online
+
+$('#target").keypress(function(event) {
+	if(event.which === 13) {
+		alert("You hit enter!");
+	}
+});
+
+event object captures implicit parameter in object.
+
+on() - works similarly to addEventListener(). Lets you specify the type of event to listen for.
+
+//prints when item with id 'submit' is clicked.
+$("#submit").on('click', function() {
+	console.log("Another click");
+});
+
+//alerts when any button is clicked
+$("button").on('click', function() {
+	console.log("button clicked!");
+});
+
+By far most used jquery method. 
+
+//double click event
+$('button').on('dblclick', function() {
+	alert("DOUBLE CLICKED");
+});
+
+//drag start event
+$('a').on('dragstart', function() {
+	console.log("DRAG STARTED");
+});
+
+//keypress event
+$('input[type="text"]').on('keypress', function() {
+	alert("key press in an input");
+});
+
+Why use on?
+
+In most cases, click() and on('click') will get job done. However, one difference:
+-click() only adds listeners for existing elements
+-on() will add listners for all potential future elements
+
+jQuery Effects
+
+fading effect and slides. 
+
+fadeOut() - fades element out. Makes its transparency from full opacity to full transparency. Can select duration. 
+
+$("button").on("click", function() {
+	$('div').fadeOut(1000);
+	console.log("Fade!");
+});
+
+Console prints message before fade. 
+
+To make sure that action will not occur before animationL
+
+$("button").on("click", function() {
+	$('div').fadeOut(1000, function() {
+		console.log("FADE");
+	});
+});
+
+$("button").on("click", function() {
+	$('div').fadeOut(1000, function() {
+		$(this).remove();
+	});
+});
+
+Removes elements after animation. 
+
+fadeIn() - fade in effect
+
+fadeToggle() - toggle fade.
+
+slideDown() - takes element that is currently not showing. Animates height rather than opacity. 
+
+slideUp()
+
+slideToggle() 

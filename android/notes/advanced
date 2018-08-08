@@ -1,0 +1,376 @@
+ADVANCED ANDROID FEATURES
+
+LISTVIEW
+
+Can use an array list to add information.
+
+but then must use an array adapter to use information with listview
+
+ListView myListView = (ListView) findViewById(R.id.myListView);
+
+ArrayList<String> myFamily = new ArrayList<String>();
+myFamily.add("David");
+myFamily.add("Ashleigh");
+myFamily.add("Martina");
+myFamily.add("Bradley");
+
+// can choose from many different layout templates
+ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myFamily);
+
+myListView.setAdapter(arrayAdapter);
+
+Then can set a listener to do an action when an item in list is clicked
+
+myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+	}
+});
+
+AdapterView<?> -> is listView being clicked. Base class. 
+
+Thus could make view disappear.
+
+parent.setVisibility(View.GONE);
+Log.i("Person tapped", myFamly.get(position));
+
+Can create array list from list
+
+ArrayList<String> friendList = new ArrayList<String>(asList("John", "Paul", "George", "Ringo"));
+
+TIMERS
+
+Allow delay running of particular activity until a certain time has passed
+
+Handler handler = new Handler(); 
+
+Handler does a few things. One is that allows chunks of code to be runned in delayed way. 
+
+Runnable -> the chunk of code to be run. Usually called run
+
+Runnable run = new Runnable() {
+	@Override
+	public void run() {
+		// code to be run at interval
+
+		Log.i("Runnable has run!", "A second must have passed...");
+		handler.postDelayed(this, 1000); //this refers to runnable, and 1000 is number of ms. Says to run "this" code again a second later.
+	}
+};
+
+// Must initialized runnable
+handler.post(run);
+
+Otherwise can use a countdown timer
+
+new CountDownTimer(10000, 1000) { / # of ms for countdown to run out, and when to show countdown tick
+	public void onTick(long millisecondsUntilDone) {
+		// CountDown has ticked
+	}
+
+	public void onFinish() {
+		// CountDown is finished
+	}
+}.start();
+
+Then CountDownTimer is destroyed when it is finished. 
+
+SHOWING AND HIDING UI ELEMENTS
+
+textView.setVisibility(View.VISIBLE);
+textView.setVisibility(View.INVISIBLE);
+
+TAGS
+
+Brain Trainer app
+
+android:tag="0"
+
+Can use tag to see which button wasa tapped.
+
+public void choose Answer(View view) {
+	view.getTag();
+}
+
+URI BUILDER
+
+To build URLs, can use Uri.Builder framework
+
+Uri builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon()
+	.appendQueryParameter(PARAM_QUERY, githubSearchQuery)
+	.appendQueryParameter(PARAM_SORT, sortBy)
+	.build();
+
+Allows you to create a well formed URI without having to worry about particulars like URL encoded characters and % between query parameters
+
+This produces an Android URI but method may need a Java URL
+
+URL url = null;
+try {
+	url = new URL(buildUri.toString());
+} catch (MalformedURLException e) {
+	e.printStackTrace();
+}
+
+DOWNLOADING WEB CONTENT
+
+Beginning of connecting apps to online services such as google, facebook, etc
+
+AsyncTask class for running code on a separate thread. So when it doesn't block the main application. Async tasks are tasks that may take a variable amount of time. 
+
+First parameter type is type of variable we will send to this class to instruct it what to do. In this case a url. Middle is the name of method we may or may not use to show progress of this task. Finally, third is type of variable that will be returned from this task.
+
+Must use try and catch with asynchronous tasks. 
+
+public class DownloadTask extends AsyncTask<String, Void, String> {
+	
+	@Override // protected so it can be accessed anywhere in the package
+	protected String doInBackground(String... params) {
+		Log.i("URL", params[0]);
+		return "Done";
+	}
+
+}
+
+DownloadTask task = new DownloadTask();
+try {
+	String result = task.execute("https://www.google.com").get();
+} catch (InterruptedException e) {
+	e.printStackTrace();
+} catch (ExecutionException e) {
+	e.printStackTrace();
+}
+
+Log.i("Result", result);
+
+To download content
+
+In doInBackground:
+
+String result = "";
+URL url;
+HttpURLConnection urlConnection = null
+
+try {
+	url = new URL(params[0]);
+	urlConnection = (HttpURLConnection) url.openConnection();
+	InputStream in = urlConnection.getInputStream();
+	InputStreamReader reader = new InputStreamReader(in);
+
+	// will read one byte at a time
+	// will keep track of what data has been read
+	// thus can use a while loop
+	int data = reader.read();
+	
+	while (data != -1) { // EOF
+		char current = (char) data;
+		result += current;
+		data = reader.read();
+	}
+	
+	return result;
+} catch (Exception e) {
+	e.printStackTrace();
+	return "Failed"
+}
+
+PERMISSIONS
+
+To use this, must request permission to use Internet Connection from use in App Manifest
+
+AndroidManifest.xml in app/manifests
+
+<uses-permission android:name="android.permission.INTERNET" />
+
+When each apk is installed, it is given its own unique Linux ID and each app runs within its own instance of an Android runtime. As a result, each app is sandboxed. Its files, processes, and other resources are inaccessible to other apps. So apps can't mess with sensitive data of other apps or mess with other apps. 
+
+Declare permissions in the app manifest. 
+
+USING SCANNER
+
+Google's udacity course uses Scanner
+
+public static String getResponseFromHttpUrl(URL url) throws IOException {
+	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+	try {
+		InputStream in = urlConnection.getInputStream();
+	
+		Scanner scanner = new Scanner(in);
+		Scanner.useDelimiter("\\A");
+	
+		boolean hasInput = scanner.hasNext();
+		if (hasInput) {
+			return scanner.next();
+		} else {
+			return null;
+		}
+	} finally {
+		urlConnection.disconnect();
+	}
+}
+
+Use "\\A" delimiter (the beginning of the stream), we force scanner to read entire contents of stream into next token string. This buffers data automatically. Automatically allocates and deallocates buffers as needed and handles character encoding. Translate from UTF-8 (default encoding for JSON and JS) to UTF-16 (default encoding for Android)
+
+Link in StackOverflow
+
+Also great libraries to simplify Android networking and add funcionality to HTTP stack.
+
+THREADS
+
+Each app can be divied into multiple threads of execution that can run concurrently. On modern Android devices, these threads of execution can be scheduled by os to run on different cpu cores, but system might choose to time slice them on a single cpu (appears to run concurrently).
+
+Android apps have single user interface thread to make things easier for developer. Responsible for getting events from various sensors and setting up next frame to draw. To run at ideal 60fps, need to make sure computation is less than 17ms. Network calls could make this longer. And if takes longer than 5 seconds, android will crash the app.
+
+AsyncTask is what lets you do this. Run network tasks on secondary execution thread. And Make changes on UI in main ui thread. Allows you to run tasks on background thread and publish results to ui thread.
+
+UI thread has message queue and handler that allows you to send and process runnable objects and messages often from other threads. AsyncTask wraps this behavior on a simple interface. 
+
+Three parameterized types:
+1. Params -> Parameter type sent to task upon execution
+2. Progress -> type published to update progress during the background computation
+3. Result - Type of result of background computation
+
+These correspond to three primary methods (also extra method (pre)):
+
+doInBackground
+onProgressUpdate
+onPostExecute
+onPreExecute
+
+Call execute() with parameters to be sent to background task. 
+
+AsyncTask runs through several steps
+
+Calls onPreExecute on UI thread
+Then calls doInBackground on background thread. Must be overriden to use the class
+If want to update some ui with progress, call publishProgress with progress parameters. Causes onProgressUpdate to be called on UI thread. 
+Finally, return result when background task complete, causing onPostExecute to be called on UI thread
+
+AsyncTask is not right for every circumstance but good to get started.
+
+DOWNLOADING IMAGES
+
+Return a Bitmap for downloading image
+
+public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+	@Override
+	protected Bitmap doInBackground(String... urls) {
+		try {
+			URL url = new URL(urls[0]);
+			HttpURLConnection connection = (HttpURLConnection) url.openConection();
+			
+			// image is not like other string data
+			// download image in one go and convert to bitmap
+
+			connection.connect();
+			InputStream is = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(is); //BitmapFactory has methods to decode bitmaps from bytes
+
+			return myBitmap;
+		} catch (MalformedURLException e) {
+
+		} catch (IOException e) {
+
+		}
+	}
+}
+
+ImageView downloadedImage;
+
+public void downloadImage(View view) {
+	ImageDownloader task = new ImageDownloader();
+	Bitmap myImage;
+	
+	try {
+		myImage = task.execute("imageurl");
+		downloadedImage.setImageBitap(myImage); // sets image of image view based on bitmap
+	} catch (Exception e) {
+
+	}
+}
+
+ADVANCED STRING MANIPULATION
+
+"John,David,Mike".split(',') -> separate string into an array of strings separated by ,
+
+[John, David, Mike]
+
+str.substring(2, 5); -> get substring
+
+Regex -> regular expressions
+
+String str = "Mississippi";
+Pattern p = Pattern.compile("Mi(.*?)pi"); // Find Mi and Find Pi and get whatever is between them
+Matcher m = p.matcher(str);
+
+while (m.find()) {
+	System.out.println(m.group(1));
+}
+
+PROCESSING JSON DATA
+
+JSON and XML most common way of passing info from one program to another. 
+
+OpenWeatherMap.org has api for weather
+
+AsyncTask has other method that can be overridden. onPostExecute. Method called when doInBackground method has completed. Is passed result. 
+
+onPostExecute can interact with UI, which doInBackground cannot.
+
+use JSONObject class to handle JSON data and parse strings. 
+
+use JSONArray to parse multiple data from JSON
+
+protected void onPostExecute(String s) {
+	super.onPostExecute(s);
+
+	try {
+		JSONObject obj = new JSONObject(s);
+		String weatherInfo = obj.getString("weather");
+		Log.i("Weather content", weatherInfo);
+
+		JSONArray arr = new JSONArray(weatherInfo);
+
+		for (int i = 0; i < arr.length(); i++) {
+			JSONObject j = arr.getJSONObject(i);
+			
+			Log.i("main", j.getString("main");
+			Log.i("description", j.getString("description");
+		}
+	} catch (JSONException e) {
+		e.printStackTrace();
+	}
+}
+
+{
+	"name": {
+		"firstName": "John",
+		"lastName": "Doe
+	}
+	"title": "Missing person"
+}
+
+How to parse
+
+JSONObject contact = new JSONObject(contactJSONString);
+JSONObject name = contact.getJSONObject("name");
+String firstName = name.getString("firstName");
+String lastName = name.getString("lastName");
+
+REMOVING KEYBOARD FROM VIEW
+
+ EditText cityName;
+
+InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+mgr.hideSoftInputFromWindow(cityName.getWindowToken(), 0);
+
+URLs with Strings iwth Spaces
+
+Must encode them
+
+try {
+	String encodedCityName = URLEncoder.encode(cityName.getText().toString(), "UTF-8");
+} catch (Exception e) {
+
+}

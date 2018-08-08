@@ -1,0 +1,304 @@
+MODULES
+
+Should split application into individual components. 
+
+PROPERTY AND EVENT BINDING
+
+Can bind properies and events on HTML elements, directives, and components. 
+
+BINDING TO CUSTOM PROPERTIES
+
+Create element in component and assign a type. In server-element:
+
+element: {type: string, name: string, content: string};
+
+Cannot access this from outside specific element
+
+In app.component.ts
+
+serverElements = [{type: 'server', name: 'testserver', content: 'this is a test'}];
+
+In app.component.html
+
+<div class="col-xs-12">
+      <app-server-element 
+      *ngFor="let serverElement of serverElements"
+      [element]="serverElement"></app-server-element>
+    </div>
+
+But ERROR. Cannot access this component. 
+
+By default all properties of components are only accessible from specific component. 
+
+Must explicitly define which properties can be access outside. Need to add a decorator.
+
+In server-element.component.ts
+
+import { Component, OnInit, Input } from '@angular/core';
+
+@Input() element: {type: string, name: string, content: string};
+
+ASSIGNING ALIAS TO CUSTOM PROPERTY
+
+Can configure @Input() if don't want to use same property name outside component as inside
+
+<div class="col-xs-12">
+	<app-server-element 
+      *ngFor="let serverElement of serverElements"
+      [srvElement]="serverElement"></app-server-element>
+</div>
+
+export class ServerElementComponent implements OnInit {
+	@Input('srvElement') element: {type: string, name: string, content: string};
+
+	...
+}
+
+Now outside component, it must be called 'srvElement'. CANNOT use 'element'.
+
+BINDING TO CUSTOM EVENTS
+
+What if have a component and something changes, how to inform parent component. 
+
+Button pressed in child component but info needed for parent. 
+
+Create functions in parent component to catch and emit data. 
+
+app.component.html
+
+<app-cockpit 
+  (serverCreated)="onServerAdded($event)"
+  (blueprintCreated)="onBlueprintAdded($event)">
+ </app-cockpit>
+
+In parnetheses is name of function that is called in child component.
+It equals the function to handle the event in parent component. 
+
+app.component.ts
+
+ onServerAdded(serverData: {serverName: string, serverContent: string}) {
+    this.serverElements.push({
+      type: 'server',
+      name: serverData.serverName,
+      content: serverData.serverContent
+    });
+  }
+
+  onBlueprintAdded(blueprintData: {serverName: string, serverContent: string}) {
+    this.serverElements.push({
+      type: 'blueprint',
+      name: blueprintData.serverName,
+      content: blueprintData.serverContent
+    });
+  }
+
+In child component, must import EventEmitter and Output. 
+
+Create properties equal to EventEmitter<>() with the object model expected to be emitted. 
+Give them the decorator @Output
+
+Then in the event functions, call emit() on theses properties. 
+
+cockpit.component.ts
+
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+
+export class CockpitComponent implements OnInit {
+  @Output() serverCreated = new EventEmitter<{serverName: string, serverContent: string}>();
+  @Output() blueprintCreated = new EventEmitter<{serverName: string, serverContent: string}>();
+  newServerName = '';
+  newServerContent = '';
+  
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  onAddServer() {
+    this.serverCreated.emit({
+      serverName: this.newServerName, 
+      serverContent: this.newServerContent
+    });
+  }
+
+  onAddBlueprint() {
+    this.blueprintCreated.emit({
+      serverName: this.newServerName,
+      serverContent: this.newServerContent
+    });
+  }
+}
+
+ASSIGNING AN ALIAS TO CUSTOM EVENTS
+
+@Output('bpCreated')
+@Output('srvCreated')
+
+CUSTOM PROPERTY AND EVENT BINDING
+
+Sometimes distance between two components is too great. Would need a chain of input and outputs. 
+
+Uses Services. 
+
+VIEW ENCAPSULATION
+
+CSS styling is specific to components in Angular. Styles for p in parent component are not styles for
+p in child component. 
+
+Angular gives each element in component a specific attribute to that component. 
+
+Can override encapsulation. Must import ViewEncapsulation from @angular/core
+
+In Component decorator:
+
+
+@Component {
+	...
+	encapsulation: ViewEncapsulation.None (or Native, Emulated). 
+}
+
+Emulated is default. 
+
+LOCAL REFERENCES IN TEMPLATES
+
+Local Reference - can be placed on any HTML element. Added with #<name>
+
+#serverNameInput - holds reference to HTML element with all its properties. 
+
+Can then pass this as argument to function
+
+<button 
+      class="btn btn-primary"
+      (click)="onAddServer(serverNameInput)">Add Server</button>
+      <button
+
+Can only be used in HTML template. Not in TS code. 
+
+Sends HTML element as parameter. 
+
+So in code:
+
+onAddServer(serverNameInput: HTMLInputElement) {
+    console.log(serverNameInput.value);
+    console.log("Hello");
+    this.serverCreated.emit({
+      serverName: serverNameInput.value, 
+      serverContent: this.newServerContent
+    });
+  }
+
+ACCESS TO DOM & TEMPLATE
+
+Access elements from within TS code without having to wait for method to be called. 
+
+cockpit.component.html
+
+ <input 
+      type="text"
+      class="form-control"
+      #serverContentInput>
+
+cockpit.component.ts
+
+@ViewChild('serverContentInput') serverContentInput: ElementRef;
+
+Can also pass in a child component to ViewChild to get the first child component of that type. 
+
+Passes a type of ElementRef. Must include it.
+
+onAddServer(serverNameInput: HTMLInputElement) {
+    this.serverCreated.emit({
+      serverName: serverNameInput.value, 
+      serverContent: this.serverContentInput.nativeElement.value
+    });
+  }
+
+Can change template element through this. Should not though. 
+
+PROJECT CONTENT INTO COMPONENTS WITH ng-content
+
+Maybe want to pass complex html into component from outside. 
+
+Angular will ignore anything placed between opening and closing tag of a component by default. 
+
+Can change this with a directive: @ng-content
+
+Serves as hook you can place in component to mark place for Angular where it should add content found in opening and closing tag of component in parent component. 
+
+server-element.component.html
+
+<div
+  class="panel panel-default">
+  <div class="panel-heading">{{ element.name }}</div>
+  <div class="panel-body">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+app.component.html
+
+<div class="container">
+  <app-cockpit 
+  (serverCreated)="onServerAdded($event)"
+  (blueprintCreated)="onBlueprintAdded($event)">
+  </app-cockpit>
+  <hr>
+  <div class="row">
+    <div class="col-xs-12">
+      <app-server-element 
+      *ngFor="let serverElement of serverElements"
+      [element]="serverElement">
+      <p>
+        <strong *ngIf="serverElement.type === 'server'" style="color: red">{{ serverElement.content }}</strong>
+        <em *ngIf="serverElement.type === 'blueprint'">{{ serverElement.content }}</em>
+      </p>
+      </app-server-element>
+    </div>
+  </div>
+</div>
+
+UNDERSTANDING COMPONENT LIFECYCLE
+
+ngOnInit() {
+
+}
+
+Lifecycle hooks. When angular sees component needs to be created when it finds a selector, it adds it to dom. Goes through different phases and gives chance to hook into phases and execute code
+
+ngOnChanges -> may be executed multiple times. On creation and whenever a bound input changes (@Input). 
+
+ngOnInit -> executed when component has been initialized. Maybe can't see it yet. Runs after constructor.
+
+ngDoCheck - runs multiple times. Called during every change detection. Whenever template checks for change. Checks on certain events (like click). 
+
+ngAfterContentInit -> Called after content (ng-content) has been projected into view
+
+ngAfterContentChecked - called every time projected content has been checked
+
+ngAfterViewInit - called after component's view (and child views) has been initialized
+
+ngAfterViewChecked - called every time the view (and child views) have been checked
+
+ngOnDestroy - called once component is about to be destoryed. Good place to do cleanup. 
+
+Must import all these and have class model implement their interfaces. 
+
+Look at code. 
+
+@ViewChild -> get access to element from template
+
+GETTING ACCESSS to ng-content with @ContentChild
+
+Say also want to add Local Reference to element in <ng-content> area of a parent component and use it in the child component that utilized ng-content. 
+
+In AppComponent can use @ViewChild. 
+
+Cannot access it in server-element because it is part of the content not part of the view. 
+
+<p #contentParagraph></p>
+
+server-element.component.ts
+
+@ContentChild('contentParagraph') paragraph: ElementRef;
+
+Not loaded until after content init. 

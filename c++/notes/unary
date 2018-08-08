@@ -1,0 +1,22 @@
+Scope declared by braces. Can be global or local to function
+or loop. 
+
+Local scope overrides all inherited scope.
+
+int tune = 20;
+
+int main() {
+	int tuna = 3;
+	cout << tuna << endl; //returns 3
+}
+
+How to use global variable: unary scope operator
+
+:: - unary scope operator
+
+int main() {
+	int tuna =3 ;
+	cout << ::tuna << endl; //returns 20
+} 
+
+:: - is for global variables of current program

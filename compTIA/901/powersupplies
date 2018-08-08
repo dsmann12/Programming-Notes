@@ -1,0 +1,258 @@
+POWER SUPPLIES
+
+PSU - powers computer. Takes electricity from wall socket and transform it into electricity to run mobo and other internal components. 
+
+Problems with PSU can create system instability, crashhse, and adata loss. 
+
+PSUs fall into category of field replaceable unit (FRU) which refers to typical parts of a tech should carry, such as RAM and hard drive.
+
+HISTORICAL/CONCEPTUAL
+
+Electricity is flow of negatively charged particles, called electrons, through matter. Electric companies gather or generate electiricty and then push it to house under pressure through wires. Flows more or less at a constant rate. 
+
+Electricity Basics:
+
+Voltage - like water pressure to electricity. Pressure. Measured in Volts. 
+
+Amperage (Current) - Volumetric Flow - how much "water" is actually flowing. Amperage. Amps. Amount of electrons moving past a certain point on a wire. Measured in amperes. Amps. 
+
+Volts and Amps create Work. Power. Watts. 
+
+V X A = W. 
+
+Wattage - amount of amps and volts needed to power a particular device. Measured in watts.
+
+Wires of all sorts - whether copper, tin, hold, or platinum - have a slight *resistance* to flow of electrons. Resistance is measured in ohms (O). 
+
+Particular thickness of wire only handles som uch current at a time. Push too much through and wire will overheat and break. Thus, wires have amperage rating. If try to push 30 amps through 20amp wire, then wire will break and electrons will seek a way to return into ground. Maybe through you. 
+
+Circuit breakers and ground wires provide basic protection from accidental overflow. Circuit breaker is heat sensitive or electromagnetically operated electrical electrical switch rated for a specified amperage. If too much amperage pushed through circuit breaker, the wiring inside detects increase in heat or current and automstically opens, stopping flow of electricity before wiring overheats and breaks. You rest the circuit breaker to reestablish the circuit, and electricity flows once more through the wires. 
+
+Ground wire - provides a path of least resistance for electrons to flow bac to ground in case of accidental overflow.
+
+In past, home and building electrical supply used fuses instead of circuit breakers. Fuses - small devices with a tiny filament designed to break if subjected to too much current. Had to be replaced every time they blew. No longer in homes but many electrical devices -- suh as PC PSU -- use fuese for own internal protection. Once blown, these fuses are not replaceable by uses or techs without special training and toos. 
+
+DC - current flows in one direction. More efficient at getting things done. Making things work. Electrons flow in one direction around a continuous circuit. 
+
+AC - alternating current. Runs long distances well. Flow of electrons alternates direction back and forth in a circuit. 
+
+Most electronic devices use DC power, but all power companies supply AC power because AC travels long distances more efficiently than DC.
+
+Power Supply - ATX typical. All in Watts. That is its max power. Use soft power. Power isn't by physical switch in power supply. Instead, jumper set on mobo itself that is power switch. Can set switch to do different things (sleep mode). Switch is more like cutoff switch. Rarely if ever turned off. 
+
+PSU in a computer converts high-voltage AC power from the wall socket to low-voltage DC. 
+
+First step in powering PC is to get and maintain a good supply of AC power. Second, need a PSU to convert AC to proper voltage and amperage of DC power for mobo and peripherals. Finally, need to control byproduct of electricity - namely heat. 
+
+Supplying AC
+
+PC PSU must have standard AC power supplied steadily and protection against accidental blurps in supply. Power supply connects to the power cord (and thus electrical outlet) via a standard *IEC-320* connector. 
+
+Dual Voltage - switching between US and EU (other countries that use different voltages). Between 110V and 120V (-115 VAC - Volts of Alternating Current) in US. 220 to 240 VAC in EU. PSUs with voltage-selection switches are referred to as fixed-input. PSUs that you do not have to manually switch for differnt voltages are known as auto-switching. 
+
+Test outlet before plugging in PC. Use multimeter or device designed to test outlets. Bad outlet could result in inoperable or destroyed equipment as well as possible electrocution. 
+
+IEC-320 plug has three holes, called hot, neutral, and ground. Hot wire carries electrical voltage. Neutral wire carries no voltage but acts as water drain, completing circuit by returning electricity to local source, normally a breaker panel. Ground wire makes it possible for excess electricity to return safely to ground, such as in short-circuit condition. 
+
+When testing AC, check three things:
+1. Hot outputs approximately 115V
+2. Neutral connects to ground (0V) 
+3. ground connects to ground  (OV)
+
+Multimeter - or volt-ohm meter (VOM) or digital multimeter (DMM) to measure aspects of electrical current. Consists of two probes, an analog or digital meter, and a dial to set the type of test. V with aolid line above a dashed line refers to DC. V~ refers to AC. Offer at least 4 types of electrical tests: continuity, resistance, AC voltage (VAC), and DC voltage (VDC). Continuity tests whether electrons can flow from one end of a wire to other end. Can be used to determine if a fuse is good or to check for breaks in wires. Resistance tester - Broken wire or fuse will show infinite resistance, while good one will show no resistance. Testing AC or DC voltages is matter of making sure measured voltage is what it should be.
+
+AC Adapters - many devices use AC adapter rather than internal PSU. Sits outside a device and converts AC current to DC. Rarely interchangeable. Must make sure voltage, amperage, and polarity match before plugging one into device. If voltage or amperage output is too low, device won't run. If too high, can roast the device. If polarity is reversed, won't work just like putting a battery in a flashlight backward. 
+
+Circuit testers - plug into outlet. May not be as asccurate as multimeter.
+
+Supplying DC
+
+PSU converts high-voltage AC into several DC voltages (5.0, 12.0, 3.3V) usable by delicate interior components. 
+
+Most common size is standard 150mm x 140mm x 86mm. 
+
+12V current used to power motors on devices such as hard drives nad optical drives. 5.0 and 3.3V for support of onboard electronics. Manufacturers may use these voltages any way they wish ohwever and may deviate from these assumptions. 
+
+P1 Power Connector - mobo connector. 20 pin and 24 pin. Has extra little part often. May require 4, 6, or 8pin connectors to supply extra power to mobo.
+
+Supplementary Power Connector - 4 or 8 pin. 
+
+PCIe Power Connectors - Used for video cards. 6pin or 8pin connector, sometimes even two. 
+
+SATA Power Connector - used for SATA hard drives, optical media. 15 pin SATA. Larger pin count supports the SATA hot-swappable feature and 3.3, 5.0, and 12.0V devices. 3.3V pins not used in any current iteration of SATA drives and are reserved for possible future use. All three generations of SATA use same power connectors. L shaped to help insertion. 
+
+Mini Power Connector - Not used much. Look like fan connector. Supplies 5V and 12V to peripherals.
+
+PSU - 12V is yellow. Red is 5V. 
+
+Molex Power Conncetor - Used to be used for much but now usually used with fans and supplementary equipment. Keyed. Supplies 5V and 12V current for fans and older drives. Has notches, called *chamfers*, that guide installation. 
+
+Splitters and Adapters - May not have enough connectors to power all devices. Splitters help create more connections. Molex to SATA adapters are common. 
+
+ATX 
+
+Original ATX PSUs had two distringuishing physical features:
+1. Mobo Power Connector
+2. Soft Power
+
+Mobo power came from single cable with p1 power connector. ATX PSUs also had at least two other cables, each populated with two or more Molex or mini connectors for peripheral poower. 
+
+When plugged in, ATX systems have 5V running to mobo. Always on, even when powered down. Power switch on ATX system simply tells computer whether it has been pressed. BIOS or OS takes over from there and handles chore of turning PC on or off. This is *soft power*. 
+
+Using soft power instead of a physical switch prevents a user from turning off a system before OS has been shut down. Enables PC to use power saving modes that put system to sleep and then wake it up on event. 
+
+All most important settings for ATX soft power are in CMOS Setup. Look for Power Management settings. Power On Function determines function of power witch. May set switch to turn off pc or may ste to more common 4 second delay. 
+
+More powerful hardware and peripherals needed advances:
+1. ATX12V 1.3
+2. EPS12V
+3. Multiple rails
+4. ATX12V 2.0
+5. Other form factors
+6. Active PFC
+
+ATX12V 1.3
+
+First widespread update to ATX standard. 2003. 
+
+P4 - unofficial name for 4 pin power connector for mobo introduced that provided more 12V power to assist the 20 pin P1 mobo power connector. Any power supply that supplide this connector is an ATX12V PSU. 
+
+SATA also supports slimline connctor that has a 6 pin power segment and a micro conncetor that hasa 9 pin power segment. 
+
+AUX connector - introduced 6 pin auxilliary connector to supply increased 3.3 and 5.0V current to mobo. Based on mobo power connector from AT. 
+
+Teething issues. Many AMD CPUs needed AUX cable, while Intel CPUs needed only P4. Sometimes would not include one or other. 
+
+Biggest problem, made lots of recommendations but few requirements so PSU makers not held by standard. 
+
+EPS12V 
+
+Server mobos needed more power. 
+
+Developed by Server System Infrastructure (SSI). Came with 24-pin main mobo power connector that resemebled 20pin ATX connector but offered more current and tthus more stability for mobos. Also came with AUX connector, ATX12V P4 connector, and a unique 8-pin connector. 
+
+Were not interchangeable with ATXV12 psus. 
+
+Didn't see much life beyond servers, but introduced a number of power featured which would eventually be part of ATX12V standard. 
+
+Most important were rails.
+
+RAILS
+
+Generally, all PC power comes from a single transformer that takes the AC current from wall socket and converts it into DC current that is split into three primary DC voltage rails: 12.0 V, 5.0 V, and 3.3V. Groups of wires run from each of these voltage rails to various connectors. 
+
+Each rail has max amount of power it can supply. Normal computers rarely approach this ceiling, but powerful computers with advanced processors and graphics cards require more power. In past 12V rails only supplied about 18 amps which was not enough for high end equipment.
+
+Solution - include 12V rails in PSUs. Worked fine but needed to make sure wren't drawing all power from same 12V rail. Key circuitry that monitors amount of ampearge going through each rail, called the over-current protection (OCP), will shut down PSU if current goes beyond it cap. 
+
+Single rail - single OCP monitors all pathways
+
+Multi-rail - each pathway gets it own OCP. When first implemented, didn't do a great job balancing circuitry but this has been fixed since 2008. 
+
+Today's PSUs prodduce single and multi-rail, high amperage power. Can find PSUs with 12V rails pushing 50 amps or more. 
+
+ATX12V 2.0
+
+Incorporated many good ideas of EPS12V. 
+
+24 pin connector, backward compatible with old 20 pin connector. Two 12V rails for any PSU rated higher than 230W. Dropped the AUX connector and requires SATA hard drive connectors.
+
+Extra 4 pins in P1 is not compatible with old P4. 
+
+EPS12V, EATX12V, or ATX12V 2x4 - Many modern ATX mobos feature an 8pin CPU power connector like those found in EPS12V to help support high-end CPUs that demand a lot of power. Part of connector may be P4 compatible. 
+
+Wattage Rating - defines how much hardware it can support. Components need max wattage to start. 
+
+Niche Power Supplies and Features
+
+Variations on standard ATX. Smaller, quieter.
+
+Mini-ATX or Micro-ATX  smaller PSU form factors designed specifically for mini-ATX or micro-ATX cases.
+
+TFX12V - small PSU form factor optimized for low profile ATX systems
+
+SFX12V - small PSU form factor optimized for systems using FlexATX mobos
+
+CFX12V - L shaped PSU optimized for microBTX systems
+
+LFX12V - small PSU form factor optimized for BTX systems.
+
+1200 Wattage - Little longer maybe. 
+
+Modular - Often, PSUs come with either not enough or too many connectors. 
+
+Small Form Factor PSUs - Mini ATX. Flex ATX. Basically same thing except wattage
+
+Active PFC
+
+Harmonics - PSU takes gults only when current is fully pushing or pulling at top and bottom of each cycle and creating an electrical phemonea. Sort of a back prssure. Called harmonics. Create humming sound heard in electronics. Over time, harmonics dmage electrical equipment, causing problems with PSU and other electrical devices on circuit. 
+
+Active Power Factor Correction (Active PFC) - good PSUs come with. Extra circuitry that smooths out power coming from wall before passing it to main PSU circuits. Smoothing process eliminates harmonics. 
+
+CHOOSING PSU
+
+Efficiency - PSUs don't take the voltage and amps and turn it perfectly into watts. Heat, etc in PSU. Really good PSU will have those north of 90% while others might have some as low as 50%. Never go lower than 82-80%. 
+
+ATX12V 2.0 standards required PSU to be at least 70% efficient. 
+
+80 Plus - voluntary standards program. Rated from 80 to 94 % for given load and badged with metal lables suchas Bronze (85%), Gold (90%), Titanium (94%). These levels are achieved within a narrow range of watts provided, while lower levels of efficiency are achieved at higher and lower power draw. Pwer and efficiency curves usually provided in PSU docs. 
+
+All PSUs produce less wattage over time. 
+
+Rails - Taking volts from household current and outputting that into 12, 5, and 3.3V DC. Process of converting AC 120 or 220V power into 3.3, 5, or 12V power requires a lot of switching, a lot of transformers, and because that, you may have enough wattage, but because different outputs plug into different places, one connection might not provide enough power. Especially bad for 12V. Rails are electric circuitry that isolate different types of power outputs and so one does not get sacrified by other in order to do best efficiency possible. 
+
+2-Rail system - two rails. Minimum you should have. 
+
+2, 3, 4 rails on PSU on real good systems. Ruleset almost goes out the window for really expensive CPUs.   
+
+INSTALLATION AND MAINTENANCE
+
+Power Supply Fan - provides basic cooling for PC. Not only cools votage regulator circuits within PSU but also provides a constant flow of outside air through interior of computer case. Dead power supply fan can rapidly cause problems. 
+
+Modern computers should have one or two case fans as well. 
+
+Airflow - Computer is an enclosed system and cases help fans keep thing scool. Airflow in closed case substantially cools off interior components. 
+
+Remember hot air rises. Warm air rises above cold air. In take fan located near bottom of front bezel of case draws cool air in from outside. Near top and rear is exhaust fan. Works opposite of intake fan and pushed warm air from inside to outside. 
+
+Also ensure slot covres are covering all empty expansoins bays. 
+
+Fans generate noise. Reduce fan noice by using manually adjustable fans, larger fans, or special quiet fans. Manually adjustable fans have knob to speed up or slow them down. Better solution is quiet fans. Large fans spin slower and produce less noise.
+
+Traditionally, industry used 80mm PSU and cooling fans, but today you'll find 100mm, 120mm, and even larger fans. 
+
+SpeedFan or Mobo software allow you to tweak fans based on tempuratures. 
+
+TROUBLESHOOTING
+
+Most likely to die. Take a lot of abuse from bad electricity. 
+
+1. Catastrophic
+2. Slow
+
+Catastrophic - no power. Nothing is coming on. Can get worse than that. Pop and smoke coming out. Probably blown. Always unplug PSU when it goes bad. Likely destroys mobo. 
+
+Multimeter can check if PSU is dead. Check everything else before assuming PSU. Do not fret if voltages supplied are more or less than nominal value. PSUs can safely vary by as much as 10%. Meaning 12V line can vary from 10.8 to 13.2 V. Test every connection on PSU. 
+
+ATX Tester - for testing PSUs without mobo. Without mobo, PSUs won't turn on. 
+
+Switches - Short power jumpers on mobo with screwdriver if think PSU switch is problem
+
+Slow - To do a test, can use a Voltmeter. Biggst V on a PSU is 12 V so always pick highest range as close to but above. Paper clip - Green wire is power good wire. Can put one end of paper clip in power good and another in a black ground wire. Voltage tester - put a little load on system. But don't know their limitations. Sometimes one connector goes bad. 
+
+Intermittent problems arethe clue. Multimeter not elpful as voltages will only once in a hilwe spike and sag to cause intermittent errors. 
+
+Fuses and Fire
+
+Inside every PSU resides simple fuse. If one blows do not go investigating inside PSU. 
+
+Keep fire extinguisher handy, 
+
+Class A - ordinary free-burning combustible such as wood or paper
+Clas sB - flammable liquid, such as gas, solvents, or paint
+Cladd C - live electrical equipment
+Class D - combustible metals such as titanium or magnesium
+Class K - Cooking oils, trans fats, or fat
+
+Should use Class C on PC. 
+

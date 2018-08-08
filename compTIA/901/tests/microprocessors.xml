@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What is the CPU?</Question>
+					<Answer xml:space="preserve">The central processing unit.Brain of computer. Basically a powerful calculator. Does lots of calculations. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What is Intel 8088?</Question>
+					<Answer xml:space="preserve">Intel 8088 is the grandad of CPUs. Invented in late 1970s, it defined idea of modern microprocesses and contains same basic parts used in even most advanced CPUs today. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+		<value2>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483651</id>
+				<data>
+					<Question>What are registers in a CPU?</Question>
+					<Answer xml:space="preserve">Registers store internal data and commands. Workplace where CPU gets things done. CPUs contain a large number of registers. Four most commong are general purpose: Ax, Bx, cx, dx. In reality, they are tiny storage areas on CPU made up of microscopic semiconductor circuits that hold charges. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value2>
+		<value3>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483652</id>
+				<data>
+					<Question>What is the external data bus (EDB)</Question>
+					<Answer xml:space="preserve">External data bus - allows CPU to read patterns sent as binary data. Also can send patterns back through this. Think of the lightbulb model. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value3>
+		<value4>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483653</id>
+				<data>
+					<Question>What is the clock wire (CLK)</Question>
+					<Answer xml:space="preserve">Charge on CLK wire tells CPU that another piece of information is waiting to be processed. Means that CPU should read or write another pattern. For CPU to process a command placed on EDB, a certain minimum voltage must be applied to CLK wire. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value4>
+		<value5>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483654</id>
+				<data>
+					<Question>What is a clock cycle?</Question>
+					<Answer xml:space="preserve">Clock cycle is a single charge tothe CLK wire. CPU requires at least two clock cycles to act on a command. Usually need more. PC may require hundreds of clock cycles to process some commands. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value5>
+		<value6>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483655</id>
+				<data>
+					<Question>What is a clock speed?</Question>
+					<Answer>Clock speed is the max number of clock cycles that a CPU can handle in a given period of time. It is the fastest speed at which a CPU can opreate, determined by CPU manufacturer. 
+
+Intel 8088 had a clock speed of 4.77 MHz (4.77 million cycles per second). Modern CPUs hav clock speeds that exceed 3Ghz (3 billion cycles per second)</Answer>
+				</data>
+			</ptr_wrapper>
+		</value6>
+		<value7>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483656</id>
+				<data>
+					<Question>Explain conversion of 1Hz, 1 MHz, and 1 GHz</Question>
+					<Answer>1 Hz = 1 cycle per second
+1 MHz = 1 milllion cycles per second
+1 GHz = 1 billion cycles per second</Answer>
+				</data>
+			</ptr_wrapper>
+		</value7>
+		<value8>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483657</id>
+				<data>
+					<Question>What is the system crystal?</Question>
+					<Answer xml:space="preserve">System crystal determines the speed at which a CPU and rest of PC operate. Usually a quartz oscillator soldered onto motherboard. Sends out electirical pulse at a certain speed, many millions of times per second. Goes first to a clock chip that adjusts the pulse, usually increasing the pulse sent by crystal by some multiple. 
+
+(Motherboards could connect crystal directly to CPU&apos;s clock wire but then would need to replace crystal if wanted to replace CPU with a CPU with a different clock speed)
+
+As long as computer is powered on, the quarts oscillator repeatedly fires a charge on CLK wire, setting beat for CPU activities. If system crystal sets a beat slower than CPU&apos;s clock speed, it will run at a slower speed. If system crystal forces CPU to run faster than its clock speed, it can overheat and stop worknig. 
+
+Before installing a CPU, make sure crystal and clock chip send out correct clock pulse for that particular CPU. Today, motherboard talks to CPU. CPU tells mobo the clock speed it needs, and clock chip automatically adjusts for CPU. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value8>
+		<value9>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483658</id>
+				<data>
+					<Question>What is the relationship between memory and EDB?</Question>
+					<Answer xml:space="preserve">Computer needs some device that take copies of programs from hard drives and sends them one line at a time to CPU quickly enough to keep up with its demands. Memory is device that stores ones and zeroes and stores them by addressing each line of memory, so CPU can easily find data. Moves data from memory to EDB. CPU can read and write to this storage medium and can jump to any line of stored code as easily as any other. All this is done near clock speed of CPU. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value9>
+		<value10>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483659</id>
+				<data>
+					<Question>What is random access memory?</Question>
+					<Answer xml:space="preserve">Random access memory allows CPU to jump to any line of code as easy as any other. Transfers and stores data to and from CPU in byte sized chunks. 
+
+Made up of a group of semiconductor chips soldered onto small cards that snap into computer. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value10>
+		<value11>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483660</id>
+				<data>
+					<Question>What are the byte conversions?</Question>
+					<Answer>bit - individual 1 or 0
+nibble - 4 bits
+byte - 8 bits
+16 bits - word
+32 bits - double word
+64 bits - paragraph or quad word</Answer>
+				</data>
+			</ptr_wrapper>
+		</value11>
+		<value12>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483661</id>
+				<data>
+					<Question>What is DRAM?</Question>
+					<Answer>DRAM is dynamic ram. For main system memory. DRAM needs both a constant electrical charge and a periodic refresh of the circuits, otherwise it loses data. Refresh can cause delays because CPU has to wait for refresh. Moden CPUs have clever ways to get around this</Answer>
+				</data>
+			</ptr_wrapper>
+		</value12>
+		<value13>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483662</id>
+				<data>
+					<Question>What is a memory controller chip?</Question>
+					<Answer>CPU and RAM need some connection to talk to each other. Must extend EDB from CPU to talk to RAM. Need EDB to connect in such a way that CPU can see any one give nrow but still give CPU capability to look at any row. CPU needs to be able to say which row of RAM it wants and chip should handle mechanics of retrieving that row of data from RAM and putting it on EDB. 
+
+MCC contains special circuitry so it can grab contents of any single line of RAM and palce that data or command on EDB. Enables CPU to act on code. CPU needs to be able to tell MCC which line of code it needs. So CPU gains second set of wires called address bus, with which it can communicate with MCC. Different CPUs have different numbers of wires.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value13>
+		<value14>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483663</id>
+				<data>
+					<Question>What is the address bus?</Question>
+					<Answer xml:space="preserve">CPU needs to be able to tell MCC which line of code it needs. So CPU gains second set of wires called address bus, with which it can communicate with MCC. Different CPUs have different numbers of wires.
+
+By turning bus wires on and off in different patters, CPU tells MCC which line of RAM it wnats at any given moment. 
+
+20 bit bus? 2^20 = 1,048,576 combinations. 1 MB. Number of wires in address bus determines max amount of RAM Cpu can handle. 
+
+Now 32bit or 64bit. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value14>
+		<value15>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483664</id>
+				<data>
+					<Question>What is the address space?</Question>
+					<Answer xml:space="preserve">Address space is max amount of RAM CPU can handle. Highest address that can be looked up. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value15>
+		<value16>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483665</id>
+				<data>
+					<Question>Describe size conversions for bytes.</Question>
+					<Answer>1 kilo = 2^10 = 1024 (K)
+1 kilobyte = 1024 bytes (KB)
+1 mega = 2^20 = 1,048,576 (M)
+1 megabyte = 1,048,576 (MB)
+1 giga = 2^30 = 1,073,741,824 (G)
+1 gigabyte = 1,073,741,824 bytes (GB)
+1 tera = 2^40 = 1,099,511,627,776 (T)
+1 terabyte = 1,099,511,627,776 (TB)
+1 peta = 2^50 = 1,125,899,906,842,624 (P)
+1 petabyte = 1,125,899,906,842,624 (PB)</Answer>
+				</data>
+			</ptr_wrapper>
+		</value16>
+		<value17>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483666</id>
+				<data>
+					<Question>What are the make and model of CPU?</Question>
+					<Answer>Make is the manufacturer (AMD or Intel)
+Model is CPU name - 3770k or Fx-4300</Answer>
+				</data>
+			</ptr_wrapper>
+		</value17>
+		<value18>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483667</id>
+				<data>
+					<Question>What are the mainstream and eithusiast desktop CPUs from AMD and Intel?</Question>
+					<Answer>Intel - Core i7/i5/i3
+AMD - A-Series, FX</Answer>
+				</data>
+			</ptr_wrapper>
+		</value18>
+		<value19>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483668</id>
+				<data>
+					<Question>What are the budget desktop CPUs from AMD and Intel?</Question>
+					<Answer>Intel - Pentium, Celeron
+AMD - Sempron, Athlon</Answer>
+				</data>
+			</ptr_wrapper>
+		</value19>
+		<value20>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483669</id>
+				<data>
+					<Question>What are the portable/mobile CPUs from AMD and Intel?</Question>
+					<Answer>Intel - Core i7/i5/i3, Core M, Atom
+AMD - A-Series</Answer>
+				</data>
+			</ptr_wrapper>
+		</value20>
+		<value21>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483670</id>
+				<data>
+					<Question>What are the server CPUs from AMD and Intel?</Question>
+					<Answer>Intel - Xeon
+AMD - Opteron</Answer>
+				</data>
+			</ptr_wrapper>
+		</value21>
+		<value22>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483671</id>
+				<data>
+					<Question>What needs to mobile CPUs have that desktop CPUs don&apos;t?</Question>
+					<Answer xml:space="preserve">Mobile CPUs have need to consume as little electricity as possible to help extend battery and reduce heat. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value22>
+		<value23>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483672</id>
+				<data>
+					<Question>What is throttling?</Question>
+					<Answer xml:space="preserve">Throttling is saving energy by making CPU run more slowly when demand is light. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value23>
+		<value24>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483673</id>
+				<data>
+					<Question>What is a clock multiplier?</Question>
+					<Answer>Clock multiplier in CPU makes CPUs run at some multiple of system clock speed. Take motherboard speed nad increase it by 8x to 16x to 20x. 
+
+200 MHx mobo. 1.6 GHz CPU. So 8x multiplier: 200MHz x 8 = 1.6 GHz. 
+
+System crystal pushes out a particular speed (motherboard speed) which is then multiplide internally by CPU to get full speed. 
+
+i7 can go up 3.4 GHz. Mobo runs at 100MHz. So multiplier goes up to x35 at full load. 
+
+Clock speed and multiplier on early clock-multiplying systems had to be manually configured via jumpers and dual in-line package (DIP) switches on motherboard. Today, CPUs report to motherboard through function called CPUID and speed and multiplier are set automatically. Can manually override this automatic setup on motherboards by overclocking.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value24>
+		<value25>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483674</id>
+				<data>
+					<Question>What is caching?</Question>
+					<Answer xml:space="preserve">Caching is placing data from memory into a smaller, faster speed memory storage device for faster access. Smaller caches are faster, but bigger ones can hold more information. Also more caches there are, the harder it is to maintain integrity and find things in it. 
+
+When CPU looks for line of code, first looks in L1 Cache, then in L2 cache, then L3. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value25>
+		<value26>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483675</id>
+				<data>
+					<Question>What is SRAM?</Question>
+					<Answer xml:space="preserve">SRAM is Static RAM. Built in to CPUs as a cache.  Preloads as many instructions as possible and keeps copies of already run instructions and data in case CPU needs them again. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value26>
+		<value27>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483676</id>
+				<data>
+					<Question>What is L1 cache?</Question>
+					<Answer>Level 1 Cache is fastest and smallest cache. Closest to cores. Most of the time CPU pulls from L1 cache</Answer>
+				</data>
+			</ptr_wrapper>
+		</value27>
+		<value28>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483677</id>
+				<data>
+					<Question>What is L2 cache?</Question>
+					<Answer xml:space="preserve">Level 2 Cache is slower and bigger than L1 cache. Usually half the speed. Used to be in motherboard but was then added to CPU. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value28>
+		<value29>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483678</id>
+				<data>
+					<Question>What is L3 cache?</Question>
+					<Answer xml:space="preserve">Level 3 cache is biggest and slowest. Runs at motherboard speed. Maybe a little faster. 10MBs in Core i7. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value29>
+		<value30>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483679</id>
+				<data>
+					<Question>What is the frontside bus and the backside bus?</Question>
+					<Answer>When L2 added to CPU, new terms were created to describe connections between CPU, MCC, RAM, and L2 cache. 
+
+The address bus and EDB (connecting CPU, MCC, and RAM) were called the frontside bus. Connection between the CPU and L2 cache became the backside bus. 
+
+These terms to dno apply to modern computers</Answer>
+				</data>
+			</ptr_wrapper>
+		</value30>
+		<value31>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483680</id>
+				<data>
+					<Question>What are x86 PCs?</Question>
+					<Answer xml:space="preserve">x86 PCs used an instruction set built on earliest Intel CPU architecture. 32 bit. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value31>
+		<value32>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483681</id>
+				<data>
+					<Question>What are x86-64 PCs?</Question>
+					<Answer xml:space="preserve">x86-64 are 64bit pcs that can also work with 32 bit. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value32>
+		<value33>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483682</id>
+				<data>
+					<Question>What is hyperthreading?</Question>
+					<Answer>Hyperthreading was first released with Pentium 4. Enabled chip to run multiple threads at same time, generally called simultaneous multithreading. Effectively turns one CPU into two CPUs on one chip, with a catch. 
+
+Limitations - First, OS and app have to be designed to take advantage of the faeture. Second, although CPU simulates actions of second process, it does not double processing power because main execution resources are not duplicated.
+
+Now found in i7.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value33>
+		<value34>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483683</id>
+				<data>
+					<Question>What is multicore architecture?</Question>
+					<Answer xml:space="preserve">Dual core architecture means there are two cores on a single chip. Dual core CPU has two execution units -- two sets of pipelines -- but the two sets of pipelines share cache and RAM.
+
+Now 4, 6, or 8 cores.
+
+Core i7 has L1, L2, and L3 caches of 64 KB, 256KB, and 15MB. L1 cache divides into 32KB to handle data (D-Cache) and another 32 Kb for instructions (I-cache). Each core has dedicated L1 and L2 caches. All cores share L3 cache. Pool of memory enables cores to communicate nad work together without having to access RAM. 
+
+Multicore processing has engineered cores to divide up work independently of OS. Still, apps have to be modified or optimized for this parallelism to have a huge impact on performance. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value34>
+		<value35>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483684</id>
+				<data>
+					<Question>What is an integrated memory controller?</Question>
+					<Answer xml:space="preserve">Intergrated Memory Controller (IMC) - almost all current CPUs have them. Moved from motherboard chip into CPU to optimize flow of information into and out from CPU. IMC enables faster control overthings like L3 cache shared among multiple cores. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value35>
+		<value36>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483685</id>
+				<data>
+					<Question>What is a GPU?</Question>
+					<Answer xml:space="preserve">GPU is a graphics processing unit. The video processing portion of a copmuter typically has a discrete microprocessor that differs in both function and architecture from CPU designed for general-purpose computing. Can handle certain tasks more efficiently than CPU so integrating GPU into CPU enhances overall performance of computer while reducing engergy use, size, and cost. Benefits mobile devices. 
+
+Intel HD Graphics and Intel Iris Pro Graphics integrated into many Core i7/i5/i3. AMD has more powerful Accelereated Processing Unit (APU). </Answer>
+				</data>
+			</ptr_wrapper>
+		</value36>
+		<value37>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483686</id>
+				<data>
+					<Question>What is NX bit technology?</Question>
+					<Answer>All modern processors employ the NX Bit technology, that enables CPU to protect certain sections of memory. This couples with implementation by OS stops malicious attacks from getting to essentia lOS files. Microsoft called feature Data Execution Prevention (DEP). 
+
+Companies call it differnt:
+
+Intel: XD Bit (eXecute Diable)
+AMD: Enhanced Virus Protection
+ARM: XN (eXecute Never)
+CompTIA: Disable Execute Bit</Answer>
+				</data>
+			</ptr_wrapper>
+		</value37>
+		<value38>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483687</id>
+				<data>
+					<Question>What are CPU extensions?</Question>
+					<Answer xml:space="preserve">CPU manufacturers add big chunks of capability to CPUs over the years. CPU extensions. Add long integer math, 3D support, power management features. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value38>
+		<value39>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483688</id>
+				<data>
+					<Question>What are two big CPU extensions?</Question>
+					<Answer xml:space="preserve">Virtualization support - create virtualized extra systems on same system. Saves on power, if system goes down, can restore it from file. But takes lots of work from CPU. To reduce workload, have virtualization support. Setting to turn on in BIOS. 
+
+Old. Virtualization used to work entirely through software. Programmers had to write lots of code to enable a CPU - which was designed to run one OS at a time - ro run more than one OS. How does memory get allocated, how does CPU know which OS to update when type something or click icon. 
+
+With hardware based virtualization, CPUs took a lot of burder off programmers and made virtualization easier. 
+
+2. Integrated GPU - GPU is video card built into CPU. Makes for smaller systems, uses less power, and pretty good graphics. Video cards are stronger. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value39>
+		<value40>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483689</id>
+				<data>
+					<Question>What is parallel execution?</Question>
+					<Answer xml:space="preserve">Parallel execution - modern CPUs can process multiple commands and parts of commands in parallel. Early processors ha dto do everything in strinct, linear fashion. CPUs accmplish this parallelism through multiple pipelines, dedicated caches, and capability to work with multiple threads or programs at one time. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value40>
+		<value41>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483690</id>
+				<data>
+					<Question>What are the steps from a CPU must take to process a command?</Question>
+					<Answer>To get command from data bus, do the calculation, and then get answer back out to data bus a CPU takes at least four steps (stages):
+1. Fetch - get data fro mEDB
+2. Decode - Figure out what type of commands needs to be executed.
+3. Execute - Perform the calculation.
+4. Send data back onto EDB
+
+Smart discrete circuits inside CPU handles these stages.
+
+In early CPUs, when command was placed on data bus, each stage did its job and CPU handed back answer before starting next command. Required at least 4 clock cycles to process a command. In every clock cycles, three of four cirtcuits sat idle. 
+
+Now there is pipelining.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value41>
+		<value42>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483691</id>
+				<data>
+					<Question>What is pipelining? Pipeline stalls?</Question>
+					<Answer xml:space="preserve">In early CPUs, when command was placed on data bus, each stage did its job and CPU handed back answer before starting next command. Required at least 4 clock cycles to process a command. In every clock cycles, three of four cirtcuits sat idle. 
+
+Pipeline - today circuits are organized in conveyor-belt fashion called a pipeline. With pipelining, each stage does its job with each clock cycle pulse, creating a much more efficient process. Keep every stage of processor busy on every click of clock, making CPU run more efficiently without increasing clock speed. 
+
+Current CPU pipelines contain up to 20 stages.
+
+Not perfect, Sometimes a stage hits a complex command that requires more than one clock cycle, forcing pipeline to stop. CPU tries to avoid these stops, called pipelines stalls?
+
+The decode stage tends to cause most pipeline stalls; certain commands are complex and therefore harder to decode than other commands. Current processors use multiple decode stages to reduce chance of pipeline stalls due ot complex decoding. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value42>
+		<value43>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483692</id>
+				<data>
+					<Question>What is the ALU and FPU?</Question>
+					<Answer>Inside CPU is composed of multiple chunks of circuitry to handle many types of calculations PC needs.
+
+Arithmetic Logic Unit (APU) - handles integer math. Basic math for numbers with no decimal point. Typical CPU spends most work doing integer math.
+
+Floating Point Unit (FPU) - special circuitry to handle complex numbers. With single pipeline, only FPU or ALU worked in execution stage. Worse, floating point calculation often took many clock cycles to execute forcing CPU to stall pipeline until FPU finshed executing complex command 
+
+Current CPUs use multiple pipelines to keep processing going.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value43>
+		<value44>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483693</id>
+				<data>
+					<Question>What are CPU sockets?</Question>
+					<Answer>CPU sockets allow CPUs to be upgraded with similar, more powerful CPUs. Refer to number of pins, physical size, and thermal characteristics</Answer>
+				</data>
+			</ptr_wrapper>
+		</value44>
+		<value45>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483694</id>
+				<data>
+					<Question>What is a PGA socket? An LGA socket?</Question>
+					<Answer xml:space="preserve">A PGA (Pin Grid Array) Socket - pins on processor. Break a pin and CPU is dead. AMD.
+
+A LGA (Land Grid Array) Socket. Intel. Pins are on socket itself. CPU has pads (or lands) on itself. Harder to dmanage CPU.
+
+Zero Insertion Force (ZIF) - socket that holds processor and clamps it in. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value45>
+		<value46>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483695</id>
+				<data>
+					<Question>Describe LGA 775</Question>
+					<Answer>LGA 775 - 775 lands on each CPU. First mainstream CPU and socket to use LGA. Ran with DDR2 and had long life. Started with Pentium 4s and lasted to Core 2s.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value46>
+		<value47>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483696</id>
+				<data>
+					<Question>Describe LGA 1156</Question>
+					<Answer xml:space="preserve">LGA 1156 - more for mainstream systems. First socket which supported a built in north bridge. Had DDR3 support. First time saw Core i3, i5, i7. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value47>
+		<value48>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483697</id>
+				<data>
+					<Question>Describe LGA 1366</Question>
+					<Answer xml:space="preserve">LGA 1366 - higher end systems. Had built in memory controller to talk to RAM. Kinda had north bridge for PCI-E Bus support. Could support lots of DDR3 and used pretty much exclusively on Core i7. First with Core i7. No integrated graphics. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value48>
+		<value49>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483698</id>
+				<data>
+					<Question>Describe LGA 1155</Question>
+					<Answer xml:space="preserve">LGA 1155 - More maintsream. First to have full support of on board graphics. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value49>
+		<value50>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483699</id>
+				<data>
+					<Question>Describe LGA 2011</Question>
+					<Answer xml:space="preserve">LGA 2011 - Replaced 1356 on high end systems. Started out with DDR3 but then supported DDR4. These supported first systems to stop supporting PCI nad only support PCI-Express. Core i3, i5, i7. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value50>
+		<value51>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483700</id>
+				<data>
+					<Question>Describe LGA 1150</Question>
+					<Answer>LGA 1150 - Mainstream. Supports multiple CPUs. Started with DDR3 and moved to DDR4 support. Supports large number of PCI-E devices</Answer>
+				</data>
+			</ptr_wrapper>
+		</value51>
+		<value52>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483701</id>
+				<data>
+					<Question>Describe LGA 1151</Question>
+					<Answer xml:space="preserve">LGA 1151 - Skylake. Not on exam. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value52>
+		<value53>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483702</id>
+				<data>
+					<Question>What is microarchitecture?</Question>
+					<Answer xml:space="preserve">Microarchitecture defines how CPU processes instructions. The reason for different sockets. Supported 3-5 yeras. Thinking of new technologies, speed improvements, reducing transistor sizes to fit more on processor. Come up with pattern for new stuff. Core pieces of what next version of CPU will do. 
+
+Usually there is one microarchitecture and features are cut down for lower systems. Some added for mainstream, more added for server, etc. 
+
+In general when new microarchitecture comes along, a new socket does too. Not always though. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value53>
+		<value54>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483703</id>
+				<data>
+					<Question>What are the two main AMD sockets?</Question>
+					<Answer>AM and FM</Answer>
+				</data>
+			</ptr_wrapper>
+		</value54>
+		<value55>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483704</id>
+				<data>
+					<Question>Describe Socket AM2</Question>
+					<Answer xml:space="preserve">Socket AM2 - Before this, AMD sockets had all kinds of different numbers. Keys have certain positions. Had 940 pins. Ran on late Athlon 64 processors. Had hyper transport capability and supported DDR2. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value55>
+		<value56>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483705</id>
+				<data>
+					<Question>Describe Socket AM3</Question>
+					<Answer>Socket AM3 - Similar to AM2, but had 941 pins, different keys. Athlon IIs, Phenom IIs, and DDR3. Also Sempron, Opteron</Answer>
+				</data>
+			</ptr_wrapper>
+		</value56>
+		<value57>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483706</id>
+				<data>
+					<Question>Describe Socket AM3+</Question>
+					<Answer xml:space="preserve">Socket AM3+ - Support Athlong IIs, Phenom IIs, DDR3, 942 pins. Big different was power and speed. FX chips. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value57>
+		<value58>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483707</id>
+				<data>
+					<Question>Describe Socket FM1</Question>
+					<Answer>Socket FM1 - 905 pins. Supported APUs. A-Series</Answer>
+				</data>
+			</ptr_wrapper>
+		</value58>
+		<value59>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483708</id>
+				<data>
+					<Question>Describe Socket FM2</Question>
+					<Answer>Socket FM2 - 904 pins. Power and speed improvements. A-Series</Answer>
+				</data>
+			</ptr_wrapper>
+		</value59>
+		<value60>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483709</id>
+				<data>
+					<Question>Describe Socket FM2+</Question>
+					<Answer>Socket FM2+ - 906 pins. More incremental improvements. Substantially more PCI-Express support. A-Series</Answer>
+				</data>
+			</ptr_wrapper>
+		</value60>
+		<value61>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483710</id>
+				<data>
+					<Question>Describe Socket G34</Question>
+					<Answer>Socket G34 - 1974 pins. Opteron</Answer>
+				</data>
+			</ptr_wrapper>
+		</value61>
+		<value62>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483711</id>
+				<data>
+					<Question>Describe Socket C32</Question>
+					<Answer>Socket C32 - 1207 pins. Opteron.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value62>
+		<value63>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483712</id>
+				<data>
+					<Question>Descipher Processing Name: Intel Core i7 5757 C Processor</Question>
+					<Answer xml:space="preserve">Intel Core i7 5757 C Processor:
+
+Intel Core - Brand
+i7 - Brand Modifier
+5 - Generation
+755 - SKU Number
+C - alpha suffic (C indicates desktop processor with integrated graphics, socket LGA 1150. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value63>
+		<value64>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483713</id>
+				<data>
+					<Question>Descipher Processing Name: Intel Core 5950 HQ</Question>
+					<Answer>Intel Core 5950 HQ:
+
+Intel Core - Brand
+i7 - Brand Modifier
+5 - Generation
+950 - SKU number
+HQ - alpha suffix (HQ indicates mobile quad-core processor with integrated graphics)..</Answer>
+				</data>
+			</ptr_wrapper>
+		</value64>
+		<value65>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483714</id>
+				<data>
+					<Question>Descipher Processing Name: AMD FX-8350</Question>
+					<Answer>AMD FX-8350:
+
+AMD - brand
+FX - product line
+8 - series and numbers of processing cores
+3 - generation (higher number means more refined)
+50 - Model number (higher number means faster.)</Answer>
+				</data>
+			</ptr_wrapper>
+		</value65>
+		<value66>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483715</id>
+				<data>
+					<Question>Descipher Processing Name: AMD A10-6800K</Question>
+					<Answer xml:space="preserve">AMD A10-6800K
+
+AMD - brand
+A10 - product line
+6 - generation
+800 - model number
+K - suffix mean that processor has an unlocked core, designed to make overclocking easier. Non suffix means locked core. M denotes mobile version.
+
+Note, no A-Series name tells you how many cores CPU has. Have to read online to find out. CompTIA does not care about prodcut numbers. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value66>
+		<value67>
+			<polymorphic_id>2147483650</polymorphic_id>
+			<polymorphic_name>ImageQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483716</id>
+				<data>
+					<Image>CPU Fan Connector</Image>
+					<Answer>CPU Fan connector. 4 prong controller. Two connectors for power, one is a tack to keep track of how fast fan is spinning, 4th is controller for fan. Can control speed of fan.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value67>
+		<value68>
+			<polymorphic_id>2</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483717</id>
+				<data>
+					<Image>Fan Connector</Image>
+					<Answer xml:space="preserve">3 progn connector - Probably plug a system or case fan to it to help cool system. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value68>
+		<value69>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483718</id>
+				<data>
+					<Question>How to control fans?</Question>
+					<Answer xml:space="preserve">System setup there may be fan control, in third party utilities for motherboard, and SpeedFan utility. SpeedFan is popular and free. Some motherboads come with control tools. SpeedFan may not see all fans. 
+
+Usually give fans a speed threhold. A max. Or adjust by temperature. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value69>
+		<value70>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483719</id>
+				<data>
+					<Question>What is liquid cooling? What are the two types?</Question>
+					<Answer xml:space="preserve">Liquid Cooling - take CPU and put metal mount on it. Liquid goes through mount to take heat away to cool off and cycle it back. Metal mounted to CPU. Radiator mounted to case.
+
+Passive Liquid Cooling - liquid goes through a big mount on top of CPU, gets heated up, runs through a radiator to cool down, and pump pushes it back again. 
+
+Active Liquid Cooling - refridgerator. Only done by few people. Passive most common type. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value70>
+		<value71>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483720</id>
+				<data>
+					<Question>What is overclocking?</Question>
+					<Answer xml:space="preserve">For CPU to work, motherboard speed, multiplier, and voltage must be set properly. In most systems, motherboard uses CPUID functions to set these automatically. Some mobos enable you to set this manually by moving a jumper, changing a CMOS setting, or using software. Many change settings to enhance performance. 
+
+Overclocking - running CPUs at clock speeds higher than whay they were rated for. Can void warranty for CPU. Can cause damage. 
+
+Intel and AMD make utilities to help overclock. 
+
+Intel Extreme Tuning Utility (Intel XTU) - Don&apos;t skip additoinal Performance Tuning Protection Plan if go this route. 
+
+AMD Overdrive Utility - No extra warranty.
+
+Most make couple of adjustments to overclock. First, through jumpers, CMOS settings, or software configuration, would increase bus speed for system. Second, often have to increase voltage going into CPU by a little to provide stability. Do that by changing jumpre or CMOS setting. 
+
+Can lock up system. Must do CMOS clear. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value71>
+		<value72>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483721</id>
+				<data>
+					<Question>What are the two most common troubleshoting issues?</Question>
+					<Answer xml:space="preserve">1. Overheating (more common
+2. Catastrophic Failures
+
+Vast majority of problems come from fauly installation or environmental issues that cause overheating. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value72>
+		<value73>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483722</id>
+				<data>
+					<Question>What can cause overheating and how to fix it?</Question>
+					<Answer xml:space="preserve">A failure to install CPU results in either nothing or a system lock-up in a short period of time. Because the nature of ZIF sockets, almost guarantted issue isn&apos;t CPU but rather installation of heat sink and fan.
+
+1. Too much thermal paste can impede flow of heat from CPU to heat sink and cause CPU to heat up rapidly. Modern CPUs have built in fail-safes to shut down before heat damage. 
+
+2. Not enough thermal paste or paste spread too unevenly can cause CPU to heat up and consequently shut itself down. 
+
+3. Failure to conncet the fan power to the mobo can cause CPU to heat up and shut down.
+
+Environmental factors frequently include dust and pet hair. Air conditioning failures. 
+
+CPU needs adequate ventilation. CPU fan is essential but inside of case also needs to get hot air out through exhaust fans and cool air in. If intake fans or exhaust fans stop working, it could cause issue. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value73>
+		<value74>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483723</id>
+				<data>
+					<Question>What can cause catastrophic failures and what to do?</Question>
+					<Answer>Blue Screen of Death (BSoD) tells catastrophic failure. Technically called a Windows Stop Error.
+
+Mac OS X get pin wheel on screen. 
+
+CompTIA calls these &quot;proprietary crash screens&quot;
+
+If smoke or pop from case, use nose to smell what hardware malfunctioned. If electrical short hit CPU, it likely damaged motherboard too.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value74>
+	</value0>
+</cereal>
+

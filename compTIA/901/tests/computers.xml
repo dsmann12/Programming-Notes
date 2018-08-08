@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What is the System Unit?</Question>
+					<Answer>The case. Where storage and processing is. Houses the motherboard, CPU, RAM, hard drives.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What are peripherals?</Question>
+					<Answer>Everything other than the system unit. Monitors, mice, keyboard, speakers, printers, scanners. Provide input or output</Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+	</value0>
+</cereal>
+

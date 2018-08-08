@@ -1,0 +1,123 @@
+Q: Describe the ls command and important arguments
+A: The ls command lists the contents of a directory. -l lists long listing, which produces more detailed. 
+
+Q: What is data in first column of ls -l output?
+A: First column of ls -l output are the file permissions. r means read, w means write, x means execute. First set of three are user permissions (owner), next are group permissions, next are other permissions. 
+
+Q: What is second column of ls -l output?
+A: Second column gives number of hard links to file. For directories this is 2+number of subdirectories. 
+
+Q: What is third column of ls -l output?
+A: Third column gives user who owns the file
+
+Q: What is fourth column of ls -l output?
+A: Fourth column gives group who owns file
+
+Q: What is fifth column of ls -l output?
+A: Fifth column tells size in number of bytes
+
+Q: What are sixth, seventh, and eigth columns and last of ls -l output?
+A: Sixth, seventh, and eigth columns tell when modified and last gives filename
+
+Q: What does -a option for ls do?
+A: -a option for ls lists hidden files (beginning with .)
+
+Q: What does cd command do?
+A: cd command changes directory to relative or absolute path of new directory. Sole argument is directory to change to
+
+Q: What does pwd command do?
+A: pwd displays present working directory. Take no arguments. Gives absolute path of current directory as output. Environmental variable PWD also contains current directory and pwd can be modified by reassigning PWD variable to something else
+
+Q: What does cat command do?
+A: cat command stands for concatenate, accepts a filename as argument, and prints contents of any file to terminal screen. If no argument given, will concatenate back whtever user enters via stdin until CTRL-D is hit. 
+
+Q: What does tac command do?
+A: tac command is like cat, but outputs contents of a file backwards line-wise
+
+Q: What does head command do?
+A: head command by default prints first 10 lines of a file. Accepts a -n flag to specify exact number of lines to output. Useful to avoid flooding terminal
+
+Q: What does tail command do?
+A: tail command prints last 10 lines of a file. Identical to head in other respects
+
+Q: What does echo command do?
+A: echo command print to stdout whatever string is given as argument. Also prints contents of environment variables (rather than names of variables themselves), which makes it useful for shell programming
+
+Q: What does rev command do?
+A: rev command prints lines backwards character-wise. Accepts a file as argument (or if no argument supplied operates on stdin)
+
+Q: What does sort command do?
+A: sort will sort lines of afile in lexicographic order. -n flag allows it to sort numerically
+
+Q: What does uniq command do?
+A: uniq command will idenitify unique lines in a file which is sorted a la the sort command
+
+Q: What does shuf command do?
+A: shuf command will produce a random line-wise shuffling of filename
+
+Q: What does touch command do?
+A: touch command is used to create a new plain-text file and manipulating file timestamps on existing files. Possible to set last modified times with it (to correct an issue, deceive a user)
+
+Q: What does mkdir command do?
+A: mkdir can be used to make a new directory. Argument list is name of directories to be made
+
+Q: What does mv command do?
+A: mv can be used to move a file from one location to another. Accepts two arguments: first is parth of file/directory and second is path of directory to move file/directory into. Can also be used to rename files. If second argument is not existing directory, file will be moved and renamed to name given by second argument
+
+Q: What does rm command do?
+A: rm command can remove files.Deletion is permanent and irreversible. To remove directories, must use -r flag (which stands for recursive)
+
+Q: What does whatis command do?
+A: whatis command accepts a command name as an argument and gives a synopsis of that command
+
+Q: What does which command do?
+A: which command accepts a command name as an argument, and gives path of that command
+
+Q: What does man command do?
+A: man command stands for manual page. Accepts a command name as argument and gives a detailed reference on the command: what it does, what its options are, how to use it, who wrote it, etc. Not all commands have man pages, espeically if they are simple or externally well documented. Press j, k to scroll. q to quit
+
+Q: What does env command do?
+A: env command lists the environment variables for a shell session (both names and values). Can be useful for determining what was in use up to this point. 
+
+Q: What does let command do?
+A: let command allows the setting or res-setting of environmental variables using arithmetic expressions. let i=2; echo $i. Assigns an environmental variable called i to numeric value 2 then prints contents of i to screen
+
+Q: Can user used ; to end a statement in bash?
+A: Yes though they are typically left off
+
+Q: What is an environmen variable?
+A: An environment variable is a variable which may be used during a shell session. Concept is similar to local variables in procedural programming except it may be used interactively on command line. Use $ to access values stored in environment variables or when refferring to them outside of initialization. 
+
+Q: What is difference between using let and not using let when initializing environment variables?
+A: a=1+1 then a stores 1+1. let b=1+1 then b stores 2 because expression is evaluated before storing result in b
+
+Q: How does output redirection work?
+A: The > operator can direct output of a command into a file: ls -al > contents.txt. Outputs the command ls -al into file contents.txt. If file already exists, it is overwritten. The >> operator appends output of a command onto a file. echo "hello" >> contents.txt
+
+Q: What is a pipe?
+A: A pipe can take output of one command and run it as input through another command using pipe. echo "hello" | rev. Can pipe arbitrarily many times. One of most powerful uses is with grep command: cat solutions.txt | grep "Problem 1". Searches linewise fo string "Problem 1" and outputs only those lines on which string exists as substring. awk and sed also best used with a pipe
+
+Q: How can command line be used to execute result of commands held by variable?
+A: Use backticks (`) to surround command to b eexecuted, then result is used in encompassing command. cmd="echo hello"; res=`$cmd`; echo $res. Result of command echo hello is hello which is stored in environment variable res
+
+Q: How does line continuation work in bash?
+A: User can split long commands among several lines by using \. Show
+
+Q: What is a regular expression?
+A: A regular expression is a string of characters which matches some text. d
+
+Q: What are some special characters for bash regular expressions?
+A: ^-beginning of file. $-end of line, *-zero or more, +-one or more, \b-boundary, \w-whitespace. To match these characters literally must put a backslash \ before them. Possible to denote letter and number ranges with []. ls [a-f]*[2-6]; lists any files or folders that begin with lowercase letters a through f and end with a number 2 through 6
+
+Q: What is the grep command?
+A: The grep command is used to find text in a file or a set of lines
+
+Q: Use grep to read contents of a file named secrets and find line containing string "kittens". Do same but lines containing strings that begin with *. 
+
+Q: What is the awk command?
+A: awk is used to isolate columns from text. example: date | awk '{print $1}'; ls -l | awk '{print $8}'
+	
+Q: What is sed command?
+A: sed command stands for stream editor, and its most powerful feature is subtitution. Is like find-and-replace function in a word processor, except more flexible. cat secrets | sed 's/kitties/cats/g' Command outputs contents of file secrets but will change out all intances of string kitties with cars. The g flag at end indicates that if there is more than one match on a line, the substitution shall be done multiple times (if omitted it only performs at most one substitution per line. Does not actually change contents of file, but rather pipes file through sed which transforms it before finally outputting to stdout. To change file, different syntax used. sed -i 's/kitties/cats/g' secrets. The -i flag means "in-place" or modify the file-in-place. The sed command can also capture certain input it mtches, then use inputs in substitutions. Commands also supported in vim. Can use () to group. 
+Q: Describe the bash control structures:
+A: If statements, else-if, while loops, for loops, functions 

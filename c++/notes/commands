@@ -1,0 +1,4 @@
+Useful commands
+
+sizeof(int); //size in bytes of int types
+

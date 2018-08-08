@@ -1,0 +1,472 @@
+Vectors 
+
+#include <vector>
+
+Sequence of elements you can access by an index. List that is indexed and can grow in length. No fixed size.
+Generic template. Can be a list of any type. 
+
+vector<int> v {1, 2, 3, 4, 5};
+vector<int> v = {5, 7, 9, 4, 6, 8};
+
+vector<int> vi(6); //vector of 6 ints initialized with 0
+vector<string> vs(4); //vector of 4 strings initialized with "" - called empty string
+
+push_back() -- adds a new element to a vector. New element becomes last element of vector. Also resizes it. 
+v.at(index) -- returns element at specified index number
+v.size() -- unsigned int
+v.begin() -- reads vector from first element (index 0)
+v.insert(v.begin() + integer, newvalue) -- adds element BEFORE specified index number
+v.insert(v.begin() + 3, newvalue) -- add selement before index 4 (so at index 3)
+v.erase(v.begin() + 4) -- remove element at specified index number
+v.clear() 
+v.isempty() 
+
+vector<double> v;
+v.push_back(2.7);
+v.push_back(5.6); //2.7, 5.6
+
+
+double d = v[0]; //d = 2.7
+
+v.size() //unsigned int. gives size of vector. Number of elements in vector.
+for(int x : v) { //for each x in v
+	cout << x << endl;
+}
+
+sort(v); //sort vector v;
+
+Vector - sequence of elements of a given type. A convenient, flexible, efficient (in time and space), statically type-safe container of elements. 
+
+Standard string is similar, as are other useful container types: list, map, etc. 
+
+ACCESS TO ELEMENTS
+
+get() and set() functions allow elements to be read and written. Both use [] operator on elem pointer.
+
+RELATION TO ARRAYS
+
+How to get a vector to initialize an list of initial values:
+
+vector v1 = {1.2, 7.89, 12.34}
+
+A {} delimited list of elements of type T is presented to programmer as an object of the STL type:
+initializer_list<T>, a list of Ts
+
+cla ss vector {
+int sz;
+// the size
+double* elem;
+// a pointe r to the e le me nts
+public:
+vector(int s)
+// constructor (s is the e le me nt count)
+:sz{s}, elem{new double[sz]} // uninitialize d me mory for e le me nts
+{
+for (int i = 0; i<sz; ++i) elem[i] = 0.0; // initialize
+}
+vector(initia lizer_list<double> lst)
+// initialize r-list constructor
+:sz{lst.size()}, elem{new double[sz]} // uninitialize d me mory
+// for e le me nts
+{
+copy( lst.begin(),lst.end(),elem); // initialize (using std::copy(); §B.5.2)
+}
+// . . .
+};
+
+Use STL copy algorithm. Copies a sequence of elements specified by its first two arguments (here beginning and end of initializer_list) to a sequence of elements starting with its third argument (here vector's elements starting at elem).
+
+Note how () used for an element count and {} used for element lists. 
+
+vector v1 = {1,2,3};
+vector v2(3);
+// thre e e le me nts 1.0, 2.0, 3.0
+// thre e e le me nts e ach with the (de fault) value 0.0
+
+vector v1 {3};
+vector v2(3);
+// one e le me nt with the value 3.0
+// thre e e le me nts e ach with the (de fault) value 0.0
+
+= is optional
+
+vector v11 = {1,2,3};
+vector v12 {1,2,3};
+// thre e e le me nts 1.0, 2.0, 3.0
+// thre e e le me nts 1.0, 2.0, 3.0
+
+COPY CONSTRUCTORS
+
+Provides a copy operation that copies the elements and make sure that this copy operation gets clled when we initialize one vector with another. 
+
+Copy constructor - a constructor that copies. Defined to take as its argument a reference to the object from which to copy. 
+
+vector(const vector&);
+
+Constructor called when initialize one vector with another. Pass by reference because do not want to copy the argument of the constructor that defines copying. Pass by const reference because don't want ot modify argument. 
+
+vector:: vector(const vector& a rg)
+// allocate e le me nts, the n initialize the m by copying
+:sz{a rg.sz}, elem{new double[a rg.sz]}
+{
+copy(a rg,a rg+sz,elem); // std::copy(); see §B.5.2
+}
+
+Given this constructor, consider example again:
+
+vector v2 = v;
+
+Definition will initialize v2 by a call of vector's copy constructor with v as its argument. Now two vectors are independent. 
+
+Could equally hae said
+
+vector v2(v);
+
+COPY ASSIGNMENTS
+
+Can also copy vectors by assignment. Default meaning of copy assignment is memberwise copy. 
+
+If copy assignment just changes variable reference to another object, then upon end of scope, destructors for same object will be called twice. 
+
+cla ss vector {
+int sz;
+double* elem;
+public:
+vector& opera tor=(const vector&) ;
+// . . .
+};
+// copy assignme nt
+vector& vector::opera tor=(const vector& a )
+// make this ve ctor a copy of a
+{
+double* p = new double[a .sz];
+// allocate ne w space
+copy(a .elem,a .elem+a .sz,elem);
+// copy e le me nts
+delete[] elem;
+// de allocate old space
+elem = p;
+// now we can re se t e le m
+sz = a .sz;
+return *this;
+// re turn a se lf-re fe re nce (se e §17.10)
+}
+
+A bit more complicated than construction because must deal with old elements.
+
+Basic issue to whether to copy a pointer (or reference) or copy information pointed to (referred to):
+-*Shallow Copy - copies only a poiner so that two pointers now refer to the same object. What pointers and references do. 
+-*Deep Copy* - copies what a pointer points to so that the two pointers now refer to distinct elements. What vectors, strings, etc do. Define copy constructor and copy assignment when want deep copy for objects of our classes. 
+Types that do shallow copy are said to have *pointer semantics* or *reference semantics*. Types that provide deep cpoy are said to have *value semantics*. 
+
+MOVING
+
+If vector has a lot of elements, can be expensive to copy. 
+
+The && notation is called an "rvalue reference." Note that move operations do not take const arguments. 
+
+That is: (vector&&) not (const vector&&)
+
+cla ss vector {
+int sz;
+double* elem;
+public:
+vector(vector&& a );
+// move constructor
+vector& opera tor=(vector&&);
+// move assignme nt
+// . . .
+};
+
+Part of purpose of a move operation is to modify source, to make it empty. Definitions tend to be simpler and more efficient than their copy equivalents. 
+
+vector::vector(vector&& a )
+:sz{a .sz}, elem{a .elem}
+{
+a .sz = 0;
+a .elem = nullptr;
+}
+// copy a’s e le m and sz
+// make a the e mpty ve ctorvector& vector::opera tor=(vector&& a ) // move a to this ve ctor
+{
+delete[] elem;
+// de allocate old space
+elem = a .elem;
+// copy a’s e le m and sz
+sz = a .sz;
+a .elem = nullptr;
+// make a the e mpty ve ctor
+a .sz = 0;
+return *this;
+// re turn a se lf-re fe re nce (se e §17.10)
+}
+
+Makes it easy and cheap to move around large amounts of information such as a vector with many elements. 
+
+Consider again:
+
+ve ctor fill(istre am& is)
+{
+vector res;
+for (double x; is>>x; ) res.push_ba ck(x);
+return res;
+}
+
+Move constructor is implicitly used to implement the return.
+
+ESSENTIAL OPERATIONS
+
+Which constructors a class should have, whether it should hve a destructor, and whether need to provide copy and move operations. 
+
+Seven to consider:
+-Constructors from one or more arguments
+-Default constructor
+-Copy constructor (copy object of same type)
+-Copy assignment (copy object of same type)
+-Move constructor (move object of same type)
+-Move assignment (move object of same type)
+-Destructor
+
+Usully use a constructor to establish an invarian.t Very varied.
+
+Use default constructors wen want to make objects of class without specifying an initializer. Only way to make vectors without specifying values of an object. 
+
+When does it make sense to havea default constructors? When we can establish the invariant for th class with a meaningful and obvious default value. 
+
+A class needs a destructor if it acquires resources. A resource is something it gets from somewhere that must be given back once finished with it (memory on free store). Files must be closed, locks, thread handles, and sockets (for communication with processes and remote computers). 
+
+Another sign that a class needs a destructor is simply that class needs a destructor is simply that it has members that are pointers or references. If a class has a pointer or a reference member, it often needs a destructor nd copy operations. 
+
+A class that needs a destructor almost always needs a copy constructor and a copy assignment. Reason is simply that if an object as hacquired a resource (and has a pointer member pointing to it), the default meaning of copy (shallow, memberwise copy) is almost certainly wrong. 
+
+Similarly, a class that needs a destructor almost always also needs a move constructor and a move assignment. Reason simply that if an object has acquired a resource (and has a pointer member pointing to it), the default meaning of copy (shallow member wise copy) is almost certainly wrong and usual remedy (copy operations that duplicate the complete object state) can be expensive. 
+
+Also a base class for which a derived class may have a destructor needs a virtual destructor. 
+
+EXPLICIT CONSTRUCTORS
+
+A constructor that takes a single argument defines a conversion from its agrument type to its class. Can be useful. 
+
+cla ss complex {
+public:
+complex(double);
+// de fine s double -to-comple x conve rsion
+complex(double,double);
+// . . .
+};
+complex z1 = 3.14;
+// OK: conve rt 3.14 to (3.14,0)
+complex z2 = complex{1.2, 3.4};
+
+However, implict conversions should be used sparingly nd with caution because they can have undesirable effects. 
+
+a ss vector {
+// . . .
+vector(int);// . . .
+};
+vector v = 10;
+v = 20; // odd: make s a ve ctor of 10 double s
+// e h? Assigns a ne w ve ctor of 20 double s to v
+void f(const vector&);
+f(10); // e h? Calls f with a ne w ve ctor of 10 double s
+
+Simple to suppress this use of a constructor as an implict conversion.
+
+A constructor-defined *explicit* provides only the usul construction semantics and not the implicit conversions. 
+
+cla ss vector {
+// . . .
+explicit vector(int);
+// . . .
+};
+vector v = 10;
+v = 20;
+vector v0(10); // e rror: no int-to-ve ctor conve rsion
+// e rror: no int-to-ve ctor conve rsion
+// OK
+void f(const vector&);
+f(10);
+f(vector(10)); // e rror: no int-to-ve ctor<double > conve rsion
+// OK
+
+cla ss vector {
+// . . .
+explicit vector(int);
+// . . .
+};
+vector v = 10;
+v = 20;
+vector v0(10); // e rror: no int-to-ve ctor conve rsion
+// e rror: no int-to-ve ctor conve rsion
+// OK
+void f(const vector&);
+f(10);
+f(vector(10)); // e rror: no int-to-ve ctor<double > conve rsion
+// OK
+
+CONSTRUCTORS AND DESTRUCTORS
+
+Not a single syntax that triggers a constructor. Simpler to think of constructors and destructors this way:
+-Whenever an object of type X is created, one of X's constructors is invoked. 
+-Whenver an object of type X is destroyed, X's destructor is invoked. 
+
+Destructor is called whenever an object of its class is destroyed; that happens when names go out of scope, the program terminates, or delete is used on a pointer to an object. A constructor (some appropriate constructor) is invoked whenver an object of its class is created; that happens when a variable is initialized, when an object is created using new (except for built-in types), and whenver an object is copied. 
+
+Simple way is ot test code:
+
+struct X {
+// simple te st class
+int va l;
+void out(const string& s, int nv)
+{ cerr << this << "–>" << s << ": " << va l << " (" << nv << ")\n"; }
+X(){ out("X()",0); va l=0; }
+// de fault constructor
+X(int v) { va l=v; out( "X(int)",v); }
+X(const X& x){ va l=x.va l; out("X(X&) ",x.va l); }
+// copy constructor
+X& opera tor=(const X& a )
+// copy assignme nt
+{ out("X::opera tor=()",a .va l); va l=a .va l; return *this; }
+~X() { out("~X()",0); }
+// de structor
+};
+
+X glob(2);
+X copy(X a ) { return a ; }
+X copy2(X a ) { X a a = a ; return a a ; }
+X& ref_to(X& a ) { return a ; }
+X* ma ke(int i) { X a (i); return new X(a ); }
+struct XX { X a ; X b; };
+int ma in()
+{
+X loc {4};
+// local variable
+X loc2 {loc};
+// copy construction
+loc = X{5};
+// copy assignme nt
+loc2 = copy(loc);
+// call by value and re turn
+loc2 = copy2(loc);
+X loc3 {6};
+X& r = ref_to(loc);
+// call by re fe re nce and re turn
+delete ma ke(7);
+delete ma ke(8);
+vector<X> v(4);
+// de fault value s
+XX loc4;
+X* p = new X{9};
+// an X on the fre e store
+delete p;
+X* pp = new X[5];
+// an array of Xs on the fre e store
+delete[] pp;
+}
+
+
+Smart compilers may eliminate some spurrious copies. 
+
+Leak detectors are professional tools to find such problems. 
+
+ACCESS TO VECTOR ELEMENTS
+
+Overlard operator[] and have it return a reference value so that it works on right and left sides.
+
+For const version, must provide a const member operator[] overload. 
+
+cla ss vector {
+// . . .
+double& opera tor[](int n);
+double opera tor[](int n) const;
+};
+// for non-const ve ctors
+// for const ve ctors
+We obviously couldn’t return a double& from the const version, so we returned a double value.
+We could equally well have returned a const double&, but since a double is a small object there
+would be no point in returning a reference (§8.5.6), so we decided to pass it back by value. We can
+now write
+
+void ff(const vector& cv, vector& v)
+{
+double d = cv[1];
+cv[1] = 2.0;
+double d = v[1];
+v[1] = 2.0;
+}
+
+ARRAYS
+
+Comon:
+-As global varaibles (thought globals most often a bad idea)
+-s local varibles (but arrays have limitations here)
+-As function arguments (but an array doesn't know its own size)
+-As class members (but member arrays can be hard to initialize)
+
+Array - a homogenous sequence of objects allocated in contiguous memory; All elements of array have same type nad there are no gaps between objects of the sequence. Numbered 0 to upward. 
+
+const int ma x = 100;
+int ga i[ma x];
+void f(int n)
+{
+cha r la c[20];
+int la i[60];
+double la d[n];
+// . . .
+}
+
+POINTERS TO ARRAYS
+
+double a d[10];
+double* p = &a d[5];
+// point to ad[5]
+
+*p =7;
+p[2] = 6;
+p[–3] = 9;
+
+p += 2;
+// move p 2 e le me nts to the right
+
+p –= 5;
+
+// move p 5 e le me nts to the le ft
+
+Pointer Arithmetic - 
+
+POINTERS AND ARRAYS
+
+Name of an array refers to all elements of the array:
+
+char ch[100];
+
+The size of ch: 
+
+sizeof(ch) -> is 100.
+
+However, array name is also pointer to first element. 
+
+char * p = ch;
+
+Using [] array notation in parameter is same as passing a pointer. 
+
+POINTER PROBLEMS
+
+Consider:
+-Access through the null pointer
+-Acces through an uninitialized pointer
+-Access of the end of an array
+-Access to a deallocated object
+-Access to an object that has gone out of scope
+
+Using references and using exceptions to signal errors are main tools to avoiding null pointers. 
+
+Do initialize pointers. 
+
+Be careful with first and last elements of loop and try not to pass arrays around as pointers to their first elements. Instead use vectors. If must use an array in more than one function, then be extra careful and pass its size along
+
+Don't access through a deleted pointer
+
+Best fix is to use new and delete in constructors and destructors or use a container such as Vector_ref to handle deletes
+
+Don;t return a pointer to a local variable. 

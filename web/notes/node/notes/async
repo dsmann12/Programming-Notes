@@ -1,0 +1,78 @@
+ASYNCHRONOUS
+
+setTimeout(function, timesInMs) -> call function after timeInMs
+
+Callback -> function called after I/O is returned in async function.
+
+Even setTimeout(function, 0) will call after synchronous code. 
+
+Call stack, event loop
+
+Call Stack called Node APIs which calls Callback Queue. This is the Event Loop. 
+
+Call Stack is part of V8. Keeps track of current execution inside app. Main function is first function run. Main is wrapper function wrapped around files when run in node. Each statement is added to call stack until it is returned. Synchronous code runs on call stack and returns before next statement. 
+
+setTimeout is a Node API. When call it, you register event callback pair in Node API. In Node API, it will call and run its down down. Function is registered into Node API, callback is moved into Callback Queue, which holds all  callback functions waiting to be fired. Needs to wait for call stack to be empty to run first function. Functions after it must wait for first function to run. 
+
+If call stack is empty, then callbacks in callback queue can run. Not empty until main returns. Or function?
+
+HTTP REQUEST
+
+request -> library to call HTTP reequest. 
+
+ENCODING AND DECODING STRINGS
+
+encodeURIComponent(string); // encodes string as URI. Spaces replaced with component character
+
+decodeURIComponent(encodedString); // decodes encoded URI as a string
+
+ERRORS
+
+Check for errors in callback
+
+if (error) handleError
+
+PROMISES
+
+Since ES6. Used to be in third party libraries. 
+
+Make it easier to do async functions. 
+
+var somePromise = new Promise((resolve, reject) => {
+	setTimeout(() => {
+		resolve('Hey, it worked!');
+	}, 2500);
+});
+
+resolve -> If things go well. State is fulfilled
+
+reject -> Something went wrong. State is rejected. 
+
+Both are functions. Can only send one argument to both functions. 
+
+then -> function called when promise is resolved or rejected
+
+somePromise.then((message) => {
+	console.log('Success: ', message);
+}, (errorMessage) => { 
+	console.log('Error: ', errorMessage);
+});
+
+Can only resolve or reject once. Can't do both. Can't do either twice. 
+
+Before promise is resolved or rejected, it is in a state of pending. Waiting for information or async computation to finish.
+
+Promise is settled after it is either resolved or rejected. 
+
+Can chain promises like you can chain callbacks.
+To do so return a new Promise in the then() function. And implement a new then() function for this promise. 
+
+.catch() -> to catch any errors in all .then() chain. CAn throw new Error in then() to go directly to catch.
+
+axios -> library for promise http requests. 
+
+axios.get(url) -> get request. Returns a promise.
+
+.then() -> handle promise
+
+

@@ -1,0 +1,148 @@
+BACKGROUND TASKS
+
+Make sure data can be updated in background. Sometimes apps need to run in background.
+
+If app has significant background components, needs to be concerned with how it uses resources. 
+
+Services, Broadcast Receivers, Jobs, and sending Notifications when app is running in background
+
+SERVICES
+
+Ex. May need to change database when user changes something in preference activity. Doesn't make sense to run this change in preference activity since it will be destroyed when user returns to main activity
+
+Doesn't make sense to do network transactions that talk to database in any activity because it doens't have directly do with UI of app.
+
+Services - Android Framework components meant for long running background tasks which don't need a visual component. So do not provide a UI. Activity can start a service even after activity is shut down. Great for loading and processing data in background. 
+
+SERVICES VS LOADERS
+
+When to use a service vs when to use a loader. 
+
+Loaders
+- if background task is loading info that will only be used in activity
+- Tied to the activity lifecycle
+- easy to make UI changes and communicate with activity
+
+Services
+- when task is decoupled from UI
+- exists even when there is no UI
+
+STARTING SERVICES
+
+Services work in background
+
+3 ways to start:
+1. Manually
+2. Schedule
+3. Bind
+
+Most straigtforward is to call startService() method from context, such as an activity. Service will execute but will not usually communicate back to component which started it
+
+JobService - if want to have a service execute at some point in the future or when some conditions are met. Define when job should run using a schedule like JobScheduler or FireBaseJobDispatcher. 
+
+A bound service offers a client server like interface. With service being a server, and various components binding to service being the clients. Components bind to service using bindService() method. Unlike started services, bound services can easily communicate back to components that are bound to them. Ex. media application. 
+
+Service can be both bound and started. 
+
+RUNNING SERVICES IN BACKGROUND
+
+All android core components start on the main thread. Activities, Content Providers, Broadcast Receivers, and Services. 
+
+To get around this, need to create background thread or async task. 
+
+Services also have lifecycle. DIfferent from activities.
+
+Created when context calls startService() passing in an intent
+= onCreate() - service method triggered. Responsible for any setup
+- onStartCommand() - called after onCreate. Inside where you should do what service is supposed to do
+Service running <- start async task here. in onStartCommand. Then inside asynctask can run code
+-stopSelf() - signal when service is done. Must call this method yourself if using just Service class. Called by developer or service itself
+-onDestroy() - called after stopSelf. 
+Service Shut Down
+
+INTENT SERVICE
+
+Subclass of service. Runs in background thread. 
+
+Starting an activity:
+Intent myIntent = new Intent(this, MyActivity.class);
+startActivity(myIntent);
+
+Starting an Intent Service
+Intent myIntent = new Intent(this, MyIntentService.class);
+startService(myIntent);
+
+Create a class that extends from IntentService
+Override onHandleIntent method to specify what service should do in background
+Then create an intent and pass in that service class
+To start it, just call startService() and pass intent
+
+public class MyIntentService extends IntentService {
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		// do background work here
+	}
+}
+
+Intent object passed into onHandleIntent is same passed to startService. Therefore can pass extra data to intent and handle it in onHandleIntent
+
+myIntent.setAction("some specific action");
+startService(myIntent);
+
+onHandleIntent:
+	String action = intent.getAction();
+
+All Intent service requests are handled on single background thread. And are issued in order. Each will take as long as necessary and will not block app's main thread. But only one call on IntentService's onHandleIntent method will be processed at a time. So it is great for tasks that need to occur in order. 
+
+ADDING INTENT SERVICE
+
+To help keep code modular and organized, can use helper class called ReminderTask to define all tasks to run in background. Create task to increment water count in this task. Activity will start intent service, which will then execute increment water count task, which will use preference utils to increment counter. 
+
+1. Create a new class that extends IntentService
+2. Override onHandleIntent
+3. Start service using startService()
+
+CREATING INTENT SERVICE
+
+Create new class
+
+public class ReminderTasks {
+	public static final String ACTION_INCREMENT_WATER_COUNT = "increment-water-count"; // first intent action that reminder task will handle
+
+	public static void executeTask(Context context, String action) {
+		// increments water count if action equals action increment water count
+		if (ACTION_INCREMENT_WATER_COUNT.equals(action)) {
+			incrementWaterCount(context);
+		}
+	}
+
+	private static void incrementWaterCount(Context context) {
+		PreferenceUtilities.incrementWaterCount(context);
+	}
+}
+
+Now in actual service
+
+public class WaterReminderIntentService extends IntentService {
+	public WaterReminderIntentService() { super("WaterREminderIntentService"); }
+
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		String action = intent.getAction();
+		ReminderTask.executeTask(this, action);
+	}
+}
+
+Services like any other Android component must be registered in AndroidManifest
+
+<service
+	android:name=".sync.WaterReminderIntentService"
+	android:exported="false" /> // controls whether other apps can use service
+
+Then in main activity, in incrementWater method
+
+Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class)
+incrementWaterCountIntent.setAction(ReminderTasks.ACTION_INCREMENT_WATER_COUNT);
+startService(incrementWaterCountIntent);
+
+

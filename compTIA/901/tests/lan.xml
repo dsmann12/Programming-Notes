@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<value0 size="dynamic">
+		<value0>
+			<polymorphic_id>2147483649</polymorphic_id>
+			<polymorphic_name>TextQuestion</polymorphic_name>
+			<ptr_wrapper>
+				<id>2147483649</id>
+				<data>
+					<Question>What is a NetBIOS/NetGUI?</Question>
+					<Answer>Computers only have MAC addresses so must have naming system to share folders and printers. Could give PCs names. MS used NetBIOS/NetGUI? to do this. As each pc booted, it would boradcast its name and mac address so other computers knew. a
+
+How interconnect millions of networks. 
+
+NetBIOS/NetGUI didn&apos;t cut it cause broadcast. Can also link switches. More broadcasts means networks would be busy reading broadcasts all the time. Work wiou
+ld never get done.
+
+Nededed something that would separate LANs from each other and create an ID for different LANs.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value0>
+		<value1>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483650</id>
+				<data>
+					<Question>What is TCP/IP?</Question>
+					<Answer>TCP/IP Trnasmission Control Protocol/Internet Protocol - not actually one protocol. Actually a bunch. Need OS software to name devices on networks.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value1>
+		<value2>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483651</id>
+				<data>
+					<Question>What is a router?</Question>
+					<Answer xml:space="preserve">Switches don&apos;t know how to read logical addresses (a name). 
+
+Router - box that does not care about MAC addresses. Only care about logical addresses. Plug routers into switches. Now router acts as intermediary between t
+wo LANs. 
+
+If PC B.1 wants to send data to computer in A.1. Uses logical addresses. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value2>
+		<value3>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483652</id>
+				<data>
+					<Question>What is a packet?</Question>
+					<Answer xml:space="preserve">Packet - data still in there. Uses logical adddresses instead of MAC addresses. Device encapsulates its data into Ethernet frame. Transmits to MAC Address of
+ router. When in Router, Router has table that defines where all networks are. So router, unpacks frame, throws Ethernet stuff away, and writes MAC addresses
+ for proper computer to frame and send sit to proper device. Packet never changes. Data inside and addressing never changes. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value3>
+		<value4>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483653</id>
+				<data>
+					<Question>What is a TCP/IP address?</Question>
+					<Answer>TCP/IP Address 192.165.1.1
+
+NEeded granularity because it predicted millions o fdevices. Idea was routers spread about country would be connected by high speed opticla lines. Routers in
+ turn connect multiple LANs. Backbone of Internet. Original concept was these were top routers of Internet. Each router assigned number. Could use any number
+ between 0 and 255 not including those numbers. 1-254. Other routers would want to connect to major router, not to backbone but to a backbone router. Idea wa
+s one would be 14.10, 14.11, 14.12 for major router 14. Etc. Then other routers will be 14.11.22, etc and next numbers would be for individual computers. 14.
+11.22.5 for PC 5. 
+
+Reason TCP/IP has 3 dots is because they originally thought you would never be more than 3 routers away from backbone of Internet. Already working on replace
+ments. But TCP/IP will always be 4 values from 1-254 with three dots in between.
+
+Every device on LAN has to have TCP/IP address.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value4>
+		<value5>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483654</id>
+				<data>
+					<Question>What are nodes?</Question>
+					<Answer>Nodes - individual devices on a network. 
+
+Nodes cabled to a switch. Other connection on switch goes to Router. One side of router is Ethernet and other is connected to cable modem. 
+
+Lots of devices today are switches and routers and even may have wireless access points. 
+
+Lots of traffic on network. Still need to acces Internet. 
+
+So needa  way to tell network that one conncetion is LAN connection and other an Ethernet connection looking for Internet.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value5>
+		<value6>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483655</id>
+				<data>
+					<Question>What is a command to see LAN information on Windows??</Question>
+					<Answer xml:space="preserve">ipconfig - command line command for Windows. Tells Ethernet card settigns.
+
+hows UP address. Notice IPv4 or IPv6. Also show subnet mask often 255.255.255.0 and a default gateway often 192.168.4.1.
+
+ipconfig /renew - causes IPIP address to reset. 
+
+ipconfig /release - causes machine to forget its IP address
+
+ipconfig - check if have problem connecting. Shows basic IP configuration. Can verify IP address, default gateway, subnet mask, etc. If worried about self. 
+
+Can&apos;t get internet? ping router (default gateway). If getting router, then must mean some other issue involved. 
+
+ipconfig /all - shows more IP congurations including MAC address and information
+
+ipconfig /flushdns - clears DNS
+
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value6>
+		<value7>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483656</id>
+				<data>
+					<Question>What is a Network ID?</Question>
+					<Answer xml:space="preserve">When setup Network, you can decide that some values on Network are the same. That all computers are 192.168.4.x. The 4th value is optional one. 
+
+*Routers also get IP addresses. Can be 192.168.4.1*
+
+Network ID - defines network. 192.168.4 is Network ID. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value7>
+		<value8>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483657</id>
+				<data>
+					<Question>What is a subnet mask?</Question>
+					<Answer>Subnet mask - When computer sees 255 it reads that these have to match and last digit (0) can be optional.
+
+192.168.4.10 wants to talk to 192.168.4.11. When it gets ready to send out packet, it will look at Subnet Mask and see that first 3 values match. That tells 
+device that it can send packet directly to other computer. 
+
+What if wants to send it to 27.13.14.6. 
+
+Computer taks a look at subnet mask and sees first three numbers don&apos;t match its own. When sees that it knows to send packet to Router or Default Gateway.
+
+Subnet Masks lets device know where network ID is and when to send things out to Internet.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value8>
+		<value9>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483658</id>
+				<data>
+					<Question>What is a default gateway?</Question>
+					<Answer>Default gateway - must have default gateway punched into system in order to connect to Internet. Default gateway is IP address of Router itself.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value9>
+		<value10>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483659</id>
+				<data>
+					<Question>How to set up a Network ID?</Question>
+					<Answer>Network Administrator basically decide swhat network ID is going to be. Job as tech is to go into Windows systems and est things up. 
+
+Control Panel - Network and Sharing Center. Change Adapter Settings. Click on regular Ethernet card, right click and select properties. Go down to Internet Protocol Version 4 and select properties.Two ways to set up IP address, Subnet mark, and default gateway. Statically (not done much) or dynamiccaly (DHCP). 
+
+Set A Static IP Address - provide IP addresses, subnet mask, and default gateway. 
+
+By convention, router is usually .1 of network ID. 
+
+Within Network ID, all computers have same Subnet Mask</Answer>
+				</data>
+			</ptr_wrapper>
+		</value10>
+		<value11>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483660</id>
+				<data>
+					<Question>What is DHCP?</Question>
+					<Answer>Part of reason can just buy router and plug things in, it all just works.
+
+Dynamic Host Configuration Protocol (DHCP) - Somewhere on network you have a DHCP server. DHCP server has to be configured, does not configure itself automatically. Set it up to say will give out 192.188.4.50 to 192.168.4.100. Computers boot and broadcast out that they need IP address. DHCP server will respond and give them IP address, Subnet Mask, Default Gateway, and other things.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value11>
+		<value12>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483661</id>
+				<data>
+					<Question>How to set up DHCP?</Question>
+					<Answer>How set up systems for DHCP. Pretty much every version of Windows now is configured for DHCP.
+
+Option &quot;obtain IP address automatically&quot; enables DHCP.
+
+When DHCP fails. 
+
+If DHCP server goes down, you may lose IP address</Answer>
+				</data>
+			</ptr_wrapper>
+		</value12>
+		<value13>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483662</id>
+				<data>
+					<Question>What is APIPA address?</Question>
+					<Answer>APIPA Address - Automatic Private Internet Protocol Addressing. 169.254.86.149.169.254 address with two random last numbers. If DHCP server goes down, don&apos;t automatically lose IP address but if restart computer or network cable unplugged, PC will try to access DHCP server again to get IP addresses. Windows designed to go to these APIPA addresses if cannot access DHCP. Mean on a DHCP client and not connected to DHCP server. 
+
+Must be plugged in for APIPA to work. If unplug network, it thinks its disconnected.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value13>
+		<value14>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483663</id>
+				<data>
+					<Question>What is a rogue DHCP server?</Question>
+					<Answer>Rogue DHCP Server - hands out unauthorized IP addresses.Will mess network up. If see another Network ID that is not yours.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value14>
+		<value15>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483664</id>
+				<data>
+					<Question>How to mess with APIPA settings?</Question>
+					<Answer>Where APIPA comes from
+
+Control Panel - Netowrk and Sharing center - Change Adapter Settings = Internet Protocol Version 4 - Alternate Configuration
+
+-Sets failover behaavior if no DHCP server available. Way to say I want PC to do this if DHCP server fails. Options are Use APIPA or Static IP address settin
+gs.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value15>
+		<value16>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483665</id>
+				<data>
+					<Question>What is the best configuration for security?</Question>
+					<Answer>Security: No DHCP and each computer uses statically assigned addressed.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value16>
+		<value17>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483666</id>
+				<data>
+					<Question xml:space="preserve">What is NAT? Gateway Router? WAN? </Question>
+					<Answer>Internet was starting to run out of IP addresses about 10 or 20 years ago. 
+
+Found way to have routers share common IP addres among many computers. 
+
+Network Address Translation (NAT) - most common way to do this.
+
+Gateway Router - named because usually only have two connections. An Internet connection and a switch that connects to other computers. WAN - IP address given by ISP. LAN address is punched by me when configuring router. 
+
+Packet comes from computer on LAN and sent to other address. FROM address is private and should not be sent out on Internet. NAT software in router looks inside packet, grabs unique information, adn writes this info into a NAT table. Then rewrites individual computer&apos;s address with its public IP address.
+
+When packet comes back it, NAT function uses reference table with information and rewrite&apos;s original device&apos;s private IP and sends packet to LAN network</Answer>
+				</data>
+			</ptr_wrapper>
+		</value17>
+		<value18>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483667</id>
+				<data>
+					<Question>What is a command to send and receive packets from another computer?</Question>
+					<Answer>ping - checks to see if a node is reachable. Can perform IP address to name translation. Sends packet to device and see if device responds back. Can see if device is connected, if on same network ID, if working together in tCP/IP level. 
+
+ping 192.158.4.
+
+Windows - gets 4 responses back. 
+
+-t cause continuous pinging. Works this way be default in other OSes. Hit CTRL-C to stop. 
+
+ping 127.0.0.1 pings local network. Normally pinging LAN. ping has problems connecting to devices far far away. 
+
+Generally don&apos;t like trying to ping things far away. Lots of devices have firewalls that prevent pings from being responded to. Common for web servers and routers. 
+
+ping 8.8.8.8 - DNS
+
+ping hub.totalsem.com - can get IP address this way</Answer>
+				</data>
+			</ptr_wrapper>
+		</value18>
+		<value19>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483668</id>
+				<data>
+					<Question>What is the localhost?</Question>
+					<Answer>Loopback. Your own computer. 127.0.0.1
+
+ping 127.0.0.1 
+ping localhost</Answer>
+				</data>
+			</ptr_wrapper>
+		</value19>
+		<value20>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483669</id>
+				<data>
+					<Question>How do Automatic Private IP Addresses look? Private IP addresses?</Question>
+					<Answer xml:space="preserve">Automatic Private IP Addresses - always 169.254.x.x
+
+10.x.x.x - private 
+
+172.16.x.x - 172.31.x.x - private
+
+192.168.x.y - You pick third value. Most famous type of private IP addresses. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value20>
+		<value21>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483670</id>
+				<data>
+					<Question>What is the IP part of TCP/IP?</Question>
+					<Answer>IP just has to do with numbering system, how to give devices IP addresses</Answer>
+				</data>
+			</ptr_wrapper>
+		</value21>
+		<value22>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483671</id>
+				<data>
+					<Question>What is TCP part of TCP/IP?</Question>
+					<Answer>TCP runs over IP. Tells how to communiate. IP just gives addresses.
+
+TCP (Transmission Control Protocol) - most common protocol that&apos;s used with IP.
+
+TCP has number of features that make it popular. All browsers use TCP.
+1. Connection oriented - when two devices decide to talk over TCP protocol, TCP negotiates a connection between client and server. Have to go through process basically saying hello are you ready. Once connction is made, they do what they do, then say bye.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value22>
+		<value23>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483672</id>
+				<data>
+					<Question>What is UDP?</Question>
+					<Answer>UDP Uesr Datagram Protocol - Datagram means unacknowledged. Not connection oriented. Connectionles. Just starts sending data assuming device is ready. UDP has a lot less overhead and is much faster than TCP. DHCP uses UDP because its faster and can count on DHCP devices to be out there</Answer>
+				</data>
+			</ptr_wrapper>
+		</value23>
+		<value24>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483673</id>
+				<data>
+					<Question>What is ICMP</Question>
+					<Answer xml:space="preserve">ICMP Internet Control Message Protocol - used for tiny utilities. Run automatically by network cards. Seen on ping. Connectionless but only one packet. With TCP and UDP can send as many packets as want. 1 packet only for ICMP. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value24>
+		<value25>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483674</id>
+				<data>
+					<Question>What are port numbers?</Question>
+					<Answer>Web server and email server in same machine. Web packets must go to web servers and email packets must go to email server.
+
+Port Number - value from 0-65535 part of every TCP or UDP packet. Each has two port numbers. First is used by receiving system to determine program that needs this data. Second is like a return address. Receiving system uses this when it responds.
+
+All serving software programs designed to listen on one or more port numbers.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value25>
+		<value26>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483675</id>
+				<data>
+					<Question>How do servers work?</Question>
+					<Answer>Computer A wants webserver from computer B. Sends data with port 80 and ethereal port number. Computer B sees port 80 to determine which program gets data. Saves etherial port number so computer A knows which browser window or tab gets the data.
+
+Etheral Port Number - always quite large and generated arbitrarily by client device itself.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value26>
+		<value27>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483676</id>
+				<data>
+					<Question>Study the port chart?</Question>
+					<Answer>21 - FTP
+22 - SSH
+23 - TELNET
+25 - SMTP
+53 - DNS
+80 - HTTP
+110 - POP3
+143 - IMAP
+443 = HTTPS
+3389 - RDP
+137-139 - NETBIOS/NETBT
+445 - SMB/CIFS
+427 - SLP
+548 - AFP</Answer>
+				</data>
+			</ptr_wrapper>
+		</value27>
+		<value28>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483677</id>
+				<data>
+					<Question>What is a command line tool to show connections to and from computer?</Question>
+					<Answer>netstat - command line tool show connections to and from computer.
+netstate -n - gives IP addresses. TIME_WAIT - after web page is handed to client. 
+
+netstat -a - shows all network statistics. Wants to see every connection whether it is active or just listening or whatever</Answer>
+				</data>
+			</ptr_wrapper>
+		</value28>
+		<value29>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483678</id>
+				<data>
+					<Question>What are gui tools for monitoring networks?</Question>
+					<Answer xml:space="preserve">Resource Monitor - new tool in Windows. 
+
+TCPVIEW - GUI program. Free. Shows network connection information in graphical format in real time. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value29>
+		<value30>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483679</id>
+				<data>
+					<Question>What is DNS?</Question>
+					<Answer>Domain Name System (DNS) - just one thing. Zillions of computers over world whose only job is to resolve IP addresses based on Fully Qualified Domain Name (FQDN) ftp.microsoft.com, http://www.google.com. Give IP addresses to your computer. 
+
+Computer sends out query to your DNS server. Then DNS server puts you on hold (web broswer shows waiting ....com). Waiting for DNS resolution process to take
+ place. Your computer has built into it the DNS settings for local DNS serer. Local DNS server has *root hints*. 13 different IP addresses that basically nev
+er change. Are root DNS servers that are set up all over world. Will randomly or round-robin, pick one of these and go to root server (&quot;.&quot;). Root server job 
+is to get connection to closest .com server. .com server is for anything associated with .com/.edu/.org etc. Your DNS server asks .com server what IP for aut
+horitative server for website is. It responds back with IP address of website. Then goes to authoritative server. Authoritative server will give it specific 
+IP for website. Now browser can talk to coputer. 
+
+Once PC has IP address, it can save IP address of website into DNS cache in case needed again. Also basically any DNS server caches that information as well.
+
+DNS servers go up and down all the time. Can set up popular DNS server names. 
+
+google DNS server - 8.8.8.8. Very powerful, works for about anybody. Often faster than ISP server. 
+
+If have own in house DNS server, if try replace it with Google one, your DNS server might help you resolve for local computer in network which is BAD.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value30>
+		<value31>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483680</id>
+				<data>
+					<Question>What is the top level domain name?</Question>
+					<Answer xml:space="preserve">Number of fully qualified top level domain names.
+.com 
+.org
+.gov
+.edu
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value31>
+		<value32>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483681</id>
+				<data>
+					<Question>What is hostname?</Question>
+					<Answer xml:space="preserve">hostname -
+www. - name of one individual computer within totalsem domain. Used by convention. Could easily be timmy.totalsem.com but not convention and people won&apos;t know. 
+ftp - for ftp server. 
+mail - for mail server
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value32>
+		<value33>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483682</id>
+				<data>
+					<Question>What is a secondary domain?</Question>
+					<Answer>Secondary domain - millions. Can have many dots but not typical.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value33>
+		<value34>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483683</id>
+				<data>
+					<Question>What is a DNS server?</Question>
+					<Answer>DNS servers - create and respond to DNS queries
+
+Authoritative server - for certain domain. dell.com. If something queries this DNS server, it has info we need to get information.
+
+Probably controlledby ISP. Built into network. ipconfig /all will show DNS settings.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value34>
+		<value35>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483684</id>
+				<data>
+					<Question>How to configure DNS?</Question>
+					<Answer xml:space="preserve">Sometimes DNS can give trouble. How to configure DNS and deal with it when there is trouble.
+
+Go to Control Panel - Network and Sharing Settings - Ethernet - Properties - Internet Protocol Version 4 - 
+
+Obtain DNS Server Automatically -&gt; DHCP will send out DNS information too if properly configured
+
+Use Following DNS Server Address - set manual address. Goes down enough that you set a preferred and an alternate. 
+
+Popular DNS
+
+8.8.8.8
+8.8.4.4
+4.4.2.2
+
+Can setup custom DNS server at home or office. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value35>
+		<value36>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483685</id>
+				<data>
+					<Question>What are symptoms of DNS problems?</Question>
+					<Answer>DNS problems? - no internet.
+
+Use ping to test. Like ping google.com. If DNS server not working, it won&apos;t be able to find server without IP Address.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value36>
+		<value37>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483686</id>
+				<data>
+					<Question>What was command to talk do DNS server?</Question>
+					<Answer>NSLOOKUP - rarely used anymore. CMD utility. Designed to talk to DNS server. Can query it. Ask it all computers it is connected to. Hackers could use that information so now DNS servers may not respond to nslookup. Tests DNS server funtionality. Use for name to address translation. 
+
+nslookup 8.8.8.8 - basically said to change server to that computer. If used with non-DNS server it will give error.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value37>
+		<value38>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483687</id>
+				<data>
+					<Question>How do computers know the names of other computers on network?</Question>
+					<Answer>Workgroup vs Domain
+
+When initially install windows, give it a domain and give it a type of network. Either a workgroup or a domain.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value38>
+		<value39>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483688</id>
+				<data>
+					<Question>What is a workgroup network?</Question>
+					<Answer xml:space="preserve">Workgroup - simplest form of networking within windows. Computers connected all called peers. When boot, they broadcast their names and other computers take note of their names and other addresses. 
+
+System -&gt; Advanced System Settings -&gt; Computer Name
+
+Workgroup typically defaults to WORKGROUP. When in workgroup, computers start broadcasting out and computers listen. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value39>
+		<value40>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483689</id>
+				<data>
+					<Question>What is a domain network?</Question>
+					<Answer>Domain 
+
+Installing another computer. Computer is not like regular computer, instead it is running Windows Server. To talk to it, use Remote Desktop. 
+
+Remote Desktop Protocol - Have remote conncetion to server. Not to be confused with regular versions of windows. Home editions cannot use Domain networks. 
+
+have built in DHCP and DNS servers. 
+
+Server Manager - software to manage Windows Server. 
+
+Active Directory Domain Services - server. Big kahuna of domain. Can see name of domain. Not have .com or .org. For little in house network. 
+
+Next is to get individual systems to join domain. 
+
+System -&gt; Advanced system Settings -&gt; Computer Name
+
+Click change. 
+
+If join domain, must have an account on the domain.
+
+Domain accounts - Network administrator has already created a domain name for you that allows you to log entire domain. 
+
+Can log into any computer within domain, and desktop and personal stuff will log in with you. 
+
+Say you have workgroup and then add domain controller. Moment added and have devices join domain, these computers will no longer broadcast. They will ask dom
+ain controller to log them into domain. 
+
+If domain controller also a DNS server (and always are), then why put DNS information on individual systems. If not member of domain, then will go to other D
+NS. 
+
+Apple and Linux - SAMBA - give them features that allow them to act as windows systems. So linux or apple devices can join domain.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value40>
+		<value41>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483690</id>
+				<data>
+					<Question>How do routers work? How do they handle broadcasts?</Question>
+					<Answer>ROUTERS
+
+Routers - interconnect broadcast domains. 
+
+Example: three network cards connected to three different broadcast domains. Each card has IP addres. 
+
+Router on far left connected to internet so called Wide Area Network (WAN). Other two are connected to plain LANs. 
+
+WAN                                     LAN                                     LAN
+12.14.75.3                      173.15.44.1                     192.168.15.1
+
+Most important to remember that routers don&apos;t care where packets come from, only where to they go to. Packets come in from different connections, must be sent to right place.
+
+Do this using Routing Table:
+
+IP (IP Address)                         SUBNET MASK (SM)                        INTERFACE - instructoins router uses to send packets out
+0.0.0.0                                         0.0.0.0                                         12.14.75.3
+192.168.15.x                            255.255.255.0                           192.168.15.1
+173.16.x.x                                      255.255.255.0                           173.16.44.1
+
+First is default route (0.0.0.0), send through 12.4.75.3 unless addressed to one of other two IP addresses (192.168.15.0, 173.16.0.0).
+
+Packet:
+
+From: 173.16.22.6
+To: 8.8.8.8
+
+From: 12.14.75.16
+to: 173.16.49.201
+
+From: 192.168.15.4
+To: 255.255.255.255
+
+What router does when broadcasts come in? Devices on router still hear broadcast, but Routers eliminate them.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value41>
+		<value42>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483691</id>
+				<data>
+					<Question>How to set up the router?</Question>
+					<Answer>Setting Up The Router
+
+First want to connect to SOHO router. But usually best to connect Ethernet port to router via a LAN port. 
+
+Pretty much all will get you on Internet without doing any configuration at all. Not a good thing. Provide no security. 
+
+Must start talking to router and get into. 
+
+Most common way to talk to router is via its own little built in web server. 
+
+Router is automatically a DHCP server. 
+
+All routers come with default IP address from factory. 
+
+192.168.1.1 or 192.168.0.1
+
+ipconfig -&gt; then look at default gateway. It is the router. Type ip address into web browser.
+
+Every router has default username and password. 
+
+First, change from default password and username. Websites dedicated to telling people what these are. 
+
+Also, can change network ID. By default, it passed 192.168.1.x address. Nothing inherently bad about that except that hackers usually know this. So can change default ID to something non-standard. 
+
+Considered good ettiquette that router has .1 address. 
+Subnet Mask - 255.255.255.0 - means can support up to 244 computers. 
+
+When update router, PC won&apos;t know what IP address of router is. 
+
+Need to start documenting. Must know that. 
+
+Now, must make sure everyone can connect to router.
+
+Must st up DHCP and DNS.
+
+In LAN set up DHCP server. Set starting pool address and ending addres. Can limit amount of devices by messing with these numbers.
+
+Really nothing to set up for DNS. Router will connect to ISP and get DNS server setting and will automatically pass that server out as part of DHCP. 
+
+If need to connect to particular DNS server, could go into settings and type specific one in.</Answer>
+				</data>
+			</ptr_wrapper>
+		</value42>
+		<value43>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483692</id>
+				<data>
+					<Question>What is port forwarding and how to set it up?</Question>
+					<Answer xml:space="preserve">Port Forwarding
+
+Very important feature. 
+
+Internet connected camera. Want to be able to look at cmera from anywhere. Must use port forwarding.
+
+Camera is on network and trivial to access camera over this network. FireWall will prevent outside device from accessing to network addresses. FireWall blocks incoming connections on SOHO routers. Need to open it a little bit to allow this. 
+
+Must be careful. 
+
+Remember Router has WAN address. 
+
+Port Forwarding - opens one or more ports to internet requests. 
+
+Under WAN. If someone wants to come in at port 80, let them, but point them straight to camera. 
+
+Service Name - Custome name for device
+Port Range - Port being requested
+Local IP - Device to send requests to
+Local Port - port on device to take requests from
+Protocol - TCP. 
+
+Don&apos;t use port 80. Everybody is poking on port 80 on system looking for stuff. 
+
+Port Range - 8181. Non common port. To look at camera, would have to type WAN IP Address and then click :8181. Keeps most people out. 
+
+DMZ - demilitarized zone. Says anything that comes into internet, send it to one particular system. Let&apos;s anyone in. Not great. </Answer>
+				</data>
+			</ptr_wrapper>
+		</value43>
+		<value44>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483693</id>
+				<data>
+					<Question>What is port triggering and how to set it up?</Question>
+					<Answer xml:space="preserve">FTP. Have laptop, want to access FTP server on Internet. FTP strange. Has certain modes. Router, if sees device going out on port, it will let data back in on same port. FTP on other hand listens on port 21 but takes data in on port 20. Router will block this instantly. 
+
+Must tell Router that if someone starts talking on FTP, allow incoming questions on 20 until done communicating.
+
+Port Triggering - similar to port forwarding but not permanent and must be started by device on LAN. 
+
+Description
+Trigger Port 
+Protocol
+Incoming Port
+Protocol
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value44>
+		<value45>
+			<polymorphic_id>1</polymorphic_id>
+			<ptr_wrapper>
+				<id>2147483694</id>
+				<data>
+					<Question>What is QoS and how to set it up?</Question>
+					<Answer xml:space="preserve">Quality of Service (QoS)
+
+Routers can be made to work hard if there are many demands on LAN. Want to tell router that some type of traffic is more important than other types of trtraffic. That&apos;s what QoS is. 
+
+Been around a long time, however, some questions may be dated. 
+
+Want one type of connection (bittorrent) to throttle down if it uses too much data. 
+
+Smart QoS - built in that will figure it out on its own (game servers, VOIP, etc get priority). 
+
+Must type in upload and download bandwidth to set up Smart QoS.    
+
+Old Fashioned versoin.
+
+Service Name - may have service built in. 
+Source IP or MAC - optional to throttle specific source. 
+Destination Port - destination ports for service. 
+Protocol
+Transferred - how big of chunks have been transferred before QoS should turn on.
+Priority - 
+(END)
+</Answer>
+				</data>
+			</ptr_wrapper>
+		</value45>
+	</value0>
+</cereal>
+

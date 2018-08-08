@@ -1,0 +1,239 @@
+NETWORKING
+
+Servers - systems with resources
+Clients - those who want access to resources
+
+Popular Server Software:
+Apache HTTPS
+Internet Information Services (IIS)
+
+NIC - Network Interface Controller. Boths clients and servers need them. Define or label machine on the network. Also breaks files into smaller data units to send across the network and resaambles the units it receives into whole files. 
+
+Software that know how to talk to each other. 
+
+Small Example. Two computers connected to a hub through wires. 
+
+Web browser - a web client. 
+Server - doesn't have to show webpages. Just needs to host them and share them with clients.
+
+MOVING DATA OVER NETWORK
+
+Frame - data moved from one device to a another in discrete chunks called frames. Chunks stored roughly about 1500 bytes of data each. Data must be broken up into individual frames to send. Nothing but a series of 1s and 0s. First flashes tell device that frame is coming. Then data. Ending tells device that's all there is. Really binary data. On fiber optic, it's 1s and 0s. In copper, its voltages going up and down. If wireless, its frequencies being changed. 
+
+Ethernet - hardware protocol that dominates networking. Most employ one of three speeds: 10BaseT, 100BaseT, or 1000BaseT (10 Mbps, 100 Mbps, 1000 Mbps or 1 Gbps). All use a star bus topology and connect via a type of cable called unshieled twisted pair (UTP). 
+
+Star Bus Topology - layout of Ethernet devices. How all individual hosts connect to a central box which takes care of all tedious details required by network to get frames sent to correct system. 
+
+HUB - repeater. Device sends frame into hub. Hub reads frame and makes copies for every connection in hub. Sends copies down wires to every other computer i network. 
+
+How to send to specific computer?
+
+MAC Address - Media Access Control - burned in to network card. Comes from manufacturer. Always 12 hex values separated into pairs. First half of address, so first 6 values, assigned to particular manufacturer. Every device has unique MAC address. 48 bits long, so 6 bytes. 
+
+At beginning of frame put destination MAC address (where want data to go to) and source MAC address (where its coming from). MAC Addresses are for NICs. 
+
+Also need type of data check to verify data was received correctly. Cyclic Redundancy Check - CRC. Math algorithms to check data. 
+
+HUB still makes copy for all computers on network. Every computer gets copy of that frame. When computer receives incoming frame, it looks at two-part MAC address. If its for device, it sends it to OS. Otherwise, it erases it. 
+
+Can set network card to a mode to listen to all connections even if not for specific network card.
+
+Broadcast Address - FF FF FF FF FF FF - A little different than regular address. When comes into a computer, device sends it up to OS automatically. Never deleted. 
+
+Broadcast Domain - Anytime have group of computers that are connected in such a way they can hear eachother's broadcast. 
+
+HUB - 10Mbps, 100Mbps, 1Gbps, 10Gbps. Problem is every two computers talking to each other on same HUB will eat the bandwidth. If have 2 pairs of computers talking to each other in 100Mbps speed, bandwidth drops to 50Mbps. 
+
+Switch - replaced HUBs. Switches are very smart. Look like HUBs. Keeps track of MAC addresses of computers hooked to it based on ports. Takes frame, checks MAC Address, sends it to port with device with that MAC address. Other connections do not see frame at all. Other devices are able to work at full bandwidth of switch. 
+
+Can still broadcast. Handle broadcasts like HUB. Switch throws notations out window and acts like a HUB.
+
+Segment - the connection between computer and switch. Can only be 100m long. Also cannot be split
+
+STRUCTURED CABLING
+
+Set of standards. TIA/EIA set standards from type of cabling to use to standard on running cables in walls and position of wall outlets. 
+
+Idea is to create a safe, reliable cabling infrastructure for all of the devices that may need interconnection. Applies to copmuter networks but also to telephone, video, anything that might need low power, distributed cabling. 
+
+Successful structure cabling requires three essential ingredients: a telecommunications room, horizontal cabling, and a work area. 
+
+Telecommunications room: - all cabling runs from individual workstations to a central location. All cables concentrate in this one area. 
+
+Equipment racks - devices that fit in racks use standard height measurement called U. A U is 1.75 inches. So device that fits in 1.75 inch space is 1U. Device that takes 3.5 inches is 2U, etc. 
+
+Horizontal cabling - all cables run horizontally for most part from telecom rom to workstations. Single piece of installed horizontal cabling is called a run. 
+
+Work area - opposite end of horizontal cabling from telecom room. Often simly an office or cublicle. 
+
+Physically connecting computers together to make a network is straight forward process. However some issues that motivate people to use structured cabling. 
+
+Plug computer into switch. Problem is cable. Where to put cable? Usually put into walls in permanant way or in drop ceilings. Other problems, will have to take cables out everntually. Also unplugging and plugging cables during work. Eventually, wear out cables at ends. 
+
+Wall outlet - Uses a special jack designed to plug into network cable. 
+
+Patch Panel - other end of the *horizontal run*. Usually near switch. Once in place, horizontal run is never touched for years. As result, can count on it to work and be safe. Simply a box wit ha row of female connectors (ports) in front and permanent connections in the back to which you connect horizontal cables. 
+
+Most common uses a special type of connector called a 110 block or a 110 punchdown block. Connect to a 110block using a punchdown tool.  
+
+Available in wide variety of configurations that include different types of ports nad number of ports. Can get UTP, STP, or fiber ports. Come with CAT ratings.  
+
+Patch cables - runs from patch panel into switch. Then another patch cable runs from wall outlet into computer. Short (two to five foot) UTP cables. Stranded rather than solid.  
+
+Basic form of structured cabling. 
+
+Benefits:
+
+Modem - cable modem takes internet from cable. Usually very close to switch. Can plug ethernet from modem into switch. Therefore any computer plugged into switch has internet. 
+
+Usually found in equipment closet or room. 
+
+PATCH CABLES
+
+Idea of cutting and crimping own cable. 
+
+Ethernet Cable - Unshielded Twisted Pair (UTP) - Always going to have 4 pairs in order to work on Network. 2 pairs used for telephone systems and things. 40 year old standard.
+
+Cat 1 - standard telephone line
+
+CAT 5 - CAT levels are important because different qualities of UTP cable can handle larger amounts of data. Need right type of UTP for speed of network you have. All other pieces get CAT rating as well, such as patch panels. 
+
+CAT 3 - designed to run 10Mbps Ethernet networks. 
+
+CAT 5 - designed to run 100Mbps Ethernet networks. Was great, but problem was that patch panels and little crimps didn't.
+
+CAT 5e - improved 100Mbps. Can actually run 1000Mbps and 1Gbps ethernet for shorter distances on same cable. 
+
+CAT 6 - Supports 1000Mbps up to 100m. Movitation after 10Gbps networks coming. Designed to run 10Gpbs Ethernet over short distances. Supports 10Gbps up to 55 m. 
+
+CAT 6A - designed to run 100m of 10Gbps segments. 
+
+Solid Core - uses a single solid wire. Better conductor but stiff and will break if handled too roughly.TIA/EIA specified to use solid core in horizontal run.
+
+Standard core - each wire is actually a bundle of tiny wire strands. Not as conductive, but more flexible. 
+
+RJ-45 - the connector for cables. Have CAT levels too. Registered Jack. 4 pairs.
+
+RJ-11 - connects telephone to telephone jack in wall. Supports up to two pairs of wires. Most phone lines use one with other reserved for another phone line.  
+
+100m the standard size because offices design telecom closets to be 100m from every device. 
+
+When comes to pulling cable, pick expensive cable you can afford because it will future proof. 
+
+Shielded Twisted Pair -STP. Consists of twisted pairs of wires surrounded by shielding to protect them from EMI. Rare because little need for shielding unless in area with excessive electronic noise.
+
+TIA/EIA 568 Standards - Telecommunications Industry Association/Electronics Industries Alliance.
+
+TIA/EIA 568 A
+
+TIA/EIA 568 B - 
+
+Difference between A and B. If punching into jack or patch panel, there is color coding on it that makes things simple. 
+
+When making own patch cables, gets more copmlicated. 
+
+Stripping off insulation from cable, can see all 4 pairs of cablingWhen comes to pulling cable, pick expensive cable you can afford because it will future proof. 
+
+TIA/EIA 568 Standards
+
+TIA/EIA 568 A
+
+TIA/EIA 568 B - 
+
+Difference between A and B. If punching into jack or patch panel, there is color coding on it that makes things simple. 
+
+When making own patch cables, gets more copmlicated. 
+
+Stripping off insulation from cable, can see all 4 pairs of cabling.
+
+Blues and Browns never move. Brown usually oriented to one side (facing away, the right side. Looking at it, the left). The blue always stays in center. The split oranges or split greens. Oranges split between blue. Green comes before orange so A (alphabetical). Always something white, solid, something white, solid, etc. Kevlar in wire to give tension strength. 
+
+Make it flat shape, then cut. 
+
+Crimp - the plastic connection at end of wire. Make sure crimp is on bottom. Make sure its all in right order, and make sure all wires have gone all the way up into the top.
+
+Crimper - Use crimper. And should have made first real connection. 
+
+For B, orange stays in front and split the greens. 
+
+110 Punchdown Tool - used to punch down all 8 wires individually. A says start with green, then orange, then brown, then blue. But doesn't matter cause internal people will make sure wires are correct.
+
+CAT6 and CAT6A need more robust tools.
+
+Plenum vs PVC 
+
+If fire, what will happen to outer cord.
+
+PVC - no fire rating at all. Lots of noxious smoke. Don't put in walls.
+
+Riser - meant to run cables up floors in building. 
+
+Plenum - standard best type of fire protection. Standard for every horizontal run. Mostly required by law to use plenum. 
+
+Crossover Cable - can hook two computers directly using this special UTP cable. RJ-45 connector with T568A on one end and T568B on other. Reverse the signal between sending and receiving wires and thus does job of hub or switch.
+
+FIBERT OPTIC AND COAXIAL CABLING
+
+Not as commong as UTP but very important. 
+
+Fiber Optic - Uses light instead of electricity. Can be very long. Can be 40KM. Depending on standard. Impervious to Electromagnetic interference. Laser light version (laser diodes genreate laser light) and regular light that use light-emitting diodes (LEDs generate visible and infrared light). Different cable for each. 
+
+Single mode - designed specifically for transmitting lasers
+
+Multi-mode - transmits regular light. More common, cheaper, and slower. 
+
+Not just plugging one cable into network card or into switch. Always come in pairs. One connector for sending and one for receiving.
+
+Duplex cable - two cables fused together. 
+
+Hundreds of fiber optics connectors. A+ covers three.
+
+ST - round connector. Stick in and twist it. One of oldest
+
+SC - Stick it in and click. Squareish connector. 
+
+Both around for decades. Because always running duplex, the connectors were very large.
+
+LC - Local connector - Alot smaller and takes less space
+
+Coaxial - Around for very long time. Called coax because more than one connection that shared an access. So conductor, then insulator that separates it from another conductor. At least 2 conductors. Can be more. Consists of center cable (core) surrounded by insulation. This in turn i scovered with a shield of braided cable. Center core carried signal and shield effectively eliminated outside interference. 
+
+RG value (radio grade) - different RG talk about different types of coax. 
+
+RG6 - used to connect cable to cable modem
+
+RG59 - used to connect old TV boxes. Thinner and doesn't carry data quite as far. 
+
+Both impedence set to 75 ohms. 
+
+Britich Naveal Connector/Bayonette, Niell-Concelman (BNC) connector - round, meta. Used on video a lot and old types of network connections. 
+
+F Connector - Round. typical cable conncetion. 
+
+Ethernet Over Power - Uses existing electrical network in building for connectivity. Uses a *bridge*, device that connects dissimilar network technologies that transmit the same signal. Bridge connects UTP to power lines in this case. Challenges: 1. Several incompatible standards compete meaning often need to buy from same manufacturer. 2. Fastest version run at 100 Mbps at best. 
+
+WIDE AREA NETWORK
+
+WAN - widespread group of copmuters connected using long distance technologies. Connect LANs int oa a WAN with a router. Internet is a WAN
+
+Can connect multiple smaller networks into a bigger network turing a group of LANs into one big WAN. 
+
+Computer needs powerful, flexible addressing to address a frame so that it goes to a copmuter within its own LAn or to a computer on another LAN on the same WAN. This process is routing, requires routig and routing-capable protocol. 
+
+Routers destroy any incoming broadcast frames by design. 
+
+NETWORKING TOOLS
+
+Mostly testing if cables are good or wired properly. 
+
+Cable Tester - Flashes green and does so in order. Green shows pairs on in proper positions. Also checks order. Also all lights come on. If not working ,wouldn't blink or order wrong or not green
+
+Two big issuesL
+1. Wire map - is rigth wire plugged into #2 and #3, etc.
+2. Wire continuity - is connected? Is it actually broke in some place?
+
+Microscanner - Tests everything all at once. 12345678 - says all wires in right place and none are missing. Wrong order if order wrong or number doesn't show up if connection bad. Can also show length. 
+
+Tone Generator - doesn't fix anything but helps find things. When network coming from many devices to one closet in bundle of wires. Sometimes you wnt one wire and which wire connects to it. 
+
+Tone Probe - listens for tones generated by tone generator. Makes noise when near correct wire. Can use multiple testers to find multiple cables at once.  

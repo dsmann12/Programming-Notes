@@ -1,0 +1,86 @@
+EXPRESS
+
+Express - framework for JS. 
+
+Libraries - code someone else wrote that we can include in apps. 
+
+Framework - like libraries but use differently. Inversion of Control. When you call a library, you are in control but in a framework, the framework 
+controls you. If want to use library, can use one method, a bunch of methods, or none. In framework, some decisions are made for you. Gives basic 
+scaffolding. Take common things, basic work, and prepackages it. 
+
+Framworks for video game development, web development, mobile apps. 
+
+Express - web development framework for JS. Also there is flask and django for Python and Rails for Ruby. Most popular Node framework. Big community. 
+
+Heavyweigth and lightweight frameworks. Some do more for you than others. Lightweight expect developers to fill in blanks. 
+
+Express is ligthweight. 
+
+Routes - code responsible for listening for and receiving requests and responding appropriately. Runs other code depending on request.
+
+var express = require('express');
+var app = express();
+
+app.get(url/path, function(request, response)); -> run function when a get request is received
+
+app.listen(port) -> listen to a port for requests.
+
+app.listen(process.env.PORT, process.env.IP); -> listen to particular port that cloud9 wants and from particular IP cloud9 wants. Different on desktop. 
+
+env -> environment variables. PORT is environment variable. 
+
+app.listen(process.env.PORT, process.env.IP, function() {
+	console.log("Server has started!");
+});
+
+app.get("/", function(req, res) {
+	res.send("Hello");
+});
+
+npm install express --save
+
+Package.json File 
+
+Every npm package has a file called package.json. 
+
+JSON - javascript object notation. Just a way of formatting text in a file to represent structure. 
+
+package.json - Just has information about package. contains name, description, author, github URL, license, and dependencies. 
+
+--save -> takes package name and version and automatically saves it into package.json file if it exists. Saves it to dependencies for app. 
+
+npm init -> creates a new package.json file. Will walk through creating package.json file. 
+
+ROUTES
+
+Can use * for default catch all route. 
+
+app.get("*", function (req, res) {
+	res.send("You are a star!");
+});
+
+Must be at end of the code. Order of routes is important. 
+
+If catch all if first, then nothing else will match. The first route that matches a given request is the only route that will be run. 
+
+ROUTE PARAMETERS
+
+Also called path variables. Can be used to look for patterns. 
+
+app.get("/r/:subredditName", function(req, res) {
+	res.send("Welcome to a subreddit!");
+});
+
+app.get("/r/:subreddit/comments/:id/:title", function(req, res) {
+	res.send("Welcome to the comments page!");
+});
+
+Can acccess data in code too. Such as getting value of subreddit or id or title. 
+
+app.get("/r/:subreddit", function(req, res) {
+	var subreddit = req.params.subreddit;
+	res.send("Welcome to the " + subreddit + " subreddit!");
+});
+
+console.log(req); //prints out long JSON like file full of name-value pairs. Look for params and it will have the values for parameters.\
+console.log(req.params); //prints out "{ subreddit: 'soccer' }" depending on what sub you type in the browser (request). 

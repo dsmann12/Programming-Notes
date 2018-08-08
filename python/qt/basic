@@ -1,0 +1,119 @@
+import sys
+from PyQt4 import QtGui
+
+app = QtGui.QApplication(sys.argv)
+
+w = QtGui.QWidget()
+w.resize(250, 150)
+w.move(300. 300)
+w.setWindowTitle('My First GUI App!')
+w.show()
+
+status = app.exec_()
+sys.exit(status)
+
+
+QtGui.QApplication - high level class. Collection for entire GUI app. Must create an instance of this to run PyQt app. Represents GUI app life cycle.
+
+GUI app does not terminate until user decides. 
+
+Event-driven program - Events tell program what to do. Not procedural like command line program.
+
+QtGui.QWidget - top level class for GUI elements in library. Buttons, scroll bar, text box, label, etc. Actually higher-level classes like QObject but don't really want to work with those. Represents all these elements as well as the container for the elements called a Window. QWidget object creates a window and some elements in window.
+
+status = app.exec_() -> all happening is calling applicatoin.exec_() function which starts an endless loop. Program is in endless loop. When done, it returns a code to status which can be passed to sys.exit(status) command. 
+
+QWidget creates window. Creates window for specific OS. Whole bunch of funtionality in this object. Gets OS style and resizing, etc. 
+
+QApplication watches all top level objects created and make sure program does not terminate until object is destroyed by user. If have two windows, program does not end until both are closed. 
+
+w.move(300, 300) - first number is top to bottom. Last number is left to right. Top left corner of screen is 0. 
+W.resize(150, 200) - resizes window
+
+Check docs for all methods. 
+
+WIDGETS
+
+Individual components of some kind of form or UI. 
+
+QLabel - label. Piece of text that is non-interactive.
+QPushButton - a button. 
+
+All elements must belong to some parent. Typically the basic QWidget element. 
+
+lbl = QtGui.QLabel('My First UI Element!', self) -> string is what label text should be. self means its parent should be the window
+
+self.setGeometry(300, 300, 250, 150) -> x axis, y axis, length, height. First two numbers are positions on screen. Second two are size of rectangular window. 
+
+Can follow the QT documentation.
+
+POSITIONING
+
+Elements can draw on top of one another. 
+
+Getting componenets to be laid out appropriately on form is most difficult aspect. 
+
+Simplest way to position elements inside their container is to use *absolute positioning*. Simplest, but most manual form. Every element has its position defined in absolute terms based on a 0,0 origin in upper left corner of container. 
+
+lbl.move(15, 20); first number is y axis, second number is x axis. 
+
+LAYOUTS
+
+PyQt offers number of predefined layouts. 
+
+Layouts - organizing widgets into coherent arrangements. 
+
+QVBoxLayout - lays out elements vertically
+
+QHBoxLayout - layous out elements horizontally
+
+QGridLayout - kinda a combinations. Can think of it as cells on grid/spreadsheet. 
+
+layout = QtGui.QVBoxLayout()
+layout.addWidget(btn1)
+
+Can have sublayouts. 
+
+layout1 = QtGui.QVBoxLayout()
+layout1.addWidget(lbl1)
+
+layout2 = QtGui.QVBoxLayout()
+layout2.addWidget(btn1)
+
+mainLayout = QTGui.QHBoxLayout()
+mainLayout.addLayout(layout1)
+mainLayout.addLayout(layout2)
+
+self.setLayout(mainLayout)
+
+mainLayout = QtGui.QGridLayout
+mainLayout.addWidget(btn1, 0, 1)
+
+QForm -> Really simple to layout forms.
+
+first = QtGui.QLineEdit()
+
+mainLayout = QtGui.QFormLayout()
+mainLayout(addRow('First', first)
+
+Docs - Widgets and Layouts page. See Layouts. 
+
+HANDLING EVENTS
+
+Event driven apps - do nothing waiting for event to trigger next action.
+
+Event may come from user or system or other application. Could get event from code itself too. 
+
+<signal>.connect
+
+signals - are events themselves. Click, mousemove, mouesrelease, etc. Attached to different objects. event emit.
+
+connect() - connects function, or slot, to event. event handler. 
+
+lbl
+
+Can check docs to see which signals are tied to which objects. 
+
+May have public connects and public slots. 
+
+

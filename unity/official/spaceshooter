@@ -1,0 +1,401 @@
+SPACE SHOOTER
+
+CAMERA AND LIGHTING
+
+Change transform to move camera
+
+Orthographic - no perspective. Background looks same. Change size to see how much is seen
+
+Perspective - can change Fov to change how much camera can see and render
+
+Best to move camera and not player
+
+
+
+
+MOVING PLAYER
+
+Can use physics to move player
+
+Therefore use code in FixedUpdate - executed once per physics step
+
+Rigidbody is used to work with built in physics engine. Has properties like useGravity, mass, and drag that we can poll, affect, and manipulate. So can change velocity of object.
+
+Rigidbody rb = GetComponent<Rigidbody>();
+rb.velocity - uses vector3 value. Gives directions traveling and how fast as a vector and its magnitude. 
+
+Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+rb.velocity = movement;
+
+Ship will move very slowly. This is because GetAxis only returns value between 0 and 1. 
+
+Give a public float variable called speed
+Multiply movement by speed
+
+rb.velocity = movement * speed;
+
+Need to constrain ship within game area
+
+Can constrain ship by constraining the object's position
+
+Mathf.clamp will clamp value between a min and a max
+
+Make public xMin, xMax, zMin, xMax
+
+Can move into their own class
+
+public class Boundary {
+	public float xMin, xMax, zMin, zMax;
+}
+
+In PlayerController
+
+[System.Serializable]
+public Boundary boundary;
+
+Unity would not be able to see it because it is not serialized. Serialization is complicated.
+
+Need to use [System.Serializable] 
+
+rb.position = new Vector3
+(
+	Mathf.Clamp(rb.posiion.x, boundary.xMin, boundary.xMax),
+	0.0f,
+	Mathf.Clamp(rb.position.z, boundary.zMin, boundary.zMax)
+);
+
+Add bank or tilt to player ship when move from side to side
+
+public float tilt;
+
+rb.rotation = Quaternion.Euler(0.0f, 0.0f. rb.velocity.x * -tilt);
+
+CREATING SHOTS
+
+Create new empty game object named Bolt to be parent object for shot
+
+Going to separate game logic from visual effect of shot. Will allow us to easily make new weapons with different visual effects by reusing the parent game object with a logic and replacing visual effect layer. 
+
+Reset game object's transform to make sure it as origin. 
+
+Create quad to hold visual fx image. Add as child of bolt. Change rotation so camera can see it. 
+
+Make shot look like a laser bolt by defining artwork for laser bolt
+
+Can drag texture onto quad or create new material ourselves
+
+When create a new asset, Unity will create asset in folder focused or in same folder as asset currently inspecting
+
+How to add texture to material?
+
+Two ways:
+1. Albedo field. Select box will come up with assets. Select appropriate texture
+2. Also can drag and drop and asset into this field
+
+Can also populate slots in materials array by hand (for quad). Can simply drag and drop material into quad.
+
+If have background, diffuse may not be best type of shader. Will want bright parts to add ontop of scene and black parts to vanish. Choose Particles -> Additive. With this, black has value of 0 and adds nothing, and white has value of 255. Other colors will be aded on top of background
+
+Can also use Mobile -> Particles -> Additive. In general, these are more efficient with games resources but may sacrifice either quality or control. 
+
+Will be moving shots with physics. Will be moving a collider more important. Both need a Rigidbody.
+
+Add a rigid body. Deselect use gravity.
+
+Remember to remove mesh collider for quad. Then add collider to parent bolt of type capsule
+
+Mess with Radius and Height to fit object
+
+Then make a trigger
+
+Want it to move automatically when fired. Want it to have its own velocity. 
+
+Make public float for speed.
+
+use start() - called on first frame when object is instantiated
+
+void Start() {
+	Rigidbody rb = GetComponent<Rigidbody>();
+	rb.velocity = transform.forward * speed;
+}
+
+Make it a prefab by dragging it into prefab folder. 
+
+Give it set speed. Should be faster than player. 
+
+Can then delete bolt object in scene because one should only be instantiated when player fires weapon.
+
+SHOOTING A SHOT
+
+Edit PlayerController script from player
+
+Can use bolt prefab assets now when a button is clicked. 
+
+Getting input from button doesn't require physics and don't want to wait for a fixedUpdate. So use Update()
+
+Use Instantiate. Needs object to instantiate and position and rotation to set on object
+
+Instantiate (object, position, rotation)
+
+Create a new empty game object, named Shot Spawn. Can use this empty game object's tranform and spawn location. Should move with player's ship
+
+As it is a child of player ship, the shot spawn's position will be relative to player ship. Can drag it infront of player object to change start position
+
+In PlayerController, need references to shot and shot spawn
+
+public GameObject shot;
+public GameObject shotSpawn; or instead public Transform showSpawn; // since only use transform
+
+Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+
+Limit shooting to button press and limit fire rate.
+
+Input.GetButton
+
+Need to instantiate as a GameObject. Instatiate just instantitates an Object. Tell code to instantiate as GameObject using "as GameObject"
+
+public float fireRate = 0.25f;
+private float nextFire = 0.0f;
+
+void Update() {
+	if (Input.GetButton("Fire1") && Time.time > nextFire)
+	{
+		nextFire = Time.time + fireRate;
+		Instantiate(shot, shotSpawn.position, shotSpawn.rotation) as GameObject;
+	}
+}
+
+Can drag bolt prefab onto Shot. 
+Can also drag shotSpawn game object onto ShotSpawn reference
+
+BOUNDARY
+
+Game object that fly out of camera view will still exist. Need to be destroyed.
+
+Can create a box around game view to destroy objects that pass from there. 
+
+Mess with scale and and position to make cube fit screen.
+
+# of units from top of screen o bottom is always 2x camera's orthographic size
+
+void OnTriggerExit(Collider other) {
+	Destroy(other.gameObject);
+}
+
+Can remove mesh renderer and such
+
+HAZARDS
+
+Can use prefab to throw objects at player.
+
+Will have parent game object for logic and artwork will be a child.
+
+Create new empty game object. Reset transform to 0.0. Then move it along z axis above player
+
+Can experiement with local scale. 
+
+Add a rigidbody to parent game object. Add a physics capsule collider. 
+
+Can set scale and height. 
+
+Can change shape in scene view using Edit Collider button. And drag handles to conform to shape.
+
+To cause tumble to asteroid
+
+Add script (RandomRotator)
+
+Also can use Random class. Use insideUnitSphere to get random vector3 value that can be applied to rigidbody's angular velocity. Each of three x, y, z values will be randomized independently.
+
+public float tumble;
+
+void Start() {
+	rb.angularVelocity = Random.insideUnitSphere * tumble;
+}
+
+Asteroid will eventually slow to a stop. Because Rigidbody has features to simulate resistance. Drag and Angular Drag do this. Drop to 0. 
+
+Now need to destroy asteroid.
+
+OnTriggerEnter() - called when collider enters another collider
+
+Destroy(other.gameObject)
+Destroy(gameObject) // destroy game object associated with component
+
+Destory does not immediately destory objects. marks objects to be destroyed. All marked objects are destoryed at end of the frame. So the order of destroy calls does not matter.
+
+This will destroy boundary and asteroid however.
+
+Need to detect boundary. So use a tag. Add tag. 
+
+if (other.tag == "Boundary") return;
+
+EXPLOSIONS
+
+In destroy script,
+
+Add reference to explosion visual effect.
+
+public GameObject explosion;
+
+In collider code:
+
+Instantiate(explosion, transform.position, transform.rotation);
+
+Can also create specific explosion for player
+
+public GameObject playerExplosion;
+
+if (other.tag == "Player") {
+	Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
+}
+
+Can also add mover script to asteroid with a speed of -5 so it moves toward player. 
+
+Move asteroid to prefab folder so it becomes a prefab. 
+
+GAME CONTROLLER
+
+We need to bring player, hazards, and projectile object together.
+
+Game Controller will run game, spawn hazards, keep track of display score, and when player is destroyed, end game. 
+
+Create a new game object. Reset transform. 
+
+Select premade tag: GameController
+
+Add a new script: GameController
+
+Primary task is to spawn hazards
+
+Need to spawn in waves.
+
+Use public field spawnValues. Out of game area in z axis, on same plane as ship and game in y axis, and in x axis between the sides of the screen 
+
+Random.Range(min, max) - random value between these two values
+Quaternion.identity - corresponds to no rotation of object
+
+public GameObject hazard;
+public Vector3 spawnValues;
+
+//spawnValues x = 6, y = 0, z is outside game frame
+
+
+void SpawnWaves() {
+	Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+	Quarternion spawnRotation = Quaternion.Identity;
+	Instantiate(hazard, spawnPosition, spawnRotation);
+}
+
+SPAWNING WAVES
+
+Can put block of code in loop.
+
+Can create public int called hazardCount;
+
+Can use a float to tell how long to wait to spawn a hazard
+
+public float spawnWait
+
+WaitForSeconds(float) - wait for specified seconds
+
+This syntax does not work in C#. To have function that can pause without pausing entire game, we need to make function a co-routine. Co-routines have specific considerations. Cannot return void. Must return IEnumerator.
+
+yield return new WaitForSeconds(spawnWait);
+
+Also to call must:
+
+StartCoroutine (SpawnWaves());
+
+Also create new public float variable called startWait
+
+public float startWait();
+
+void Start() {
+	StartCoroutine(SpawnWaves());
+}
+
+IEnumerator SpawnWaves() {
+	yield return new WaitForSeconds(startWait);
+	for(int i = 0; i < hazardCount; i++) {
+		Vector3 spawnPosition = new Vector3
+		Quaternion spawnRotation = Quaternion.Identity
+		Instantiate(hazard, spawnPosition, spawnRotation);
+		WaitForSeconds(spawnWait);
+	}
+}
+
+Can wrap instantiate loop in another loop to create continuous wave.
+
+Wrap in while loop that goes forever. 
+
+while(true) {
+
+}
+
+However, explosions will persist in game. 
+
+Currently, things are only destroyed by contact or by leaving boundary trigger box. 
+
+Create script, DestroyByTime
+
+public float lifetime;
+
+void Start() {
+	Destroy(gameObject, lifetime);
+}
+
+Destroys object after lifetime time. 
+
+MUSIC
+
+AudioClips, AudioSources, AudioListener
+
+AudioClips hold audio sound files
+AudioSources play audio clips in the scene
+
+3D sound means Unity compares location of audio source playing audio clip and compare it with scenes active audio listener. And use the relative positions to affect clip's volume and panning. 
+
+Need to associate audio clips with explosion prefabs and player ship. AudioClips need to play when they are instantiated into scene. Player needs to play audio clip when fire weapons. 
+
+Associate audio clip with game object by using Audio Source component. Plays audio clip. 
+
+Easier way to do this. 
+
+If we drag audio clip onto game object, unity will create new audio source component on it and source audio clip. 
+
+Play on Awake means will play when object is instantiated
+
+Can also play programmatically
+
+GetComponent<AudioSource>().Play();
+
+Background music
+
+Can put in GameController
+
+Can add audio source. Can select loop.
+
+Now can balance audio. 
+
+Can lower volume of sound effects
+
+COUNTING POINTS AND DISPLAYING SCORE
+
+To create GUIText:
+
+Create a new emprt game object
+Add a GUIText component
+-from add component button
+-from component menu
+
+Component -> Rendering -> GUIText
+
+Update GUIText's transform to (0.5, 0.5, 0.0 to place it in middle of screen.
+
+Update GUIText.text with "Score Text"
+
+This might be deprecated.
+
+Use UI -> Text?
+
+

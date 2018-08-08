@@ -1,0 +1,83 @@
+EXPRESS
+
+Web server.
+
+npm install express --save
+
+const express = require('express');
+var app = express();
+
+app.get('/', (req, res) => {
+	
+}); 
+
+request -> stores inforation about requets coming in. Headers, path, etc. URL, method, status cpde
+response -> methods available to you. To customize data sent back. Error codes, etc. Content-Type. 
+
+res.send('Hello express') -> send back a string 
+
+app.listen(3000); -> bind server to port 3000
+
+res.send(obj) -> send json
+res.json
+
+View Engines -> used for templating
+
+.ejs - one learned in other course
+handlebars -> module around handlebars to use as engine
+hbs -> module for handlebars
+
+app.set(key, value) -> express configuration
+app.set('view engine', 'hbs')
+
+Views -> directory for template
+
+res.render('about.hbs'); // render page with view engine
+
+{{}} => handlebars
+
+res.render('about.hbs', {
+	pageTitle: 'About page',
+	currentYear: new Date.().getFullYear()
+});
+
+{{ pageTitle }}
+
+Partials -> subtemplates. html subtemplates that can be included in templates
+
+hbs.registerPartials(__dirname + 'views/partials')
+
+footer.hbs -> <p>footer</p>
+
+{{> footer }}
+
+Handlebars helpers a way to register functions for use in handlebars templates. Must register
+
+hbs.registerHelper('getCurrentYear', () => {
+	return new Date().getFullYear();
+});
+
+{{getCurrentYear}}
+
+Handlebars looks for helper first. 
+
+hbs.registerHelper('screamIt', (text) => {
+	return text.toUpperCase();
+});
+
+{{screamIt welcomeMessage someOtherData}}
+
+Middleware -> takes function. Runs before routes are handled
+
+next is next function to run. Tells when to finish with middleware
+
+app.use((req, res, next) => {
+	var now = new Date().toString();
+
+	console.log(`${now}: ${req.method} ${req.url}`;
+	next();
+});
+
+Useful for authentication. 
+
+

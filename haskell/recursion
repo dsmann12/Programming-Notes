@@ -1,0 +1,110 @@
+RECURSION
+
+Recursion important to Haskell. Allows developer to work out consise and elegant solutions to problems by thinking recursively. 
+
+Recursion a way ot defining functions in which function is applied inside its own definition. 
+
+Edge condition - an element or two in recursion definition defined non-recursively. Important o getting function to terminate. 
+
+Recursion important to Haskell because computations done by declaring what something is not how you get it. 
+
+Ex: maximum done recursively
+
+    maximum' :: (Ord a) => [a] -> a  
+    maximum' [] = error "maximum of empty list"  
+    maximum' [x] = x  
+    maximum' (x:xs)   
+        | x > maxTail = x  
+        | otherwise = maxTail  
+        where maxTail = maximum' xs 
+
+Now the third pattern is where the action happens. We use pattern matching to split a list into a head and a tail. This is a very common idiom when doing recursion with lists, so get used to it. We use a where binding to define maxTail as the maximum of the rest of the list. Then we check if the head is greater than the maximum of the rest of the list. If it is, we return the head. Otherwise, we return the maximum of the rest of the list.
+
+An even clearer way to write this function is to use max. If you remember, max is a function that takes two numbers and returns the bigger of them. Here's how we could rewrite maximum' by using max:
+
+    maximum' :: (Ord a) => [a] -> a  
+    maximum' [] = error "maximum of empty list"  
+    maximum' [x] = x  
+    maximum' (x:xs) = max x (maximum' xs)  
+
+Ex: replicate - takes an Int and some element and returns a list that has several repetitions of same element. 
+
+replicate 3 5
+[5, 5, 5]
+
+    replicate' :: (Num i, Ord i) => i -> a -> [a]  
+    replicate' n x  
+        | n <= 0    = []  
+        | otherwise = x:replicate' (n-1) x  
+
+Note: Num is not a subclass of Ord. That means that what constitutes for a number doesn't really have to adhere to an ordering. So that's why we have to specify both the Num and Ord class constraints when doing addition or subtraction and also comparison.
+
+Ex: take
+
+    take' :: (Num i, Ord i) => i -> [a] -> [a]  
+    take' n _  
+        | n <= 0   = []  
+    take' _ []     = []  
+    take' n (x:xs) = x : take' (n-1) xs  
+
+The first pattern specifies that if we try to take a 0 or negative number of elements, we get an empty list. Notice that we're using _ to match the list because we don't really care what it is in this case. Also notice that we use a guard, but without an otherwise part. That means that if n turns out to be more than 0, the matching will fall through to the next pattern. The second pattern indicates that if we try to take anything from an empty list, we get an empty list. The third pattern breaks the list into a head and a tail. And then we state that taking n elements from a list equals a list that has x as the head and then a list that takes n-1 elements from the tail as a tail
+
+Ex: Reverse
+
+reverse' :: [a] -> [a]  
+reverse' [] = []  
+reverse' (x:xs) = reverse' xs ++ [x]  
+
+Ex: Repeat
+
+Because Haskell supports infinite lists, our recursion doesn't really have to have an edge condition. But if it doesn't have it, it will either keep churning at something infinitely or produce an infinite data structure, like an infinite list. The good thing about infinite lists though is that we can cut them where we want. repeat takes an element and returns an infinite list that just has that element. A recursive implementation of that is really easy, watch.
+
+    repeat' :: a -> [a]  
+    repeat' x = x:repeat' x  
+
+Calling repeat 3 will give us a list that starts with 3 and then has an infinite amount of 3's as a tail. So calling repeat 3 would evaluate like 3:repeat 3, which is 3:(3:repeat 3), which is 3:(3:(3:repeat 3)), etc. repeat 3 will never finish evaluating, whereas take 5 (repeat 3) will give us a list of five 3's. So essentially it's like doing replicate 5 3.
+
+Ex; zip
+
+zip takes two lists and zips them together. zip [1,2,3] [2,3] returns [(1,2),(2,3)], because it truncates the longer list to match the length of the shorter one. How about if we zip something with an empty list? Well, we get an empty list back then. So there's our edge condition. However, zip takes two lists as parameters, so there are actually two edge conditions.
+
+    zip' :: [a] -> [b] -> [(a,b)]  
+    zip' _ [] = []  
+    zip' [] _ = []  
+    zip' (x:xs) (y:ys) = (x,y):zip' xs ys  
+
+Ex: elem
+
+elem. It takes an element and a list and sees if that element is in the list. The edge condition, as is most of the times with lists, is the empty list. We know that an empty list contains no elements, so it certainly doesn't have the droids we're looking for.
+
+    elem' :: (Eq a) => a -> [a] -> Bool  
+    elem' a [] = False  
+    elem' a (x:xs)  
+        | a == x    = True  
+        | otherwise = a `elem'` xs   P
+
+QUICK SORT
+
+quick sort - sorting algorithm. Take upward of 10 lines to implement quicksort in imperative languages, but much shorter in Haskell. Sort of poster child for Haskell.
+
+So, the type signature is going to be quicksort :: (Ord a) => [a] -> [a]. No surprises there. The edge condition? Empty list, as is expected. A sorted empty list is an empty list. Now here comes the main algorithm: a sorted list is a list that has all the values smaller than (or equal to) the head of the list in front (and those values are sorted), then comes the head of the list in the middle and then come all the values that are bigger than the head (they're also sorted). Notice that we said sorted two times in this definition, so we'll probably have to make the recursive call twice! Also notice that we defined it using the verb is to define the algorithm instead of saying do this, do that, then do that .... That's the beauty of functional programming! How are we going to filter the list so that we get only the elements smaller than the head of our list and only elements that are bigger? List comprehensions. So, let's dive in and define this function.
+
+    quicksort :: (Ord a) => [a] -> [a]  
+    quicksort [] = []  
+    quicksort (x:xs) =   
+        let smallerSorted = quicksort [a | a <- xs, a <= x]  
+            biggerSorted = quicksort [a | a <- xs, a > x]  
+        in  smallerSorted ++ [x] ++ biggerSorted  
+
+    ghci> quicksort [10,2,5,3,1,6,7,4,2,3,4,8,9]  
+    [1,2,2,3,3,4,4,5,6,7,8,9,10]  
+    ghci> quicksort "the quick brown fox jumps over the lazy dog"  
+		"        abcdeeefghhijklmnoooopqrrsttuuvwxyz"  
+
+THINKING RECURSIVELY
+
+Usually you define an edge case and then you define a function that does something between some element and the function applied to the rest. It doesn't matter if it's a list, a tree or any other data structure.
+
+Usually the edge case is some scenario where a recursive application doesn't make sense. When dealing with lists, the edge case is most often the empty list. If you're dealing with trees, the edge case is usually a node that doesn't have any children.
+
+So when trying to think of a recursive way to solve a problem, try to think of when a recursive solution doesn't apply and see if you can use that as an edge case, think about identities and think about whether you'll break apart the parameters of the function (for instance, lists are usually broken into a head and a tail via pattern matching) and on which part you'll use the recursive call.

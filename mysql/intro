@@ -1,0 +1,281 @@
+Create MySql database:
+
+mysql-ctl install
+
+Star MySql databse:
+
+mysql-ctl start
+
+Open CLI with access to MySql database:
+
+mysql-ctl cli
+
+Show databases:
+
+show databases;
+
+To exit cli:
+
+mysql cli -> exit
+
+Get hostname
+
+select @@hostname;
+
+MYSQL - most popular open source database
+
+mysql.com/customers/ -> examples
+
+Databases Server - service running on a machine (server or desktop) that houses many databases.
+
+Database - contains all persistent information for applications. Stored in tables, similar to spreadsheets. Have columns and rows or data. 
+
+Schema - in MySql, this is synonymous with Database and can be used interchangeably, but really shouldn't because SQL Server and Oracle treat them differently. 
+
+SQL Server/Oracle Schema is a namespace inside the database with different permissions associated with it. 
+
+In MySql, it is essentially a view of database, structural view of database. 
+
+Clear screen: \! clear;
+
+Show schemas: show schemas;
+
+Create test database within database server:
+
+create database project1;
+create schema project1; //same thing
+
+Delete database:
+
+drop database project1;
+
+Select database for queries:
+
+use project1;
+
+TABLES
+
+Rows and Columns. Like a spreadsheet. 
+Header - stores names of columns
+Rows - contain actual data
+
+structure matters!
+
+Show tables:
+
+show tables;
+
+select database(); - shows which database currently in use
+
+Create table:
+
+CREATE TABLE people ( PersonID int
+	, first_name varchar(100) //string of up to 100 chars
+	, last_name varchar(100) //string of up to 100 chars
+	);
+
+CREATE TABLE people2 ( PersonID int not null auto_increment //cannot be null and will automatically increment
+	,first_name varchar(100)
+	, last_name varchar(100)
+	, primary key (PersonID));
+
+primary key - unique value that each row in table will have. Used in all databases and tables. Identifies unique items. 
+
+Delete table:
+
+DROP TABLE people;
+
+Show Columns:
+
+show columns in people2;
+
+Shows schema for columns. 
+
+Add Column:
+
+alter table people2 add column DOB date NULL; //date is value type. NULL is default value
+
+Drop Column:
+
+alter table people 2 drop column DOB;
+
+ASSIGNMENT:
+
+Create table called actors - ActorrID, first_name, last_name, needs to have primary key defined
+Create table called movies - MovieID, title, release_year, rating, needs to have primary key defined
+
+Create Table in specific database:
+
+CREATE TABLE project1.actors ( ActorID INT NOT NULL AUTO_INCREMENT
+	,FIRST_NAME VARCHAR(100) NULL
+	,LAST_NAME VARCHAR(100) NULL
+	,PRIMARY KEY (ActorID));
+
+CREATE TABLE project1.movies ( MovieID INT NOT NULL AUTO_INCREMENT
+	,TITLE VARCHAR(100) NULL
+	,RELEASE_YEAR INT NULL
+	,RATING VARCHAR(5)
+	,PRIMARY KEY (MovieID));
+
+Insert data into table:
+
+INSERT INTO actors ( FIRST_NAME, LAST_NAME ) VALUES ('Ben', 'Stiller');
+
+SQL QUERIES
+
+SELECT *  //- most likely refer to header names
+FROM tablename 
+WHERE condition;
+
+select *
+from tablename
+where conditoin;
+
+//select-from-where
+
+SELECT * FROM tablename WHERE condition;
+
+SELECT column1,
+		column2,
+		column3
+FROM tablename
+WHERE condition;
+
+Show data in table:
+
+SELECT * FROM aors;
+
+Multiple Insert:
+
+INSERT INTO project1.actors ( FIRST_NAME, LAST_NAME ) VALUES
+	('Owen', 'Wilson')
+	,('Christine', 'Taylor')
+	,('Will', 'Farrell')
+...
+
+INSERT INTO movies ( Title , ReleaseYear, Rating )
+VALUES ('Zoolander',2001,'PG-13')
+      ,('Zoolander2',2016,'PG-13')
+      ,('Night at the Museum: Secret of the Tomb',2014,'PG')
+      ,('Night at the Museum: Battle of the Smithsonian',2009,'PG')
+      ,('Night at the Museum',2005,'PG')
+      ,('National Treasure',2004,'PG')
+      ,('Tropic Thunder',2008,'R');  
+
+SELECT
+
+select - lists elements. For retrieving data.
+
+select * from movies; -> lists all (*) from movies (database)
+
+SELECT MovieID, TITLE, RELEASE_YEAR, RATING from movies; -> select specific columns
+
+SELECT TITLE FROM movies;
+
+CONCAT AND SUBSTRING
+
+concatenation -> put two strings together
+
+SELECT CONCAT(LAST_NAME, ', ', FIRST_NAME) FROM actors;
+
+SELECT CONCAT(LAST_NAME, ', ', FIRST_NAME) AS ACTOR_NAME FROM actors; -> give output column a name
+
+SUBSTRING - get part of string
+
+SELECT LAST_NAME,SUBSTRING(LAST_NAME, 1, 3) FROM actors; -> first number is index of first. Last is index of last. 
+
+SELECT FIRST_NAME, LAST_NAME, SUBSTRING(FIRST_NAME, 1, 1), CONCAT(SUBSTRING(FIRST_NAME, 1, 1), LAST_NAME) AS USER_NAME FROM actors;
+
+SELECT CONCAT(LAST_NAME, ', ', FIRST_NAME) AS "Actor's Names"
+-> ,LAST_NAME AS LNAME
+-> ,FIRST_NAME AS "First Name"
+-> ,CONCAT(SUBSTRING(FIRST_NAME, 1, 1), LAST_NAME) AS USER_NAME
+-> ,'Any Text' AS anything
+-> ,1+2 AS math FROM actors;
+
+Creates column names while retrieving data and manipulating data. Can create custom values for each based on computation or literal value. 
+
+SQL SCRIPTS
+
+Can create a *.sql file with the sql commands. 
+
+source test1.sql
+
+MYSQL, SQL SERVER, ORACLE
+
+SQL - Structure Query Language. Is a standard. Different implementation of the standard (MySql, Oracle, SQL Server). 
+
+Once proficient in one, will be very easy to pick up others. 
+
+There are differences though. 
+
+Concatenation:
+
+MySql -> CONCAT()
+Oracle -> ||
+SQL Server-> +
+
+Concepts and functions are same but features and syntax differ. 
+
+LIMIT, ORDER BY, DISTINCT
+
+Only want 10 actors from database. 
+
+SELECT * FROM actors LIMIT 10; -> first 10 entries
+
+What if want to order by column. 
+
+SELECT * FROM ACTORS ORDER BY 3; -> order output by column 3. 
+
+SELECT * FROM ACTORS ORDER BY LAST_NAME ASC; -> sort by LAST_NAME in ascending order
+
+SELECT * FROM ACTORS ORDER BY LAST_NAME DESC;
+
+SELCT * FROM ACTORS ORDER BY LAST_NAME ASC, FIRST_NAME DESC; -> order by last name. IF same value then order by first name in descending. 
+
+SELECT * FROM actors ORDER BY LAST_NAME ASC, FIRST_NAME ASC, LIMIT 10;
+
+DISTINCT
+
+SELECT RATING FROM movies;
+
+SELECT DISTINCT RATING FROM movies; -> sort through duplicates. Show unique values in that column. 
+
+SELECT DISTINCT MovieId, RATING, FROM movies; -> will show all movies. Because all have unique MovieID.
+
+COUNT, LIKE, GROUP BY
+
+count - give number of entries in a table\
+
+SELECT COUNT(*) AS cnt FROM movies; -> shows cnt with number of entries
+
+SELECT COUNT(*) AS total_actors FROM actors;
+
+select RATIGN, count(*) AS total_movie_ratings_ FROM movies; -> will give WRONG answer
+
+SELECT RATING, COUNT(*) AS movies FROM movies GROUP BY RATING; -> gives count for each rating. 
+
+What if don't know title but only part of it. Can use LIKE
+
+SELECT * FROM movies WHERE TITLE LIKE 'Night at the M%'; -> get all titles that have match. Like globbing and regular expressions. 
+
+SELECT * FROM movies WHERE TITLE LIKE '%Museum%';
+
+SELECT COUNT(*) AS Museum_Count FROM movies WHERE TITLE LIKE '%MUSEUM%';
+
+MIN AND MAX
+
+SELECT MAX(RELEASE_YEAR) FROM movies;
+
+SELECT MIN)RELEASE_YEAR) FROM movies;
+
+SELECT TITLE< MAX(RELEASE_YERA) RATING FROM movies; -> INCORRECT. WILL NOT GIVE MATCHING ROW FROM MAX. 
+
+SELECT MIN)RELEASE_YEAR), RATING FROM movies WHERE TITLE LIKE '%MUSEUM%' GROUP BY TITLE, RATING;
+
+SELECT RATING
+      ,MAX(ReleaseYear)
+FROM movies
+GROUP BY RATING;
+
+

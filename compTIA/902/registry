@@ -1,0 +1,158 @@
+WINDOWS UNDER THE THOOD
+
+REGISTRY
+
+Registry - a huge database that stores everything about PC, including information on all the hardware, network information, user preferences, file types, and virtually anything else you might find in Windows. Almost any form of configuration to a Windows system involves editing th Registry. 
+
+hives - the numerous Registry files
+
+Typically stored in \%SystemRoot%\System32\ config folder and each user account folder. 
+
+Should know basic components of Registry, how to edit Registry manually, and know best way to locate a particular setting. 
+
+regedit - the default Registry editor
+
+REGISTRY COMPONENTS
+
+Registry organized in a tree structure. Five main subgoups or *root keys*:
+
+-HKEY_CLASSES_ROOT
+-HKEY_CURRENT_USER
+-HKEY_USERS
+-HKEY_LOCAL_MACHINE
+-HKEY-CURRENT_CONFIG
+
+Subkeys - keys that exist within the root key registries
+
+Values - subkeys of the subkeys. Regedit shows only keys (root keys and subkeys) with values on the right. 
+
+HKEY_CLASSES_ROOT
+
+Historically, defined the standard *class objects* used by Windows. A class object is a named group of functions that defines what you can do with the object it represents. Everything that has to do with fiels on system is defined by a clas object. 
+
+Today, this root key combines clas objects from \Software\Classes under both HKEY_CURRENT_USER and HKEY_LOCAL_MACHINE to provide backward compatability for older apps. 
+
+HKEY_CURRENT_USER and HKEY_USERS
+
+Windows is designed to support more than one user on the same system, storing personalized information such as desktop colors, screensavers, and contents of desktop. HKEY_CURRENT_USER stores current user settings, and HKEY_USERS stores all of personalized infomration for each user. Can change settings here but no need. 
+
+HKEY_LOCAL_MACHINE 
+
+Root key contains all data for a system-s non-user-specific configurations. Encompasses every device and every program in the computer. 
+
+HKEY_CURRENT_CONFIG
+
+If values of HKEY_LOCAL_MACHINE have more than one option, such as two different monitors, this root key defines which one is currently being used. Because most people have only one type of monitor and similar equipment, this area is almost touched. 
+
+VALUES
+
+Values must have a defined type of deata they store:
+
+-string value - Most flexible type of value and are very common. 
+-Binary value - Store nothing more than long strings of ones and zeroes.
+-DWORD value - Like binary values but limited to 32 bits
+-QWORD value - like binary values but limited to 64 bits. 
+
+MANUAL EDITS
+
+Risk of breaking system with editing Registry. Apps might not start, utilities might not work, or pc may not boot. 
+
+Can always make backup of registry and restore it if problem. 
+
+Can stop autostart programs at startup with editing registry. 
+
+Restiry Editor's Export feature enables you to save either full Registry or a single rootkey or subkey. 
+
+File -> Export. Save as .reg file. 
+
+If need to restore:
+
+File->Import or just right click file and select Merge. 
+
+COMMAND LINE TOOLS FOR EDITING REGISTRY
+
+reg - full Registy editing tool. Can view Registry keys and values, import and export some or all of a Registry, and even compare two different versions of a Registry. Has multiple levels of help so can tailor a command to accomplish very tight Registry edits. 
+
+reg /? 0 brings up a list of 12 specific operations that you can search for help on. Such as reg query /? and reg add /?
+
+regsvr32 - can modify Registry in only one way, adding (or registering) dynamic link library (DLL) files as command components in the Registry. 
+
+By defaul,t it run regsvr32 in 64-bit Windows, the 64 bit version runs by default. Can cause problems if trying to add a 32-bit DLL to the Registry. To ad the latter, run the regsvr32.exe file in %SystemRoot&Syswow64 folder. 
+
+THE BOOT PROCESS
+
+Windows installation creates a number of specific iles and folders that OS needs to run. Some are directly on root of C:. 
+
+Current Windows versions support both BIOS and UEFI boot processes. 
+
+First thing: either BIOS or UEFI starts up. Different is what happens next:
+
+-BIOS: The BIOS uses its boot order to scan a hard drive for a master boot record (MBR). The MBR holds a small bit of file system boot code that scans the partition table for the system partition and then loads its boot sector. The boot sector in turn contains code that does nothing but ponit the boot process toward a file called *bootmgr* (boot manager), the Windows Boot Manager. In short, BIOS looks for MBR which fins boot code to launch OS
+
+UEFI: Neither MBR/GUID patirtion tables (GPT) nor the file system boot code is run, and UEFI simply loads bootmgr directly. 
+
+bootmgr: "Which system do you want to load?". When it starts, it reads data from a Boot Configuration Data (BCD) file that contains information about the various OSes installed on system as well as instructions for how to actually load (bootstrap) them. Once OS is sleected (or immediately if only one if present), bootmgr loads a program called winload.exe, which readies your system to load the OS kernel (ntoskrnl.exe) itself. Loads into memory the hardware abstraction layer, the system Registry, and the drivers for any boot device before OS itself takes over. 
+
+NOTE: If get error saying Windows cannot boot because bootmgr is missing, this mmeans boot sector code is unable to locate bootmgr, which can be caused by file system corruption, a botched installation, or viruss. 
+
+Once OS process takes over, it loads up all various processes and systems that comprise Windowws, 
+
+PROCESSES, SERVICES, AND THREADS
+
+In Windows, programs are executable files waiting on a mass storage device. When start a program, Windows loads it into RAM as a process. Once there, CPU reads the process and the process tells CPU which chunks of code to run. 
+
+Windows is multitasking OS, running lots of processes simultaneously. Many appear in window (or full screen) when opened and end when closed. These are called applications. 
+
+However, many programs do not need a window and run invisibly in the background providing a large number of necessary support roles. These are called *services*. 
+
+TASK MANAGER
+
+Task Manager - Windows one stop shop for anything to do with applications, processes, and services. 
+
+CTRL-SHIFT-ESC
+
+Start|Search -> taskmgr
+
+OR
+
+CTRL-ALT-DELETE and select task manager. 
+
+Applications - The applications tab shows all running applications on system. 
+
+End Task
+Switch To - bring any proigram to the front
+New Task - enables you to run programs if you know the executable. Click, type cmd, and press Enter to open command line. 
+
+Everything is a process so every application also listed in Processes tab. Right click on application and select Go To Process to open Processes tab to see which process is running the app.
+
+Processes - shows every running process. Can see everything running on compuer.
+
+All processes have certain common features:
+-A process is named after its exectuable file, which usually ends in .exe but can also end with other extensions
+-All processes have a user name to identify who started the process. A process started by Windows has the user name System
+-All processes have a Process Identifier (PID). To identify a process, you use the PID, not the process name. 
+
+Task manager doesn't show PID by default. Click View | Select Columns and select PID. 
+
+Task manager provides info about processes: amount of CPU time (percentage) and amount of RAM in KB process is using. Many also provide a description to help understand what process is doing. 
+
+By default, task manager shows only processes associated iwth current user. Click Show processes for all uers to see every process on system. 
+
+Right click a process to see options:
+
+-Open File Location - takes you to wherever process is located.  
+-End Process
+-Debug - unless running a Windows debugger program it is greyed out
+-UAC Virtualization - gives older programs that weren't written to avoid accessing protected folders a way to do so by making a fake protected folder. In most cases, Windows handles this automatically, but rare cases when you will need to set this manually. Likely will be on the phone with tech support for some software company. 
+-Create Dump Files. Dump files show the status of the program at the moment you click Create Dump File. Developers use special debugging utilities to read dump files to analyze problems with programs. 
+-Set Priority - gives ability to devote more or less processor time to a process. Handy when a process is slowing down machine or running too slowly. Can make things complicated. Like VIP lines, just means have to wait less time to start. 
+-Set Affinity - enables you to specify which CPU cores a process cn run on. Most likely reason to touch this is when have some processes that need to be separated from others. 
+-Properties is same as if you wer eto right click on exectuable file. 
+-Go To Service(s) - will move you to Services tab, showing any and all services associated with process. Process could use no services or multiple. 
+-End PRocess Tree - very common for single process to be dependent on other processes. Creates a tree of dependencies. Sadly, Task Manager doesn't give any clues as to what processes depend on other processes, but does give option to end process tree. Ends not only process but any process it depends on. MS will not let you kill a process tree for most important system processes.
+
+Process Explorer - free program. Task Manager on steroids. Uses a tree structure so you can see dependencies.
+
+Services - To work with services directly. Here can stop or start services or go to the associated process. 
+
+Services Control Panel applet - best way to see services in action. To open, click on services tab in Task Manager or open Services in Administrative Tools. Also can open from Start | Search bar. Type services.msc. Can also access Services from a Microsoft Management Console (MMC), adding it as a custom snap in. Type mmc and press Enter. Each line in this applet is an inidivudal service. Can use this to start, stop, and configure services. Can see if service is running by reading the Status column. To configurem right click on service name. Click properties. Of 4 tabs, General and Recovery are most used. General tab provides name of service, describes the service, and enables you to start, stop, pause, or resume the service. 

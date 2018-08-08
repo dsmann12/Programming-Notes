@@ -1,0 +1,490 @@
+Must include preprocssor directives if use library functions.
+These are added to code by linker during compilation.
+
+#include <iostream> //includes iostream library and its functions
+
+int main() function must be included. First function run in program.
+Calls other functions.
+
+Variables -- names for memory locations that can hold data of a 
+specified type.
+
+int number = 5;
+int a = 21;
+
+int sum = a + number; //26
+
+Names with underscores (_foo) are reserved for implementation and system entities. 
+
+Type defines set of possible values and set of operations for a n object.
+An object is some memoery that holds a value of a given type.
+A vlue is a set of bits in memory interpreted according to type.
+A variable is a named object. 
+A declaration is a statement that givs a name to an object. 
+A definition is a declaration that sets aside memory fo an object.
+
+Global variables are initialized to 0 by default. But local variables and class members
+are not.
+
+Variables have scope.
+
+Global scope: area of text outside any other scope. There fule that name must be declared 
+before it can be used still holds. 
+
+Namespace scope - a named scope nested in global scope or in another namespace
+
+Class scope: the area of text within a class
+
+Local scope: between {...} braces of a block or in a function argument list
+
+A statement scope: e.g. in a for statement
+
+Main purpose of scope is keep names local so won't interfere with names declared elsewhere  
+
+Basic Types
+
+Strings - array of characters terminated by null character
+include string library
+#include <string>
+
+Can compare strings with standard comparison operators. Uses lexicographical ordering
+, so Ape comes before Apple
+
+!= <=
+== >
+< >=
+
+Type Safety - program is type safe when objects are used only according to rules of 
+their types. 
+
+Non-type safe:
+double x; //x undefined
+long y = x; //type difference
+int i = x; //unsafe
+char c = i; //unsafe
+
+Truncates narrow casting.
+
+
+Safe Conversions
+bool to char
+bool to int
+bool to double
+char to int
+char to double
+int to double
+
+Unsafe Conversions
+double to int
+double to char
+double to bool
+int to char
+int to bool
+char to bool
+
+C++11 introduced an initialization notation that outlaws narrowing conversions
+double x {2.7}; //ok
+int y {x}; //error double->int might narrow
+int a {1000}; //OK
+char b {a}; //erro int->char might narrow
+
+{}-list notation known as universal and uniform initialization. 
+
+Operators
+
+Control Flow
+
+if/else statements
+
+Loops
+
+while loop
+do while loop
+for loop
+
+double temp
+cin>>temp//condition for for state,emt/ True if value was read correctly, false
+otherwise. Stops when giving anything not of typed
+
+switch-statements
+
+Rules of switch:
+1. The value on which we switch must be of an integer, char, or enumeration type.
+Cannot switch on a sting
+2. Values in the case labels must be constexpr/ Cannot use variable in case label.
+3. Cannoy use same value for two case labels.
+4. You can use several case labels for a single case. 
+5. Don't forget to end each case with a break.
+
+To select based on string: must use an if-statement or a map.
+
+Often, want same action for a set of values in a switch. It would be terdious to repeat 
+the action:
+
+switch() {
+	case '0': case'2': case '4': case '6': case '8':
+		cout << "is even\n";
+		break;
+	default:
+		cout << "not a digit\n";
+		break;
+}
+
+Functions -- program essentially a series of functions
+
+To use default arguments:
+
+int volume (int l = 1, int w = 1, int h = 1);
+int main() {
+	cout << volume(5, 6); //return 30
+}
+
+int volume(int l, int w, int h) {
+	return l * w * h;
+}
+
+Do not have to give argument types
+int value(int, int, int);
+
+Pass by Value - copies value
+
+
+What if value is large? An image (storing millions of bits0, a large table of values
+(say thousands of ints), or a long string (say, hundreds of chars)? Copying is then
+costly. 
+
+Pass By Const Reference - pass address of an object to function. Address is called a 
+reference. 
+
+void print(const vector<double>& v) {
+
+}
+
+Pass By Reference - pass address of object to function. Object can be modified by function
+
+int i = 7;
+int &r = i; //r is reference to i
+r = 9;
+i = 10;
+cout << r << " " << i << endl; //print 10 10
+
+Consider:
+vector<vector<double>> v;
+
+May need to refer to some element often:
+v[f(x)][g(y)]
+
+double &val = v[f(x)][g(y)];
+
+int f(int &x) {
+	x+=1;
+	return x;
+}
+
+int xx = 0;
+cout << f(xx) << endl; //print 1
+cout << xx << endl; //print 1
+
+& means referenace and const is there to stop function from modifying argument by accident
+
+Pass by Value vs Pass by Reference
+Technically an integer literal is just a value (an rvalue), rather than an object holding
+a value. Needed for reference arguments is an lvalue, something that could appear on the
+left-hand side of an assignment. Const reference can use literals (rvalues). Compiler sets
+asside a an int for argument to refer to. Compiler generated object is called a temporary
+object or just temporary. 
+
+Rules of thumb:
+1. Use pass by value to pass very small objects
+2. Use pass by const reference to pass large objects that you don't need to modify
+3. Return a result rather than modifying an object through a reference argument
+4. Use pass-by-reference only when you have to. 
+
+Lead to simplest, least error prone, most efficient code. 
+
+Use non-const reference arguments:
+1.For maniupulating containers (e.g. vector) and other large objects
+2. For functions that change several objects (we can have only one return value)
+
+If use reference simply to avoid copying, use a const reference. When see a non-cost
+reference, can assume the functoin changes value of its argument. 
+
+Explicit conversion:
+double x;
+int x3 = static_cast<int>(x);
+
+Classes - stores instance variables (fields) and methods
+
+class MyClass {
+	public:			//access specifier
+		int number;
+		char name[10];
+
+		void sayit() {
+			cout << "David rules!\n";
+		}
+};
+
+Classes consist of public interface (labeled public:) and implementation details, labeled
+private:. Idea is to separate what a user of a type needs for convenient use fomr details we
+need in order to implement the type but what we'd rather not have users mess with. 
+
+class_name::member_name //when define a member of a class, have to mention which class we
+mean the member to be a member of
+
+Why define member outside class? Clarity. Class definition can fit on one page, rather than 
+how it would look if members defined in class. 
+
+Classes that have default constructors do not need to be initialized. 
+
+Reading numbers is more difficult. How find value of 123 or 12.34 or 12.34e5. Input streams
+know what C++ literals look like and how to turn them into values of type double. 
+
+C++ reference
+
+int main() {
+	MyClass object;
+	object.number = 10;
+	object.sayit();
+	return 0;
+}
+
+public - can access instance variables outside class.
+
+Objects - instances of a class. Stores class variables and calls
+methods. Allows access to them. Region of memory with a type that specifies what 
+kind of information can be placed in it.  
+
+MyClass object;
+object.sayit();
+
+Instance variables should be private with public methods for 
+accessing and modifying them.
+
+class Class {
+	public:
+		void setName(string s) {
+			name = s;
+		}
+
+		string getName() {
+			return name;
+		}
+
+	private:
+		string name;
+}
+
+Constructors - mainly to give object variables initial values
+
+class Class {
+	public:
+		Class() {
+			name = "";
+		}
+	private:
+		string name;
+}
+
+Constructor
+
+Needed to look ahead in program.
+
+Problems with calculator.cpp
+
+1. Don't require expression to be on one line:
+1
++
+2
+is valid.
+
+2. How do we search for * or / among digits, plusses, minuses, and parentheses on
+several lines of input
+
+3. How rememeber where a * was?
+4/ How handle evaluation that's not strictly left to right?
+
+Conventional way of reading data from input and storing it in a way that lets us look at
+it in conventient ways. Tokenize: first input characters are read and assembled into tokens.
+
+Token is a sequence of characters that represents something we consider a unit, such
+as number or operator.
+
+Tokenizing of some form or anothe ris way most analysis of text astarts.
+
+3 kinds of tokens needed for calculator:
+1. Flaoting point literals (3.14, 0.247e2, and 42);
+2. operators: +, -, *, /, %
+3. Parentheses: (, )
+
+Obvious, conventional solution is to represent each token as a (kind, value) pair.
+Kind tells whether token is number, operator, parenthesis. For number, use its numerical
+value as its value.
+
+Define type Token to represent tokens.
+
+types upsupported by STL: Matrix and Date, and infinite precision integers (Bignum).
+
+Escape problem of needing types by allowing (User-defined types).
+
+Member access notation:
+objectname.membername
+Token t;
+t.kind = '8';
+
+Write grammar defining syntax of input then write a program that implements
+the rules of that grammer. 
+
+Expression:
+	Term
+	Expression "+" Term
+	Expression "-" Term
+
+Term:
+	Primary
+	Term "*" Primary
+	Term "/" Primary
+	Term "%" Primary
+
+Primary:
+	Number
+	"(" Expression ")"
+
+Number:
+	floating-point-literal
+
+Reading a string of tokens according to a grammar is called parsing. A program that does
+that is often called a parser or syntax analyzer. 
+
+E.g.: 2
+1. Expression must be a term or end with a term. Term must be a primary or end in a primary.
+Primary must start with a ( or be a Number. 2 is floating-point-literal, which is a Number,
+which is a Primary.
+2. That primary is not preceded by a /, *, or % so it is a complete Term, rahter than end of
+a expression
+3. That Term isn't preceded by a + or -, so it is a complete expression, rather than end of
++ or - expressions.
+
+Writing a grammar:
+1. Distinguishin a rule from a token
+2. Put one rule after another (sequencing)
+3. Express Alternative Patterns (alternation)
+4. Express a repeating pattern (repetition)
+5. Recognize the grammer rule to start with
+
+Some call tokens terminals and rules non-terminals or productions. 
+
+List:
+	"{" Sequence "}"
+Sequence:
+	Element
+	Element "," Sequence
+Element:
+	"A"
+	"B"
+
+Turning Grammar Into Code:
+Many ways. Simplest one: simply write one function for each grammar rule and use type Token
+to represent tokens. Program that implements a grammer is often called a parser. 
+
+Implementing Grammar Rule:
+4 Functions: one to read tokens plus one for each rule in grammar
+
+Token get_token() //read chars and compose tokens. uses cin
+
+double expression() //deal with + and -. calls term() and get_token()
+
+double term()	//deals with *,/,and %. calls primary() nad get_token()
+
+double primary() //deal with numbers and parentheses. calls expression() and get_token()
+
+Each function should call other grammer functions according to the grammar rule it is 
+implementing and get_token where a token is requirec in a rule. 
+
+Expression:
+
+Loop
+
+double expression() {
+	double left = term();
+	Token t = get_token();
+	while(true) {
+		switch(t.kind) {
+			case '+':
+				left += term();
+				t = get_token();
+				break;
+			
+			case '-':
+				left -= term();
+				t = get_token();
+				break;
+			
+			default:
+				return left;
+		}
+	}
+}
+
+Term() -- cannot use % with floats. Must eliminate modulo for now. Also, cannot divide
+by 0 so must ensure there are checks
+
+double term() {
+	double left = primary();
+	Token t = get_token();
+	while(true) {
+		switch(t.kind) {
+			case '*':
+				left *= primary();
+				t = get_token();
+				break;	
+			
+			case '/': {
+				double d = primary();
+				if (d==0) error("divide by 0");
+				left /= d;
+				t = get_token();
+				break;
+			}
+			default:
+				return left;
+		}
+	}
+}
+
+//Why a block in switch statement? Compiler insists. If want to define and want to initialize
+variables within a siwtch statement, must place them inside a block. 
+
+Primary expressions:
+
+double primary() {
+	Token t = get_token();
+	switch(t.kind) {
+		case '(': {
+			double d = expression();
+			t = get_token();
+			if(t.kind != ')') {
+				error("')' expected");
+			}
+			return d;
+		}
+		
+		case '8':
+			return t.value;
+		
+		default:
+			error("primary expected");
+	}
+}
+
+Arrays - sequence of same time. Have index and set size
+
+int a[5] = {0, 1, 2, 3, 4};
+
+a[0] = 0;
+a[1] = 1;
+
+
+Multidimensional arrays
+
+int a[5][5];

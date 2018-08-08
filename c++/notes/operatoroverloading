@@ -1,0 +1,128 @@
+Operating Overloading - allows you to take operators
+(+, -, *, /) and change how they will be applied to 
+certain objects (like + for concatenation when using strings).
+
+Declare new method in class. Must have return type equal
+to class. 
+
+All operators are method name operator and the symbol of operation.
+
+operator+
+operator-
+operator*
+
+class OpOverload {
+	public:
+		int num;
+		OpOverload operator+(OpOverload
+)
+
+Can define almost all C++ operators for class or enumeration operands. 
+
+Month operator++(Month &m) {
+	m = (m==dec) ? jan : Month(int(m)+1);
+	return m;
+}
+
+Month m = jan;
+m++; //feb
+m++: //march
+
+Can define any operator provided by C++ for user types, but only existing operators. Cannot define new operators and must use conventional numbre of operands for operator. 
+
+Overloaded operators must have at least one user-defined type as operand. 
+
+Generally a good idea not to define operators for a type unless really certain that it makes a big positive change to code. Also should define operators with their conventional meaning. + should be addition, [] access, () call, etc. 
+
+Most interesting operators to overload are =, ==, != , <, [] (subscript), and () (call)
+
+Defining output operator << for given type is typically trivial. Main design problem is that fdifferent people might prefer the output to look differnt, so it is hard to agree on a single forma. Still often a good ide to define << for a user-defined type. 
+
+ostream & operator<<(ostream &os, const Date &d) {
+	return os << '(' << d.year()
+		<< ',' << d.month()
+		<< ',' << d.day() << ')';
+}
+
+Defining input operator:
+
+Defining input operator >> for given type and input format is an exercise in error handling. More than can and will go wrong with input than output
+
+istream & operator>>(istream &is, Date &dd) {
+	int y, m, d;
+	char ch1, ch2, ch3, ch4;
+	
+	is >> ch1 >> y >> ch2 >> m >> ch3 >> d >> ch4;
+	
+	if(!is) return is;
+	
+	if(ch != '(' || ch2 != ',' || ch3 != ',' || ch4 != ')') {
+		is.clear(ios_base::failbit);
+		return is;
+	}
+
+	dd = Date {y, Date::Month(m), d};
+	return is;
+}
+
+If >> doesn't find something in correct format, it will leave stream in a non-good state and leave target Date unchanged. Leaving target Date unchanged in case of failure to read is ideal, tends to lead to cleaner code. 
+
+General strategy for reading files:
+
+for(mytype var; ist >> var;) { //read until eof
+	//maybe check var is valid
+	//do something with var
+}
+
+if(ist.bad()) error {"bad input stream"};
+if(ist.fail()) {
+	//was it an acceptable terminator?
+}
+//carry on: found eof
+
+Read sequence of values into variables and when can't read any more values, check stream state to see why. 
+
+Can improve by letting istream throw an exception of type failure if it goes bad. 
+
+//somewhere: make ist throw exception if it goes bad
+ist.exceptions(ist.exceptions() | ios_base::badbit);
+
+Could also designate a character as terminator:
+for (mytype var; ist >> var;) { //read until end of file
+	//maybe check that var is valid
+	//do something with far
+}
+
+if(ist.fail()) {
+	ist.clear();
+	char ch;
+	if (!(ist >> ch && ch == '|')) error("Bad terminator of input"));
+}
+//carry one: found eof or terminator
+
+Terminators can be useful when read files with nested constructuts. Such as file of monthly readings containing daily readings, containing hourly reading , etc. 
+
+Can also improve by giving its own function:
+
+//somewhere: make ist throw exception if it goes bad
+ist.exceptions(ist.exceptions() | ios_base::badbit);
+
+void end_of_loop(istream &ist, char term, const string &message) {
+	if(ist.fail()) {
+		ist.clear();
+		char ch;
+		if (!(ist >> ch && ch == term)) return;
+
+		error(message);
+	}
+}
+
+Reduces input loop to:
+
+for(mytype var; ist >> var;) {
+	//maybe check var is valid
+	//do something to var
+}
+end_of_loop(ist, '|', "bad termination of file"); //does nothing unless stream is in fail()
+
+File formats can be peculiar. Industry moving to more regular and hierarchically structured files (HTML and XML), but reality is still that we can rarely control input format. 

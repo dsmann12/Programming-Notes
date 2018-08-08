@@ -1,0 +1,259 @@
+INTERNET
+
+Can make web server and email server anywhere on Internet and anyone can get to it. 
+
+Lots of infrastructure to make that happen.
+
+Large routers and connections with thousands of miles of fiber optic cables buried underground to connect network with million dollar routers in buildings called network operation centers (NOC). Different networking competitors on east coast and west coast. Create peering agreement - so traffic on each network won't be charged for using network on other's infrastructure. 
+
+Tier 1 - all networks with peering agreement. About 9 companies in US that are considere Tier 1 providers. Tier 1 providers provide own long distance high speed fiber optic networks called *backbones*. Span major cities of the earth. Interconnect at speed locatoins called *network access points (NAPs)*. Do not charge each other to connect. 
+
+Tier 2 - connect to Tier 1 companies. Have some peering agreement but must pay Tier 1 companies to connect to them. Tier 2 providers own smaller, regional networks and must pay the Tier 1 providers. Most companies that provide Internet access to general public are Tier 2. 
+
+Tier 3 - can be big companies all over US. Not paying for own big lines. Paying either Tier 1 or Tier 2 companies for access to internet. Even more regional than Tier 2. 
+
+All companies are Internet Service Providers (ISP) - any of these will allow you to connect to internet. Tier 1 and Tier 2 will be expensive. Tier 1 and Tier 2 providers lease connection to Internet to these ISPs. ISPs lease connection to users.  
+
+Invididual homes and businesses in general connect to Tier 3 company, which provides individualized internt connections.
+
+Backbone Routers - makes tiered Internet concept work. Connect to more than one other backbone router, creating a big, interwoven framework for communication. Provide alternative pathways for data if one or more routers went down. 
+
+How to connect individuals to Internet - The Last Mile
+
+To connect to Internet need:
+1. Hardware - for connectivity. Modem and working cable wire
+2. Software - such as protocols to govern the conncetions and the data flow and apps to take advantage of the 				various TCP/IP services. 
+
+DIAL UP CONNECTIONS
+
+Needed telephone service - publicly switched telephone networks, plain old telephone service (POTS) - for Internet access. 
+
+1. Needed ISP with phone number you could dial up and connecto to plug into Internet
+2. iHardware to dial up ISP, Modem or ISDN terminal adapter
+3. Software to govern connection such as Microsoft's Dial-up Networking (DUN)
+
+RJ-11 - old telephone jack. 
+
+Given telephone number, then username and password. Had to take that and plug it in to log in. 
+
+XP - Control Panel, Modem and Phone, give area code and carrier code if necessary , if dial number to outside line, what is it: 9,. 
+
+Tone dialing vs pulse dialing. 
+
+That would create location and then have to connect mode. 
+
+Add modem manually, then selec a COM port that modem is connected to. 
+
+Modem - modulator demodulator. Took serial signal analog signal from telephone line and converted it into digital parallel signal that computer uses. Only devices that truly use modems are old school dial up networks. Everthing else is really uses a terminal adapter. But these are known as modems too, even if cable, DSL, etc connections. Also take digital signals from computer and converts them into analog signals for outgoing telephone line. 
+
+Baud - phone lines have speed based on this unit. One cycle per second. Fastest rate a phole line can achieve is 2400 baud. A 33.6 Kbps modem packs 14 bits into every baud: 2400 x 14 = 33.6 Kbps
+
+Network Connections - Create a New Connection. Connec to the Internet - Set up Connection Manually - Connect using dialup modem - 
+Enter ISP name, Enter phone number, enter username and password
+
+Dial Up - not always on. If want to get on Internet you get on web browser or email client and OS will connect for you. 
+
+PPP = Point-To-Point Protocol - special hardware protocol that dial up links to the Internet have. Streaming protocol developed especially for dial up Internet access.
+ 
+Integrated Services Digital Network - ISDN - only alternative to POTS in dial up. Not very common. Had special ISDN phones that made connection. Also ran at 128Kbps. Allowed phon companies to send telephone transmissions across fully digital lines end-to-end. Consists of two types of channels: Bearer (B) channels and Delta (D) channels. B channels carry data and voice information at 64 Kbps. D channels carry setup and configuration information and data at 16 Kbps. 
+
+Bsaic Rate Interfae (BRI) - two B and one D. Uses only one physical line, but each B channel sends 64 Kbps, doubling the throughput total to 128 Kbps. 
+
+Terminal Adapters (TA) - look like modems and are common interface for your computer. 
+
+Internal modems connect usually to a PCI or PCIe expansion bus slot. Contemporary external modems connect to the computer though an available USB port. USB offers simple plug and pay and easy portability. 
+
+BROADBAND
+
+To get on internet whenever people want
+1. DSL
+2. Cable
+3. Fiber
+
+All manifest as some kind of box. Some input, with fiber optic connection (sometime coaxial), coaxial for cable, and RJ-11 (telephone wire) for DSL. With RJ-45 ethernet port for Internet.
+
+Digital Subscriber Line DSL - smallest tube. Based on telephone system. So don't need to pull cables into house for it to work. Have to use some kind of filter because DSL puts bunch of data on wire so would cause interference on regular phone. Must be within 18,000 feet from central office or central switch for telephone company. Upload speeds are small percentage of download speeds. PPPOE (Point to point protocol over ethernet) - have to type user name or password given by ISP. Came out cause DSL people didn't like idea of people plugging three or four computers into one DSL connection
+
+Asynchronous DSL - lines difer between slow upload speed (such as 384 Kbps, 768 Kbps, or 1 Mbps) and faster download speed (3-15 Mbps). 
+
+Synchronous DSL - same upload and download speds but telecom companies charge more. 
+
+Cable - F connector and big cable. Days have limitations. It's a shared network. All people in neighborhood plug into same "hub". If too many people on hub then may not get speeds. If you're not getting your speeds, cable company may start splitting it up. Upload speeds from 1 to 20 Mbps and Download speeds from 6 to 100+ Mbps. 
+
+Fiber Optic - FiOS by Verizon and U-Verse by AT&T. Really DSL connections but high speed DSL. Will run fiber optic cable to house or to service to get outrageous speeds. often include telephone sevice. Still needs a box.
+
+Fiber-To-The-Node FTTN - fiber connection runs from providers to a box somewhere in neighborhood. Box is connected to home or office using normal coaxial or Ethernet cabling. ATT U-Verse.
+
+Fiber-To-The-Premises FTTP - runs from provider straight to a home or offic, using fiber the whole way. Verizon FiOS. Googe Fiber. 
+
+WIRELESS INTERNET CONNECTIONS
+
+Cellular WAN - Not originally designed for data at all. Were analog device designed for voice. Have been many technologies out there to deal with change, GM, LTE. In marketing method, they began to call them generations.1G. 
+
+Global System for Mobile Communications (GSM). Became GPRS and EDGE (2.5G). 
+Code Division Multiple Access (CDMA). Became EV-DO. True 3G.
+
+GSM - 3G. UTMS, HSPA+, HSDPA. 
+LTE - 4G
+
+Oldest networks were going bits per second, not going megebits per second.
+
+Long-Term Evolution (LTE) - proprietary standard controlled by phone companies. Up to 300 Mbps download and 75 Mbps upload.
+
+Worldwide Interoperability For Microwave Access (WIMAX) - open standard
+
+Similar tech. Both have antennaes sitting on cell towers with 15 to 30 miles range. Works like cellular phones. Moving around and it jumps from cell tower to cell tower. LTE more popular. You don't pick tech. You pick phone or carrier, and it uses technology it can use. Specific radios use specific technology.
+
+802.11 - companies like AT&T and T Mobile set up commercial 802.11 hot spots, establishing a number of differe WAPs and create a single log on location that allows you to say go airports all over country
+
+Metropolitan Area Network (MAN) - one organization where log in with account and use 802.11 to log in to any of city's WAP in city.
+
+Satellite - satellite communication. Satellite floating around earth in geosynchronous orbit. As floating around, you have antannaes that create connection to internet. Slower than everything else, but no matter where you are, you can connect. Has latency because of distance from satellite to dish. Stops and skips. 
+
+Tethering - sharing smartphone or tablet's cellular connection. Turn on service on device and then connect phone to computer either wireless as a mobile hotspot or directly using a USB connection. 
+
+INTERNET APPLICATIONS
+
+thousands of apps out there. Have to organize stuff in such a way that they can talk to each other.
+
+TCP based applications and UDP based applications
+
+TCP is primary heavy lifting most time protocol gone to for movign data between computers. UDP more simplistic. 
+
+TCP - Want to make sure client computer makes a good connection, that it's talking, that server computer is raedy to send information. Handshake - telling each other they are ready for connection. Check packets when they get them. Connection oriented
+
+UDP - used when not worried about data. Shoots data to server whether server is ready or not. Use when you know server is up and running. Like you physically plug into it or just know. Connection less. Faster than TCP
+
+Server probably getting data from many computers. How to get data to right application. Use ports!
+
+Ports - port added to packet information, added to end of IP address. Can have ports from 0-65536. First 1024 all well known and used by convention. Other number generated arbitrarily by client for application. Web client generats that port number. Port number used for specific tabs, etc. 
+
+TELNET AND SSH
+
+Internet used to connect to far away computers. 
+
+Telnet - one of oldest applications that come with TCP. remote terminal emulator that lets you get to someone else's command line. Old and unsecure. So SSH used these days. Comes with basically every OS. Can download other clients or use default OS ones. Telnet servers require user names and passwords. Port 23. Completely unsecure. Could read data going back and forth and could read people's usernames and passwords.
+
+telnet
+
+open 192.168.4.41
+
+login: 
+password:
+
+And will login to command prompt. 
+
+Secure Shell - SSH - PuTty used in windows. Port 22. Encrypted data. Must use a key because SSH is encrypted. Accept the key and use it to encrypt data. Server has decrypter. 
+
+ssh 192.168.4.41
+
+login:
+password:
+
+And will login to command prompt. 
+
+HTTP
+
+Hyper Text Transfer Protocol - HTTP - Port 80.
+
+Hyper Test Transfer Protocol Secure - HTTPS - Port 443. 
+
+netstat - shows all connections. 
+netstat -n
+netstat -a - show every connection, including listening ports. Computer can be a server if wanted. If listening on Port 80 you are acting as web server. All kinds of programs may put own web server on there. NVidia may put update tool that uses port 80. Could also let attackers in. 
+
+EMAIL
+
+In traditional email world, you install client on computer, and client sends email and grabs your email. 3 protocols to make this happen.
+
+Simple Mail Transfer Protocol - SMTP - Port 25. Used to send email. Sends to SMTP server. SMTP server sends it to next guy.
+
+To download email from server:
+
+Pick whatever email server uses.
+
+POP3 - Post Office Protocol 3 - Port 110. Tend to make folders on client. 
+
+IMAP - Internte Message Access Protocol - Port 143. Allows you to create folders and such on server.
+
+Thunderbird - mozilla, free email client. 
+
+Setup:
+
+name:
+email address
+password
+
+Email administrator gives you information. Notices what protocol used and sets it up automatically with built in security. And needs a sertificate for security (SSL?). 
+
+Manual Setup
+
+Incoming - Pop3/IMAP - Port 110/Port 143 - SSL - mail.totalsem.com
+Outgoing - SMTP - Port 25 - mail.totalsem.com
+
+FTP
+
+File Transfer Protocol (FTP) - Port 21. However, can also run on Port 20. 
+
+FileZilla - FTP client. Download and upload files. 
+
+host:	username: password: port:
+
+ftp.ubuntu.com 	anonymous - popular username for public ftp servers. Will pick correct port. 
+
+Can then search file system. 
+
+ftp - everything done in clear, no encryption.
+
+Secure FTP - SFTP - Port 22. FileZilla does not do SFTP very well. Usually just use FTP when not worried about people looking in. 
+
+REMOTE DESKTOP CONNECT
+
+Access systems remotely. 
+
+Telnet - remote access. Can't use it to transfer files from remote computer to here. 
+
+SSH - remote access. 
+
+Remote Desktop Protocol - RDP - Port 3389 - Works with most every version of Windows. Some home versions don't support it. 
+
+System - Remote Settings. 
+
+Remote Assistance - lets others connect to your system or handle file which allows them to connect to system. Whoever sitting on host machine can see what person is doing
+
+Remote Desktop - cannot see what other logged in person is doing. Can work with Network Level Authentication so only specific users can get in. Adminstrators can already get in. 
+
+To connect to a system, must fire Remote Desktop
+
+Programs -> Accessories -> Desktop SConnection
+
+Cmd -> nstsc
+
+Type in IP address of name of computer. Then want username and password. Can do stuff to that system from this sytem itself. 
+
+FILE SHARING
+
+Every modern OS allows you to share folders with others on a network. Folder and file sharing as Internet protocols. 
+
+Network and Sharing Settings - Ethernet Adapter - Right Click - Properties
+
+File and Pritner Sharing for Microsoft Networks - serving software. Has to be turned on to work. 
+Client for Microsoft Networks - needs to be on to access others' shared files and folders
+
+If turn on these protocols, they were orginally called:
+
+NETBIOS over IP or NETBIOS/NT - old protocol rewritten on top of TCP/IP to share folders and files. Was dumped.
+
+Server Message Block - SMB - Basically on by default. Should see connected sessions and such. Can use TCPView or netstat. Port 445. 
+
+Common Internet File System - CIFS - considered obsolete but on test. 
+
+Port 137-139 - NETBIOS over IP/CIFS
+
+Exception. After a while, they realized NETBIOS stuff was unneeded.
+
+Port 445- SMB. Direct SMB.
+
+Apple Filing Protocol - Port 548. AFP. Most Macs also use SMB. 
+
+Linux reverse engineered SMB and wrote SAMBA - simply to emulate a windows system

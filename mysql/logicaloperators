@@ -1,0 +1,77 @@
+LOGICAL OPERATORS
+
+WHERE - how to control which columns are returned. 
+
+select 1 as Result from movies where rating='PG';
+
+For every movie with rating PG, show 1 in column Result
+
+For every 
+
+select * from movies where rating='PG' AND title like "Night%"
+
+Show all movies with PG Rating and a title starting with "Night"
+
+NOT
+
+select * from movies where rating='PG' and title NOT like "Night%"
+
+Show all movies with PG Rating and a title that does not start with "Night"
+
+select title, release_year from movies where release_year > 2005;
+
+select title, release_year from movies where release_year >= 2005;
+
+AND
+
+select title, release_year from movies where release_year > 2005 AND release_year < 2016;
+
+BETWEEN
+
+select title, release_year from movies where release_year between 2005 and 2016;
+
+<> -> not equal
+
+select titel, release_year from movies where release_year <> 2016;
+
+select title, release_year from moveis where title <> 'Zoolander';
+
+IN
+
+select title, release_year from movies where releas_year in (2005, 2009, 2016);
+
+select title, release_year from movies where releas_year not in (2005, 2009, 2016);
+
+select title, release_year from movies where title in ('Zoolander', 'Tropic Thunder');
+
+OR
+
+select * from movies where rating='R' OR title like "Zoo%";
+
+select * from movies where (rating='R' OR title like "Zoo%");
+
+NULL or EMPTY
+
+NULL - no value at all
+
+'' - empty value
+
+IFNULL(A, B) - A is field to be compared, B is default value to be used when NULL is found. 
+
+select * from movies where rating='R' or IFNULL(rating, '') = '';
+
+Show movies whree rating if R or rating is NULL or ''
+
+CASE
+
+select title, rating, case
+-> when rating='PG' then 'Bring the kids!'
+-> when rating='PG-13' then 'Older kids!'
+-> when rating='R' then 'Not for kids!'
+-> else 'No information' 
+-> end as audience
+
+Creates audience column with appropriate string text. 
+
+
+

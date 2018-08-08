@@ -1,0 +1,702 @@
+EXCEPTIONS
+
+Exception - error in code typically in runtime that are difficult to account for. Such as being unable to 
+connect to a database, a corrupted file, or trying to contact a machine that is offline. 
+
+Exception handling - technique for dealing with exceptions. However, even for bugs and user errors, the CLR 
+will often generate a corresponding exception that indentifies the problem at hand. 
+
+Such as FormatException, IndexOutOfRangeException, FileNotFoundException, ArgumentOutOfRangeException
+
+Old exception handling involved making a constant with a numerical value. Functions would return values and 
+programmer could check if value was returned and handle it. 
+
+/* A very C-style error trapping mechanism. */
+#define E_FILENOTFOUND 1000
+ 
+int UseFileSystem()
+{
+// Assume something happens in this function
+// that causes the following return value.
+return E_FILENOTFOUND;
+}
+ 
+void main()
+{
+int retVal = UseFileSystem();
+if(retVal == E_FILENOTFOUND)
+printf("Cannot find file...");
+}
+
+Ideally would want to wrap error's name, a descriptive message, and other information and about the error 
+condition into a single, well defined package. 
+
+Structured Exception Handling - standard technique to send and trap runtime errors. Gave developers a unified 
+approach to error handling common to all .NET languages. Also syntax used to throw and catch exceptions across
+assemblies and machine boundaries is identifical. 
+
+ExampleL If use C# to build a Windows Communication Foundation (WCF) service, you can throw a SOAP fauly to a 
+remote caller using same keywords that allow you to throw an exception between methods in same application.
+
+Another bonus is that is that arther than receiving a numerical value, exceptions are objects that contain a human readable description of proble, as well as detailed snapshot of the call stack that triggered the exception in the first place. 
+
+Involves use of 4 interrelated entities:
+-A class type that represents details of the exception
+-A member that *throws* an instance of the exception class to the caller under the correct circumstances
+-A block of code on caller's side that invokes the exception-prone member
+-A block of code on caller's side that will process (catch) the exception should it occur. 
+
+Five keywords (try, catch, throw, finally, when) allow to throw and catch exceptions. 
+
+Object that represents the problem at hand is a class extending System.Exception of a descendent. 
+
+All exceptions untimately derive from System.Exception base class. It in turn derives from System.Object 
+class. 
+
+public class Exception : ISerializable, _Exception
+{
+// Public constructors
+public Exception(string message, Exception innerException);
+public Exception(string message);
+public Exception();
+...
+ 
+// Methods
+public virtual Exception GetBaseException();
+public virtual void GetObjectData(SerializationInfo info,
+StreamingContext context);
+// Properties
+public virtual IDictionary Data { get; }
+public virtual string HelpLink { get; set; }
+public Exception InnerException { get; }
+public virtual string Message { get; }
+public virtual string Source { get; set; }
+public virtual string StackTrace { get; }
+public MethodBase TargetSite { get; }
+...
+}
+
+Properties are read-only in nature. Because derived types will typically supply default values for each 
+property. 
+
+System.Exception Property 		Meaning in Life
+Data 							This read-only property retrieves a collection of key/value pairs
+								(represented by an object implementing IDictionary) that provide
+								additional, programmer-defined information about the exception. By
+								default, this collection is empty.
+
+HelpLink 						This property gets or sets a URL to a help file or web site describing the
+								error in full detail.
+
+InnerException 					This read-only property can be used to obtain information about the
+								previous exception(s) that caused the current exception to occur. The
+								previous exception(s) are recorded by passing them into the constructor
+								of the most current exception.
+
+Message 						This read-only property returns the textual description of a given error.
+								The error message itself is set as a constructor parameter.
+
+Source 							This property gets or sets the name of the assembly, or the object, that
+								threw the current exception.
+
+StackTrace 						This read-only property contains a string that identifies the sequence of
+								calls that triggered the exception. As you might guess, this property is 
+								useful during debugging or if you want to dump the error to an external error 
+								log.
+
+TargetSite 						This read-only property returns a MethodBase object, which describes
+								numerous details about the method that threw the exception (invoking
+								ToString() will identify the method by name).
+
+THROWING A GENERAL EXCEPTION
+
+// This time, throw an exception if the user speeds up beyond MaxSpeed.
+public void Accelerate(int delta)
+{
+if (carIsDead)
+Console.WriteLine("{0} is out of order...", PetName);
+else
+{
+CurrentSpeed += delta;
+if (CurrentSpeed >= MaxSpeed)
+{
+carIsDead = true;
+CurrentSpeed = 0;
+ 
+// Use the "throw" keyword to raise an exception.
+throw new Exception(string.Format("{0} has overheated!", PetName));
+}
+else
+Console.WriteLine("=> CurrentSpeed = {0}", CurrentSpeed);
+}
+}
+
+Up to developer to decide exactly what constitutes the error in question and when exception should be thrown.
+
+Output:
+
+***** Simple Exception Example *****
+=> Creating a car and stepping on it!
+Jamming...
+=> CurrentSpeed = 30
+=> CurrentSpeed = 40
+=> CurrentSpeed = 50
+=> CurrentSpeed = 60
+=> CurrentSpeed = 70
+=> CurrentSpeed = 80
+=> CurrentSpeed = 90
+ 
+Unhandled Exception: System.Exception: Zippy has overheated!
+at SimpleException.Car.Accelerate(Int32 delta) in C:\MyBooks\C# Book (7th ed)
+\Code\Chapter_7\SimpleException\Car.cs:line 62
+at SimpleException.Program.Main(String[] args) in C:\MyBooks\C# Book (7th ed)
+\Code\Chapter_7\SimpleException\Program.cs:line 20
+Press any key to continue . . .
+
+CATCHING EXCEPTIONS
+
+When method throws an exception, caller must be ready to handle the exception, should it occur. Must use a
+try/catch block. 
+
+// Handle the thrown exception.
+static void Main(string[] args)
+{
+Console.WriteLine("***** Simple Exception Example *****");
+Console.WriteLine("=> Creating a car and stepping on it!");
+Car myCar = new Car("Zippy", 20);
+myCar.CrankTunes(true);
+// Speed up past the car's max speed to
+// trigger the exception.
+try
+{
+for(int i = 0; i < 10; i++)
+myCar. Accelerate(10);
+}
+catch(Exception e)
+{
+Console.WriteLine("\n*** Error! ***");
+Console.WriteLine("Method: {0}", e.TargetSite);
+Console.WriteLine("Message: {0}", e.Message);
+Console.WriteLine("Source: {0}", e.Source);
+}
+ 
+// The error has been handled, processing continues with the next statement.
+Console.WriteLine("\n***** Out of exception logic *****");
+Console.ReadLine();
+}
+
+***** Simple Exception Example *****
+=> Creating a car and stepping on it!
+Jamming...
+=> CurrentSpeed = 30
+=> CurrentSpeed = 40
+=> CurrentSpeed = 50
+=> CurrentSpeed = 60
+=> CurrentSpeed = 70
+=> CurrentSpeed = 80
+=> CurrentSpeed = 90
+ 
+*** Error! ***
+Method: Void Accelerate(Int32)
+Message: Zippy has overheated!
+Source: SimpleException
+ 
+***** Out of exception logic *****
+
+TARGETSITE PROPERTY
+
+System.Exception.TargetSite property - returns not just a vainlla string of return type, name, and parameter
+types. Returns a strongly-typed System.Reflection.MethodBase object. Type can be used to gether numerous 
+details about the offending method, as well as class that defines the offending method. 
+
+static void Main(string[] args)
+{
+...
+// TargetSite actually returns a MethodBase object.
+catch(Exception e)
+{
+Console.WriteLine("\n*** Error! ***");
+Console.WriteLine("Member name: {0}", e.TargetSite);
+Console.WriteLine("Class defining member: {0}",
+e.TargetSite.DeclaringType);
+Console.WriteLine("Member type: {0}", e.TargetSite.MemberType);
+Console.WriteLine("Message: {0}", e.Message);
+Console.WriteLine("Source: {0}", e.Source);
+}
+Console.WriteLine("\n***** Out of exception logic *****");
+Console.ReadLine();
+}
+
+TargetSite.DeclaringType - determine fully qualified name of the class that threw the error as well as the 
+MemberType property of the MethodBase object to identify the type of member (such as property vs method) 
+where exception originated. 
+
+*** Error! ***
+Member name: Void Accelerate(Int32)
+Class defining member: SimpleException.Car
+Member type: Method
+Message: Zippy has overheated!
+Source: SimpleException
+
+STACKTRACE
+
+System.Exception.StackTrace property allows you to identify the series of calls that resulted in the exception
+
+catch(Exception e)
+{
+...
+Console.WriteLine("Stack: {0}", e.StackTrace);
+}
+
+Stack: at SimpleException.Car.Accelerate(Int32 delta)
+in c:\MyApps\SimpleException\car.cs:line 65 at SimpleException.Program.Main()
+in c:\MyApps\SimpleException\Program.cs:line 21
+
+HELPLINK PROPERTY
+
+System.Exception.HelpLink - can be set to point the user to a specific URL or standard Windows help file that 
+contains more detailed information. Default value is empty string. If want to fill this property with more 
+interesting value, you need to do so before throwing System.Exception object. 
+
+public void Accelerate(int delta)
+{
+if (carIsDead)
+Console.WriteLine("{0} is out of order...", PetName);
+else
+{
+CurrentSpeed += delta;
+if (CurrentSpeed >= MaxSpeed)
+{
+carIsDead = true;
+CurrentSpeed = 0;
+// We need to call the HelpLink property, thus we need to
+// create a local variable before throwing the Exception object.
+Exception ex =
+new Exception(string.Format("{0} has overheated!", PetName));
+ex.HelpLink = "http://www.CarsRUs.com";
+throw ex;
+}
+else
+Console.WriteLine("=> CurrentSpeed = {0}", CurrentSpeed);
+}
+}
+
+DATA PROPERTY
+
+System.Exception.Data - developer can fill an exception object iwht relevant auxiliary information (such as 
+timestamp). Returns an object implementing interface named IDictionary defined in System.Collections namespace
+. Dictionary collections allow you to create a set of values that are retrieved using a specific key. 
+
+public void Accelerate(int delta)
+{
+if (carIsDead)
+Console.WriteLine("{0} is out of order...", PetName);
+else
+{
+CurrentSpeed += delta;
+if (CurrentSpeed >= MaxSpeed)
+{
+carIsDead = true;
+CurrentSpeed = 0;
+ 
+// We need to call the HelpLink property, thus we need
+// to create a local variable before throwing the Exception object.
+Exception ex =
+new Exception(string.Format("{0} has overheated!", PetName));
+ex.HelpLink = "http://www.CarsRUs.com";
+// Stuff in custom data regarding the error.
+ex.Data.Add("TimeStamp",
+string.Format("The car exploded at {0}", DateTime.Now));
+ex.Data.Add("Cause", "You have a lead foot.");
+throw ex;
+}
+else
+Console.WriteLine("=> CurrentSpeed = {0}", CurrentSpeed);
+}
+}
+
+To successfully enumerate over the key-value pairs, you must first make sure to specify a using directive for 
+the System.Collections namespace, since you will use a DictionaryEntry type in the file containing the class 
+implementing the Main() method. 
+
+using System.Collections;
+
+Next, must update catch logic to test that value returned from Data property is not null (the default value). 
+After, use the Key and Value properties of the DictionaryEntry type to print custom data to console. 
+
+catch (Exception e)
+{
+...
+Console.WriteLine("\n-> Custom Data:");
+foreach (DictionaryEntry de in e.Data)
+Console.WriteLine("-> {0}: {1}", de.Key, de.Value);
+}
+
+Output:
+
+***** Simple Exception Example *****
+=> Creating a car and stepping on it!
+Jamming...
+=> CurrentSpeed = 30
+=> CurrentSpeed = 40
+=> CurrentSpeed = 50
+=> CurrentSpeed = 60
+=> CurrentSpeed = 70
+=> CurrentSpeed = 80
+=> CurrentSpeed = 90
+*** Error! ***
+Member name: Void Accelerate(Int32)
+Class defining member: SimpleException.Car
+Member type: Method
+Message: Zippy has overheated!
+Source: SimpleException
+Stack: at SimpleException.Car.Accelerate(Int32 delta)
+at SimpleException.Program.Main(String[] args)
+Help Link: http://www.CarsRUs.com
+-> Custom Data:
+-> TimeStamp: The car exploded at 9/12/2015 9:02:12 PM
+-> Cause: You have a lead foot.
+ 
+***** Out of exception logic *****
+
+Data property useful in that it allows you to pack in custom information regarding error at hand, without 
+requiring the building of a new class type to extend the Exception base class. 
+
+SYSTEM LEVEL EXCEPTIONS (System.SystemException)
+
+System namespace defines core expcetion objects such as ArgumentOutOfRangeException, IndexOutOfRangeException,
+StackOverflowException, etc. 
+
+Other namespaces define exceptions that reflect the behavior of that namespace. System.Drawing.Printing 
+defines printing exceptions, System.IO deifnes I/O based exceptions, System.Data defines database-centric 
+exceptions, and so forth. 
+
+System exceptions - exceptions that are thrown by the .NET platform. Generally regarded as non-recoverable, 
+fatal errors. Derive from System.SystemException, which derives from System.Exception. 
+
+Means that .NET runtime is entity that has thrown the exception, rather than code base of executing app. 
+
+Can determine if Exception is SystemException with is keyword:
+
+// True! NullReferenceException is-a SystemException.
+NullReferenceException nullRefEx = new NullReferenceException();
+Console.WriteLine("NullReferenceException is-a SystemException? : {0}",
+nullRefEx is SystemException);
+
+APPLICATION LEVEL EXCEPTIONS (System.ApplicationException)
+
+Because Exceptions are class types, you can create your own application specific exceptions. 
+
+Functionally, only purpose of System.ApplicationException is to identify the source of the error. 
+
+Also, can avoid using a data dictionary. 
+
+public class CarIsDeadException : ApplicationException
+{
+private string messageDetails = String.Empty;
+public DateTime ErrorTimeStamp {get; set;}
+public string CauseOfError {get; set;}
+ 
+public CarIsDeadException(){}
+public CarIsDeadException(string message,
+string cause, DateTime time)
+{
+messageDetails = message;
+CauseOfError = cause;
+ErrorTimeStamp = time;
+}
+ 
+// Override the Exception.Message property.
+public override string Message
+{
+get
+{
+return string.Format("Car Error Message: {0}", messageDetails);
+}
+}
+}
+c void Accelerate(int delta)
+{
+...
+CarIsDeadException ex =
+new CarIsDeadException (string.Format("{0} has overheated!", PetName),
+"You have a lead foot", DateTime.Now);
+ex.HelpLink = "http://www.CarsRUs.com";
+throw ex;
+...
+}
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Custom Exceptions *****\n");
+Car myCar = new Car("Rusty", 90);
+ 
+try
+{
+// Trip exception.
+myCar.Accelerate(50);
+}
+catch (CarIsDeadException e)
+{
+Console.WriteLine(e.Message);
+Console.WriteLine(e.ErrorTimeStamp);
+Console.WriteLine(e.CauseOfError);
+}
+Console.ReadLine();
+}
+
+Typically, only need to create custom exceptions when error it tightly bound to class issuing the error. 
+
+Not required to override properties. Can simply pass message to parent's constructor.
+
+public class CarIsDeadException : ApplicationException
+{
+public DateTime ErrorTimeStamp { get; set; }
+public string CauseOfError { get; set; }
+ 
+public CarIsDeadException() { }
+ 
+// Feed message to parent constructor.
+public CarIsDeadException(string message, string cause, DateTime time)
+:base(message)
+{
+CauseOfError = cause;
+ErrorTimeStamp = time;
+}
+}
+
+Often follows this pattern. Usually just need to supply a strongly named type that clearly identifies the 
+nature of the error. 
+
+.NET Exception Best Practices:
+
+-Derives from Exception/ApplicationException
+-Is marked with the [System.Serializable] attribute
+-Defines a default constructor
+-Defines a constructor that sets the inherited Message property
+-Defines a constructor to handle "inner exceptions"
+-Defines a constructor to handle the serialization of your type
+
+[Serializable]
+public class CarIsDeadException : ApplicationException
+{
+public CarIsDeadException() { }
+public CarIsDeadException(string message) : base( message ) { }
+public CarIsDeadException(string message,
+System.Exception inner)
+: base( message, inner ) { }
+protected CarIsDeadException(
+System.Runtime.Serialization.SerializationInfo info,
+System.Runtime.Serialization.StreamingContext context)
+: base( info, context ) { }
+// Any additional custom properties, constructors and data members...
+}
+
+PROCESSING MULTIPLE EXCEPTIONS
+
+Often situations where a single try block could trigger numerous exceptions. 
+
+// Test for invalid argument before proceeding.
+public void Accelerate(int delta)
+{
+if(delta < 0)
+throw new
+ArgumentOutOfRangeException("delta", "Speed must be greater than zero!");
+...
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Handling Multiple Exceptions *****\n");
+Car myCar = new Car("Rusty", 90);
+try
+{
+// Trip Arg out of range exception.
+myCar.Accelerate(-10);
+}
+catch (CarIsDeadException e)
+{
+Console.WriteLine(e.Message);
+}
+catch (ArgumentOutOfRangeException e)
+{
+Console.WriteLine(e.Message);
+}
+Console.ReadLine();
+}
+
+Exception that is throw will be processed by first appropriate catch. Structure them so that first catch is 
+most specific exception leaving final catch for most general. 
+
+// This code compiles just fine.
+static void Main(string[] args)
+{
+Console.WriteLine("***** Handling Multiple Exceptions *****\n");
+Car myCar = new Car("Rusty", 90);
+try
+{
+// Trigger an argument out of range exception.
+myCar.Accelerate(-10);
+}
+catch (CarIsDeadException e)
+{
+Console.WriteLine(e.Message);
+}
+catch (ArgumentOutOfRangeException e)
+{
+Console.WriteLine(e.Message);
+}
+// This will catch any other exception
+// beyond CarIsDeadException or
+// ArgumentOutOfRangeException.
+catch (Exception e)
+{
+Console.WriteLine(e.Message);
+}
+Console.ReadLine();
+}
+
+GENERAL catch STATEMENTS
+
+Does not explicitly receive the exception object thrown by a given member. 
+
+// A generic catch.
+static void Main(string[] args)
+{
+Console.WriteLine("***** Handling Multiple Exceptions *****\n");
+Car myCar = new Car("Rusty", 90);
+try
+{
+myCar.Accelerate(90);
+}
+catch
+{
+Console.WriteLine("Something bad happened...");
+}
+Console.ReadLine();
+}
+
+RETHROWING EXCEPTIONS
+
+When catch an exception, it is permissible for logic in try block to rethrow exception up call stack to the 
+previous caller. To do so, use throw keyword within a catch block. This passes the exception up the chain of 
+calling logic, which can be helpful if catch block is only able to partially handle error at hand. 
+
+// Passing the buck.
+static void Main(string[] args)
+{
+...
+try
+{
+// Speed up car logic...
+}
+catch(CarIsDeadException e)
+{
+// Do any partial processing of this error and pass the buck.
+throw;
+}
+...
+}
+
+Notice: not creating a new exception object, just rethrowing original exception object. If throw it up to 
+Main() then ultimate receiver of excpetion is the CLR. So user will get a system-supplied error dialog box.
+
+INNER EXCEPTIONS
+
+Possible to trigger an exception at time you are handling another exception. 
+
+catch (CarIsDeadException e)
+{
+try
+{
+FileStream fs = File.Open(@"C:\carErrors.txt", FileMode.Open);
+...
+}
+catch (Exception e2)
+{
+// Throw an exception that records the new exception,
+// as well as the message of the first exception.
+throw new CarIsDeadException(e.Message, e2);
+}
+}
+
+Notice the FileNotFoundException object as second parameter to the CarIsDeadException constructor. Should throw exception up call stack to next caller. 
+
+Usually only useful when the caller has ability to gracefully catch the exception in the first place. If so, caller's catch logic can use the 
+InnerException property to extract the details of the inner exception block. 
+
+THE finally BLOCK
+
+finally block - ensure that a set of code will always execute, exception or not. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Handling Multiple Exceptions *****\n");
+Car myCar = new Car("Rusty", 90);
+myCar.CrankTunes(true);
+try
+{
+// Speed up car logic.
+}
+catch(CarIsDeadException e)
+{
+// Process CarIsDeadException.
+}
+catch(ArgumentOutOfRangeException e)
+{
+// Process ArgumentOutOfRangeException.
+}
+catch(Exception e)
+{
+// Process any other Exception.
+}
+finally
+{
+// This will always occur. Exception or not.
+myCar.CrankTunes(false);
+}
+Console.ReadLine();
+}
+
+EXCEPTION FILTERS
+
+Current release introduces a new (optional) clause that can be placed on a catch scope via the when keyword. When adding this calause, you have ability 
+to ensure that the statements within a catch block are executed only if some condition in code holds true. 
+
+Must evaluate to a Boolean (true or false) and can be obtained by using a simple code statement in the when definition itself or by calling an additional
+method in your code. 
+
+Essentially adds "filters" to exception logic. 
+
+public class CarIsDeadException : ApplicationException
+{
+...
+// Custom members for our exception.
+public DateTime ErrorTimeStamp { get; set; }
+public string CauseOfError { get; set; }
+ 
+public CarIsDeadException(string message,
+string cause, DateTime time)
+: base(message)
+{
+CauseOfError = cause;
+ErrorTimeStamp = time;
+}
+}
+
+Assume Accelerate() usess the new constructor when throwing the error:
+
+CarIsDeadException ex =
+new CarIsDeadException(string.Format("{0} has overheated!", PetName),
+"You have a lead foot", DateTime.Now);
+
+When clause ensures that catch block is never executed on a Friday.
+
+catch (CarIsDeadException e) when (e.ErrorTimeStamp.DayOfWeek != DayOfWeek.Friday)
+{
+// This new line will only print if the when clause evaluates to true.
+Console.WriteLine("Catching car is dead!");
+ 
+Console.WriteLine(e.Message);
+}
+
+

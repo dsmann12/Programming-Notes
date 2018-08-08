@@ -1,0 +1,106 @@
+INTRO
+
+Node ia s JavaScript runtime built on Chrome's V8 JavaScript engine. Compiles JS to machine code. Assembly? Makes it fast. V8 written in C++. 
+
+Just like what runs in Chrome's console window
+
+global is the variable in Node that holds global functions and values. An Object
+
+process is like document variable in the browser. Document stores DOM. Process stores information about current node process and methods associated with it. stdin, stdout, etc. 
+
+process.exit() -> exit process
+
+Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. 
+
+Asynchronous functionality. 
+
+REQUIRE
+
+Modules are units of functionality. Like little libraries. 
+
+require lets you load modules. 
+
+Some things built in js. 
+
+Http module allows us to make webservers. fs modules allows to manipulate file system. 
+
+Express and Sqlize - use less code. Libraries. 
+
+Also allows you to break up program into smaller files. 
+
+const os = require('os');
+var user os.userInfo();
+
+user.username
+
+Template strings -> start and end with ` operator. To insert JS variable use ${}. 
+
+
+'Hello %{user.username}!'
+
+To reference a file. Require relative file path.
+
+const file = requre('./file.js');
+
+module -> variable in node. Has exports variable. Everything it exports is in exports. And object. 
+
+module.exports.age = 25;
+module.exports.addNote = () => { }
+
+Big difference is that => doesn't bind to this keyword or arguments array. Anonymous functions do.
+
+When require 3rd party file, looks in core first and then looks in node_modules. 
+
+lodash -> popular library. Sorting, filtering, typechecking. 
+
+yarg -> for parsing. Validating input. Formatted input. Etc. i
+.command() -> commands and their descriptions
+.help() -> make help flag
+
+Can add options for each command too in a n object.
+
+filter -> useful function
+
+DEBUG
+
+node inspect file.js
+
+Will break at first line. 
+
+list(10) -> list 10 lines 
+
+Wrapper functiono representing the Node app.
+
+function (exports, require, module, __filename, __dirname) { code }
+
+n -> next
+c -> continue
+
+repl - Can access app as it current stands. Access variables. 
+person.age
+person.age = 26
+
+debugger -> in file makes a breakpoint in code.
+
+CHROME - DEBUG
+
+node inspect-brk file.js
+
+Go to Chrome
+
+chrome://inspect
+
+Under remote target you have 
+
+Open dedicated DevTools
+
+nodemon can be called with -brk 
+
+ARROW FUNCTIONS
+
+Do not bind a this keyword. 
+
+// for objects to bind to this
+exFunction() {
+	console.log(this.name);
+}

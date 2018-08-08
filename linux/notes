@@ -1,0 +1,249 @@
+who -uH := user logged in with headers
+set := set shell configuration
+type := locate file
+type -a ls := find all files ls and aliases
+locate filename := check all directories user has access to for file with name specified
+
+/etc/passwd -> shows default shell for users
+
+Know terminal keyboard shortcuts pg 78
+
+troff
+nroff
+
+chown
+chmod
+grep
+
+Expanding commands
+sort $(ls ~/Documents) 
+sort `ls ~/Documents`
+$[expression] or $(expression) for arithmetic expressions
+
+Expanding Variables
+$VARIABLE
+
+$ echo $PATH
+$ cs %JAVA_HOME
+
+$SHELL - shell running
+$BASH - bash
+$PS1 - defines shell prompt
+$MAIL - defines mailbox
+
+set := show variables in shell (also declare command)
+env := see environment variables
+
+Know common environmental variables
+
+
+alias/unalias
+
+Know Bash configuration files
+
+source $HOME/.bashrc := make file available to current shell
+
+Know how to change prompt
+
+Know different sections of man page 93-94
+
+Understand the file system hierarchy and what each folder is for
+
+Know filesystem commands
+Know metacharacters
+Know I/O redirection
+Know brace expansion
+
+touch {John, Bill, Sally}-{Breakfast, Lunch, Dinner}
+ls
+John-Breakfast John-Lunch John-Dinner ...
+...
+
+
+Files and File Permissions
+
+4096 number indicates size of file containing info about the directory. 
+
+-rwxrwxrwx -> for denoting file persmissions
+-s setUID setGID. Instead of x. Assigns ownership of running process to application's user/group instead of that of user launching command. 
+-t Also, sticky bit. Setting sticky bit on a directory, the directory's owner can allow other users and groups to add files to the directory but prevent users from deleting each other's files. With set GID assigned to directory, any files created in that directory are assigned the same group as the directory's group. Capital S or T means that GID or stick bit permission was set but execute bit was not also turned on.
++ for extended control bits (ACLs or SELinux)
+
+umask 
+
+VIM commands
+a, A, i, I, o, O
+w, b, 0, $
+H, M, L
+d<?> - delete word (w) after cursor, word (b) before cursor, line (d)
+c<?> - ($) change characters (erases them) from current character to end of line ($) and goes into input, (0) changes (erases) characters crom current character to beginning of line (0) and goes into input, (l) erases current letter and goes into input, (c) erase the line and goes into input
+y<?> - (y) copies current line into buffer, ()) copies ccurrent sentence, to right of cursor, into the buffer, (}) copes current paragraph t oright of the cursor
+
+Thses commands can also be modified by proceding them with numbers
+3dd -> delets three lines from current line
+
+p/P - puts copied text either before or after cursor.
+
+. -> repeat d, c, p commands. 
+
+:!command -> run command (:!date)
+
+Ctrl+f -> pages ahead one at atime
+Ctrl + b -> pages back
+Ctrl+d -> one half page ahead
+Ctrl+u -> one half page back
+G - last line of file
+1G - first line of file
+
+Ex mode - substitute text
+
+:g/Local -> searches for word Local nad prints every occurence. 
+:s/Local/Remote - substitutes first occurrence of word Local on every line of file with word Remote
+:g/Local/s//Remote/g - substitutes every occurrence of word Local with word Remote in entire file
+:g/Local/s//Remote/gp - substitutes every occurrence of word Local with word Remote in entire file and then prints each line so you can see changes
+
+FINDING FILES
+
+locate - find commands by name
+find - find files based on diffferent attributes
+grep - search within text files to find lines in files that contain search text
+
+On most Llinux systems, the updatedb command runs once per day to gather names of files through your system into a database. locate searches that database. 
+
+locate - finds files faster because uses database. Disadvantage is it cannoy find any files added to system since the previous time database was created. Also not every file in file system is storedin database. 
+
+/etc/updatedb.conf shows file limit which filenames are collected by pruning out select mount types, filesystem types, file types, and mount points. 
+
+Regular users cannot see any files from locate that they can't see in filesystem normally. 
+
+Searching for string, string can appear anywhere in file's path. Not just filename.
+
+To get database to contain all files up to current moment, run updatedb from shell as root.
+
+Using locate as root, you can see every file in every user's filesystem.
+
+-i -> locate file by disregarding case 
+
+Find -> searches filesystem live, so runs slower than locate. Can also tell find to start at a particular point in filesystem so search can go faster. By default, it searches from current directory. 
+
+find -ls /usr firefox
+
+To get rid of any errors stemming from needing root to see files, direct stderr to /dev/null with 2>.
+
+Use -name or -iname to find fils y by name. Can use special characters. -iname ignores case. 
+
+-size to also search by size of file to find files that are taking up space. Look up file exactly, smaller than, or larger than selected size
+
+fine /usr/share -size +10M
+
+-user or -group can be used to search for files based on particular owner or group. 
+
+-not and -or, to refine search. 
+
+find /home -user chris -or -user joe -ls
+
+-perm to find files by permission. To find security issues on system or uncover access issues. If use number, with a hyphen (-) in front, all three bits mus match; with a plus (+), any of numbers can match for search to find a file. Full exact number must match if neither - or + used.
+
+find /bin -perm 755 -ls
+find /home/chris -perm -222 -type d -ls
+
+Cnal so find fils by date and time stampes
+find /etc/ -mnim -10 # find file modified in last 10 minutes
+find /bin /usr/bin /sbin/ -ctime -3 # search to  see if any commands have had their ownership or permissions changed in last three days. 
+find /var/ftp /var/www -atime +300 # find files in FTP or web server that have not been access in more than 300 days.
+
+-atime, -ctime, -mtime (access, changed, or metadata changed). (days)
+-amin, -cmin, -mmin (minutes)
+Number preceded by -, +, or nothing. 
+
+find /var/all \( -user joe -o -user chris \) -ls # searchs files owned by user joe or chris
+find /var/all -user joe -not -group joe -ls
+find /var/all -user joe -and -size +1M -ls
+
+-exec -> Can also execute commands with files found by find. 
+-ok -> option stops at each matched file and asks whether you want to run command on it
+
+find [options] -exec command {} \;
+find [options] -exec command {} \; 
+
+{} -> indicate where on command line to read in each file that is found. 
+
+To end line, you need to add backslash and semicolol (\;). 
+
+grep -> search files that contain a certain search term. 
+
+-i -> ignore case
+grep -i desktop /etc/services
+
+-v -> get lines that do not contain selected text string
+grep -vi tcp /etc/services
+
+-r -> recursively search directory
+-l -> lists files that include search texts without showing actual lines of text
+
+grep -rli peerdns /usr/share/doc/
+
+--color -> use color in results.
+grep -ri --color root /etc/sysconfig
+
+MANAGING RUNNING PROCESSES
+
+ps. top, kill, jobs
+
+Processes have unique process id. Each process also associated with a particular user account and group account. This determines what system process the process can access. 
+
+ps -> listing processes currently runing on the system. 
+-u -> asks that usernames be shown
+
+STAT represents state of process, with R indicating RUNNING and S indicating SLEEPING. + indicates process is associated with a foreground process.
+VSZ (virtual set size) shows size of the image process in KB Memory allocated for process
+RSS (resident set size) shows size of program in memoery. Actual memory being used. Cannot be swapped
+START shows the time the process began running
+TIME shows the cumulative system time used (0:00 is for processes that haven't used 1 second of cpu time)
+
+ps aux -> show all processes
+
+-o -> use keywords to indicate the columns you want to list with ps. 
+-e -> list every running process
+
+ps -eo pid,user,uid,group,gid,vsz,rss,comm | less
+
+--sort=rss -> sort by a specific column (RSS) Use --sort=-rss for descending order. 
+
+top -> provides screen oriented means of displaying processes running on system. Default is to display processes based on how much CPU time they are currently consuming. 
+
+h -> see help
+M -> sort by memory usage instead of CPU
+P - sort by CPU
+1 -> toggle showing CPU usage of all cpus if have more than one
+R -> to reverse sort your output
+u -> enter a username to isplay processes only for this user
+
+Can renice process using too much CPU to give it less priority to CPUs. Process using too much memory can be killed. 
+
+r -> renice. Type PID of process want to renice, type number from -19 to 20
+k -> kill process. Give PID. 15 to terminate cleanly or 9 to just kill it. 
+
+BACKGROUND AND FOREGROUND PROCESSES
+
+command & -> run command in background
+at - run commands in such as way that they ar enot connected to the shell
+
+CTRL-Z -> stop a running command and put it in the background. 
+fg -> bring command to foreground. 
+fg %1 -> bring jobs[1] to oreground.
+
+If output appears from a command running in background durin vim session, use CTRL-L to redraw screen.
+
+To avoid having output appear, you can have any process running in background send its output to a file or to null. 
+
+jobs -> check commands running in background
++ -> program most recently place in background
+- -> program second most recently placed in background
+
+% -> most recent command put in background
+%string -> refers to job where command begins iwth a particular string of characters (must be unambigious)
+%?string -> reers to job where command line contains string at any point.
+%-- -> refers to previous job stopped before one most recently stopped
+
+KILLING PROCESSES WITH KILL AND KILLAA

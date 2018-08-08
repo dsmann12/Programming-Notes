@@ -1,0 +1,34 @@
+DATA ASSOCIATIONS
+
+Associations - multiple collections being related to one another. 
+
+Different types of associations:
+
+one:one - simplest. One entity related to one of another entity. One book has one publisher
+one:many - one entity is related to many of another entity. One user has many photos. 
+many:many - many entities are related to many other entities. Many students have many courses. 
+
+EMBEDDING DATA
+
+Embed data in object as an array or list.
+
+Then push data to that array or list. 
+
+Referencing Data
+
+Reference id of another object in other databases. Have array of those IDs in object.
+
+//check examples
+
+Usually one style or the other is better depending on what you are doing. 
+
+MODULE.EXPORT
+
+Modularize code to split it into files based on functionality and similarities. 
+
+var User = mongoose.model("User", userScheme);
+module.exports = User;
+
+Exports an object that can be referenced in another JS file with require.
+
+var User = require("./models/user");

@@ -1,0 +1,93 @@
+ANGULAR
+
+JavaScript framework hwich allows you to create reactive Single Page Applications. Changes happen on client 
+side during runtime. Not making http requests. Just one HTML file. 
+
+Angular 1 - first version.
+Angular 2 - rewrite. Not much in common with 1. Was future
+Angular 4 - update to Angular 2 but common with 1
+
+Angular CLI - used to setup Angular. Angular uses TypeScript so must be compiled before browser uses. 
+
+npm install -g @angular/cli
+
+ng new <project name>
+ng new my-first-app
+
+ng serve - builds all source code (typescript). Then spins up development server.
+
+Navigate to the correct port on localhost to check it worked. 
+
+Folder structure:
+
+Most files are for configuring project
+
+e2e - end to end testing
+
+src - where you create your project. 
+
+src/index.html is single page that will be served
+
+src/app = folder where create app. 
+
+app.component.ts - exports title 'app works'
+
+ng server - watches files for changes and automatically changes pages in browser.
+
+app.component.html - html template
+
+To add input.
+
+In regular JS, have to add a listener and find p element to get text and dislay.
+
+In angular:
+
+<input type=text [(ngModel)]="name"> //angular command. Sets up binding. Binds to property of ts file. 
+<p>{{ name }}</p>
+
+in component.ts
+
+name = ''
+
+So webpage dynamically changes text in p tags according to what is typed in the input textbox.
+
+Add name property to app.component.ts file. 
+
+Updates in real time. 
+
+Structure:
+1. Basics
+2. Components & Databinding
+3. Directives
+4. Services & Dependency Injection
+5: Routing
+6. Observables
+7. Forms
+8. Pipes
+9. Http
+10. Authentication
+11. Optimizations and NgModules 
+12. Deployment
+13. Animations and Testing
+
+TypeScript - superset to JS. Classes, interfaces, and types. Has to be compiled into JS. CLion.
+
+Can add Bootstrap. 
+
+npm install bootstrap --save
+
+Then open .angular-cli.json file. 
+
+Scroll to styles:
+Allows imports of global style sheets
+Already supplies styles.css which is empty file
+Reference node_modules folder which holds all downloaded repositories
+
+"styles": [
+	"../node_modules/bootstrap/dist/css/bootstrap.min.css",
+	"styles.css"
+],
+
+Behind the scenes, the CLI uses Webpack, a tool which bundles all JS and CSS files and adds them to the index.html file
+
+Can also adjust project, like changing title for index.html. 

@@ -1,0 +1,743 @@
+ZOMBIE SHOOTER
+
+Give us environment as a prefab. Dragging into hierarchy puts it in the scene. 
+
+Will have camera looking down.
+
+Raycast - will create invisible line from camera to the floor. Very inconsitent floor. Don't want to worry about different heights. To make things simple, add in a game quad
+
+Reset to origin. Rotate by 90 in x axis. Give scale of 100 and 100. Don't want to see it. Just want collider. Quad is made visible by mesh renderer. Just remove mesh renderer to make it invisible. Must keep mesh filter and mesh collider. 
+
+Don't want raycast to care about anything but this quad. So use layers. From layer dropdown, choose floor.
+
+Create object for music. Name BackgroundMusic
+
+Add audio source component. Add audio source.
+
+Mix volume
+
+PLAYER CHARACTER
+
+Drag player from  Models into the scene. Reset to origin. 
+
+Can tag player as player
+
+Animator Controller - allows for animations. Use state machine. FSM to handle animations. 
+
+Create Animator Controller
+
+Drag it onto player, 
+
+Can look at it by double clicking it. 
+
+Can drag animations on to animator controller to use as assets. 
+
+Can set default state by right clicking. 
+
+Need to tell animator when we want to transition from one state to another. Create parameter to control when something changes state.
+
+Parameters button in corner of animator screen. + to create a parameter. Floa, Int, Bool. Trigger. 
+
+Bool IsWalking
+
+Trigger - like boolean. Can have state true or false. But when set to true, immediately sets to false. 
+
+Trigger Die
+
+Set up transitions to say how states can transition. 
+
+Right click -> make transition.
+
+Click on transition to dictate when that happens. Transition will turn blue. Can change in inspector view. 
+
+Conditions - what is condition of transition. 
+
+Select IsWalking and set to true. 
+
+So transition from Idle to Move when IsWalking is true. 
+
+Then make opposite transition. 
+
+Use any state for things that can happen in any state you are in. 
+
+Add rigid body for player object to move. 
+
+So that things don't slow down over time, set Drag and Angular Drag to infinity. inf and click Enter to get Infinity
+
+Can use constraints to make sure players don't fall foward or sink. 
+
+Add collider to player. 
+
+Use scripts to handle player movement. 
+
+Animator anim;
+Rigidbody playerRb;
+int floorMask; // collider on floor to use as raycaster object. Int is for layer. 
+float camRayLength = 100; // length of ray cast from camera. 
+
+Awake() gets called regardless of whether script is enabled. Good for setting up references
+
+void Awake() 
+{
+	floorMask = LayerMask.GetMask("Floor");	
+	anim = GetComponent<Animator>()
+	playerRb = GetComponent<Rigidbody>();
+|
+
+FixedUpdate() -> for physics
+
+Input.GetAxisRaw() - Normal axis has values varying between -1 and 1. Raw axis means only -1, 0, 1. So no acceleration. Snaps to full speed. 
+
+void FixedUpate()
+{
+	float h = Input.GetAxixRaw("Horizontal");
+	float v = Input.GetAxisRaw("Vertical");
+	
+	Move(h, v);
+	Turning();
+	Animating(h, v);
+}
+
+void Move(float h, float v) 
+{
+	movement.Set(h, 0f, v);
+	// can get advantage by moving diagnally because vector is 1.4. 
+	// normalize it to make sure sizek is 1 no matter what. 
+	movement = movement.normalized * speed * Time.deltaTime;
+	playerRb.MovePosition(transform.position + movement);
+}
+
+void Turning()
+{
+	// based on mouse input
+	Ray cameRay = Camera.main.ScreenPointToRay(Input.mousePosition); // find point underneath mouse. If that hits floor quad. 
+	RaycastHit floorHit;
+
+	if(Physics.Raycast(camRay, out floorHit, camRayLength, floorMast)) { // true if ray has hit something
+		Vector3 playerToMouse = floorHit.point - transform.position; // point where ray hit floor - player position
+		playerToMouse.y = 0f; // make sure doesn't lean
+
+		Quaternion newRotation = Quaternion.LookRotation(playerToMouse); // z axis is typically forward vector. Use to store rotation. 
+		playerRb.MoveRotation(newRotation); // apply rotation. Give new rotation. Not offset. 
+	}
+}
+
+void Animating(float h, float v)
+{
+	bool walking = (h != 0f || v != 0f);
+	anim.SetBool("IsWalking", walking);
+}
+
+CAMERA
+
+Want to make isometric view. 
+
+Use orthographic camera. 
+
+Set up where camera is positioned. 
+
+(1, 15, -22)
+RotatioNm 30, 0, 0
+
+size = 4.5
+
+Set background to black` 
+
+Add script to camera. 
+
+public Transform target; // target for camera to follow
+public float smoothing = 5f; // camera follows player around with a little lag for smoother expereience
+
+Vector2 offset;
+
+void Start()
+{
+	offset = transform.position - target.position; // camera - player
+}
+
+void FixedUpate() 
+{
+	Vector3 tragetCamPos = traget.position + offset;
+	transform.position = Vector3.Lerp(transform.position, targetCamPos, smoothing * Time.deltaTime); // smoothly move between current position and target position
+}
+
+ENEMY
+
+Place enemy model into scene. 
+
+Use particles for stuffing to fall out enemy when hit. In prefab. 
+
+Put them in Shootable layer. 
+
+Add a RigidBody for physics and animator. 
+
+Give collider. Capsule. To give character physical presence.
+Can also add trigger collider to detect player. 
+
+To follow player, use NavMesh
+
+Unity - Window - Navigation
+
+Add Component - Nav Mesh Agent
+
+Baking - specify which parts of level are navigable. Agent is something that can move over that body. 
+
+Nav Mesh Agent has outline similar to collider.
+
+Set radius to 0.3, speed to 3, and stopping distance to 1.3, Height to 1.1
+
+Bunny is not moving, it's the nav mesh that is moving. Nav mesh agent will pick and follow target and avoid obstacles. 
+
+Environment has colliders. Also static is cheked in Prefab. Means Navigation Static is also checked
+
+Navigation - Bake tab
+
+Radius - radius of nav mesh. How near to wall an agent can move. 
+
+Will have different enemies. Bunnies and elephants and bears. So need to compromise with radius.
+
+Normally want nav mesh agents and nav mesh with same radius. 
+
+Height is also compromise. 
+
+Radius - 0.75
+Height - 1.2
+
+If only one type of enemy use same radius and height as agent. 
+
+Step Height - so agent can climb steps. Not be stoppe dby little bumps. 
+
+Then in advanced, set Width Inaccuracy to 1%. Tracks how carefully the nav mesh is baked. Can be baked very quickly if have high inaccuracy and could look angular. 
+
+Then click bake in bottom of window. 
+
+Will see overlay on scene view when navigation is pressed. 
+
+Agents and pathfinding will work with complex meshes but it is inefficient and there are issues if there are bumps and cracks. Not really worth traversing bumps and such. When bake, it is finding all the static meshes in scene. Things marked as navigatoin. These things aren't going to move and this is what we can walk on, so it calculates a simple, flat mesh that is inexact but close enough to use and walk on. And move around. Generating flat plane, possibly with slope and makes naviating AI clear and simple. 
+
+If we wanted to move blocks we'd have to rebake navmesh since they are static. 
+
+Must apply animations. 
+
+Create Animator Controller. Assing to enemy. Drag Controller onto Animator. 
+
+Create parameters and drag animations as states. 
+
+Move until PlayerDead or they are Dead.
+
+Create script to move enemy. 
+
+Will have:
+
+Transform player; // not public because enemies are spawned 
+NavMeshAgent nav;
+
+void Awake()
+{
+	player = GameObject.FindGameObjectWithTag("Player").transform;
+	nav = GetComponent <NavMeshAgent>();
+}
+
+void Update()
+{
+	nav.SetDestination(player.position); // not physics
+}
+
+nav.SetDestination(position) - nav mesh agent. Telling where it wants to go. Nev mesh engine will avoid other enemies and such. 
+
+HEALTH HUD
+
+Click 2D. 
+
+GameObect - UI - Canvas. 
+
+Name it HUDCanvas
+
+UI based around Rect Transform - numbre of ways of displaying Rectangle on screen. Every UI element is based on parent's Rect Transform. 
+
+In Render Mode, Rect Transform is being driven some way. Stays to scale of screen with Screen Space - Overlay. 
+
+Screen Space - Camera -> UI perspective
+World Space - for things within 3D scene. Like speech bubble popping up from 3D character.
+
+Pixel Perfect - to make sure graphic elements ar epixel perfect
+
+Graphic Raycaster - not important right now
+
+Add Canvas Group component.
+
+Allows UI elements to have an Alpha and toggle whether they are interactable. 
+
+Don't want UI interactable. Don't want canvas to block Raycasts either so uncheck BlockRaycasts. 
+
+Canvas is big because it maps one pixel per world unit so you get highest level fidelity in graphic.
+
+Can use Layers to disable this (though may cause confusion. Can hide everything and only show UI.
+
+Create GameObject on HUDCanvas named HealthUI. 
+
+Adding it from UI object, Unity will automatically give it a Rect Transform instead of normal Transform.
+
+For UI objects, can use rect tool to scale and rotate UI. Or snap to area. And mess with anchor points. 
+
+Button on Rect Transform which gives you some Rect Presets using Alt or Shift to lay things out in a certain area. 
+
+Can set width and height. 
+
+Can add image to UI.
+
+UI - Image. Anyway to get texture or sprite into UI layout. For heart icon.
+
+Change Source Image to change image. 
+
+Add slider in UI for health.
+
+Make child of HealthUI and choose UI -> Slider. 
+
+Set x and y. 
+
+Can use sliders for settings. Can also use in non-interactive manner for health bar. So don't need the handle and can delete it. 
+
+Slider has interactable checkbox but because canvas is not interactable you don't need to worry about this. 
+
+Transition - for interactivity. Set to none for no interactivity.
+
+Set max value to starting health. 
+Set value to starting health.
+
+Can write scripting to decrease slider. 
+
+Want screen to flash when you are hurt. 
+
+Add a UI - Image. 
+
+Call it DamageImage.
+
+Want it over screen. Drop it on to HUDCanvas and in RectTransform, alt click on lower right preset to stretch across screen.
+
+Set alpha to 0. 
+
+PLAYER HEALTH
+
+Add script to player. 
+
+public int startingHealth = 100;
+public int currentHealth;
+public Slider healthSlider;
+public Image damageImage;
+public AudioClip deathClip;
+public float flashSpeed = 5f;
+public Color flashColor = new Color(1f, 0f, 0f, 0.1f);
+
+Animator anim;
+AudioSource playerAudio;
+PlayerMovement playerMovement;
+
+bool isDead;
+bool damaged;
+
+void Awake()
+{
+	anim = GetComponent<Animator>();
+	playerAudio = GetComponent<AudioSource>();
+	playerMovement = GetComponent<PlayerMovement>();
+	currentHealth = startingHealth;
+}
+
+void Update()
+{
+	if (damaged) 
+	{
+		damageImage.color = flaseColor;
+	} 
+	else
+	{
+		damageImage.color = Color.Lerp(damageImage.color, Color.clear, flashSpeed * Time.deltaTime); // move from one color to another. Go from red to invisible smoothly.
+	}
+	damaged = false;
+}
+
+public void TakeDamage(int amount)
+{
+	damaged = true;
+	currentHealth -= amount;
+	healthSlider.value = currentHealth;
+	playerAudio.Play();
+	
+	if (currentHleath <= 0 && !isDead) 
+	{
+		Death();
+	}
+}
+
+void Death()
+{
+	isDead = true;
+	
+	anim.SetTrigger("Die");
+	playerAudio.clip = deathClip;
+	playerAudio.Play();
+	
+	playerMovement.enabled = false;
+}
+
+Now want enemies to attack the player.
+
+Create attack script. 
+
+public float timeBetweenAttacks = 0.5f;
+public int attackDamage = 10;
+
+Animator anim;
+GameObject player;
+PlayerHealth playerHealth;
+bool playerInRange; // true when player is close enough to attack
+float timer; // to make sure enemy is not attacking too fast or slow
+
+void Awake()
+{
+	player = GameObject.FindGameObjectWithTag("Player"); // locate player. Want to limit the times this is called. 
+	playerHealth = player.GetComponent<PlayerHealth>();
+	anim = GetComponent<Animator>();
+}
+
+void OnTriggerEnter(Collider other)
+{
+	if (other.gameObject == player)
+	{
+		playerInRange = true;
+	}
+}
+
+void OnTriggerExit(Collider other)
+{
+	if (other.gameObject == player)
+	{
+		playerInRange = false;
+	}
+}
+
+void Update()
+{
+	timer += Time.deltaTime;
+	
+	if (timer >= timeBetweenAttacks && playerInRange)
+	{
+		Attack();
+	}
+
+	if (playerHealth.currentHealth <= 0)
+	{
+		anim.SetTrigger("PlayerDead");
+	}
+}
+
+voikd Attack()
+{
+	timer = 0f;
+	
+	if (playerHealth.currentHealth > 0)
+	{
+		playerHealth.TakeDamage(attackDamage);
+	}
+}
+
+HARMING ENEMIES
+
+Create EnemyHealth script. Drag onto enemy. 
+
+public int startingHealth = 100;
+public int currentHealth;
+public float sinkSpeed = 2.5f;
+public int scoreValue = 10;
+public AudioClip deathClip;
+
+Animator anim;
+AudioSource enemyAudio;
+ParticleSystem hitParticles;
+CapsuleCollider capsuleCollider;
+bool isDead;
+bool isSinking;
+
+void Awake()
+{
+	anim = GetComonent<Animator>();
+	enemyAudio = GetComponent<AudioSource>();
+	hitParticles = GetComponentInChildren<ParticleSystem>();
+	capsuleColider - getComponent<CapsuleCollider>();
+	
+	currentHealth = startingHealth;
+}
+
+void Update()
+{
+	if (isSinking)
+	{
+		transform.Translate(-Vector3.up * sinkSpeed * Time.deltaTime); // move down. Not using physics
+	}
+}
+
+public void TakeDamage(int amount, Vector3 hitPoint) // hit point to make particles where hit
+{
+	if (isDead)
+		return;
+	
+	enemyAudio.Play();
+	
+	currentHealth -= amount;
+	
+	hitParticles.transform.position = hitPoint;
+	hitParticles.Play();
+	
+	if (currentHealth <= 0)
+	{
+		Death();
+	}
+}
+
+void Death()
+{
+	isDead = true;
+	
+	capsuleCollider.isTrigger = true; // no longer an obstacle
+	anim.SetTrigger("Dead");
+	
+	enemyAudio.clip = deathClip;
+	enemyAudio.Play();
+}
+	
+public void StartSinking()
+{
+	GetComponent<NavMeshAgent>().enabled = false; //SetActive = false is turning off a gameObject. This just turns off component
+	GetComponent<RigidBody>().isKinematic = true; // when move collider in scene, Unity tries to recalculate all static geometry. But kinematic means Unity will ignore that. 
+	isSinking = true;
+
+	Destroy(gameObject, 2f);
+}
+
+StartSinking() is on an animation event. In unity, can tell it in animation that at this point, look for this function.
+
+In Event. Click time. Type in Function. Will attempt to call a method given by name. 
+
+Common event, would be footprint. Want particular frame to drop footprint.
+
+Scripting.
+
+In EnemyAttack, get EnemyHealth component. Make sure attack doesn't occur when enemy dead. 
+
+Add particle to player to fire gun, add light to light up player.
+
+Want particles to be at tip of gun. Add gameObject as child to player and put where gun barrel end is. So gun particles come out of end. 
+Use scripts to say when particles should fire.
+Add Component - Line Renderer
+
+Line Renderer - for laser. 
+
+add material. To Element 0. LineRenderMaterial in given assets.
+
+Can adjust Start width and end width. Use same value. If different it would flare out in cone or get narrow, etc
+
+Start Wdith = 0.05;
+
+Disable component. Only turn it on when actally fired.
+
+Want gun to flash when fired.
+
+Add a light component. 
+
+Rendering -> Light
+
+Give it appropriate settings. Maybe yellow color. Disable and enable when fired. 
+
+AudioSource for firing sound.
+
+Script for shooting
+
+public int damagePerShot = 20;
+public float timeBetweenBullet = 0.15f;
+public float range = 100f; // how far they can go.
+
+float timer;
+Ray shootRay;
+RaycastHit shootHit;
+int shootableMask; // to make sure we can only hit shootable htings. layer
+ParticleSystem gunParticles;
+LineRenderer gunLine;
+AudioSource gunAudio;
+Light gunLight;
+float effectsDisplayTime = 0.2f;
+
+void Awake()
+{
+	shootableMask = LayerMask.GetMask("Shootable");
+	gunParticles = GetComponent<ParticleSystem>();
+	gunLine = GetComponent<LineRenderer>();
+	gunAudio = GetComponent<AudioSource>();
+	gunLight = GetComponent<Light>();
+}
+
+void Update()
+{
+	timer += Time.deltaTime;
+	
+	if (Input.GetButton("Fire1") && timer >= timeBetweenBullets)
+	{
+		Shoot();
+	}
+
+	if (timer >= timeBetweenBullets * effectsDisplayTime)
+	{
+		DisableEffects();
+	}
+}
+
+public void DisableEffects()
+{
+	gunLine.enabled = false;
+	gunLight.enabled = false;
+}
+
+void Shoot()
+{
+	timer = 0f;
+	gunAudio.Play();
+	gunLight.enabled = true;
+	
+	gunParticles.Stop(); // if particles are still playing. Stop them, then start them again. So they replay.
+	gunParticles.Play();
+	
+	gunLine.enabled = true;
+	gunLine.SetPosition(0, transform.position); // barrel of gun
+
+	shootRay.origin = transform.position; // set up ray to utilize it.
+	shootRay.direction = transform.forward;
+
+	if (Physics.Raycast(shootRay, out shootHit, range, shootableMast))
+	{
+		EnemyHealth enemyHealth = shootHit.collider.GetComponent<EnemyHealth>();
+		if (enemyHealth != null)
+		{
+			enemyHealth.TakeDamage(damagePerShot, shootHit.point); // if ray hits something. Then stop line at object it hits
+		}
+		gunLine.SetPosition(1, shootHit.point);
+	}
+	else
+	{
+		gunLine.SetPosition (1, shootRay.origin + shootRay.direction * range); // shoot all the way out as far as range
+	}
+}
+
+Can apply to prefab
+
+SetDestination can only be called on an active agent that has been placed on a NavMesh. 
+
+Window -> Console to see error console.
+
+In EnemyMovement, reference playerHealth, enemyHealth and if player or enemy is alive or dead
+
+if (enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
+{
+	nav.SetDestination(player.position);
+}
+else
+{
+	nav.enabled = false;
+}
+
+SCORING POINTS
+
+Create score text in HUDCanvas. As child component.
+
+Can also add drop shadow. With script?
+
+Add Manager script to manage score. Drag onto score text copmonent.
+
+SPAWNING ENEMIES
+
+Can share components and animations so multiple objects can behave similarly. 
+
+Can drop EnemyAC Animator controller onto other object's animator controller. 
+
+Animtor Override Controller - classes of characters in game. If share similar skeleton. Then same statem achine can drive all of them and just use different clips. 
+
+Project -> Create -> Animator Override Controller. 
+
+So if character runs the same and walks the same but attaks different. Then you only need to override attack. 
+
+Give it controller to relate to. Then choose override for ones that need an override. Changing animation clips.
+
+Use GameObject manager to be in charge of enemy spawning and how many there are. Etc. Can attach to whatever. 
+
+Can create an empty game object.
+
+Use script to spawn enemies
+
+public PlayerHealth playerHealth;
+public GameObject enemy;
+public float spawnTime = 3f;
+public Transform[] spawnPoints; // not being used in this example but can use many spawnPoints and choose randomly from this.
+
+void Start()
+{
+	InvokeRepeating("Spawn", spawnTime, spawnTime); // amount of time to wait begore invoking, amount of time to wait before repeating. Repeats every 3f seconds.
+}
+
+void Spawn()
+{
+	if (playerHealth.currentHealth <= 0f)
+	{
+		return;
+	}
+	
+	int spawnPointIndex = Random.Range(0, spawnPoints.Length);
+	
+	Instantiate(enemy, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+}
+
+Can create GameObjects for spawnPoints. Then drag into Spawner script variable. 
+
+Clicking on cube on inspector for game object can allow you to give the object an icon. So you see where it is. 
+
+Can then add multiple instance of Spawning script with different enemies and in different locations.
+
+GAME OVER
+
+Add UI elements. Fade screen. Move UI elements inhierarchy correctly. 
+
+Use animations to fade in and use state machines. Can animate any public property of cany component on any game object. 
+
+Window -> Animation.
+
+If don't have a clip, then as soon as add curve (add curve means add property that will animate of anything that is attached to game object currently selected). 
+
+Click add curve. 
+
+Create new animation. 
+
+Animation window. In record mode. So anything you do in scene view or inspector will be recorded. Play icons are red also. 
+
+Automatically adds Animator component to animation screen.
+
+Can pick from components. 
+
+Get Text, Text, color, and add key frames.
+
+Top row is to grab all curves.
+
+Red line is play head and shows values at that moment in time.
+
+Can create key frame at certain time by moving play head. Select property and press K or click add a keyframe button. Or double click in row. 
+
+Then can enter values at beginning, and at other key frames.
+
+Can zoom in animation view using two finger zoom or scroll wheel. 
+
+Can drag box over all keyframe to select them. Then can drag them all to move them.
+
+Then disable record mode. 
+
+Default is for animation clips to loop. 
+
+So go to animation folder in assets, go to animation clip. And uncheck Loop Time. 
+
+Double click animation to see states. 

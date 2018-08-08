@@ -1,0 +1,121 @@
+Strings
+
+Python has built in string class named str. 
+
+string literals can be enclosed by either double or single quotes, although single quotes are more commonly used. 
+
+Usual escape characters. 
+
+Double quoted string literal can contain single qutes without fuss. 
+
+String literal can span multiple lines, but must be a backslash at end of each line to escape the newline. 
+
+String literals in triple quotes (""" or ''')
+
+Python strings are immutable. Cannot be changed after they are created (like Java). Instead, new strings are constructed and variables hold those values. 
+
+Characters can be accessed using []. If index out of bounds, Python calls error. ([] and len actually work across multiple data types).
+
+str() function convers values to string form. + does not automatically. 
+
+print operator prints out one or more python items followed by a newline (leave trailer comma at end of items to inhibit newline.
+
+A "raw" string literal is prefixed by an 'r' and passes all chars through without special treatment of backslashes. 
+
+r'x\nx' evaluates to length 4 string 'x\nx'/
+
+A u prefix allows to write unicode string literal
+
+String Methods
+
+s.lower(), s.upper() - returns lowercase/uppercase versions
+s.strip() - returns a string with whitespace removed from start and end
+
+s.isalpha()/s.isdigiy()/s.isspace() - tests if all string chars are in the various character classes
+
+s.startswith('other'), s.endswith('other') - tests if string starts or ends with the given other string
+
+s.find('other') - searches for given other string (not a regular expression) within s, and returns the first index where it begins or -1 if not found
+
+s.replace('old', 'new') - returns a string where all occurrences of old have been replaced by new
+
+s.split('delim') - returns a list of substrings separated by given delimiter. Delimiter is not a regular expression. Just text. s.split() splits on all whitespace chars
+
+'aaa, bbb, ccc'.split(,) -> ['aaa', 'bbb', 'ccc']. 
+
+s.join(list) - opposite of split(), joins elements in given list together using string as delimiter. 
+
+'-'.join(['aaa', 'bbb', 'ccc'])->aaa-bbb-ccc
+
+
+Python Characters
+
+Python does not have a separate char type. Instead expressions like s[0] returns a string length 1 containing the character. 
+
+String Slices
+
+Slice syntax is handy way to refer to subparts of sequences -- typically strings and lists. 
+
+The slice s[start:end] is the elements beginning at start and extending up to but not including end.
+
+s="Hello"
+
+s[1:4] is 'ell'
+s[:] is 'Hello' #pythonic way to copy a sequence like string or list
+s[1:100] is 'ello' #index is too big so truncated
+
+Python also uses negative numbers to give easy access to chars at end of a string. 
+
+s[-1] is 'o' (1st from end)
+s[-5] is 'h'
+s[-4] is 'e'
+s[:-3] is 'He'
+s[-3:] is 'llo'
+
+Truism that s[:n] + s[n:] == s. Always partition string into two string parts, conserving all the characters. 
+
+s[::1] = specifies step size of 1.
+s[::2] = step size of 2. Grabs every other letter.
+s[::-1] = traverse string backwards
+
++ - for concatenation
+
+s = "Hello " + "World!" = "Hello World"
+
+* - fot repeating
+
+'z' * 10 = 'zzzzzzzzzz'
+
+
+
+String %
+
+Python has printf() like facility to put together a string.
+
+The % opreator takes a printf type format string on left (%d, %s, %f/%g) and matching values in a tuple on the right. A tuple is made of values separatedf by commas, typically grouped inside parentheses, 
+
+text = "%d little pigs come out of I'll %s and %s and %s % (3, 'huff', 'puff', 'blow down')
+
+To split this declaration:
+text = (%d little pigs come out or I'll %s and %s and %s" %
+	(3, 'huff', 'puff', 'blow down'))
+
+i18n Strings (Unicode)
+
+Regular Python strings are *not* unicode, they are just plain bytes. 
+
+To create a unicode string, use 'u' prefix on string literal.
+
+ustring = u'A unicode \u018e string \xf1'
+
+A unicode string is a different type of object from regular str string. But unicode string is compatible (share common superclass "basestring", and the various libraries such as regular expressions work correctly if pased a unicode string instead of a regular string.
+
+To convert unicode string to bytes with an encoding such as 'utf-8', call:
+
+ustring.encode('utf-8')
+
+unicode(s, encoding) - converts encoded plain bytes to a uniode string. 
+
+Built in print does not fully work with uncode strings. 
+
+Unicode handling is on earea where Python 3 significantly cleanedup vs Python 2

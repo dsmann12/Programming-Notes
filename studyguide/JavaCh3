@@ -1,0 +1,65 @@
+Q: Desribe ArrayLists.
+A: ArrayLists are a class that contain arrays and methods to make bigger and smaller arrays. can grow and shrink as needed. Can insret and remove. Are generics.
+
+Q: Initialize a new array list named names. 
+A: ArrayList<String> names = new ArrayList<String>();
+
+Q: Add a string to an array list of strings called name.
+A: names.add("David");
+
+Q: Add a string to an array list of strings called names at index 0
+A: names.add(0, "David");
+
+Q: Remove the element at index 0 of the array list names.
+A: names.remove(0);
+
+Q: Get the element of an array list at index i
+A: names.get(i);
+
+Q: Set the element at index 0 of an array list names to "David"
+A: names.set(0, "David");
+
+Q: Get the size of the array list names.
+A: names.size();
+
+Q: What is the psuedo random number generator?
+A: java.util.Random. Object that computes a sequence of number that are statistically random.
+
+Q: Are random number generators really random? Explain.
+A: No. It is possible to predict the next number in the sequence given the past list of numbers
+
+Q: What is the seed of a random number generator?
+A: The seed is a number used to determine random numbers. Sets the pattern. Will return the same pattern each time with same seed.
+
+Q: Create an instance of a new random object
+A: Random rand = new Random();
+
+Q: Set the seed of a Random object named rand
+A: rand.setSeed(n);
+
+Q: Store the next number produced by a random number generator in an int variable
+A: int random = rand.nextInt();
+
+Q: Get a boolean value produced by a random number generator and store it
+A: Bool b = rand.nextBoolean();
+
+Q: Get a float value produced by a random number generator named rand and store it
+A: Float f = rand.nextFloat(); b/w 0.0 and 1.0
+
+Q: Get the next integer produced by a Random object between 0 and a certain number n
+A: int r = rand.nextInt(n); //returns next random int value in range [0, n)
+
+Q: Implement insertion sort.
+A: Check code
+
+Q: What is a singly linked list?
+A: A linked list is a series of nodes that together form a linear ordering. Each node is an object that has a reference to the next node. Reference or pointer to next node. First and last node are called head and tail. Tail has null next reference. Does not have fixed size and uses space proportional to the number of its elements. No index numbers so cannot tell by examining a node which place it has in the list
+
+Q: Implement a singly linked list
+A: What is a double linked list?
+
+Q: What is a doubly linked list
+A: A doubly linked list is a linked list where nodes are linked to previous and next nodes. Insertions and removals from both ends. Header node just before head and trailer node just after tali. Dummy or sentinal nodesthat don't store any values
+
+Q: Implement a doubly linked list
+A: Check Code

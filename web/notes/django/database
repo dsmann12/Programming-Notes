@@ -1,0 +1,198 @@
+DATABASE
+
+Default configuration is SQLite. May want to use a more scalable database like PostgreSQL to avoid database 
+switching headaches down the road. 
+
+If want to use another database, install the appropriate database bindings and change the following keys in 
+the DATABASES 'default' item to match your database connection settings:
+
+ENGINE – Either 'django.db.backends.sqlite3', 'django.db.backends.postgresql', 'django.db.backends.mysql', or
+'django.db.backends.oracle'. Other backends are also available.
+
+NAME – The name of your database. If you’re using SQLite, the database will be a file on your computer; in
+that case, NAME should be the full absolute path, including filename, of that file. The default value, 
+os.path.join(BASE_DIR, 'db.sqlite3'), will store the file in your project directory.
+
+If you are not using SQLite as your database, additional settings such as USER, PASSWORD, and HOST must be
+added. For more details, see the reference documentation for DATABASES.
+
+For databases other than SQLite
+
+If you’re using a database besides SQLite, make sure you’ve created a database by this point. Do that with “CREATE DATABASE database_name;” within your database’s interactive prompt.
+
+Also make sure that the database user provided in mysite/settings.py has “create database” privileges. This allows automatic creation of a test database which will be needed in a later tutorial.
+
+If you’re using SQLite, you don’t need to create anything beforehand - the database file will be created automatically when it is needed.
+
+mysite/settings.py
+
+Set TIME_ZONE to your time zone. 
+
+INSTALLED_APPS - settings at top of file holds names of all Django apps that are activated n this Django 
+instance. Apps can be used in multiple projects and you can package and distribute them for use by others in
+their projects. 
+
+By default, INSTALLED_APPS contains following apps which come with Django by default:
+
+
+    django.contrib.admin – The admin site. You’ll use it shortly.
+    django.contrib.auth – An authentication system.
+    django.contrib.contenttypes – A framework for content types.
+    django.contrib.sessions – A session framework.
+    django.contrib.messages – A messaging framework.
+    django.contrib.staticfiles – A framework for managing static files.
+
+Some of these make use of at least one database table so need to create tables in database before they can 
+be used. 
+
+python manage.py migrate
+
+migrate - command looks at INSTALLED_APPS settings and creates any necessary database tables according to 
+database settings in mysite/settings.py file and database migrations shipped with the app. Message shows for 
+each migration i applies. 
+
+If you’re interested, run the command-line client for your database and type \dt (PostgreSQL), SHOW TABLES; (MySQL), .schema (SQLite), or SELECT TABLE_NAME FROM USER_TABLES; (Oracle) to display the tables Django created.
+
+For the minimalists
+
+Like we said above, the default applications are included for the common case, but not everybody needs them. If you don’t need any or all of them, feel free to comment-out or delete the appropriate line(s) from INSTALLED_APPS before running migrate. The migrate command will only run migrations for apps in INSTALLED_APPS.
+
+MODELS
+
+Models - essentially the database layout with additional metadata. 
+
+
+
+Philosophy
+
+A model is the single, definitive source of truth about your data. It contains the essential fields and behaviors of the data you’re storing. Django follows the DRY Principle. The goal is to define your data model in one place and automatically derive things from it.
+
+This includes the migrations - unlike in Ruby On Rails, for example, migrations are entirely derived from your models file, and are essentially just a history that Django can roll through to update your database schema to match your current models.
+
+In simple poll app, create two models: Question and Choice. A Questino has a question and a publication date. 
+A Choice has two fields: the text of choice and a vote tally. Each Choice is associated with a Question.
+
+polls/models.py
+
+from django.db import models
+
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+Each model is represented by a class that subclasses django.db.models.Model. Each mode has a number of class 
+variables, each of which represents a databse field in the model.
+
+Each field is represented by an instance of a Field class - e.g. CharField for character fields and 
+DateTimeField for datetimes. 
+
+Can use an optional first positional argument to a Field to designate a human-readable name. Used in a couple 
+introspective parts of Django and doubles as documentation. If field isn't provided, Django will use the 
+machine-readable name. In this example, only defined human-readable name for Question.pub_date.
+
+Some Fields have required arguments. CharField requires a max_length. Used not only in database schema but in 
+validation as well. 
+
+Field can also have various optional arguments. In example, set default votes to 0.
+
+Finally, note a relationship is define using ForeignKey. Tells Django each Choice is related to a single 
+Question. 
+
+Django supports all common database reationships: many-to-one, many-to-many, and one-to-one
+
+ACTIVATING MODELS
+
+With model code, Django can:
+
+-Create a database schema (CREATE TABLE statements) for the app
+-Create a Python database-access API for accesing Question and Choice objects
+
+But first need to tell project that polls app is installed.
+
+Philosophy:
+Django apps are pluggable. Can use an app in multiple projects and can distribute apps, because they do not 
+have to be tied to a given Django installation. 
+
+To include app in project, need to add a reference to its configuration class in the INSTALLED_APPS settings. The PollsConfig class in the polls/apps.py file, so its dotted path is 'polls.apps.PollsConfig'. Edit the 
+mysite/settings.py file and add that dottesd path to the INSTALLED_APPS settings:
+
+INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
+Now Django knows to include polls app. 
+
+python manage.py makemigrations polls
+
+Migrations for 'polls':
+  polls/migrations/0001_initial.py:
+    - Create model Choice
+    - Create model Question
+    - Add field question to choice
+
+Running makemigrations tells Django that you've made changes to your models (or made new ones) and that you 
+want changes to be stored as a migration.
+
+Migrations are how Django stores changes to models (and thus database schema) - they're just files on disk. 
+You can read migration for model in files polls/migrations/0001_initial.py. Designed to be human-editable in 
+case you want to manually tweak how Django changes things. 
+
+migrate - command that will run migrations for you and manage your database schema automatically. 
+
+sqlmigrate - takes migrations names and returns their SQL
+
+python manage.py sqlmigrate polls 0001
+
+Will show SQL script.
+
+-Exact ouput varies depending on database usined (postgreSQL, MySql, SQLite, etc)
+-Table names automatically generated by combining the name of the app(polls) and lowercase name of the model: 
+question and choice (you can override this behavior)
+-Primary keys (IDs) are added automatically. (can override this too)
+-By convention, Django appends "_id" to the foreign key field name. (Yes, can override this as well)
+-The foreign key relationship is made explicit by a FOREIGN KEY constraint. Don't worry about DEFERABLE parts;
+that's just telling PostgreSQL to not enforce the foreign key until the end of the transaction
+-It's tailored to the database you're using, so database-specific fild types such as auto_increment (MySQL), 
+serial(PostgreSQL), or integer primary key autoincrement (SQLite) are handled for you automatically. Same goes
+for quoring of field names - e.g. using double quotes or single quotes
+-The sqlmigrate command doesn't actua;;y run the migration on your database - it just prints it to the screen 
+so that you can see what SQL Django thinks is required. Useful for echking what Django is going to do or if 
+you have database administrators who require SQL scripts for changes. 
+
+python mange.py check - checks for any problems in project without making migrations or touching the database.
+
+Run migrate again to create those model tables in your database:
+
+python manage.py migrate
+
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Rendering model states... DONE
+  Applying polls.0001_initial... OK
+
+migrate - Takes all the migrations that haven't been applied (Django tracks which ones are applied using 
+special table in your database called django_migrations) and runs them against your database - essentially 
+synchronizing the changes you made to your models with the schema in the database. 
+
+Migratoins let you change models over time without need to delete database or tables and make new ones. 
+Specializes in upgrading database live, without losing data. 
+
+Three step guide to making model changes:
+-Change models (in models.py)
+-Run python_manage.py makemigrations (to create migrations for those changes)
+-Run python manage.py migrate (to apply those changes to the database)

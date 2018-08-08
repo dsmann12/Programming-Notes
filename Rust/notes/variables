@@ -1,0 +1,97 @@
+VARIABLE BINDINGS
+
+Variable bindings - bind some value to a name. 
+
+let - used to introduce a binding
+
+fn main() {
+    let x = 5;
+}
+
+Similar to variables in other languages, but have more features. 
+
+Left-hand side of let statement is a 'pattern', not variable name. 
+
+Allows:
+
+let (x, y) = (1, 2);
+
+Type Annotations:
+
+Rust is statically typed, means specify types up front and they are checked at compile time. 
+
+So why does above statement compile?
+
+Rust has *type inference*. Can figure out what type something is without explicit declaration. 
+
+Can add type. Use colon (:):
+
+let x: i32 = 5;
+
+x is bindining with type i32 and value five. 
+
+Rust has many different primitive integer types. Begin with i for signed, u for unsigned. Possible sizes are 8, 16, 32, and 64 bits. 
+
+MUTABILITY
+
+By default, binding are *immutable*. 
+
+let x = 5;
+x = 10;
+
+Causes ERROR. 
+
+mut - must be used to make a binding mutable
+
+let mut x = 5;
+x = 10;
+
+Default immutable for safety. Compiler will catch if value is attempted to be changed informing developer if they meant for binding to be mutable. 
+
+INITIALIZING BINDINGS
+
+Bindings are required to be initialized with a value before they can be used. 
+
+If binding not used, code will still run and compile. If is used though, program will not compile. 
+
+fn main() {
+    let x: i32;
+
+    println!("The value of x is: {}", x);
+}
+
+Will not work.
+
+Also, if include two curly braces {} in string to print, Rust will interpret this as request to interpolate some value. 
+
+String interpolation is computer science term that means "stick in middle of a string".
+
+When using curly braces, Rust will attempt to display value in meaningful way by checking out its type. If want to specify format in more detailed manner, wide number of options, 
+
+std::fmt
+
+SCOPE AND SHADOWING
+
+Scope is defined by {}. 
+
+fn main() {
+    let x: i32 = 17;
+    {
+        let y: i32 = 3;
+        println!("The value of x is {} and value of y is {}", x, y);
+    }
+    println!("The value of x is {} and value of y is {}", x, y); // This won't work.
+}
+
+
+Variable bindings can be shadowed. Means a later variable binding with same name as another binding that is currently in scope will override previous binding. 
+
+Shadowing distinct from mutability. For one, can rebind name to value of a different type. Also possible to change mutability of a binding.  Also shadowing a name does not alter or destory value it was bound to. Value exists until variable goes out of scope. 
+
+let mut x: i32 = 1;
+x = 7;
+let x = x; // `x` is now immutable and is bound to `7`.
+
+let y = 4;
+let y = "I can also be bound to text!"; // `y` is now of a different type.
+

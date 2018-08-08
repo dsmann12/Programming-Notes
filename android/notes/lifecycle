@@ -1,0 +1,155 @@
+LIFECYCLE
+
+Apps can be killed at any time when not being used and left in background.
+
+onCreate() -> where build and wire up UI. Activity is created
+CREATED
+onStart() -> when activity becomes visible <----------|
+VISIBLE												  |
+onResume() -> when activity has become active. 		  |
+ACTIVE												  |
+onPause() -> activity is not focused				  |
+PAUSED												  |
+onStop() -> app not visible							  |
+STOPPED												  |
+onRestart() -> App restarting						  |
+RESTARTING  -------------------------------------------
+onDestroy() -> app is destriyed
+DESTROYED
+
+Will move through active and visible many times. 
+
+ACTIVE - activity in fg and in focus. Actively getting info from user events. onRsume and onPause.
+
+onPause called as soon as activity is obscured. Like when dialog comes up on top. Or when activity is trying to fulfill an implicit intent. App is still visible. So don't pause processes that are drawing UI.
+
+VISIBLE - on as long as app is visible. When app is obscured by another app, onStop is called. onStart. 
+
+onCreate and onDestroy is called at most once. These others may happen many times. 
+
+Moving from portrait to landscape could destroy and recreate activity. 
+
+onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+
+Bundle - key value storage mechanism used to store data wanted to be saved. Can't quite store any data. must be passed between processes or serialized to a file. So support limited set of types.
+
+Can add complex types by having them inokements the Parcelable interface. This effectively contains instructions on how to output an object from a stream of data and then recreate that data.
+
+private static final String LIFECYCLE_CALLBACKS_TEXT_KEY = "callbacks";
+
+@Override void onSaveInstanceState(Bundle outState) {
+	super.onSaveInstanceState(outState);
+	logAndAppend(ON_SAVE_INSTANCE_STATE);
+	String lifecycleDisplayTextViewContents = mLifecycleDisplay.getText().toString();
+	outState.putString(LIFECYCLE_CALLBACKS_TEXT_KEY, lifecycleDisplayTextViewContents);
+}
+
+in onCreate() 
+
+if (savedInstanceState != null) {
+	if (savedInstanceState.containsKey(LIFECYCLE_CALLBACKS_TYEXT_KEY)) {
+		String allPreviousLifecycleCallbacks = savedInstanceState
+			.getString(LIFECYCLE_CALLBACKS_TEXT_KEY);
+		mLifeycleDisplay.setText(allPreviousLifecycleCallbacks);
+	}
+}
+
+APP TERMINATION
+
+Prepare for app termination. 
+
+onPause and onStop are signals that app may be killed imminently. So near a good teardown. Closing any open connections or sockets
+
+Because editText content can be edited by users. They are saved during lifecycle changes by the android framework. Regular textViews are not. 
+
+Again can use savedInstanceState. Save information into bundle. In OnCreateor onStart then can check if savedInstanceState is null.
+
+ASYNCTASK AND LOADERS
+
+Edge case: what happens if device is rotated while network transaction is going on?
+
+When destory or rotate an activity, the application continues to run. So all of its threads still can process away. Means they deliver result of query to a zombie activity that has been killed. 
+
+Can cause new threads to be created every time device is rotated. Killing battery and memory. 
+
+Loaders -> to solve this problem. Added in HoneyComb. provide framework to perform asynchronous loading of data. Registered by ID with a copmonent called LoaderManager, which allows them to live beyond lifecycle of activity hey are associated with. Preventing duplicate loads from happening in parallel. 
+
+Can use implementation of loaderpattern called AsycTaskLoader for doing thing in background
+
+Therefore has different lifecycle
+
+onCreate
+	initLoader()
+		onCreateLoader()
+			loadInBackground()
+		----- rotate ------
+				initLoader()	-> 
+					onLoadFinished()
+
+Loader Manager makes sure that running loader is connected to AsyncTaskLoader is connected to equivalent to onPostExecute of AsyncLoader, the onLoadFinished function. Loader thread keeps running in background, and notified in onLoadFinished.
+
+LEVERAGING LOADERS
+
+1. Create a Loader ID (int constant)
+2. Fill-in Loader Callbacks
+3. Init Loader with Loader Manager
+
+How to replace asynctask with asynctaskloader
+
+Have MainActivity implement LoaderManager.LoaderCallbacks<String>
+
+@verride loader callbacks
+
+private static final int GITHUB_SEACH_LOADER = 22;
+
+in makeGithubSearchQuery()
+
+Bundle queryBundle = new Bundle();
+queryBundle.putString(SEARCH_QUERY_URL_EXTRAm gitHubSearchUrl.toString());
+
+@Override
+public Loader<String> onCreateLoader(int id, final Bundle args) {
+	return new AsyncTaskLoader<String>(this) {
+		@Override
+		protected void onStartLoading() {
+			super.onStartLoading();
+			if (args == null) {
+				return;
+			}
+			// move on preExecute code here
+		}
+
+		@OVerride
+		public String loadInBackground() {
+			// do the doInBackground code
+		}
+
+		@Overide
+			public void onLoadFinished() {
+				// on post ezecute code
+			}	
+	}
+}
+
+User loaderManager to 
+
+LoaderManager loaderManager = getSupportLoaderManager();
+Loader<String> githubSearchLoader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);
+	
+if (githubSearchLoader == null) {
+	loaderManager.initLoader(GITHUB_SERACH_LOADER, queryBundle, this);
+} else {
+	loaderManager.restartLoader(GITHUB_SEACH_LOADER, queryBundle, this);
+}
+
+Only execute loader after user hits the query button in this case.
+
+Also restartLoader will create loader if it does not already exist, but this is more clear. 
+
+Also will not have to persist and retrieve data from savedInstanceState since loader will do this.
+
+CACHING WITH LOADERS
+
+Loaders tied with application lifecycle. Automatically handle changes in configuration like rotations. Designed to reload if user navigates away from activity and then returns. Can avoid this if we want by caching and redelivering our existing result. 
+
+

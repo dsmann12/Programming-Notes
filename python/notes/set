@@ -1,0 +1,19 @@
+SET
+
+Sets are an unordered collection of unique elements.
+
+x = set()
+
+x.add(1)
+{1}
+
+Not a dict even though it uses brackets. No keys.
+
+x.add(2)
+{1, 2}
+
+x.add(1) # no change. sets only concerned with unique elements. 
+
+list = [1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4]
+set(list)
+{1, 2, 3, 4}

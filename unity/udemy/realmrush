@@ -1,0 +1,235 @@
+REALM RUSH
+
+Tower defense game. 
+
+Pathfinding. BFS Pathfinding. Gonna learn C# lists, queues, dictionaries. 
+
+GAME DESIGN
+
+Tower defense. Enemies spawn from start point.
+Enemies use pathfinding to reach goal.
+Turrets shoot enemies
+If enemy reaches goal, player loses health
+
+Place towers to kill enemies before they reach base. 
+
+LIMITATIONS ON UNITY PATHFINDING
+
+Have to configure nav mesh parameters. 
+
+How wide agent is, how tall, max slop it can go up, step height, etc
+
+Need nav mesh agent for speed, angular speed, acceleration. 
+
+This works fine when using a terrain. 
+
+But in grid based games, this won't be useful.
+
+Tech						Unity's NavMesh System					Our BFS System
+Underlying algorithm		A* (assumed)							Breadth First Search
+Movement type				Continuous analog mesh					Discrete digital grid
+Runtime recalculation		With limitations						Up to us, very flexible
+Pathfinding speed			Very fast								Slow but can improve as needed
+Navigation spaces			Two: visual and navigation				Unified
+Tweakable parameters		Dozens									3 (start, end, speed)
+What you'll learn			How to use Unity's system				Fundamentals of AI Pathfinding:
+																		- Powerful new C# features
+																		- How to take control of Unity
+
+
+Z FIGHTING AND QUADS
+
+Moving object to same z position of another object. 
+
+Graphical artifacts can occur. Z fighting. Has two graphical images in same plane. Floating point rounding errors are manifesting themselves causing this glitching. 
+
+Quad just a flat plane game object. 
+
+If try to put quad on cube you will get z fighting. Can "solve" problem by lifting quad slightly above cube. 
+
+This doesn't actually fix the problem. 
+
+Lack of flexibility. 
+
+Possible to build a cube from 6 quads.
+
+In actuality, 3D graphcs is really built from either quads or triangles. 
+
+Can color each side separately.
+
+[ExecuteInEditMode] ATTRIBUTE
+
+Want snap to grid functionality with cube quad. 
+
+Can scale quad by changing scale.
+
+What if want to snap to a grid at a certain distance
+
+Edit > Snap Settings
+
+Change values for axes. 
+
+Hold CMD/CTRL key  and drag one of axes to drag it by
+
+Give to class script. Can make editor to snapping for you. 
+
+[ExecuteInEditMode]
+class EditorSnap : MonoBehavior {
+	[SerializeField]
+	[Range(1f, 20f)]
+	float gridSize;
+	Update() {
+		Vector3 snapPos;
+		snapPos.x = Mathf.RoundToInt(transform.position.x/10.0f) * gridSize; 
+		snapPos.z = Mathf.RoundToInt(transform.position.z/10f) * gridSize;
+		transform.position = new Vector3(snapPos.x, 0f, snapPos.z);
+	}
+}
+
+USING TEXT MESH FOR LABELS
+
+Want labels on grid to be added automatically. 
+
+Add component to game object. A Text Mesh.
+
+Assign text to it. Can reset transform iteslf or change anchor, alignment, text size, etc. 
+
+Should look smooth on top of cube. 
+
+Scale and font size matter. Smaller font size makes font lose information at lower sizes. Change scale when you find correct font size for smooth look to make it fit. 
+
+Good to use this because Text UI element has canvas and processes events for user input, etc. 
+
+Not needed.
+
+				Text Mesh					UI Text
+Typical use		Text labels					User Interface
+Simplicity		Simple						Complex
+Interactable?	No							Yes
+World/Sceen 3D	World						Choice
+
+Rename script Cube Editor
+
+Add code to add label to grid. 
+
+C # LISTS FOR CUSTOM PATHS
+
+Add  script for movement of enemies. 
+
+How List of grid blocks. a
+
+COROUTINES
+
+Change return type to IEnumerator
+
+IEnumerator PrintAllWAypoints() 
+{
+	foreach (Waypoint waypoint in path)
+	{
+		print(waypoint.name)
+		yield return new WaitForSeconds(1f);
+	}
+}
+
+Then StartCoroutine(PrintAllWaypoints());
+
+Then instead of print, move the enemy's position. 
+
+IEnumerator is something that can be counted and returned. 
+
+TYPES OF PATHFINDING
+
+Want enemies to find the shortest path to target. 
+
+Breadth First Search:
+Will always find shortest path
+Can't vary movement cost. Constant cost.
+Can have ulltiple end points
+Medium speed on 100x100 grid
+
+Simple, versatile, fast enough most of the time
+
+Djikstra's Algorithm:
+Always shortest path
+Movement cost can vary
+Can have multiple end points
+Slow speed on 100x100 grid
+
+Movement cost allows for swamps, road, etc
+
+A* (A Star):
+Choice of path
+Movement cost can vary
+Can't have multiple endpoints
+Fast speed on 100x100 grid.
+
+Complex. CAn trade sped against accuracy to suit a game
+
+Speed:
+Algorithm		Speed			10x10		20x20			100x00
+BFS				O(V+E)  		280			1160			29800 "Medium"
+Djikstra		O(E + VlogV)	380			1801			59800 "Slow"
+A*				Varies			180			760				19800 "Fast"
+
+THE PATH AHEAD
+
+Going to be moving things around and refactor code. 
+
+INSTANCE VARIABLES AND CONSTANTS
+
+[SelectionBase] - Add this attribute to a script class to mark its GameObject as a selection base object for Scene View picking.
+
+Use const for variables that should ont change among instances. 
+
+What if you want toshare data calculated in one script with another script
+
+Make the varible an instance method of the other script. 
+
+Tell this script to require other script
+
+[RequireComponent(typeof(Waypoint))]
+
+Also smart to add a Waypoint instance variable and get it at Awake(). 
+
+Then make public method in other script. 
+
+Call that method on the variable in the other script. 
+
+THE DICTIONARY DATA STRUCTURE
+
+For quick lookups. O(1) look up. 
+
+Uses a key and value. Keys must be unique and are usually simple
+Values can be more complex type. 
+
+Much slower to go from value to key.
+
+Dictionary<Vector2Int, Waypoint grid = new Dictionary<Vector2Int, Waypoint>();
+var waypoints = FindObjectsOfType<Waypoint>();
+foreach (Waypoint way in waypoints)
+{
+	grid.add(way.GetGridPos(), way);
+}
+
+Can detect overlapping blocks by checking if the object already exists in dictionary. 
+
+FINDING OBJECTS BY NAME
+
+transform.Find("Name") -> finds object in children of gameObject of a certain name.
+
+EXPLORE NEIGHBOR GRIDS
+
+Really just checking grid +1 and -1 of x and y axis. 
+
+Can use Vector2Int.up, right, .down, left, etc. 
+
+Can use grid dictionary to set colors. 
+
+Error check to make sure grid location exists. 
+
+BREADTH FIRST SEARCH
+
+
+
+
+

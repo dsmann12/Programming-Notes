@@ -1,0 +1,173 @@
+OPERATOR OVERLOADING
+
+Operators can be overloaded for custom functionality.
+
+C# Operator 								Overloadability
++, -,! , ~, ++, --, true,
+false 										These unary operators can be overloaded.
+
++, -, *, /, %, &, |, ^, <<, >> 				These binary operators can be overloaded.
+
+==,!=, <, >, <=, >= 						These comparison operators can be overloaded. C# demands that “like”
+											operators (i.e., < and >, <= and >=, == and !=) are overloaded together.
+
+[] 											The [] operator cannot be overloaded. As you saw earlier in this chapter,
+											however, the indexer construct provides the same functionality.
+
+() 											The () operator cannot be overloaded. As you will see later in this chapter,
+											however, custom conversion methods provide the same functionality.
+
++=, -=, *=, /=, %=, &=, |=, ^=, 			Shorthand assignment operators cannot be overloaded; however, you receive
+<<=, >>=
+											them as a freebie when you overload the related binary operator.
+
+// Just a simple, everyday C# class.
+public class Point
+{
+public int X {get; set;}
+public int Y {get; set;}
+ 
+public Point(int xPos, int yPos)
+{
+X = xPos;
+Y = yPos;
+}
+
+public override string ToString()
+{
+return string.Format("[{0}, {1}]", this.X, this.Y);
+}
+}
+
+// A more intelligent Point type.
+public class Point
+{
+...
+// Overloaded operator +.
+public static Point operator + (Point p1, Point p2)
+{
+return new Point(p1.X + p2.X, p1.Y + p2.Y);
+}
+ 
+// Overloaded operator -.
+public static Point operator - (Point p1, Point p2)
+{
+return new Point(p1.X - p2.X, p1.Y - p2.Y);
+}
+}
+
+operator keyword used to equip a custom type to respond uniquely to instrinsic operators, which can only be used with
+the static keyword. When you overload a binary operator, will most often pass in two arguments that are the same type 
+as the defining class. 
+
+Can also pass other values:
+
+public class Point
+{
+...
+public static Point operator + (Point p1, int change)
+{
+return new Point(p1.X + change, p1.Y + change);
+}
+ 
+public static Point operator + (int change, Point p1)
+{
+return new Point(p1.X + change, p1.Y + change);
+}
+}
+
+// Prints [110, 110].
+Point biggerPoint = ptOne + 10;
+Console.WriteLine("ptOne + 10 = {0}", biggerPoint);
+ 
+// Prints [120, 120].
+Console.WriteLine("10 + biggerPoint = {0}", 10 + biggerPoint);
+Console.WriteLine();
+
+OVERLOADING UNARY OPERATORS
+
+When overload unary operator must also use static keyword with operator keyword. But in this case, you passs a single parameter
+that is the same type as the defining class/structure.
+
+public class Point
+{
+...
+// Add 1 to the X/Y values for the incoming Point.
+public static Point operator ++(Point p1)
+{
+return new Point(p1.X+1, p1.Y+1);
+}
+ 
+// Subtract 1 from the X/Y values for the incoming Point.
+public static Point operator --(Point p1)
+{
+return new Point(p1.X-1, p1.Y-1);
+}
+}
+
+OVERLOADING EQUALITY OPERATORS
+
+If choose to override Equals() it is trivial to overload the equality operators (== and !=). 
+c class Point
+{
+...
+public override bool Equals(object o)
+{
+return o.ToString() == this.ToString();
+}
+ 
+public override int GetHashCode()
+{
+return this.ToString().GetHashCode();
+}
+ 
+// Now let's overload the == and != operators.
+public static bool operator ==(Point p1, Point p2)
+{
+return p1.Equals(p2);
+}
+
+public static bool operator !=(Point p1, Point p2)
+{
+return !p1.Equals(p2);
+}
+}
+
+In C#, you must override != operator if you overload the == operator. 
+
+OVERLOADING COMPARISON OPERATORS
+
+Must overload < if you overload >. Same holds for <= and >=.
+
+// Point is also comparable using the comparison operators.
+public class Point : IComparable<Point>
+{
+...
+public int CompareTo(Point other)
+{
+if (this.X > other.X && this.Y > other.Y)
+return 1;
+if (this.X < other.X && this.Y < other.Y)
+return -1;
+else
+return 0;
+}
+ 
+public static bool operator <(Point p1, Point p2)
+{ return (p1.CompareTo(p2) < 0); }
+ 
+public static bool operator >(Point p1, Point p2)
+{ return (p1.CompareTo(p2) > 0); }
+ 
+public static bool operator <=(Point p1, Point p2)
+{ return (p1.CompareTo(p2) <= 0); }
+ 
+public static bool operator >=(Point p1, Point p2)
+{ return (p1.CompareTo(p2) >= 0); }
+}
+
+FINAL THOUGHTS
+
+Should only overload operators when it makes sense. 
+
+Generalyl useful when building atomic data types. Text, points, rectangles, fractions, and hexagons. 

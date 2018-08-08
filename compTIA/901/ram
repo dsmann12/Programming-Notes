@@ -1,0 +1,222 @@
+RAM
+
+HISTORICAL/CONCEPTUAL
+
+DRAM - like electronic spreadsheet. Each cell is speicla type of semiconductor that can hold a single bit by using microscopic capacitors and transistors. DRAM makers put semiconductors into chips that can hold a certain number of bits. bits inside the chip are organized in rectangular fashion using rows and columns. Each chip has limit on number of lines of code it can contain. Also limit on width of data. One chip might handle 8bit wide data and another might handle 16bit wide. x8 and x16 respectively 
+
+Low cost, high speed, capabilty to contain a lot of data in a relatively small package. Became standard in all computers. 
+
+Needed RAM that could store 8bit (1 byte) chunks so MCC could put 8bit chunk on data bus when CPU asked for line of code. All DRAM back then had 1 bit width. So sizes such as 64K x 1 or 256K x 1.  So how was 1 bit wide DRAM turned into 8 bit wide memory?
+
+Solution: take eight 1 bit wide chips and use MCC to organize them electronically to be 8 wide. 
+
+More complex commands in 8088 were 2 bytes wide. MCC dealt with this by taking command 1 byte at a time. Took twice as long to handle command but it worked. 
+
+8086 - 16 bit frontside bus but otherwise identical to 8088. No affordable MCC or RAM that handled 2 bytes however, so IBM bought 8088. 
+
+DRAM sticks
+
+As CPU data buse sizes increased, so did neeed for RAM wide enough to fill bus. 
+
+Intel 80386 had 32 bit data bus. Lining up 32 1 bit wide DRAM chips would be a pain. 
+
+DRAM manufacturers responded by creating wider DRAM chips, suchas x4, x8, and x16 and putting multiples of them on a small circuit board called a stick or module. (Single Inline Memory Module - SIMM). 
+
+Modern CPUs have some commands that are 64 bits wide. To optmize flow of data into and out of CPu, the modern MCC provides at least 64 bits of data every time CPU requests information from RAM. 
+
+Modern DRAM chips come in 32bit and 64bit wide data form factors with varying number of chips. x32 or x64. When CPU needs certain bytes of data, it requests those bytes via the address bus. MCC keeps track of RAM and how many DRAM chips work together to provide memory. Gives it to CPU. 
+
+Consumer RAM
+
+Rather than using label which describe the electronic structure of RAM, common usage describe the total capacity of RAM on stick in bytes. 4GB stick, etc. 
+
+TYPES OF RAM
+
+Random Access Memory - temporary storage where programs run on system. Programs loaded in RAM to be processed by CPU. Isn't saved to hard drive until user saves data.  
+
+1.5, 2, 4, 8, 16, 32GBs. 
+
+Capacity and speed. How much and how fast. 
+
+DRAM - Dynamic Random Access Memory. First ever used in computers. Means every bit is stored with little capacitor and little transistor. Number of changes over the years. 
+
+Ancient RAM - fast paged mode, EDO. Not on A+
+
+SDRAM - Synchronous DRAM. Synchronized with system clock, just like CPU and MCC, so MCC knows when data is ready to be grabbed from SDRAM and little time is wasted. 168 pin DIMM (Dual In-Line Memory Module). Two notches in it. Pins on either side of stick have different jobs. Has clock speed. Must get right speed for motherboard. Intel and other companies got together to create speed ratings for RAM. 66Mhz Motherboard - PC66. 100Mhz Motherboard - PC100 speed. PC ratings. Lasted a long time. Not in PCs so much now but in other equipment (printers).
+
+Laptops came in 68-pin, 144-pin or 172-pin micro-DIMM packages. And 72-pin, 144-pin, or 200=pin small outline DIMM (SO-DIMM). 
+
+SDRAM speed was tied to system clock, so its clock speed matched the frontside bus. Five clock speeds were common: 66, 75, 83, 100, and 133 Mhz. RAM speed had to match or exceed system speed of computer would not work. 
+
+For Pentium III with 100 MHz frontisde bus, you need to buy SDRAM DIMMs rated at PC100 or PC133.
+
+DDR SDRAM - Dual Data Rate SDRAM. WAnted to go faster. 184 pin DIMM package. One notch. Took motherboard speed and in essence doubled it so every click of system clock you got two RAM clocks. Compied Rambus, doubling the throughput of SDRAm by making two prcoesses for every clock cycle. Speed up RAM without having faster motherboards. Couldn't use PC Ratings because have two speeds: DDR speed and PC Speed. To make it work, take motherboard speed and double it. 100Mhz Motherboard - 200Mhz DDR speed. Then multiply that by 8. 200Mhz * 8 = 1600Mhz. PC 1600. DDR has 4 digit speed.  DDR400 refers to 400 MHz DDR SDRAM chip running on 200MHz clock. 
+
+DDR speed for individual DDR chips (8 chips on stick), PC is for DDR sticks. 
+
+Clock Speed			DDR Speed			PC Speed
+100 MHz				DDR-200				PC-1600
+133 MHz				DDR-266				PC-2100
+166 MHz				DDR-333				PC-2700
+200 MHz				DDR-400				PC-3200
+217 MHz				DDR-433				PC-3500
+233 MHz				DDR-466				PC-3700
+250 MHz				DDR-500				PC-4000
+275 MHz				DDR-550				PC-4400
+300 MHz				DDR-600				PC-4800
+
+Copied *Dual Channel Architecture* from RDRAM. Using two sticks together to increase throughput. Must be identical sticks. 					
+
+DDR2 - Improved. Enhancements enable it to run even faster than DDr while using less power. Big speed increase comes by clock doubling the input/output circuits on the chips. Does not speed up core RAM (part that holds data) but speeding up iput/output and adding special buffer (like a cache) makes it run much faster. 240 pin DIMM. One notch. Different place than regular DDR. Gets more complicated. Take Motherboard speed and double that for DDR speed. Then to get speed of DDR2 must double that again. Multiply by 8 to get PC speed. 100Mhz Motherboard - 200Mhz DDR speed - 400Mhz DDR2 speed. x8 = PC2 3200.
+
+PC2 3200 -> PC2 for DDR2
+
+Core RAM Clock Speed			DDR I/O Speed			DDR2 Speed			PC Speed
+100 MHz							200 MHz					DDR2-400			PC2-3200
+133 MHz							266 MHz					DDR2-533			PC2-4200
+166 MHz							333 MHz					DDR2-667			PC2-5300
+200 MHz							400 MHz					DDR2-800			PC2-6400
+266 MHz							533 MHz					DDR2-1066			PC2-8500
+
+DDR3 - Most common today. (Maybe DDR4 now? 240 pin DIMM. Notch in different location again. Quadruples bus. Higher speeds, more efficient architecture, and around 30 % lower power consumption than DDR2. Doubles buffer of DDR2 from 4 bits to 8 bits. Some also include feature called *XMP (Extended Memory Profile)* that enables power users to overclock their RAM easily. Also uses higher-density memory chips up to 16 GB DDR3 modules. Some mobos also support triple-channel architecture or quadruple channel architectur, which is like dual channel but with three or four sticks. DDR3 quadruples clock speeds, thanks to increased bufer size which allows it to grab twice the data for every clock cycle than DDR2.  
+
+100Mhz Motherboard - x4 400Mhz DDR speed - Double to get DDR3 speed - DDR3 800 - then x8 to get PC3 6400. 
+
+Core RAM Clock Speed			DDR I/O Speed			DDR3 Speed			PC Speed
+100 MHz							400 MHz					DDR3-800			PC3-6400
+133 MHz							533 MHz					DDR3-1066			PC3-8500
+166 MHz							667 MHz					DDR3-1333			PC3-10667
+200 MHz							800 MHz					DDR3-1600			PC3-12800
+233 MHz							933 MHz					DDR3-1866			PC3-14900
+266 MHz							1066 MHz				DDR3-2133			PC3-17000
+300 MHz							1200 MHz				DDR3-2400			PC3-19200
+
+DDR3L/DDR3U - L is low voltage DDR3 that provides substantical costs savings when used in massive RAM apps (like big data centers). Runs at 1.35 volts compared to 1.5 or 1.65 V or regular DDR3, providing up to 15% cost savings. U is ultra low voltage version, runs at 1.25 V. Lower voltage means less heat generated. In server farm or data center, that can reduce air conditioning. 
+
+DDR4 -Newest. 2014. Offers higher density and lower voltages than DDR3 and can handle faster data transfer rates. DIMMS running DDR4 top out at 16 GB but run at only 1.2 V. Performance versions that run at 1.35 V and low voltage that handls 1.05V. Uses 288-pin DIMM
+
+With DDR4, most techs have switched from bit rate to megatransfers per second (MT/s). Way to describe the bandwidth as number of data transfer operations happenign at any given second. 
+
+Clock Spede			Bandwidth			DDR4 Speed			PC Speed
+200 MHz				1600 MT/s			DDR4-1600			PC4-12800
+266 MHz				2133 MT/s			DDR4-2133			PC4-17000
+300 MHz				2400 MT/s			DDR4-2400			PC4-19200
+400 MHz				3200 MT/s			DDR4-3200			PC4-25600
+
+Capacity - different RAM sticks have different capacities depending on how much they hold. Important. In general want to install same capacity into every slot. RAM is additive. Motherboard manual will tell you highest capacity of RAM stick that can be put in RAM slot. 
+
+"Weird RAM"
+
+RDRAM - RAMBus DRAM - Two notches. Long gone. Came out around time SDRAMM. First double pumped RAM. Creators wanted money. Had 184 pin RIMM (means nothing). Had to install it in twos. Any leftover slots had to be filled with CRIMM (Continuity RIMM). Every slot in motherboard populated. Speeds up to 800MHz needed for Pentium 4. But not accepted because significant delays in development and price many times that of SDRAM. Stick of RDRAMM was a RIMM. 
+
+Single-Sided Ram - Memory on one side of stick. 
+
+Double-Sided Ram - memory storage on both sides of stick. Must have motherboard that supports it. Chips on both sides. Basically two sticks of RAM soldered onto one board. Some mobos can't use them or only in certain ways. 
+
+ECC or Parity RAM - memory that has extra chips designed for error correction. Usually only seen on big server systems. Can only be used on motherboard that accept them. Bank server, for example, must resist even smallest errors. 
+
+Parity RAM - stored an extra bit of data (called parity bit) that MCC used to verify whether dat awas correct. Wasn't perfect. Would't always detect an error and if MCC did find an error, it couldn't correct it. 
+
+Error Correction Code (ECC) RAM - major advance. First ECC detects any time a single bit is incorrect. Second, ECC fixes these errors on the fly. Checking and fixing come at price as ECC is always slower. Can find DDR2, DDR3, or DDR4 sticks thta come in 240-pin 72 bit versions. Extra 8 bits for error checking. 
+
+SODIMM (smal outline DIMM) - invented for laptops. SDRAM, DDR2, DDR3. Same speeds and have capacities. Same ram sticks but smaller and made for laptops. Must make sure size is correct for laptop.  Traditional sizes are 100, 144, and 200 pin. Unlike desktop memory, DDR can be in any of sizes. 204 pin SODIMMs pretty much unique to DDR3. Ensure right type of memory for system. 
+
+Know how many pins for each kind of SODIMM (DDR, DDR2, etc).
+
+Low-Latency Memory
+
+High-Density Memory
+
+LATENCY
+
+RAM responds to electirical signals at varyingrates. When memory controller starts to grab a line of memory, a slight delay occurs. After RAM sends out requested line of memory, another slight delay before controller can ask for another line. 
+
+Latency - delay in RAM's response time. RAM with lower latency (CL6) is faster than RAM with higher latency (CL9). CL refers to clock cycle delays. 6 means memory delays 6 clock cycles before delivering data, etc. 
+
+Column Array Strobe (CAS) latency of 11 not as good as CAS latency of 9.
+
+Can be deceptive when comparing generations of memory.
+
+DDR4 with higher latency is still performs as well as DDR3 at same clock speed. 
+
+Registed and Buffered Memory - especially with ECC. Registered or Buffered RAM. Either term refers to a small register installed on some memory modules to act as a buffer between DIMM and memory controller. Extra bit of circuitry helps compensate for electrical problems that crop up in systems with lots of memory modules, such as servers. Motherboards will use either buffered or un-buffered (regular consumer RAM), not both. 
+
+INSTALLATION
+
+Adding ram is easy and simple. 
+
+Installing RAM - Motherboard documentation tells what kind of memory can be supported. Faster the RAM the better in general. 
+
+Most DDR Memory is Dual or Quad channel. Means must put in two or 4 sticks. Every stick in channel must be same speed and same capacity. 
+
+Two cases to see if messed up:
+
+1, Computer doesn't boot.
+2. Don't see RAM that was added. 
+
+Don't put different size RAM in same channel.
+
+Troubleshooting:
+
+Installation Errors
+
+Check Windows to see how much RAM system asys it has. Click start, right click computer, select properties. Installed Memory. 
+
+CPU-Z - SPD (Serial Presence Detect) - like CPU info but for RAM. Tells exactly type of RAM have, how big it is, information for each slot. 
+
+Dead RAM - 
+
+Mean Time Between Failures (MTBF). Everything has MTBF. RAM has MTBF measured in decades. Assuming taken care of. Blue Screen of Death symptom, reboots, freezes, melting screen. All errors point to bad RAM. 
+
+Either pull RAM out or use memory testing tools. 
+
+MemTest86 - older program but reliable. Tests memory. Very slow process. Takes hours to run. Boot into it, from ISO disc in optical media or flash drive. Reports something wrong in hex. Doesn't say "that sticks bad". If it shows an error, you know one stick is bad. Use process of elimination. 
+
+Windows 7 and later - comes with memory testing tool. Control Panel -> Adminstrative Tools -> Windows Memory Diagnostic. Must run on its own, will restart computer.
+
+Nothing points to individual stick. Must figure it out for self.     
+
+Need more RAM? 
+
+Symptoms:
+
+General system sluggishness and excessive hard drive accessing. Programs take long time to load and seem to stall and move slowly.
+
+Virtual Memory - computers use a portion of hard drive as extension of system RAM, through what's called virtual memory. Portion of hard drrive or solid state drive set aside as hat's called a *page file* or *swap file*. When computer starts running out of real RAM because too many program loaded, the system swaps programs from RAM to page file, opening more space for programs currently active. 
+
+Windows virtual memory starts by creating a page file that resides on hard drive. Page file works like temporary storage box. Windows rmeoves running programs temporarily from RAM into page file so other programs can load and run. Only used when RAM is full. Least used program typically taken from RAM and stored in page file. Program in page file when trying to be used will then be loaded back into RAM. 
+
+Swapping programs to and from page file and RAM takes time. Machine slows down. 
+
+Disk thrashing - using the page file too much. Reading and moving from hard drive too frequently. 
+
+Best RAM recommendations:
+
+32 bit - 2 GB to get by. 4 GB best.
+64 bit - 4 GB to get by, 8 GB for solid machine, 16 GB for serious work. 
+
+Alot of devices (smartphones, laptops, etc) have memory soldered on and cannot be upgraded. 
+
+Determine Current RAM: CTRL-SHIFT-ESC and go to Performance. 
+
+ReadyBoost - Windows Vista and later versions offer feature that enables use of flash media devices as super fast dedicated virtual memory. Performance gains over rtpical hard drive . Windows 7 and later can handle up to 8 flash devices, while Vista could only handle 1. Devices could be between 1 and 32 GB. Microsoft recommends 1-3x amount of system RAM. Most get out of a flash drive is 4GB without manually changing file system. 
+
+Plug ReadyBoost supported device itno USB port or flash memory card reader slot. Right click device in Computer and select properties. Click ReadyBoost tab and select radio button to either Dedicate this device to ReadyBoost or Use this device. Click Apply. 
+
+Use RAM as identical as possible. Can mix speeds, but may not see performance improvements and must be as faster or faster than speed required by mobos. 
+
+Serial Presence Detect (SPD) - mobo should detect and automatically set up and DIMM installed. RAM makers ad chip to modern sticks called SPD chip. SPD chip soters all information about DRAm including size, speed, ECC, or non-ECC, registered or unregistered and number of others bits of info. When PC boots, it queries SPD chip so that MCC knows how much RAM is on stick, how fast it runs, and other information. All new systems count on SPD to set RAM timings properly for system when it boots. RAM stick with bad SPD chip will get POST error message nd system won't boot. 
+
+Memory Errors show up in variety of ways on modern systems, including parity errors, ECC error messages, system lockups ,p[age faults, and other rror screens. Can indicate bad RAM but often point to something unrelated. 
+
+Real and phantom parity errors - Real parity errors are simply errors that MCC detects from parity or ECC chips. OS reports problem in  error message. "Parity error at A5F2:004EEAB9). Almost always indicates you have a bad RAM stick. Phantom parity errors - show up on systems that don't have parity or ECC memory. If Windows generates parity erros with different addreseses, mostly likely do not have a problem with  RAM. Can occur for variety of reasons, including software proble,ms, heat or dust, etc. 
+
+System lockups and page faults can indicate problem wiht RAM.
+
+System lockup - when computer stops functioning. 
+
+Page fault - milder eroor that can be cause by memory issues but not necessarily system RAM problems. Look like RAM issues because Windows generates error messages with long hex digits. If same address repeats, then probably have problem with RAM otherwise problem is likely something else. 
+
+Non-maskable interrupt (NMI) - panic button in PC. Defined as an interruption the CPU cannot ignore. Manifests as a proprietary crash screen. Called Blue Screen of Death. 
+
+Intermittent memory errors can come from variety of sources, inclduing dying power supply, electrical interference, bugggy apps, buggy hardware, etc. Show up as lockups, general protection faults, page faults, and parity errors, but never have same address or happen with same applications.  

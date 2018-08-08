@@ -1,0 +1,286 @@
+Q: What is a graph?
+A: A graph is a way of representing relationships that exist between pairs of objects. Graph is a set of objects, called vertices, together with a collection of pairwise connections between them, called edges. Viewed abstractly, a graph G is simply a set V of vertices and a collection E of pairs of vertices from V called edges. Way of representing relationships between pairs of objects from some set V.
+
+Q: What makes graphs useful?
+A: Graphs have applications in moderling many domains, including mapping, transportation, computer networks, and electrical engineering. 
+
+Q: What is a directed edge?
+A: An edge (u, v) is  said to be directed from u to v if the pair (u, v) is ordered, with u preceding v. 
+
+Q: What is an undirected edge?
+A: An edge (u, v) is said to be undirected if the pair (u, v) is not ordered. (u, v) is same as (v, u)
+
+Q: What is an undirected graph?
+A: An undirected graph is a graph whose edges are all undirected
+
+Q: What is a directed graph?
+A: A directed graph, or digraph, is a graph whoses edges are all directed
+
+Q: What is a mixed graph?
+A: A mixed graph has both directed and undirected edges. 
+
+Q: What are end vertices (endpoints) of an edge?
+A: Endpoints are the two vertices joinged by an edge. If an edge is directed, its first endpoint is its origin and the other is the destination of the edge. 
+
+Q: What are adjacent edges?
+A: Two vertices u and v are adjacent if there is an edge whose end ertice are u and v.
+
+Q: What are incident edges?
+A: Edge is said to be incident to a vertex if the vertex is one of the edge's endpoints. 
+
+Q: What are outgoing edges of a vertex?
+A: Outgoing edges of a vertex are the directed edges whose origin is that vertex
+
+Q: What are incoming edges of a vertex?
+A: Incoming edges of a vertex are the directed edges whose destination is that vertex.
+
+Q: What is the degree of a vertex?
+A: Degree of a vertex v, denoted deg(v), is number of incident edges of v.
+
+Q: What are the in-degree and out-degree of a vertex?
+A: The in-degree and out-degree of a vertex v are the number of incoming and outgoing edges of v, and are denoted indeg(v) and outdeg(v) respectively. 
+
+Q: What is a collection in a graph?
+A: Definition of a graph refers to group of edges as a collection, not a set, thus allowing two undirected edges to hav ethe same end vertices, and for two directe edges to have the same origin and same destination. Such edges are called parallel edges or multiple edges. 
+
+Q: What is a self-loop edge?
+A: An edge is a self-loop if its wo endpoints coincide. 
+
+Q: What is a simple graph?
+A: A simple graph does not have parallel edges or self loops. Thus, can say the edges of a sinple graph are a set of vertex pairs (not just a collection). 
+
+Q: What is a path of a graph?
+A: A path is a sequence of alternating vertices and edges that starts at a vertex and ends at a vertex such that each edge is incident to its predecessor and successor vertex
+
+Q: What is a cycle?
+A: A cycle is a path that starts and ends at the same vertex, and that includes at least one edge.
+
+Q: What is a simple path? Simple cycle?
+A: A path is simple if each vertex in the path is distinct and a cycle is simple if each vertex in the cycle is distinct except the first and last. 
+
+Q: What is a directed path?
+A: A directed path is a path such that all edges are directed and are traversed along their direction. 
+
+Q: What is a directed cycle?
+A: A directed cycle is a cyle such that all edges are directed and are traversed along their direction.
+
+Q: What is an acyclic graph?
+A: A graph is acyclic if it has no directed cycles
+
+Q: What does it mean for a ertex to be reachable from another vertex?
+A: Given vertices u and v of a (directed) graph G, say u reaches v and that v is reachable from u if G has a directed path from u to v. In undirected graph, notion of reachability is symmetric. U reaches v iff v reaches u. However, in directed graph, since path must be traversed accoring to directinos, it is possible u reaches v but v does not reach u
+
+Q: What makes a graph connected? 
+A: A graph is connected if, for any two vertices, there is a path between them. A graph is strongly connected if for any two vertices u and v of digraph G, u reaches v and v reaches u.
+
+Q: What is a subgraph?
+A: A subgraph of graph G is a graph H whose vertices and edges are subsets of the vertices and edges of G, respectively 
+
+Q: What is a spanning subgraph?
+A: A spanning subgraph of G is a subgraph of G that contains all the vertices of the graph G. 
+
+Q: What are connected components?
+A: If a graph G is not connected, its maximal connected subgraphs are called the connected components of G.
+
+Q: What is a forest?
+A: A forest is a graph without cycles
+
+Q: What is a graph-like definition of a tree?
+A: A tree is a connected forest, that is, a connected graph without cycles
+
+Q: What is a spanning tree?
+A: A spanning tree of a graph is a spanning subgraph that is a tree. Not necessarily a designated root.
+
+Q: What is the relationship between the edges and vertices of a graph and its degree?
+A: If G is a graph with m edges and vertex set V, then the sum of all degrees in V is 2m. Summation for every v in V deg(v) = 2m.
+
+Q: What is relationship between edges and vertices of a digraph and its degrees?
+A: If G is a digraph with m edges and vertex set V, then the summation of all in-degrees in V equals the summation for all out-degrees in V is equal to m. Summation for all v in V indeg(v) = summation for all v in V outdeg(v) = m.
+
+Q: What is the relationship between vertices and edges and an undirected graph G?
+A: Let G be an undirected graph with n vertices and m edges: 1. If G is connected then m >= n-1. 2. If G is a tree, then m = n-1. 3. If G is a forest, then m <= n-1. 
+
+Q: Describe the ADT of a graph?
+A: numVertices() - returns number of vertices of the graph. vertices() - returns an iteration of all the vertices of the graph. numEdges() - returns number of edges of the graph. getEdge(u, v) - returns edge from vertex u to vertex v is one exists; otherwise null. For an undirected graph, there is no difference between getEdge(u, v) and getEdge(v, u). endVertices(e): returns an array containing the two endpoint vertices of edge e. If graph is directed, the first vertex is the origin and the second the destination. opposite(v, e) - For edge e incident to vertex v, returns the other vertex of edge; an error occurs if e not incident to v. outDegree(v) - returns the number of outgoing edges from vertex v. inDegree(v) - returns number of incoming edfges to vertex v. For an undirecte graph, this returns same value as does outDegree(v). outgoingEdges(v) -- returns an iteration of all outgoing edges from vertex v. incomingEdges(v) - returns an iteration of all incoming edges to vertex v. For an undirected graph, this returns same collection as does outgoingEdges(v). insertVertex(x) - crates nd returns a new vertex storing element x. insertEdge(u, v, x) - creates and returns a new Edge from vertex u to vertex v, storing element x; an error occurs if there already exists an edge from u to v. removeVertex(v) - removes vertex v and all its incident edges from the graph. removeEdge(E) - removes edge e from the graph. 
+
+Q: What are the four data structures used for representing a graph. Differ greatly in way they organize the edges.
+A: Edge list, adjacency list, adjacency map, and adjacency matrix
+
+Q: What is an edge list?
+A: In an edge list, maintain an unordered list of all edges. Minimally suffices, but there is no efficient way to locate a particular edge (u, v) or the set of all edges incident to a vertex v.
+
+Q: What is an adjacency list?
+A: In an adjacenecy list, we additionally maintain, for each vertex, a separate list containing those edges that are incident to the vertex. This organization allows to more efficiently find all edges incident to a given vertex.
+
+Q: What is an adjacency map?
+A: An adjacency map is similar to an adjacency list, but the secondary container of all edges incident to a vertex is organized as a map rather than alist, with the adjacent vertex serving as a key. Allows more efficient access to a specified edge (u, v) for example in O(1) time with hashing. 
+
+Q: What is an adjacency matrix?
+A: An adjacenecy matrix provides worst-case O(1) access to a specific edge (u, v) by maintining and nXm matrix, for a graph of n vertices. Each slot is dedicated to storing a reference to the edge (u, v) for a particular pair of vertices u and v; if no such edge exists, the slot will store null. 
+
+Q: Describe the edge list structure.
+A: Edge list structure is possibly the simplest, though not most efficient, representation of a graph G. All vertex objects are stored in an unordered list V, and all edge objects are stored in an unordered list V, and all edge objects are stored in an unordered list E. 
+
+Q: Describe the vertex object of an edge list.
+A: The vertex object for a vertex v storing element x has instance variables for: 1. a reference to element x, to support the getElement() method. 2. A reference to the position of the ertex instance in the list V, thereby allowing v to be efficiently removed from V if it were removed from the graph
+
+Q: Describe the edge objects of an edge list.
+A: The edge object for an edge e storing element x has instance variables for: 1. A reference to element x, to support the getElement() method. 2. Refernce to the vertex objects associated with the endpoint vertices of e. These will allow for constant-time support for methods endVertices(e) and opposite(v, e). 3. A reference to the position of the edge instance in the list E, thereby allowing e to be efficiently removed from E if it were removed from the graph. 
+
+Q: Describe the performance of the edge list structure.
+A: Analysis
+
+Q: Describe the adjacency list structure.
+A: The adjacency list structure for a graph adds extra information to the edge list structure that supports direcyt access to the incident edges (and thus to the adjacent vertices) of each vertex. Specifically, for each vertex v, we maintain a collection I(v), called the incidence collection of v, whose entries are edges incident to v. For digraphs, outgoing and incoming edges can be respectively stored in two separate collections Iout(v) nad Iin(v). Traditionally, the incidence collection I(v) for a vertex v is a list, which is why we call this way of representing a graph the adjacenecy list structure. Requires that primary structure of adjacency list maintin the collection V of vertices in a way so that we can locate the secondary structure I(v) for a given vertex in O(1) time (positional list with each vertex maintaining direct reference to its I(v) incidence collection. If vertices can be uniquely numbered, could instead use a primary array-based structure.
+
+Q: What is the primary benefit of an adjacency list?
+A: The primary benefit of an adjacency list is that the collection I(v) (or more specifically Iout(v)) contains exactly those edges that should be reported by the method outgoingEdges(v). Therefore can implement this method by iterating the edges of I(v) in O(deg(v)) time. 
+
+Q: Describe the performance of an adjacency list?
+A: Analysis
+
+Q: Describe the adjacency map structure.
+A: Best implementation of getEdge(u, v) requires O(min(deg(u), deg(v))) because must search thrugh either I(u) or I(v). Can improve performance of adjacency list by using a hash-based map to implement I(v) for each vertex v. Let opposite endpoint of each incident edge serve as a key in the map, with edge structure serving as value. Space usage remains O(n+m) because I(v) uses O(deg(v)) space for each vertex v, as with adjacency list. 
+
+Q: What is good about adjacency map?
+A: Adjacency maps essentially achieve optimal running times for all methods, making it an excellent all purpose choice as aa graph representation. The getEdge(u, v) method can be implemented in expected O(1) time by seraching for vertex u as a key in I(v) or vice versa. 
+
+Q: Describe an adjacency matrix structure.
+A: The adjacency matrix structure for a graph G augments the edge list structure with a matrix A (two dimensional array), allows us to locate an edge between a given pair of vertice in worst-case constant time. Think of vertices as being integers in set {0, 1, ..., n01} and edges as being pairs of such integers. Allows us to store refeerences to edges in cells of a two dimensional n*n array A. The cell A[i][j] holds a reference to edge (u, v) if it exists where u is the vertex with index i and v is vertex with index j. If no such edge, then A[i][j] = null.
+
+Q: What is the advantage of an adjacency matrix structure?
+A: Advantage of an adjacency matrix structure is that any edge (u,v) can be accessed in worst-case O(1) time. 
+
+Q: What is disadvantage of an adjacency matrix structure? 
+A: Several operations are less efficient with an adjacency matrix. To find the edges incident to vertex v, must presumably examine all n entries in the row associated with v; recall an adjacency list or map can locate those edges in optimal O(deg(v)) time. Adding or removing vertice from graph is also problematic. as matrix must be resized. Also the O(n^2) spae usage of an adjacency matrix is typically far worse than O(n+m) required for other representations. 
+
+Q: What is a dense graph?
+A: A dense graph is the worst case, where number of edges are proportional to n^2.
+
+Q: What is a sparse graph?
+A: Most graphs are sparse graphs. Less edges than n. 
+
+Q: Is an adjacency map or adjacency matrix better for a dense graph?
+A: An adjacency matrix is better for a dense graph, becaue the constants of proportionality of an adjacency matrix can be smaller than that of an adjacency list or map. In fact, if edges do not have auxiliary data, a boolean adjacency matrix can use one bit per edge slot, such that A[i][j] = true if and only if associated (u, v) is an edge.
+
+Q: What is a traversal?
+A: A traversal is formally a systematic procedure for exploring a graph by examining all of its vertices and edges. Traversal is efficient if it visits all vertices and edges in time proportional to their number.
+
+Q: What important concept of graphs to traversal have to do with?
+A: Graph traversal algorithms are key to answering many fundamental questions about graphs involving the notion of reachability.
+
+Q: What are some problems that deal with reachability in an undirected graph G?
+A: 1. Computing a path from vertex u to vertex v or reporting that no such path exists. 2. Given a start vertex s of G, computing, for every vertex v of G, a path with the minimum number of edges between s and v, or reporting that no such path exists. 3. Testing whether G is connceted 4. Computing a spanning tree of G, if G is connected. 5. Computing the connected compnents of G. 6. Identifying a cycle in G, or reporting that G has no cycles. 
+
+Q: What are some problems that deal with reachability in a digraph G?
+A: 1. Computing a directed path from vertex u to vertex v, or reporting that no such path exists. 2. Finding all vertice of G that are reachable from a given vertex s. 3. Determining whether G is acyclic. 4, Determin whether G is strongly connected
+
+Q: Describe Depth First Search.
+A: Begin at specific starting vertex s in G. Mark it as visited. Then we consider arbitrary edge (u, v) incident to current vertex u. If edge leads to a vertex v that is already visisted, we ignore that edge. Else, then go to v and mark it visited and make it current vertex. Repeat until hit a dead end, that is current vertex v such that all the edges incident to v lead to vertices already visited. When hit dead end, go back vertex u. Make u current then repeat computation looking for any edges incident to u not yet visited. Process terminates when backtrack all the way back to start vertex  s and there are no more unexplored edges incident to s.
+
+Q: What is useful about depth first search?
+A: DFS useful for testing a number of properties of graphs, including whether ther is a path from one vertex to another and whether or not a graph is connected. 
+
+Q: What is a depth-first-search tree of a graph?
+A: Tree rooted at starting vertex s that is naturally identified by depth-first-search algorithm. Whenver an edge e = (u, v) is used to discover a new vertex v during DFS, that edge is known as a discovery edge or tree edge. All other edges are considered nontree edges, which go to a previously 
+
+Q: What are three types of non-tree edges?
+A: Back edges, forward edges, and cross edges
+
+Q: What is a back edge?
+A: A back edge is an edge which connects a vertex to an ancestor in the DFS tree.
+
+Q: What is a forward edge?
+A: A forward edge is an edge which connects a vertex to a descendant in the DFS tree
+
+Q: What is a cross edge?
+A: A cross edge is an edge which connecs a vertex to a vertex that is neither its ancestor nor its descendant
+
+Q: What is relationship between an undirected graph and DFS traversal.
+A: Let G be an undirected graph on which a DFS traversal starting at vertex s has been performed. Then the traversal visits all vertices in the connected component of s, and the iscovery edges form a spanning tree of the connected component of s
+
+Q: What is relationship between a digraph and DGS traversal
+A: Let G be a digraph. DFS on G starting at a vertex s visits all the vertices of G that are reachable from s. Also, the DFS tree contains directed paths from s to every vertex reachable from s. 
+
+Q: Describe running time of DFS.
+A: DFS is called at most once on each vertex, and therefore every edge is examined at most twice for an undirected graph (once from each of its end vertices) and at most once in a digraph from its origin vertex. If we let ns <= n be number of vertices reachable from a vertex s and ms <= m be number of incident edges to those vertices, a DGS starting at s runs in O(ns + ms) time, provided following conditions are satisfied: 1. Graph is represented by a data structure such that creating and iterating through the outgoingEdges(v) takes O(deg(v)) time, and the opposite (v , e) method takes O(1) time. Adjacency list structure is one such structure, but adjacency matrix is not. 2. Have way to mark a vertex or edge as explored and to test if a vertex or edge has been explored in O(1) time. 
+
+Q: Describe running time of DFS on an undirected graph with n vertices and m edges?
+A: Let G be an undirected graph with n vertices and m edges. A DFS traversal of G can be performed in O(n + m) time, and can be used to solve the following problems in O(n+m) time: 1. computing a path between two given vertices of G if one exists. 2. Testing whether G is connected. 3. Computing a spanning tree of G, if G is connected. 4. Computing the connected component of G. 5. Computing a cycle in G, or reporting that G has no cycles. 
+
+Q: Describe running time of DFS on a digraph with n vertices and m edges.
+A: Let G be a digraph with n vertices and m edges. A DFS traversal of G can be performed in O(n + m) time, and can be used to solve the following problems in O(n + m) time: 1. Computing a directed path between two given vertices of G, if one exists. 2. Computing the set of vertices of G that are reachable from a given vertex s. 3. Testing whether G is strongly connected. 4. computing a directed cycle in G or reporting that G is acyclic.
+
+Q: How to use DFS reconstruct a path from u to v?
+A: After DFS. Begin at end of path, examining the forest of discovery edges to determine what edge was used to reach v. Then determine opposite ertex of that edge and repeat process to determine what edge was used to discover it. Continue process until reaching u. 
+
+Q: How to use DFS to test for connectivity
+A: In undirected graph, simply start DFS at arbitrary vertex and then test whether known size() equals n at conclusion. If graph is connected, then all vertices will have been discovered.
+
+Q: How to use DFS to test for strong conncetivity in a digraph?
+A: Begin by performing a DFS of our digraph G starting at an arbitrary vertex s. If there is any vertex of G that is not visited by this traversal and is not reachable from s, then graph is not strongly connected. If first DFS does visit every vertex, we need to check whether s is reachable from all other vertices. Then reimplement version of DFS that loops through all incoming edges to the current vertex, rather than all outgoing edges. Runs in O(n+m) time since it takes two DFS traversals of G. 
+
+Q: How to use DFS to compute all connected components in an undirected graph?
+A: When grap is not connected, next goal is to identify all connected component of undirected graph or the strongly connected components of a digraph. If initial call to DFS fails to reach all vertices, can restart a new call to DFS at one of unvisited vertices. Returns a map that represents a DFS forest for the entire graph. Vertices that serve as of DFS trees within this forest will not have discovery edges and will not appear as keys in the returned map. Therefore number of connected component of the graph g is eqal to g.numVertices() - forest.size(). Runs in O(n+m) time. 
+
+Q: How to use DFS to compute all connected components in a digraph?
+A: More complex . The O(n+m) total bound for a call to DFSComplete applies to the directed case as well
+
+Q: How to use DFS to detect all cycles in a graph?
+A: For both directed and undirected graphs, a cycle exists iff a back edge exists relative to the DFS traversal of that graph. For undirected graph, it is easy because all edges are either tree edges or back edges. For directed graph, when a directed edge is explored leading to a previously visited vertex, we must recognize whether that vertex is an ancestor of the current vertex. Can be accomplished by maintaining another set with all vertices upon which a recursive call to DFS is currenyly active. 
+Q: Implement a Graph
+A: Check Code
+
+Q: Implement a digraph
+A: Check code
+
+Q: Implement a DFS algorithm
+A: Check code
+
+Q: Use DFS to restructure a path from u to v
+A: Check code
+
+Q: Use DFS to check for connectivity.
+A: Check code
+
+Q: Use DFS to compute all connected components in graph?
+A: Check code
+
+Q: Use DFS to detect all cycles in a graph
+A: Check code
+
+Q: What is Breadth-First-Search?
+A: More akin to sending out many explorers in all directions who collectively traverse a graph in coordinated fashion. BFS proceeds in rounds and subdivides the vertices into levels. BFS starts at vertex s, which is at level 0. In first round, marked visited all vertices adjacent to start vertex s; these vertices are one step away from beginning and placed into level 1. In second round, allow all explorers to go two steps (edges) away from starting vertex. New vertices, which are adjacent to level 1 and not previouslt assigned a level are placed into level 2 and marked visited. Process continues until no new vertices are found ina level.
+ 
+Q: What is the classification of nontree edges in a BFS?
+A: On an undirected graph, all nontree edges are cross edges. BFS on a digraph, all nontre edges are either back edges or cross edges.
+
+Q: What is the relationship between paths and BFS?
+A: The path in a BFS tree rooted at vertex s to any other vertex v is guarantted to be the shortest such path from s to v in terms of number of edges.
+
+Q: What are the properties of a BFS?
+A: Let G be an undirected or directed graph on which a BFS traversal starting at vertex s has been performed, then: 1. The traversal visits all vertices of G that are reachable from S. 2. For each vertex v at level i, the path of the BFS tree T between s and v has i edges, and any other path of G from s to v has at least i edges. 3. If (u, v) is an edge that is not in the BFS tree, then the level number of v can be at most 1 greater than the level number of u. 
+
+Q: What is the time complexity of BFS?
+A: O(n+m). More specificially O(ns + ms) if ns is number of vertices reachable from vertex s and ms <= m is number of incident edges to those vertices. To explore entire graph, process can be restarted at another vertex.  Let G be a graph with n vertices and m edges represente with the adjacency list structure. A BFS traversal of G takes O(n+m) time. 
+
+Q: What is transitie closure?
+A: Needs to be added?
+
+Q: What is a directed acyclic graphs?
+A: Directed graphs without directed cycles are encountered in many apps. Sucha directed graph is often referred to as a directed acyclic graph - DAG. 
+
+Q: What kind of applications are directed acyclic graphs used in?
+A: 1.Prerequisites between courses in an academic program, 2. inheritance between classes of an object-oriented program. 3. Scheduling constraints between the tasks of a project. 
+
+Q: What is a topolgical ordering?
+A: Let G be a digraph with n vertices. Topological ordering of G is an ordering v1,...,vn of the vertices of G such that for every edge (vi, vj) of G, it is the case that i < j. That it, is it an ordering such that any directed path in G traverses vertices in increasing order. 
+
+Q: What is required for a digraph to have topological ordering?
+A: G has a topological ordering iff it is acyclic.
+
+Q: What does the acyclic requirement of topological sorting suggest?
+A: Acyclic requirement of tological ordering suggests an algorithm for computing a topological ordering, called topological sorting. 
+
+Q: What is a weighted graph?
+A: A weighted graph is a graph that has a numeric label w(e) associated with each edge e, called the weight of edge e.  

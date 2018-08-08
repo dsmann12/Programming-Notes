@@ -1,0 +1,60 @@
+TESTING
+
+For testing. Test infrastucture and test functions. 
+
+Mocha -> testing module for node
+
+mkdir utils
+utils/utils.js
+
+module.exports.add = (a, b) => a + b;
+
+npm -i mocha@3.0.0 --save-dev // saves for development purposes only
+
+Adds to devDependencies -> so won't be installed by Heroku and such
+
+utils.test.js -> test cases. Mocha should run files with this extension. 
+
+In package.json
+
+"scripts": {
+	"test": "mocha **/*.test.js", // ** for looking in every directory
+},
+
+
+it() -> function in mocha. Defines new test case. String description, and function. 
+
+const utils = require('./utils')
+
+it('should add two numbers',  () => {
+	var res = utls.add(33, 11);
+	if (res !== 44) {
+		throw new Error(`Expected 44 and got ${res}`);
+	}
+});
+
+npm test -> runs test scripts
+
+nodemon -> can tell what command to run when files change
+
+nodemon --exec 'npm test'
+
+Make new script
+
+"text-watch": "nodemon --exec 'npm test'".
+
+Assertion libraries -> for doing error tests. For doing the it() functions easilly
+
+expect -> assertion library
+
+// Uses old version that is not forwrd compatible
+
+expect('something truthy').toExist() -> assserts if object is truthy
+expect('something not truthy').toNotExist() -> asserts if object is falsey. 
+expect(value).toBe(expectedValue) -> assets if object value is expected value
+
+const expect = require('expect');
+
+Look at library API to see how to use. 
+
+

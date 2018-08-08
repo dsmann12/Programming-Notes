@@ -1,0 +1,524 @@
+LASER DEFENDER
+
+Animations and such
+
+IMPORTING THE MENU
+
+Create a unity package from the block breaker game 
+
+Import unity package into LaserDefender
+
+Open build menu and add scenes to it
+
+CREATING THE STARSHIP
+
+Find a suitable sprite asset
+Import into the game
+Create a Player Controller script to move it
+Restrict the movement to the playspace
+
+When moving object
+
+Work in update()
+
+Switch for specific keys, update position based on a vector with x axis equal to ((+/-)speed * Time.deltaTime
+
+Time.deltaTime -> helps make it framerate independent. Time it takes between frameupdates. If frame takes longer to render, it will have a higherspeed. 
+
+transform.position += new Vector3(speed, 0.0f, 0f);
+
+RESTRICTING THE SPACESHIP's POSITION
+
+Can use Mathf.clamp()  to restrict movement. 
+
+Vector3.left -> predefined unit vectors that point left, right, up, or down.
+
+transform.position += Vector3.left * speed * Time.deltaTime;
+
+Store min and max x in variables
+
+float xmin, xmax;
+
+And get new position
+
+float newX = Mathf.Clamp(transform.position.x, xmin, xmax);
+
+transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+
+Camera.main -> main camera
+
+Camera.main.ViewPortToWorldPont -> takes in a world point and returns a world point component
+
+Takes a Vector3. First value is between 0-1, and same for y. X,y coordinates relative to size of the screen. Bottom left is 0,0. z value is distance from camera to object you want. Want to figure out which plane you are projecting
+
+float distance = transform.position.z - Camera.main.transform.position.z; //distance between object and camera
+Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0,distance)); // bottom left
+Vector3 rightmost = Camera.main.ViewportToWorldPoint(new Vector(1, 0, distance); // bottom right
+
+xmin = leftmost.x;
+xmax = rightmost.x;
+
+To make ship stay in screen use padding
+
+public float padding = 1f;
+xmin = leftmost.x + padding;
+xmax = rightmost.x - padding;
+
+CREATING ENEMIES
+
+Create enemy prefab
+Create an EnemySpawner that will generate enemies at runtime
+
+Make EnemySpawner generate a single enemy on start
+
+More organizations/
+
+New Folder -> Entities
+
+Put Enemoy and Player folders in Entities and put prefabs and assets there
+
+Create object called EnemyFormation, create script called EnemySpawner. Put enemies under formation
+
+public GameObject enemyPrefab;
+
+Start() {
+	GameObject enemy = Instantiate(enemyPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+	enemy.transform.parent = transform;
+}
+
+Drag Enemy prefab to public field in Inspector
+
+Transform makes sure that enemy is located as child of the EnemyFormation object
+
+CREATING ENEMY POSITOINS
+
+Create a position within enemyformation
+Use OnDrawGizmos() to show the position
+Turn position into a prefab
+Change spawning script to keep track of positions
+
+Create GameObject Positoin inside EnemyFormation
+
+Have one method in Position
+
+void OnDrawGizmos()
+
+Gizmos are things on screen like Camera, etc. Menu for them at top. Useful things that are shown within editor but not within the game itself.
+
+void onDrawGizmos() {
+	Gizmos.DrawWireSphere(transform.position, 1);
+}
+
+Shows sphere around positoin in scene view
+
+Add several positions
+
+Then transform them in EnemyFormation (make sure they are all children of this object)
+
+In start:
+
+enemy.transform.parent = transform;
+
+foreach( Transform child in transform) {
+	GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity);
+	enemy.transform.parent = child;
+}
+
+Want to spawn Enemy prefabs at position of child not at origin, or they will be lost.
+
+MOVING THE ENEMY FORMATION
+
+Add a Gizmo to show formation while editing
+On Enemy formation's update, move it left or right ot leave player no space to hide
+Make sure formation doesn't leave bounds of play space
+
+Give EnemyFormation a width and height
+
+public float width = 10f;
+public float height = 5f;
+
+Then implement OnDrawGizmos
+
+puvlic void OnDrawGizmos() {
+	Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
+}
+
+Gives a box around the EnemyFormation so you can move it and all its children
+
+Like with player, must get the right and left boundary of the screen. 
+
+Add speed, xmin, xmax fields and bool movignRight. 
+
+Get distance to camera and calculate left and right boundaries. Set xmin and xmax appropriately
+
+In Update() -> transform position based on Vector.right or Vector.left depending on which directoin it is moving and clamp it to screen boundary
+
+Also need to beware of left and right edges of formation (formation transform position is the center of the formation. So right edge is transform.position + (width/2)
+
+Left edge is transform.position - (width*0.5f)
+
+If xmax > rightedge or xmin < leftedge then movingRight = !movingRight
+
+We use speed * Time.deltaTime to make speed of movement framerate independent. Ensures it is always the right speed no matter how quick or slow computer is. 
+
+FIXING THE FORMATION MOVEMENT
+
+If we change the speed of the formation movement too high, then formation may get stuck on one edge of the playspace
+
+SPAWNING PROJECTILES
+
+Player object should spawn laser when [space] is pressed
+
+Create a laser prefab
+
+Can use Instantiate() to create a new one
+
+Give the projectile velocity
+
+Drag a laser into sprites. Then drag into scene. 
+
+Create prefab from it. 
+
+Give laser prefab a rigidbody2D component with 0 gravity. 
+
+In PlayerController:
+
+Create GameObject field for projectile
+Create float field for projectile speed
+
+In Update()
+
+Check for KeyDown = space. 
+
+If so, instantiate a projectile at the player's position.
+Get the rigidbody2D velocity and set it to Vector(0, projectileSpeed, 0)
+
+However, we want to fire multiple projectiles while holding down key without firing one for every call of update() (60 fps is too much)
+
+Limiting the Fire Rate
+
+Use GetKeyDown() and GetKeyUp() to call InvokeRepeating() and CancelInvoke()
+
+To avoid multi-shot bug, make sure initial delay is greater than 0.0 for InvokeRepeating()
+
+InvokeRepeating(string methodName, float timeBeforeFirstInvocation, float repeatRate)) -> calls method every interval (usually a second)
+
+Time before first invocation should not be 0.0. Will cause bug. So use very small number. 
+
+public float firingRate = 0.2f;
+InvokeRepeating("Fire", 0.000001f, firingRate);
+
+Now must cancel InvokeRepeating if [space] released. 
+
+So if keyup = 'space', 
+CancelInvoke("fire");
+
+But now lasers are being instantiated but not destroyed
+
+Must destroy them
+
+Make a GameObject, add a BoxCollider2D and make it a trigger
+
+Give it width of playspace, and a good tall height to catch all laser beams
+
+Add a script to it. 
+
+Handle OnTriggerEnter2D(Collider2D collider)
+
+Also add a box collider to the laser beam. 
+
+SHOOTING ENEMIES 
+
+Enemies need to respond to projectile hitting them. 
+
+Use Kinematic Rigidbody Triggers for enemies. 
+On trigger, enemmy takes damage according to projectile component. 
+
+Use colliders to detect damage. As well as collisoin boxes
+
+Use OnTriggerEnter2D() to detect collisions
+Check that thing colllided into has a Projectile component
+If so, damage ourselves and call the Hit() method of the projectile
+
+ENEMIES SHOOTING BACK
+
+Enemies will randomly shoot back with a tuneable frequency.
+
+Lasers will not collide with each other or with other enemies
+
+Add a PolyGon collider to player. Polygon collider is better shaped. Can edit it by clicking the Edit Collider button.
+
+Tuning the frequency
+
+Calculate probability of firing in a given frame and fire if appropriate
+Probability of firing depends on how long has elapsed and the inteded frequency
+
+p(first this frame) = time elapsed * frequency
+
+Use Random.value to fire iven a probability
+
+Player can be destoryed by colliding into own laser. Watch for where projectile starts from
+
+CONTROLLING COLLISIONS WITH LAYERS
+
+Player shoots himself whe nfiring
+
+Lasers hit each other and enemies
+
+We need player's projectile not to collide with itself or player. Same with enemies
+
+CONTROLLING COLLISIONS WITH LAYERS
+
+Player shoots himself whe nfiring
+
+Lasers hit each other and enemies
+
+We need player's projectile not to collide with itself or player. Same with enemies
+
+Layer -> Right top corner of inspector
+
+Add a new layer
+
+Tags, SortingLayers, etc
+
+Add Layer
+
+Friendlies -> for player and friendlies
+
+Allows us to select how any item on that layer reacts to collisions
+
+Edit -> Project Settings -> Physics 2D
+
+Can then mess witha a matrix of collisions for enemies
+
+DECTING ENEMIES ARE DESTORYED
+
+Use childCount property of a transform on the positions - an empty position is a dead enemy
+
+Respawn enemies when that happens
+
+Using Transform.cildCount
+
+Need to loop over every position
+Have AllChildMembersAreDead method
+
+In example, EnemyBehavior became EnemyFormation and EnemySpawner became FormationController
+
+For some reason, in Unity you access parent and child components with transforms
+
+bool AllMembersDead() {
+	foreach(Transform childPositionGameObject in transform) {
+		if (childPositoinGameOBject.childCount > 0) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+Then spawn enemies when all are dead in update
+
+SPAWNING ENEMIES ONE BY ONE
+
+iSpawn enemies until formation is full one by one
+
+Create NextFreePosition() => returns a Transforma
+
+POSITOIN ANIMATION FOR A NEW ENEMY
+
+Enemies shoul danimate in, rather than apear
+
+Create an Animaor and Animation Controller
+Create states to represent arriving and flying
+Add the appropriate animation
+
+Drop an enemy onto scene to see it. 
+
+Right click on bottom plane (with Project/Console) and add an Animation frame. 
+
+Select Enemy
+Then click dropdown in Animation frame to create a new clip. Create a new animation.
+
+Also createa an animation controller in folder where animation saved. Can be changed in Animation Window
+
+Must apply animations to entire prefab. 
+
+In this case, we also place the enemy object inside a position and reset its transform so the enemy is placed relative to this position. 
+
+Then in Animation window to mess with animation.
+
+Dopesheets -> like a timeline
+
+You want to have it swoop in, so you want to mess wti hthe transform and the position
+
+Unity does much of the hardwork.
+
+Can mess with start and end points of object.
+
+If say start point x = 2 and end point x = 0. And give a timeDelta by placing the endpoint at a specific time (say 1 second in the future). Then unity does work of transforming object, so that it moves from x = 2 to x = 0 in one second, at 60 frames. 
+
+Can also add rotation that will rotate itself accordingly.
+
+Can change and animate basically anything that can be changed in the inspector. 
+
+Can use seek buttons to move between start and end.
+
+Make sure record button is pressed to change location at a point in the animation. 
+
+Can add a frame by click on the a place in the timeline. 
+
+By changing other values, you can change animation dynamically.
+
+Ex. Changing size of an object depending on distance. 
+
+Problem
+
+Only two enemies at a time, and constantly repeating
+
+Can create a new state in the Animator window. 
+
+Can name state idle and then set it as default state by right clicking
+
+To tell Unity to transition from one animation to another. Right click and select make transition
+
+The final position may not be correct.
+
+If so, add an animation for the idle state. 
+
+Add one key frame with position (0,0,0). 
+
+CREATING A STAR FIELD
+
+Add a starfield with parallax effect to give sense of depth.
+
+Can use particle system
+
+Create new Particle System Object in hierarchy
+Position it so that particls are moving down and toward the comaera
+Tune the lifetime and size of particles to make effect look like stars
+
+Particle System
+
+Shape -> can change shape. From cone to box. 
+Rotation -> change which directions particles move
+
+Issues: Want it to be in background and want it to be running before enenmies pop up
+
+Prewarm -> option that starts particles before game starts
+
+Can change Start size of particles, max amount of them, and the emission (rate over time) to get a starfield effect.
+
+Parallax
+
+Parallax is idea that as you move, objects in the distance seem to move less than those nearby. 
+
+Good technique to give a sense of depth artifically even in 2D
+
+Relative speed objects in important
+
+To achieve effect, build a second particle system. Move it further back. 1 further possibly.
+
+Make a slower speed. 
+
+Dim colors maybe to make it more immerseive. 
+
+Can use cones to make a depth effect
+
+KEEPING SCORE
+
+Create a ScoreKeeper
+
+Will track scores ad upate UI (for ow)
+Attached to score Txt UI element
+
+Can use GameObject.Find()
+
+Create Score text visivle to player that will keep track of score
+
+Make sure it renders at right place for target resolution
+
+Text UI always needs to go on canvas?
+
+Create ScoreKeeper script
+
+Two methods:
+
+Score(int points)
+Reset()
+
+ADDING SOUND EFFECTS
+
+Add ab AudioClip public variable
+Drag a sound into it
+Call that clip with AudioSource.PlayClipAtPoint(soundVar, transform.position);
+
+SPRITE RENDERING ORDER
+
+Changes which sprites are drawn on top.
+
+Lets missiles from player be drawn below ship when instantiated.
+
+Not affected by z position
+
+Sorting layers - tool that can be used for sprite rendering order. tells camera which layer to render first. Ignoring z depth
+
+Layer order for 
+
+EnemyProjectiles
+Enemy
+FriendlyProjectiles
+Player
+Explosions
+
+Select Sortin Layer in Sprite Renderer of the object in the instpector
+
+FIXING UI
+
+To keep score and use it in multiple scenes, make it a static variable
+
+Certain music for certain levels
+
+OnLevelWasLoaded() -> for playing certain music for certain levels. Isn't called at first level
+
+static MusicPlayer instance = null;
+
+public AudioClip startClip;
+public AudioClip gameClip;
+public AudioClip endClip;
+
+private AudioSource music;
+
+void Start() {
+	if (instance != null && instalce != this) {
+		Destroy(gameObject);
+		print ("Duplicate music player self-destructing");
+	} else {
+		instance = this;
+		GameObject.DontDestroyOnLoad(gameObject);
+		music = GetComponent<AudioSource>();
+		music.clip = startClip;
+		music.Play();
+	}
+}
+
+void OnLevelWasLoaded(int level) {
+	music.Stop();
+	
+	switch(level) {
+		case(0):
+			music.clip == startClip;
+			break;
+		case(1):
+			music.clip = gameClip;
+			break;
+		case(2):
+			music.clip = endClip;
+			break;
+	
+	}
+
+	music.loop = true;
+	music.Play();
+}
+
+

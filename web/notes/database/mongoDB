@@ -1,0 +1,67 @@
+MongoDB
+
+C9 special instructions
+
+mongod 
+
+./mongod
+
+mongo - interpreter to interact with data or debug
+
+Commands
+
+mongod - mongo daemon. The mongo process. Runs in background. 
+
+mongo - mongo shell. Can test things and run commands. 
+
+help - lists common commands
+
+show dbs - show database names
+
+admin (empty)
+local (0.078GB)
+
+will make a separate database for every app that is created. 
+
+use <database> - if it exists, it will be used. If not, it will create database and use it. 
+
+Collections used inside databases.
+
+Collections of Dogs:
+name, age, breed
+
+db.dogs.insert({name: "David", breed: "Mutt"})
+
+db - the database being used
+dogs - collection. May not exist
+insert - command inserts data into collection
+
+show collections - shows collections
+
+To view all dogs in database
+
+db.dogs.find() - returns all dogs in collection without arguments. 
+
+db.dogs.find({name: "Sugar"})
+
+CRUD - create, read, update, and delete
+
+db.dogs.update({name: "Lulu"}, {breed: "Labradoodle"}) //will overwrite all other information
+db.dogs.update({breed: "Poodle", {breed: "Labradoodle"})
+
+To preserve other information:
+
+db.dogs.update({name: "Lucy"}, {$set: {name: "Tater", isCute: true}}) //preserves other information with $set
+.$set -> can pass a query to add and update for database object. Instead of whole object to replace.
+
+db.dogs.remove({breed: "Mutt"})
+
+db.dogs.remove({breed: "Mutt"}).limit(2) //just remove 2
+
+db.collection.drop() - delete all contents of a collection.
+
+JAVASCRIPT
+
+mongoose - library for makign MongoDB requests
+
+

@@ -1,0 +1,80 @@
+UNIX
+
+All peripheral devices, even keyboard and screen, are files. So input and output done by reading or writing files. 
+
+Opening a file - informs system of intent to read or write a file. 
+
+File descriptor - a small non-negative integer returned by a call to open(). Whenver input or output is to be done on the file, file descriptor is used instead of name to identify file. Analagous to file pointer of stdlib or file handle of MS-DOS. All info about open file is maintained by system; user program refers to file only by descriptor
+
+The standard file descriptors:
+When command interpreter (shell) runs a program, three files are open with file descriptors 0 (stdin), 1 (stdout), and 2(stderr). 
+
+User can redirect I/O to and from files with < and >
+	prog <infile >outfile
+
+Input and Output uses read and write system calls, accessed through functions read() and write(). First argument is file decriptor, second is char array in your program where data si to go to or from. This is number of bytes to be transferred. Each call returns number of bytes transferred. 
+
+For reading, number of bytes returned may be less than number requested. Return of 0 implied EOF and -1 implies error. For writing, return value is number of bytes written; error is not equal to number requested. 
+
+Most common values to be written or read from are 1 (which means one character at a time (unbuffered) and a number like 1024 or 4096 correspnding to physical block size on a peripheral device. Larger sizes will be more efficient because fewer system calls will be made. 
+
+program for copying input to output. Will copy anything to anything since input and output can be redirected to any file. 
+
+#include "syscalls.h"
+
+main() {
+	char buf[BUFSIZ];
+	int n;
+	
+	while ( (n = read(0, buf, BUFSIZ)) > 0) {
+		write(1, buf, n);
+	}
+	
+	return 0;
+}
+
+BUFSIZ defined in syscalls.h (though header name is not standard). Its value is a good size for local system. 
+
+getChar implemented with syscalls using unbuffered input:
+
+#include "syscalls.h"
+
+int getchar(void) {
+	char c;
+	
+	return (read(0, &c, 1) == 1) ? (unsigned char) c : EOF;
+}
+
+getChar implemented getting input in chuncks, handing out characters one at a time
+
+#include "syscalls.h"
+
+int getchar(void) {
+	static char buf[BUFSIZ];
+	static char *bufp = buf;
+	static int n = 0;
+	
+	if (n == 0) {
+		n = read(0, buf, sizeof buf);
+		bufp = buf;
+	}
+
+	return (--n >= 0) ? (unsigned char) *bufp++ : EOF;
+}
+
+Other than stdin, stdout, and stderr, files must be explicitly opened to read or write to/from them. Two syscalls for this:
+
+open() and creat()
+
+int open(char *name, int flags, int perms);
+
+int fd = open(name, flags, perms);
+
+Open() returns file decriptor. Argument char *name refers to path of file. Flags specify how file i to be opened (O_RDONLY, O_WRONLY, O_RDWR, read only, writeonly, both). 
+
+int creat(Char *name, int perms);
+fd = creat(name, perms);
+
+creat() provided to create new files or rewrite old ones. If file does not exist, creat() will create it with permission specified in argument, else creat() with truncate it to zero length discaring previous content. 
+
+In UNIX file system, there are nine bits of permission information associate witha file that control read, write, and execute access for owener of file, owner's group, and for all othres. 

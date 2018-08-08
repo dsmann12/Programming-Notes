@@ -1,0 +1,126 @@
+Q: What is a binary search tree?
+A: A binary search tree is a proper binary tree such that each internal position p stores a key value pair such that: 1. keys stores in the left subtree of p are less than k. 2. keys stored in right subtree of p are greater than k.  Excellent data structure for storing entries of a map, assuming they have an order relation defined on keys. Efficiently implements a sorted map.
+
+Q: What is the formal ADT of a binary search tree?
+A: get(k) - returns the value v associated with key k if such an entry exists, otherwise null. put(k, v): associates value v with key k, replacing and returning any existing value if the map already contains an entry with key equal to k. remove(k): removes the entry with key equal to k, if one exists, and returns its value, otherwise returns null
+
+Q: Describe the search algorithm of a binary search tree?
+A: search(p, k) { if p.isExternal then return p; else if (k == key(p)) then re < key(p) then return search(left(p), k); else return search(right(p), k)
+
+Q: Describe the analysis of a binary tree searching?
+A: O(h). Height of tree can be as alarge as number of entries n but many strategies to maintain an upper bound of O(log n) on height of tree.
+
+Q: Describe insertion in a binary search tree?
+A: Puts either find correct node to change value or find node where new entry should be inserted. 
+
+Q: Describe deletion in a binary search tree?
+A: To delete an entry with key k, find position storing entry with key equal to k. If no position exists, then there is no entry to remove. Otherwise there are two cases that must be distinguished: 1. If at most one of the chilren of position p is internal, the deletion of entry is simple. Let r be child of p that is internal. Remove p and r's sibling and promote r upward to take place of p. 2. If position p has two cihldren, cannot simply remove node from tree. Must proceed as follows: 1. Locate position r containing entry having greatest key that is strictly less than that of position p. Will always be locate in the right-most internal position of the left subtree of p. Use r's entry as replacement for one being deleted at position p. Instead delete node at position r from tree. Since r was rightmost internal position, it does not have an internal right child. Deletion can therefore be performed using first approach. 
+
+Q: Implement a binary search tree?
+A: Check code
+
+Q: Describe the analysis of a binary search tree?
+A: analysis
+
+Q: What is the weakness of a binary search tree?
+A: A binary search tree can be created where T has height equal to n (all nodes are greater than root and less than root) So tree would execute in O(n) time for most operations. Better to rely on variations that guarantee a worst-case of O(logn) for searches, insertions, and deletions. 
+
+Q: What is a balanced search tree?
+A: A balanced search tree is a binary tree that is rebalanced upon every insertion and deleted so that height is maintained as (log n)
+
+Q: What is a rotation?
+A: Rotation is the primary operation to rebalance a binary search tree. During a rotation, a cihld is "rotated" to be above its parent. 
+
+Q: What is a trinode restruturing?
+A: Combining one or more rotation to provide a broader rebalancing within a tree. In describing trinode restructuring, rename positions x, its parenx y and its grandparent z as a,b, c so that a precedes b and b precedes c in an inorder traversal of T. 1. Let (a, b, c) be a left-to-right (inorder( listing of positions x, y, and z, and let (T1, T2, T3, T4) be a left-to-right (inorder) listing of the four subtrees x, y, and z not rooted at x y or z. 2. Replace sbtree rooted at z with new subtree rooted at b. Let a be the left child of b and let T1 and T2 be the left and right subtrees of a. Let c be right child of b and let T3 and T4 be left and right subtrees of c.
+
+Q: What is a single rotation? A double rotation?
+A: Single rotation occurs when a child supersedes only one parent. Such as when  y and z are both left or right children. Double rotation occurs when a child supersedes two parents. Occurs when x and y are different children of their respective parents. 
+
+Q: What is an AVL Tree?
+A: An AVL tree is any binary search tree T that satisfied the heigh-balance property stating that for every internal position p of T, the heights of the children of p differ by at most 1. 
+
+Q: What defines a balanced tree?
+A: A position is balanced if the absolute value of the difference between the heights of its children is at most 1. Unbalanced otherwise. 
+
+Q: Describe insertion for an AVL tree?
+A: Insertion may upset balance in tree. Restore balance with simple "search and repair" strategy. Let z be first position we encounter in going up from p toward the root of T such that z is unbalanced. Let y denote child of z with greater height that is ancestor of p. Let x be child of y with greater height (cannot be a tie and position x must als be an ancestor of p or p itself. Rebalance subtree rooted at z by calling trinode restructuring. Any ancestor of z that became temporarily unbalanced becomes balanced again tand this one restructuring restores height-balance property globally. 
+
+Q: Describe deletion from an AVL tree?
+A: Let z be first unbalanced position encountered going up from p toward the root of T, and let y be child of z with greater height (y will not be an ancestor of p). Further let x be child of y defined as follows: if one of cihldre of y is talle rthan other, let x be taller child of y, else (both children of y have same height), let x be child of y on same side as y (if y is left child, x is y's left child, etc). Then perform trinode restructuring. Guarantees Must walk up T looking for for more unbalanced positions. If another is found, must perform trinode restructuring and continue marching up T until the root. 
+
+Q: Describe the performance of AVL trees?
+A: Analysis
+
+Q: Why does a Splay Tree differ from other balanced search trees?
+A: Conceptually different from other balanced search trees in that it does not strictly enforce a lograithmic upper bound on height of a tree. No additional height, blance, or other auxialliary data need be stored with nodes of the tree.
+
+Q: What makes a splay tree efficient?
+A: Efficiency of splay tree is due to a certain move-to-root operation, called splaying, that is performed at the bottommmost position p reached during every insertion, deletion, or even a search. Causes more frequently accessed elements to remain nearer to the root, reducing typical search times. Still allows guarantee a logarithmic amortized running time for insertions, deletions, and searches. 
+
+Q: Descibe splaying?
+A: Given a node x of a binary search tree T, splay by moving x to the root of T through a sequence of restructurings. Three different types of restructurings: 1. zig-zig: The node x and its parent y are both left children or both right children. Promote x, making y a child of x and z a child of y while maintaining inorder relationship of nodes in T. 2. Zig-zag - one of x and y is a left child, and other is a right child. Promote x by making x have y and z s its children, while maintaining inorder relationships of nodes in T. Zig - x does not have a grandparent. In this case, we perform a single rotation to promote x over y, making y a child of x, while maintaining the relative inorder relationships of the nodes in T. In otherwords, promote a zig-zig or zig-zag when x has a grandparent and perform a zig when x does not. Splaying consists of repeating these restructurings until x becomes root of T. 
+
+Q: When do you splay?
+A: Following rules: 1. When searching for a key k, if k is found at position p, we splay p, else we splay parent of leaf position at which the search terminate unsuccessfully. 2. When inserting key k, we splay newly created internal node where k gets inserted. 3. When deleting a key k, we splay the position p that is the parent of the removed node; recall that by the removal algorithm for binary search trees, the removed node may be that originally containing k, or a descendant node with a replacement key. 
+
+Q: Describe the anaylists of splay trees?
+A: Analysis
+
+Q: What is a multiway search tree?
+A: A general tree structure in which internal nodes may have more than two children. Let w be a node of an ordered tree. Say w is a d-node if w has d chilldren. Multiway search tree has following properties: 1. Each internal node of T has at least two children (heach internal node is a d-node such that d >= 2). 2. Each internal d-node w of T with children c1...cd stores an ordered set of d-1 key values pairs (k1, v1),...,(kd-1, vd-1) where k1 <= ... <= kd-1. 3. Conventually define k0 = -infinity and kd = +infinity. For each entry stored at a node in subtree of w rooted at ci, i=1...,d, we have that ki-1 <= k <= ki
+
+Q: What is the relationship between the number of entries in a multiway search tree and the number of external nodes?
+A: An n-entry multiway search tree has n+1 external nodes
+
+Q: Describe searching in a multiway tree.
+A: Simple. Perform search by tracing a path in T starting at root. When at a d-node w during serach, cmpare the key k with the keys k1...kd-1 stored at w. If k = ki for some i the search is successfully completed. Otherwise, continue serach in the child ci of w such that ki-1 < k < ki. If reach an external node, then know there is no entry with key k in T, and search terminates unsuccessfully. 
+
+Q: What data structures can be used with a multiway search tree?
+A: During search for key k in multiway search tree, the primary operation needed when navigating a node is finding the smallest key at those node that is greater than or equal to k. Thus, natural to model information at a node itself as a sorted map, allowing use of ceilingEntry(k) method. Map seres as a secondary data structure to support primary data structure of multiway search tree. Use bootsrapping to avoid circular dependence. Natural choice for multiway search tree for secondary structure at each node is SortedTableMap. Because want to determine the associated value in case of a match for key k, and otherwise the corresponding child ci, such that ki-1 < k < ki, then should have each key ki in secondary structure map to the pair (vi, ci). Thus, processing a dnode w while searching for an entry o fT with key k can be performed using a binary serach operation in O(logd). Let dmax denote max number of children of any node of T, and let h denote height of T. Search time for multiway serach tree is therefore O(hlogdmax). If dmax is constant the running time is O(h).
+
+Q: What is the primary efficiency goal of a mutliway search tree?
+A: The primary efficiency goal of a multiway search tree is to keep height as small as possible. 
+
+Q: What is a (2,4) tree?
+A: A (2, 4) tree is a multiway search tree that keeps tree balanced while using small secondary data structures at each node. Achieves goals by maintiaining two simple properties: 1. Eery internal node has at most four children. Depth property - all external nodes have same depth. Also called (2-3-4) tree. Can represent secondary map stored at each node using an unordered list or an ordered array and still achive O(1) time performance
+
+Q: What is the height of a (2, 4) tree?
+A: The height of a (2, 4) tree storing n entries is O(log n)
+
+Q: Describe analysis of a (2, 4) tree
+A: Proposition 11.7 states that size and depth properties are sufficient for keeping a multiway search tree balanced. Also implies that performing a search in a (2, 4) tree takes O(logn) time and that specific realization of secondary structures at nodes is not a crucial design choice.
+
+Q: Describe insertion in a (2, 4) tree?
+A: To insert a new entry (k,v) into a (2,4) tree T, must first perform a search for k. If no entry has key k, search terminates unsuccessfully at external node z. Let w be parent of z. Insert new entry into node w and add a new child y (external node) to w on left of z. This preserves depth property, but may violate the size property. If node w was previously a 4-node then it would become 5-node after insertion. This type of violation of the size property is called an overflow at node w. To resolve, let c1,...,c5 be children of w and let k1,...,k4 be keys stores at w. Perform a split operation: 1. Replace w with two nodes w' and w'' where 1.1 w' is a 3 node with cihldren c1, c2, c3 storing keys k1, k2 1.2. w'' is a 2 node with children c4, c5 storing key k4. 2. If w is root of T, create a new node u, else let u be parent of w. 3. Insert key k3 into u and make w' and w'' children of u so that if w was child i of u, then w' and w'' will become children i and i+1 of u, respectively. New overflow may occur at parent u of w. Triggers a split at node u. 
+
+Q: Describe the analysis of insertion in a (2, 4) tree?
+A: O(logn)
+
+Q: Describe deletion in a (2, 4) tree?
+A: Begin by searchin T for an entry with key k. Removing entry can always be reduced to case where entry to be removed is stored at a node w whose children are external nodes. Suppose entry with key k that wish to remove is stored in ith entry (ki, vi) at a node z that has internal children. Swap entry (ki, vi) with an appropriate entry that is stored at a node w with external children as follows: 1. Find rightmost internal node w in subtree rooted at ith child of z, nothing that children of node w are all external nodes 2. Swap entry (ki, vi) at z with last entry of w. Once ensure that entry to remove is stored at a node w with only external children, simply remove entry from w and remove the external node that is the ith child of w. Such a removal preserves depth property but may violate size property at w. (If w was a 2-node, it then becomes a 1-node which is not allowed). Type of violation is called an underflow at node w. To remedy, check whether an immediate sibling of w is a 3-node or a 4-node. If find such a sibling, then we perform a transfer operation in which we moe a child of s to w, a key of s to parent u of w and s, and a key of u to w. If w has nly one sibling, or if both immediate siblings of w are 2-nodes then perform a fusion operation in which we merge w with a sibling, creating a new node w' and move a key from parent u of w to w'
+
+Q: Describe anaylisis of deletion in a (2,4) tree.
+A: O(logn)
+
+Q: Desribe performance of (2,4) tree?
+A: Anaylsis
+
+Q: What is a major disadvantage of AVL trees?
+A: AVL trees may require many restruture operations (rotations) to be performed after a deletion.
+
+Q: What is a major disadvantage of (2, 4) trees?
+A: (2,4) trees may require many split or fusing operations to be performed after an insertion or removal.
+
+Q: What is a red-black tree?
+A: A red-black tree is a binary search tree with nodes colored red and black in a way that satisfied the following properties: 1. Root property: root is black. 2. External property: Every external node is black. 3. Red property: the children of a red node are black. 4. Depth property: all external node have same black depth, defined as number of proper ancestors that are black.
+
+Q: What is the correspondence between (2, 4) trees and red-black trees?
+A: Given a red-black tree, can construct a corresponding (2, 4) tree by merging every red node w into its parent, storing the entry from w at its parent, and with children of w becoming ordered childrem of parent. Can transform any (2, 4) tree into a corresponding red-black tree by coloring each node w black and then performing the following transformation: 1. If w is a 2-node,then kep the (black) children of w as is. 2. If w is a 3-node, then create a new red nod ey, give w's last two (black) children to y, and make the first child of w and y be the two children of w. 3. If w is a 4-node then create two new red nodes y and z, give w's first two (black) children to y, give w's last two (black) cihldren to z, and make y and z be the two children of w. 
+
+Q: What is the height of a red-black tree storing n entries?
+A: The height of a red-black tree storing n entries is O(logn)
+
+Q: Describe insertion with a red-black tree?
+A: Describe. 
+

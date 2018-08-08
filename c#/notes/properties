@@ -1,0 +1,381 @@
+PROPERTIES
+
+Properties - provide ability to protect field in a class by reading and writing to it through the property. Often accomplished by implementing getter and setter methods. C# properties enable this protection while also letting you access property like a field. 
+
+Another benefit is that you can change their internal implementation over time. 
+
+With public field, underlying data type must always be same because calling code depends on field being the same. With property, can change implementation. 
+
+For example, if a customer has an ID that is originally stored as an int, you might have a requirements change that made you perform a validation to ensure that calling code could never set the ID to a negative value. If it was a field, you would never be able to do this, but a property allows you to make such a change without breaking code
+
+Traditional Encapulation Without Properties:
+
+Languages that don’t have properties will use methods (functions or procedures) for encapsulation. The idea is to manage the values inside of the object, state, avoiding corruption and misuse by calling code. Listing 10-1 demonstrates how this traditional method works, encapsulating Customer information via accessor methods.
+
+using System;
+
+public class Customer
+{
+    private int m_id = -1;
+
+    public int GetID()
+    {
+        return m_id;
+    }
+
+    public void SetID(int id)
+    {
+        m_id = id;
+    }
+
+    private string m_name = string.Empty;
+
+    public string GetName()
+    {
+        return m_name;
+    }
+
+    public void SetName(string name)
+    {
+        m_name = name;
+    }
+}
+
+public class CustomerManagerWithAccessorMethods
+{
+    public static void Main()
+    {
+        Customer cust = new Customer();
+
+        cust.SetID(1);
+        cust.SetName("Amelio Rosales");
+
+        Console.WriteLine(
+            "ID: {0}, Name: {1}",
+            cust.GetID(),
+            cust.GetName());
+
+        Console.ReadKey();
+    }
+}
+
+Uses getter and setter methods. 
+
+C# embraces such funtionality with properties.
+
+Encapsulating Type States With Properties:
+
+Practice of accessing field data via methods was good because it supported encapsulation. Now same thing can be accomplished in much smoother fashion with properties. 
+
+using System;
+
+public class Customer
+{
+    private int m_id = -1;
+
+    public int ID
+    {
+        get
+        {
+            return m_id;
+        }
+        set
+        {
+            m_id = value;
+        }
+    }
+
+    private string m_name = string.Empty;
+
+    public string Name
+    {
+        get
+        {
+            return m_name;
+        }
+        set
+        {
+            m_name = value;
+        }
+    }
+}
+
+public class CustomerManagerWithProperties
+{
+    public static void Main()
+    {
+        Customer cust = new Customer();
+
+        cust.ID = 1;
+        cust.Name = "Amelio Rosales";
+
+	Console.WriteLine(
+            "ID: {0}, Name: {1}",
+            cust.ID,
+            cust.Name);
+
+        Console.ReadKey();
+    }
+ing System;
+
+public class Customer
+{
+    public int ID { get; set; }
+    public string Name { get; set; }
+}
+
+public class AutoImplementedCustomerManager
+{
+    static void Main()
+    {
+        Customer cust = new Customer();
+
+        cust.ID = 1;
+        cust.Name = "Amelio Rosales";
+
+        Console.WriteLine(
+            "ID: {0}, Name: {1}",
+            cust.ID,
+            cust.Name);
+
+        Console.ReadKey();
+    }
+}
+
+Notice how the get and set accessors in Listing 10-5 do not have implementations. In an auto-implemented property, the C# compiler creates the backing store field behind the scenes, giving the same logic that exists with traditional properties, but saving you from having to use all of the syntax of the traditional property. As you can see in the Main method, the usage of an auto-implemented property is exactly the same as traditional properties, which you learned about in previous sections
+
+class Employee
+{
+// Field data.
+private string empName;
+private int empID;
+private float currPay;
+ 
+// Properties!
+public string Name
+{
+get { return empName; }
+set
+{
+if (value.Length > 15)
+Console.WriteLine("Error! Name length exceeds 15 characters!");
+else
+empName = value;
+}
+}
+ 
+// We could add additional business rules to the sets of these properties;
+// however, there is no need to do so for this example.
+public int ID
+{
+get { return empID; }
+set { empID = value; }
+}
+public float Pay
+{
+get { return currPay; }
+set { currPay = value; }
+}
+...
+}
+
+value - a contextual keyword. Always represents the value being assigned by caller in a property. Always has same underlying data type as property. 
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Encapsulation *****\n");
+Employee emp = new Employee("Marvin", 456, 30000);
+emp.GiveBonus(1000);
+emp.DisplayStats();
+ 
+// Reset and then get the Name property.
+emp.Name = "Marv";
+Console.WriteLine("Employee is named: {0}", emp.Name);
+Console.ReadLine();
+}
+
+Also properties able to respond to instrinsic operators of C#. 
+
+So can do:
+
+Joe.Age++; instaed of Joe.setAge(Joe.getAge()+1);
+
+Properties within Class Definition:
+
+If need to check for limits with field data, then would have to check in a constructor as well as property setter and getter. To avoid this, just use
+properties whenever field data is being updated.
+
+class Employee
+{
+// Field data.
+private string empName;
+private int empID;
+private float currPay;
+private int empAge;
+ 
+// Constructors.
+public Employee() { }
+public Employee(string name, int id, float pay)
+:this(name, 0, id, pay){}
+public Employee(string name, int age, int id, float pay)
+{
+Name = name;
+Age = age;
+ID = id;
+Pay = pay;
+}
+ 
+// Methods.
+public void GiveBonus(float amount)
+{ Pay += amount; }
+public void DisplayStats()
+{
+Console.WriteLine("Name: {0}", Name);
+Console.WriteLine("ID: {0}", ID);
+Console.WriteLine("Age: {0}", Age);
+Console.WriteLine("Pay: {0}", Pay);
+}
+ 
+// Properties as before...
+...
+}
+
+static properties can be used to set and get static data. 
+
+// A simple savings account class.
+class SavingsAccount
+{
+// Instance-level data.
+public double currBalance;
+ 
+// A static point of data.
+private static double currInterestRate = 0.04;
+ 
+// A static property.
+public static double InterestRate
+{
+get { return currInterestRate; }
+set { currInterestRate = value; }
+}
+...
+}
+
+Auomatic Properties
+
+Often will have get and set properties to go with private data fields. This can be cumbersome when setting does not need to pass through a specific logic
+and serves only to be a wrapper to the private data. 
+
+Automatic properties - solve this. Feature that offloads the work of defining a private backing field and the related C# property member to the compiler
+using new syntax. 
+
+class Car
+{
+// Automatic properties!No need to define backing fields.
+public string PetName { get; set; }
+public int Speed { get; set; }
+public string Color { get; set; }
+}
+
+// Read-only property? This is OK!
+public int MyReadOnlyProp { get; }
+ 
+// Write only property? Error!
+public int MyWriteOnlyProp { set; }
+
+With automatic properties, the copmiler will define the private backing dield at compile time so the class defining automatic properties will always need
+to use property syntax to get and set underlying value. Cannot directly use private fields within class definition. 
+
+class Car
+{
+// Automatic properties!
+public string PetName { get; set; }
+public int Speed { get; set; }
+public string Color { get; set; }
+ 
+public void DisplayStats()
+{
+Console.WriteLine("Car Name: {0}", PetName);
+Console.WriteLine("Speed: {0}", Speed);
+Console.WriteLine("Color: {0}", Color);
+}
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Automatic Properties *****\n");
+ 
+Car c = new Car();
+c.PetName = "Frank";
+c.Speed = 55;
+c.Color = "Red";
+ 
+Console.WriteLine("Your car is named {0}? That's odd...",
+c.PetName);
+c.DisplayStats();
+ 
+Console.ReadLine();
+}
+
+When using automatic properties to encapsulate Boolean or numerical data, you can use them straightway as hidden backing fields will be assigned a safe 
+default value (0 or false). However, if you use automatic properties to encapsulate a Class variable, the hidden private reference type will be set to a 
+default value of null. 
+
+class Garage
+{
+// The hidden backing field is set to zero!
+public int NumberOfCars { get; set; }
+ 
+// The hidden backing field is set to null!
+public Car MyAuto { get; set; }
+ 
+// Must use constructors to override default
+// values assigned to hidden backing fields.
+public Garage()
+{
+MyAuto = new Car();
+NumberOfCars = 1;
+}
+public Garage(Car car, int number)
+{
+MyAuto = car;
+NumberOfCars = number;
+}
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Automatic Properties *****\n");
+ 
+// Make a car.
+Car c = new Car();
+c.PetName = "Frank";
+c.Speed = 55;
+c.Color = "Red";
+c.DisplayStats();
+ 
+// Put car in the garage.
+Garage g = new Garage();
+g.MyAuto = c;
+Console.WriteLine("Number of Cars in garage: {0}", g.NumberOfCars);
+Console.WriteLine("Your car is named: {0}", g.MyAuto.PetName);
+ 
+Console.ReadLine();
+}
+
+Now, C# allows you to assigna an initial value to underlying backing field generated by compiler. 
+
+class Garage
+{
+// The hidden backing field is set to 1
+public int NumberOfCars { get; set; } = 1;
+ 
+// The hidden backing field is set to a new Car object
+public Car MyAuto { get; set; } = new Car();
+ 
+public Garage(){}
+public Garage(Car car, int number)
+{
+MyAuto = car;
+NumberOfCars = number;
+}
+}

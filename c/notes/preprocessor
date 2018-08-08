@@ -1,0 +1,18 @@
+Pre-Processor Directives:
+
+#include keyword. Linker links code in header files specified by #include keyword. 
+Important for compilation.
+
+#define keyword. Defines a constant. 
+
+#define TUNA 32
+#define MYNAME "David"
+
+Can make custom header file. Must give it .h extension. 
+
+example.h
+
+#include "example.h" // use quotation marks for local header files. 
+#include <stdio.h> // use <> for searching default directory for header files. Standard libraries?
+
+Allows you to include code with structures or variables that can be created or accessed

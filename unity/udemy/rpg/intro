@@ -1,0 +1,303 @@
+RPG CORE COMBAT
+
+START DESIGING RPG
+
+RPG 3rd person fixed camera RPG like Diablo. 
+
+T for Teen, 
+Controls: Mouse, Keyboard, Controller
+Thematic Setting: Fantasy, Post Apocalpytic, Sci Fi, Cyberpunk, Steampunk.
+Tech stack: Unity 5+, Blender, Gimp, Audacity
+Platforms: Steam
+Game Moment: Combat, Mystery, etc
+
+SET UP A COMBAT SANDBOX
+
+Make terrain. Make it green. 
+
+Use 1m per world unit.
+
+Import characters from standard asset pack.
+
+Assets > Import Package > Characters
+
+Import all because inter dependencies.
+
+Use Ethan the 3rd person giy. ThirdPersonCharacter prefab. 
+
+DIY FOLLOW CAMERA
+
+Use script. 
+
+Follow from fixed offset. 
+
+Make camera arm object. Child camera to it.
+
+Tag camera and player correctly. 
+
+Use LateUpdate(). 
+
+PAN AND TILT CAMERA OPTIONS
+
+Can use camera standard assets pack. Import them. 
+
+Free Look, protect from wall clipping, handheld camera, 
+
+PROTOTYPING WITH PLACEHOLDERS
+
+Use blocks and default character to see how game will play. 
+
+RAYCASTING AND LAYER MASKS
+
+int layerMask = 1 << (int) layer;
+
+Bit shifting. 
+
+USING RAYCASTS TO QUERY CLICK
+
+Like firing laser into scene. Visibility query. 
+
+Goes from camera to enemy, maybe object, and then EndStop. 
+
+Can put objects you can walkon to a layer Walkable. 
+
+Want to get layers in code so you can change them in one place. 
+
+Use an enum
+
+public enum Layer {
+	Walkable = 8,
+	Enemy = 9
+}
+Use CameraRaycaster?
+
+Use distanceToBackground vaiable. Distance of raycast.
+
+int layerMask = 1 << (int)layer;
+Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
+RaycastHit hit;
+bool hasHit = Physics.Raycast(ray, out hit, distanceToBackgroundk layerMask);
+if (hasHit)
+{
+	return hit;
+}
+
+return null;
+
+RaycastEndStop is used for end of the world basically.
+
+CLICK MOUSE TO MOVE
+
+Move within a certain radius of where you clicked and then character will move. 
+
+ThirdPersonUserControl and ThirdPersonCharacter
+
+Has many member variables. 
+
+Calls a m_character.Move()
+
+if (Input.GetMouseBUtton(0))
+
+Chcek for mouse button click, find hit point where mouse clicked using raycaster. 
+
+currentClickTarget = cameraraycaster.hit.point;
+
+Then
+m_Character.Move(currentClickTarget - transform.position, false, false);
+
+Filter for clicks on walkable layer only. 
+
+Can us ea switch and use cameraRaycaster.layerHit and check if case is Layer.Walkable
+
+If you make speed to fast on Ethan, there will be abug. Moves so fast that animation doesn't actually put him in correct place. 
+
+So add a walkMoveStopRadius of 0.2f (20cm). Stops walk if in that radius from position. 
+
+var playerToClickPoint = currenClickTarget - transform.position;
+if (playerToClickPoint.magnitude >= walkMoveStopRadius)
+	then move
+	m_Character.move(playertoClickPoint, false, false);
+else
+	Don't move
+	m_Character.move(Vector3.Zero, false, false);
+
+WORK BREAKDOWN STRUCTURE
+
+Need to wear many hats. Design, develop, artist, marketing, etc. Audio
+
+Design, Development, Content, Tuning, Feedback, Tuning, Feedback -> Loop
+
+Can make charts in mindmeister.com
+
+ORGANiZING PROJECT FOR TEAMWORK
+
+Organize folders for project. Use 0,0 based transforms for base objects.
+
+Drag children out, then reset parent, then drag back in.
+
+Can right click on prefab and select to see all object links to prefab. 
+
+Can also right click objects and select prefab to see what they are based from. 
+
+USING CURSOR AFFORDANCES
+
+Crosshair switches icon depending on if it is a space you can walk or an enemy you can attack. 
+
+Unity has a class called Cursor so don't call things Cursor. 
+
+Affordance - possibility of an action on an object. 
+
+Player needs to know that clicking enemy will do something different from clicking walkable ground.
+
+Need to import cursor artwork.
+
+Video has cursor assets or download. Add thses files to Unity.
+
+Set texture type to Cursor. Important as sets transparency and other things.
+
+Then write script for Cursor affordance.
+
+Cursor -> UnityEngine class has static method and 2D texture, hotspot and cursormode. 
+
+Hotspot determine where on cursor a click should be registered. I all point to top left of their image, can make hotspot top left in return.
+
+Make class for CursorAffordance
+
+Texture2D walkCursor = null;
+Vector2 cursorHotspot = new Vector2(96, 96); // 96 x 96 is tuned outside video
+
+Use switch statement to pick correct cursor depending on raycast layer hit. 
+
+switch (cameraRaycaster.layerHit)
+{
+	case Layer.Walkable:
+		Cursor.SetCursor(walkCursor, cursorHotspot, CursorMode.Auto);
+		break;
+	case Layer.Enemy:
+		break;
+	default:
+		Debug.LogError("Don't know what cursor to show");
+		break;
+}
+
+Add other cursor textures as variable to drag rom interface. 
+
+GAMEPAD MOVEMENT MODE
+
+Using two keys lets you double movement speed and go faster. Should ix this. 
+
+Can change animation or movement speed to go faster. 
+
+Actually don't need ThirdPersonUserControl script. Disable it. 
+
+Have movespeed 1 and animation speed of 2. Funny effect. 
+
+Then make different method sin PlayerMovement to select whether we are doing direct movement (using WASD or controller) or indirect (using mouse clicks).
+
+Use a boolean (can be static) to check if controller is in direct mode or indirect. 
+
+As of now, character does not go around objects. This is very complicated and Diablo does not even use this. Must direct character away from objects when using indirect mouse clicks.
+
+ONION DESIGN
+
+Core of game is most important. 
+
+Base other functionality around the core. Make sure core isn't borked by other features. Make sure every thing supports the core. 
+
+Create sandbox elements to test movement and controls. 
+
+To line up elements when moving like ramps. Hold V to snap to the corner of selected object. Grab that vertex to where you want to select it and it will snap to that location. 
+
+THE PLAYER EXPERIENCE
+
+What feeds into player experience. 
+
+Mood, tone of game. Feeling people get when playing. Everything from audio, NPC, etc adds to experience.
+
+-Theme -> allows to build player experience. Story, characters, art supports this theme.
+-Features -> Mechanics, tuning
+-Development -> priorities, resources, MVP (minimal viable product)
+-Marketing -> don't necessarily aim for "fun". Videos, images, messaging, media. 
+
+Define player experience. Aim for 1 to 4 words. 
+
+TODOs AND BUG FIXES
+
+PlayerMovement.
+
+Bug when changing back to indirect mode. Because curentClickTarget variable. 
+
+Slippery enemy bug. Pushing enemy with player. 
+
+Add MaxFriction to enemy Capsule collider. Still not perfect.
+
+Change max size of cursors to 32 pixels. 
+
+Cursor drifting. Caused by setting cursor every frame. Do we want this set every frame?
+
+Really we only care about cursor when it is changed. Use observer pattern and events. 
+
+Also check for required components. 
+
+OBSERVER PATTERN
+
+Have some subjects we are interested in watching. Also have observers that find out when something happens. Subject notifies observers when something has happened. Observers register to listen to events on the subject without the subject knowing or caring about what is listening. 
+
+In old way, objects had to ask subject for information. Is asking every frame. So this can cause issues as well as performance problems. 
+
+Instead, want to call specific method OnLayerChange() to be called when event occurs. So observers don't need to send any information to subject.
+
+DELEGATES
+
+public delegate void OnLayerChange(); // basically a prototype for a method
+
+Instantiate new delegate observer set. 
+
+public OnLayerChange layerChangeObservers; // instantiate observer pool (set)
+
+Write a handler function. Doesn't need same name,
+
+void SomeLayerChangeHandler()
+{
+	print("I handled it");
+}
+
+Add handling function to set of observers. In Start()
+
+layerChangeObservers += SomeLayerChangeHandler; // basically a function pointer. 
+layerChangeObserver(); // call the delegates
+
+Can call delegate rom outside class.
+
+Make class (SomeObserver.cs)
+
+How get metohds inside SomeObserver to handle call made from subject. 
+
+cameraRaycaster = GetComponent<CameraRaycaster>();
+camerRycaster.layerChangeObservers += SomeHandlingFunction;
+
+void SomeHandlingFunction() {
+	print("handled elsewhere");
+}
+
+Do if statements in loop in CameraRaycaster to see if layer has changed and only call those delegate functions if so. 
+
+EVENTS
+
+public event OnLayerChange layerChangeObservers;
+
+Events can only be added to or subtracted from outside of the class they were defined in. So you cannot accidentally overwrite all observers in another class.
+
+Can also deregister with -=. May not need to. May need to. Depends on code. More important in C++ where memory management is manual. 
+
+Mostly same syntax as before. 
+
+What about adding parameter to delegate functions. 
+
+public delegate void OnLayerChange(Layer newLayer);
+
+Thus have to add paramters to any time delegate is called. 
+
+So can stop switching on boolean in other class by getting parameter from delegate.
+
+

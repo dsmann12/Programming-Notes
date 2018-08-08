@@ -1,0 +1,38 @@
+#!/bin/bash
+#can use (esc+ggdG) to clear all text in vim
+
+getDate() {
+	date
+	
+	return #exit status between 0-255
+}
+
+getDate
+
+name="David" #global variable
+
+demoLocal() {
+	local name="Paul"
+	echo "name in function is $name"
+	return
+}
+
+demoLocal
+echo $name
+
+getSum() {
+	#$1, $2, $3 can be used for parameters
+	
+	local num3=$1
+	local num4=$2
+	
+	local sum=$((num3+num4))
+	
+	echo $sum #returns back value to caller
+}
+
+num1=5
+num2=6
+
+sum=$(getSum num1 num2)
+echo "The sum is $sum"

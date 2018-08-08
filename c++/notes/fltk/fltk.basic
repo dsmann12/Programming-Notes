@@ -1,0 +1,69 @@
+FLTK
+
+Widgest created using C++ new operator. For most widgets, arguments to constructor are:
+
+Fl_Widget(x, y, width, height, label)
+
+x,y are coordinates for where window is placed. (0,0) is top left corner grows to the right and downward. Units are pixels. 
+
+Width and height determine size of widget or window in pixels. Max widget size typically governed by underlying window system or hardware. 
+
+label is pointer to character string to label widget with or NULL. If not specified, label defaults to NULL. Label string must be in static storage such as string constant because FLTK does not make copy of it, just uses pointer.
+
+CREATING WIDGET HIERARCHIES
+
+Widgest can be ordered into functional groups, which may themselves be grouped, creating hierarchy. 
+
+Fill groups by adding all widgets that are created between myGroup->begin() and myGroup->end(). myGroup would be current group. 
+
+Newly created groups and their derived widgets implicitly call begin() in constructor.
+
+Setting current group to NULL will stop automatic hierarchies. New widgets can now be added manually using Fl_Group::add() and Fl_Group::insert()
+
+GET/SET METHODS
+
+box->box(FL_UP_BOX) sets type of box Fl_Box draws (default FL_NO_BOX). FL_UP_BOX, means reaisde button border will be drawn around widget. 
+
+FLTK uses method name overloading to make short names for get/set methods. Can examine boxtype in by doing box->box(). A set method always of form "void name(type)" and get method always of form "type name() const"
+
+REDRAWING AFTER CHANGING ATTRIBUTES
+
+Almost all set/get pairs very fast, short inline functions and very efficient thusly. However, set methods DO NOT REDRAW. Must call it yourself. Greatly reduces code size and execution size. 
+
+Exceptions are value() which calls redraw() and label() which calls redraw_label() if necessary.
+
+LABELS
+
+All widgets support labels. 
+
+labelfont() - sets typeface and style used for label. (FL_BOLD+FL_ITALIC). Can also specify typefaces directly. 
+
+labelsize() - sets height of font in pixels
+
+labeltype() - sets type of lable, FLTK supports normal, embossed, and shadowed internally, and more types can be added. 
+
+SHOWING THE WINDOW
+
+show() method shows windget or window. For windows, can also provide command line args to allow users to customize appearance, size, and position of windows. 
+
+MAIN EVENT LOOP
+
+All FLTK apps (and most GUI apps in general) are based on a simple event processing model. User actions (mouse movement, button clicks, keyboard activity) generates events that are sent to app. May ignore events or respond to user, such as by redrawing button in down position, dding text to input field, etc. 
+
+FLTK also supports idle, timer, and file psuedo-events.
+
+Idle functions called when no user input is present and no timers or files need to be handled - in short, when app is not doing anything. Often used to update a 3D display or do other background processing.
+
+Timer functions called after a specific amount of time expired. Can be used to pop up a progress dialog after certain amount of time or do other things that need to happen at more-or-;ess regular intervals. Not 100% accurate, so should not be used to measure time intervals.
+
+File functions called hwne data is ready to read or write, or when an error condition occurs on a file. Most often used to monitor network connections (sockets) for data-driven displays. 
+
+FLTK apps must periodically check (Fl::check()) or wait (Fl::wait()) for events or use the Fl::run() method to enter a standard processing loop. 
+
+Fl.run() equivalent to:
+
+while(Fl::wait());
+
+Fl::run() does not return until all windows under FLTK control are closed by user or program
+
+use fltk --compile to compile

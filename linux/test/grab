@@ -1,0 +1,18 @@
+#!/bin/bash
+
+nums=$(cat exp* | awk '{print $8}')
+echo $nums
+sum=0
+
+for num in $nums
+do
+	echo -n $num
+	sum=$(python -c "print($sum+$num)")
+	echo $sum 
+done
+
+avg=$(echo "$sum/64" | bc -l)
+
+echo
+echo $avg
+printf "%.3f\n" "$(echo $avg)"

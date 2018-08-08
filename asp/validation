@@ -1,0 +1,250 @@
+VALIDATION
+
+Add validations on server side and client side for form data
+
+Earlier used annotations.
+
+[Required]
+
+In CustomersController.Save
+
+Customer is a parameter, when ASP.MVC populates this object using request data, it checks to see if object is valid based on data annotations applied on properties in the object's class.
+
+Can use ModelState to get acceess to validation data.
+
+ModelState.IsValid -> returns whether model is valid or not
+
+If (!ModelState.IsVAlid)
+{
+	var viewModel = new CustomerFormViewModel
+	{
+		Customer = customer,
+		MembershipTypes = _context.MembershipTypes.ToList()
+	};
+	
+	return View("CustomerForm", viewModel);
+}
+
+So 1. Add annotations on entities, then use ModelState to change program flow. Return view if not valid. Third step is validation messages. 
+
+In Form, must add placeholder for validation messages in any location where data must be validated. 
+
+Use Html.ValidationMessageFor()
+
+<div class="form-group">
+	@Html.LabelFor(m => m.Name)
+	@Html.TextBoxFor(M => m.Name)
+	@Html.ValidationMessageFor(m => m.Customer.Name)
+</div>
+
+STYLING VALIDATION FORMS
+
+HTML validation elements get styled with classes. 
+
+input-validation-error -> for inputs
+field-validation-error -> for other elements. Like the Html.ValidationMessageFor()
+
+Got to Content, and go to Site.css
+
+Add classes
+
+.field-validation-error {
+	color: red;
+}
+
+.input-validation-error {
+	border: 2px solid red;
+}
+
+GO to customers/new, and save. Will show invalid fields. 
+
+byte types are implicitly required. 
+
+DATA ANNOTATIONS
+
+[Required]
+[StringLength(255)]
+
+[Range(1, 10)] -> specifies minimum and max for numeric properties
+[Compare["OtherProperty")] -> compare to properties
+[Phone]
+[EmailAddress]
+[Url]
+[RegularExpression("...")]
+
+Can override messages for these attributes
+
+[Required(ErrorMessage = "Please enter customer's name.")]
+
+CUSTOM VALIDATION
+
+What if new business rule.
+
+Imagine if customer wants to go on monthly, quarterly, or annual membersihp, they must be at least 18. 
+
+To implement:
+
+Right click Models. Add a new class. Min18YearsIfAMember
+
+using System.ComponentModel.DataAnnotations
+
+namespace Vidly.Models
+{
+	public class Min18YearsIfAMember : ValidationAttribute
+	{
+		protected override VlidationResult IsValid(object valid, ValidationContext validationContext)
+		{
+			var customer = (Customer)validationContext.ObjectInstance;
+			
+			if (customer.MembershipTypeId == 1)
+				return ValidationResult.Success;
+			
+			if (customer.Birthdate == null)
+				return new Validationresult("Birthdate is required");
+			
+			var age = DateTime.Today.Year - Customer.Birthdate.Value.Year;
+	
+			if (age >= 18) 
+				? ValidationResult.Success 
+				: new ValidationResult("Customer should be at least 18 years old for these plans");
+		}		
+	}
+}
+
+The old IsValid has two versions. One that takes an object, and one that takes and object and VlidationContext. Go for second because this gives you access to others properties of the model. 
+
+To apply attribute, go to model class. 
+
+public class Customer 
+{
+	...
+	[Display(Name="Date of Birth")]
+	[Min18YearsIfAMember]
+	public DateTime? Birthdate { get; set; }
+
+
+}
+
+To access the object, use the validationContext in IsValid. 
+
+validationContext.ObjectInstance -> gives us customer object. But returns object type. So must be casted
+
+var customer = (Customer)validationContext.ObjectInstance;
+
+To return that it is valid
+
+return ValidationResult.Success;
+
+To return invalid with an error message
+
+if (customer.Birthdate == null)
+	return new ValidationResult("Birthdate is required");
+
+
+REFACTORING MAGIC NUMBERS
+
+Should avoid magic numbers because they hurt maintainability. 
+
+If reference data is used in application, then it must be specifically defined in the domain model of the application. 
+
+In MembershipType model add some fields
+
+public static readyonly byte Unknown = 0;
+public static readonly byte PayAsYouGo = 1;
+etc
+
+Could also use an Enum. Problem is that back in validation class, when using an enum must cast to byte to compare to membership type id. Alternatively, could create another property on Customer called membership code that would return enumeration member. 
+
+VALIDATION SUMMARY
+
+Some people prefer to display a list of errors at top of form. 
+
+At top of form use:
+
+@Html.ValidationSummary() -> shows all validation messages
+
+Before had hidden field for id, which is implicitly required. However, new forms had no id to fill the input. Thus new requests were always invalid. 
+
+To change this, initialize a customer in the New method. customer = new Customer()
+
+This will give customer a default id of 0 which is valid. Add() method will do the rest. 
+
+Instead of displaying every error, can choose. First argument to ValidationSummary is excludePropertyErrors boolean. 
+
+So if pass (true), individual property errors will be excluded. Can supply another message
+
+@Html.ValidationSummary(true, "Please fix the following errors")
+
+To make it red, inspect and find the class. 
+
+CLIENT SIDE VALIDATION
+
+Server side validation is crucial, but it is good to do validation on client as well.
+
+user gets immedaite feedback. Also won't waste server resources when user makes mistakes filling out a form. 
+
+By default, client side validation is not enabled in ASP.NET. 
+
+Why?
+
+If look in Bundle config, there is bundle calls jqueryval. Not referenced anywhere. 
+
+In _layout, it is not rendered. 
+
+@RenderSection("scripts", required: false) -> allows us to add a script section in our views. What's put there will be rendered in the page. 
+
+In pages where we need jquery validation, we can reference jquery validation bundle to enable client side validation.
+
+In bottom of CustomerForm
+
+@section scripts
+{
+	@Scripts.Render("~/bundles/jqueryval")
+}
+
+Uses Data Annotations to do client side validations
+
+Only works with Standard .NET data validations. If you want to add custom validations, you must add jquery code. 
+
+ANTI FORGERY TOKENS
+
+Cross-Site Request Forgery - Imagine if hacker takes advantage of user's authentication to send requests to database endpoints. Requests are successfully executed on that user's behalf.a
+
+Logs would act like requests were done from user. Must ensure that requests are only done from specific form.
+
+Use @Html.AntiForgeryToken() -> creates a token and puts it as hidden field on form and as cookie on user's browser. 
+
+@Html.AntiForegeryToken()
+<button></button>
+
+When they post form, we compare these two values (one in form and one in cookie). So if hacker steals cookie, it still won't have access to server. 
+
+To perform validation, decorate the Save action
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Save(Customer customer)
+{
+
+}
+
+EXERCISE
+
+Add validators to movie form
+
+Initialize movie in New. 
+Stock must be between 1 and 20
+All fields have validators
+
+
+To avoid default values for objects in forms when using a default constructor, can use the @Html.Hidden() instead of @Html.HiddenFor()
+
+@Html.Hideen("Movie.Id", (Model.Movie !- null) ? Model.Movie.Id : 0)
+
+Problem is the use of magic string. 
+
+Better approach is to dedicate a pure ViewModel to the form. 
+
+In ViewModel now, we are using the Movie class. 
+
+To void this, copy and paste properties into ViewModel. Make certain fields nullable. Create constructors. And replace code in controller with constructors.  

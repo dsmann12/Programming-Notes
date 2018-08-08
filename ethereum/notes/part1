@@ -1,0 +1,152 @@
+PART 1
+
+Solidity - language for ethereum. Uses .sol files. Strongly types. Similar to JavaScript to people, especially in syntax. But sometimes quite different. Has several gotchas. Because it is a new language. 
+
+Contract definition -> solidity creates this. 
+
+Contract passes through solidity compiler which create byte code ready for deployment on ethereum networks and also crates Application Binary Interface (ABI) which is interface that is used to interact with contract. 
+
+ABI allows us to interact with Contract using JavaScript. 
+
+Remix - online IDE for creating and testing smart contracts
+
+pragma solidity ^0.4.17; // specifies version of solidity in file
+
+contract Inbox {
+    string public message;
+
+    function Inbox(string initialMessage) public {
+        message = initialMessage;
+    }
+
+    function setMessage(string newMessage) public {
+        message = newMessage;
+    }
+}
+
+contract -> siginifies new contract. Like class keyword in OO languages. 
+
+storage variable (message) is variable that exists in instance. Automatically stored with contract on blockchain. Local variables are destroyed after use, like in functions. 
+
+string public message; // public variable of type string
+
+Functions are members on contract. Constructor function is called one time automatically when contract is created, e.g. when contract is deployed to blockchain. 
+
+function getMessage() public view returns (string) {
+	return message;
+}
+
+public view is type of function and returns (string) tells what type it returns. 
+
+Function types
+
+One use per function:
+public -> anyone can call this function
+private -> only contract can call this function
+
+Mean the same thing:
+view -> function returns data and does not modify the contract's data
+constant - function returns data nad does not modfy the contract's data
+
+pure -> function will not modify or even read the contract's data
+
+payable -> when someone calls this function they might send ether along
+
+2 other function types **************************
+
+REMIX TESTING
+
+Remox editor has contract source. It is compiled to bytecode and deployed to in browser fake network that holds instance of contract. Remix holds tiny, fake ethereum network for interacting with contract
+
+Environment -> JavaScript VM tells remix that we want to inject contract into in browser network. 
+
+Accounts are accounts created in this fake network. 
+
+Gas Limit
+
+Value - used to make a transaction and send along some amount of ether with a transaction. 
+
+Drop down shows what contract you want to deploy.
+
+Create button is for calling constructor.
+
+In console can see some activity and a new entry of contract in bottom right showing address where it is. 
+
+Blue means they return data.
+Red means they modify contents of contract in some fashion. 
+
+Gotcha -> public stored variables can be accessed without function. Can be accessed directly. 
+
+BEHIND THE SCENES
+
+External Account to Create contract Transactio
+
+nonce -> how many times the sender has sent a transaction. Sender is person trying to create contract
+to -> address of account this money is going to. For contract creation, this is left blank.
+data -> compiled bytecode of the contract. Where code that comes out of solidity compiler is stored on network
+Raw bytecode is available to everyone on blockchain. So usually don't put secret sauce there.
+value - Amount of 'Wei' to send to the target address. New contract has initial balance of ether assigned to it.
+gasPrice -> Amount of Wei sender is willing to pay per unit gas to get this transaction processed
+startGas/gasLimit -> units of gas that this transaction can consume
+v
+r				-> Cryptographic pieces of data that can be used to genreate the senders account address.
+s					Generated from senders's private key.
+
+Take an account, author new transaction that tries to create a new contract, and tries to send this contract into some specific network (contract given its own account in network)
+
+MORE ON RUNNING FUNCTIONS
+
+Anytime you want to update any data on blockchain, you have to submit a transaction. Also have to wait for it to be mined (PoW algorithm). 
+
+Two ways in which we invoke functions that belong to contracts:
+
+Calling a function:
+1. Cannot modify contract's data
+2. Can return data
+3. Runs instantly
+4. Free to do
+
+Sending a Transaction to a function
+1. Can modify a contract's data
+2. Takes time to execute
+3. Returns the transaction hash
+4. Costs money
+
+Can't get value back even if you write function to return a value.
+
+In JavaScript VM, running transactions seems instantaneous but not actually on real networks. 
+
+WEI vs ETHER
+
+Wei is really small amount of ether. 
+
+GAS vs TRANSACTIONS
+
+Gas -> In order to get someone else to run contracts, must pay them money. Any time send transaction to ethereum network, there is some amount of gas price attached to it. 
+
+function doMath(int a, int b) {
+	a + b;
+	b - a;
+	a * b;
+	a == 0;
+}
+
+Operations have a set price. Are public and can see a spreadsheet of them. Gas Used shows price in gas for each operation. 
+
+Whenever issue a transaction that is meant to modify the blockchain in any fashion or run any code, must specify two properties in side trnasaction object.
+
+gasPrice -> amount of Wei the sender is willing to pay per unit of gas. if gasPrice is 10 and operation takes 3 gas, then willing to pay 30 wei. 
+
+startGas/gasLimit -> units of gas that this transaction can consume. Total number of units of gas we are willing to spend with this transaction. Will not always know how much gas a transaction will take. 
+
+What if:
+gasPrice 300
+gasLimit 10
+
+Before executing code, contract checks how much gas has been spent, and if over limit, it stops executing code and breaks. 
+
+Total cost: 
+
+gasPrice wei/gas * total gas = total wei
+
+

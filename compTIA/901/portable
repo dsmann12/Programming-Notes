@@ -1,0 +1,146 @@
+PORTABLES
+
+Different people need different types of laptops
+
+Standard Laptops - computer having somewhere from .5 to 1 GB RAM, running mobile Intel processor, 2.5 inch drive, optical media, and running regular windows, either 32 or 64bit.
+
+Desktop Replacement Laptop - heavy. Big screen. Up to 21 inches. Lots of RAM. 4,8, 16GB. Highest end Windows, 64bit. Full size keyboard. Two hard drives often, maybe two sets of optical media. 
+
+Netbook - tiny. Often don't run typical Intel or AMD CPU. Often run Atom chips, 32bit processors. Have very small RAM. Often don't have HDD, using SD cards or SSD for storage. Often run low end version of Windows but many run Linux.
+
+Ultrabook - skinny. Thin and light. Storage SSD. Lack optical media. Plenty of RAM, big screen, and nice CPU. 
+
+Tablet PC - In some way, they can be treated as a tablet. Can fold over. Often use pen. Windows often have special features for these. Windows 7 - real tablet PC. Have Control Panel applets - Pen and Touch (Windows 7), Pen and Input Devices (Vista). Also Tablet PC Settings. Can mess wtih display. Can calibrate stylus input. Go through calibration when pen does not seem accurate. Have pen options, configuring what quals what kind of clicks. Also can have "flicks" which are like gestures. Can handle handwriting recognition. And also touch features. Sometimes not multitouch. 
+
+Laptop Expandability
+
+Assume can't do much in terms of expandability but can actually do a good bit.
+
+Often need to use screwdrivers to open up Laptop chassis. 
+
+Can remove 2.5 inch SATA HDD. CPU usually connected to heatsink, which connects to a fan and real heatsink. RAM. Standardized so can get replacement parts from other than manufacturer. 
+
+mini-PCIe - network card can be found here. And may have another slot. 
+
+WPAN - bluetooth radio. 
+
+Connectors on bottom - Docking Stations. Box that can slide some PCs into to get full video, wired Ethernet, PS/2 ports for mice or keyboards. Need proprietary connector though. For Dell. For particular makes and models of laptop
+
+Port Replicator - looks like docking station but plug USB into laptop. Basically like a USB hub. Problem is usually all USB.
+
+Exanpansion Cards
+
+PCMCIA - 16bit connector. Has little pins. 
+
+Type 1 - very thin
+Type 2 - thicker 
+Type 3 - very thick
+
+Usually could slot in two Type 1s or 2s, but only one 3
+
+PC Card - has metal on end. 32bit connection
+
+These two were dominant for years. No drivers to install, just push it and works. Could slide them into port in laptop. 
+
+Express Cards - 34mm and 54mm. Different widths. Do not put PC Card in Express Card slots. 
+
+LAPTOP TOUR
+
+Function Keys - let keys be other things. Fn. Change functions. 
+
+Monitors - LCD and OLED (Organic Light Emitting Diode). LCDs always have backlight. Using CCFL or LED. LEDs use less power, can be brighter, and have longer life. OLED - much better contrast, less power, generally looks better. On lots of smartphones and tablets. 
+
+Two technologies
+
+Twisted Nematic (TN) - oldest. First generation. Twisted crystals. 
+
+IPS  In Plain Switching - better contrast, wider viewing range, and preferred. 
+
+Glossy - shiny outside. Better contrast, but will give you glare. 
+
+Matte - not very shiny. Will kill glare but comes at cost of losing a lot of contrast. 
+
+Pointing Devices
+
+Trackpad - flat touchpad. Can go into configuration settings and change sensitivity and etc. 
+
+Trackpoint - eraser point looking thing
+
+LAPTOP PORTS
+
+SD CArd Reader
+
+mini Display Port - 
+
+eSATA
+
+Display Port
+
+Thunderbolt - really video camera. Unique to Apple products. 
+
+USB - main. 
+
+USB dongles - USB to bluetooth. USB to wifi. USB to 802.11. 
+
+PROPER LAPTOP DISASSEMBLY
+
+Scary, very dense equipment, nonstandardized screws, and can miss connections and mess things up. 
+
+Get a toolkit. 
+
+Must be careful with tape. Put it back when done. 
+
+Often make sketches or notes. or take a picture. 
+
+Put screws in envelope or organize in a way that you know where things need to go. 
+
+POWER MANAGEMENT
+
+Make devic use less power one way or another. Been around for a long time
+
+Advanced Power Management (APM) - early 90s. Original standard.
+
+Advanced Configuration and Power Interface (ACPI) - more advanced standard that replaced APM. 
+
+Intel based systems have built in power management to CPU. How to turn it on. In old days, had to go into BIOS. Nowadays, moment you boot system it will be on. ACPI ON - everything is running. On means ready to do stuff, not using. 
+
+Different states
+On
+Selectively turn off devices. Shutting off monitor, shutting off hard drives.
+ACPI Sleep - keeps RAM powered and shuts off all other systems. Standby. Great but still powering RAM.
+ACPI Hibernate - saves RAM to disk and then powers off all devices. 
+ACPI Hybrid - keeps RAM powered but sktill saves RAM to disk. benefit is if you go down, you don't lost data. 
+
+Issues.
+
+Want to turnoff monitor after certain amount of time, or HDD at certain times, and when to go into sleep, etc.
+
+Control Panel - Power Applets
+
+Power Plans:
+High Performances - keeps everything running. May shut down monitor only at times
+Power Saver - turns everything off as often as possible
+Balanced
+
+Change Plan Settings - customize plan. 
+
+Can allow Hybrid sleep. Turns off by default for laptops, on by default for desktops. Because laptops often thrown into bags when done. 
+
+Hibernate settings. 
+
+Can Create Power Plan. 
+
+Power Management Settings in BIOS are mostly ignored by OS. OS will handle it. Exceptions are features where outside influence is going to turn system back on. 
+
+Wake on LAN - if someone sending LAN activity. Have to configure network card. Going into BIOS often. 
+Resume by Alarm - have system boot up by date and time
+
+AC BACK - if power goes out, will not automatically restart
+Power On By Keytboard
+Power on By Mouse
+
+TROUBLESHOOTING
+
+Sticky Keys - Can use air to clean. Keyboard button usually spring loaded so when they break and drop down, they're not very replaceable. Often have to replace entire keyboard. Scary part is trying to remove speakers screens and removing fragile ribbon cable. 
+
+Video Connection Running To Monitor - ribbon cable. Can get flickering display. Working on different parts of laptop can mess up connectors.  

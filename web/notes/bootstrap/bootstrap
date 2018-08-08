@@ -1,0 +1,112 @@
+BOOTSTRAP
+
+Library. Can be downloaded and included locally.
+
+Most popular HTML, CSS, and JS framework for developing, responsive, mobile first projects on web. 
+
+Most starred and forked repository on github. Just a single file of css and js. 
+
+Help makes fast, responsive websites. 
+
+Bootstrap docs - famously good
+
+CSS - things that can be added to website
+-buttons (can change colors)
+-forms
+
+Components - Basic things can be used
+-navbars: many styles
+-jumbotron
+-progress bars
+
+Can customize these with own styles. Good developers make websites where can't tell bootstrap is used. 
+
+Bootstrap expo - websites that use bootstrap
+
+Can either download files and add them to app locally.
+
+bootstrap.css - most important css file. 
+bootstrap.min.css - same file but compressed. 
+
+Just a list of classes. Can then use those classes in own apps.
+
+Other option for installing:
+
+Bootstrap CDN:
+Take link and add it to code. Links to hosted version of same files. 
+
+Buttons:
+
+CSS Buttons: can use <a>, <button>, or <input> element
+
+different buttons
+different sizes
+can set to active
+
+To override styles, override classes
+
+.btn-danger {
+	background: orange;
+}
+
+FORMS and INPUTS
+
+Jumbotron - lightweight, flexible component that can optionally etend entire viewport to showcase key content on site 
+
+Regular Forms, Inline Forms, and new types of form controls. Different and disabled checkboxes and radio buttons. Dropdowns. 
+
+Focus state - shows focus. 
+
+class="form group" - adds optimum spacing for elements.
+
+Input:
+
+class="form-control" - without it, get basic html with basic focus. 
+
+These classes also important to overall grid system.
+
+Everything boils down to these two classes.
+
+Container - good way to get spacing for website. 
+
+Navbar - responsive and becomes mobile hamburger when compressed. 
+
+Can hold brands, links, inputs, 
+
+Bootstrap criticisms - a little ugly, meaningless. Response to Bootsrap called Semantic UI. Not as widely used though. 
+
+Look at file and docs for how it works. 
+
+THE GRID SYSTEM
+
+Probably main reason people use bootstrap.
+
+Adds structure and layout to website. 
+
+Every container can be divided into 12 different columns. Then can pick how many of those 12 units each element should take up. 
+
+Grids can be nested, so in each col of a grid can be divided into 12 parts
+
+LAYOUTS
+
+4 different sizes that can be specified
+
+xs - mobile
+s - tablet
+m - laptop?
+l - largest
+
+When l switches to medium, want each col to take up 2 units instead, so 2 rows of 6.
+
+<div class="col-md-3 col-sm-6 pink">TOUR DATE</div>
+
+Larger sizes inherit smaller size if not specified. 
+
+
+NESTING GRIDS  
+
+A grid of rows and columns. Each row can fit 12 columns. Each column can fit multiple rows.
+
+To have bootstrap styled website be responsive on mobile, add following meta tag to <head> before <title>:
+
+<meta nae="viewport" content="width=device-width, initial-scale=1">

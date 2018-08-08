@@ -1,0 +1,57 @@
+
+bubble sort
+Insertion Sort
+Selection Sort
+Merge Sort
+Quick Sort
+
+write inputs to file
+then use file to read inputs
+
+//Best to avoid getters and setters
+//Not OO design because allows classes to be changed
+//acceptable for testing
+//If null return value is valid, then use pointer return value
+//Try to use const as often as possible.
+
+Read .csv and .txt files
+Write them to console
+
+4103 assg
+
+Node
+
+LNode
+LinkedList
+
+DLNode
+DoublyLinkedList
+
+ArrayStack
+Stack
+
+ArrayQueue
+Queue
+
+Deque
+
+TNode
+Tree
+
+BTNode
+BinaryTree
+
+PriorityQueue
+Heap
+
+Unsorted Map
+
+Hash Table
+
+Binary Search Tree
+AVL Tree
+Splay Tree
+
+Graphs
+
+

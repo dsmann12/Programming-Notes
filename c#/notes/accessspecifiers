@@ -1,0 +1,221 @@
+ACCESS SPECIFIERS
+
+Types (classes, interfaces, structures, enumerations, and delegates) as well as their members (properties, methods, constructors, and fields) are defined
+using a specific keyword to control how "visible" the item is to other parts of application. 
+
+C# Access Modifier 					May Be Applied To 					Meaning in Life
+public 								Types or type members 				Public items have no access restrictions. A public member can be accessed from an
+																		object, as well as any derived class. A public type can be accessed from other 
+																		external assemblies.
+
+private 							Type members or nested types 		Private items can be accessed only by the class (or structure) that defines the 
+																		item.
+
+protected 							Type members or nested types 		Protected items can be used by the class that defines it and any child class. How
+																		ever, protected items cannot be accessed from the outside world using the C# dot 
+																		operator.
+
+internal 							Types or type members 				Internal items are accessible only within the current assembly. Therefore, if you
+																 		define a set of internal types within a .NET class library, other assemblies are 
+																		not able to use them.
+
+protected internal 					Type members or nested types		When the protected and internal keywords are combined on an item, the item is 
+																		accessible within the defining assembly, within the defining class, and by 
+																		derived classes.
+
+Default access modifers:
+
+PRIVATE
+type members are implicitly private while types are implicitly internal. 
+
+// An internal class with a private default constructor.
+class Radio
+{
+Radio(){}
+}
+
+Can also set nested classes or structures to private but cannot do so with external structures. 
+
+Private fields allow you to set limits for code. Consider a book class with a public field denoting number of pages. Because number can be in billions
+technically on C#, then user could change this field to be an unrealistic number. A private field would set a hard limit. 
+
+Members of a class that represent an object's state should not be marked as public. Public constants and public read-only fields are quite useful. 
+
+Private data can only be indirectly manipulated in one of two ways:
+•	 You can define a pair of public accessor (get) and mutator (set) methods.
+•	 You can define a public .NET property.
+
+Properties can be useful here.
+
+PROTECTED
+
+Protected members can only be accessed by the class that defines them as well as subclasses. 
+
+Weakness is that when a derived type has direct access to its parent's internal data, it is possible to accidentally bypass existing rules found within public properties. Must have a level of trust between parent class
+and child class.
+
+Since we did not specify a static modifier, as for Main(), getChoice() becomes an instance method. The difference between instance methods and static methods is that multiple instances of a class can be created (or instantiated) and each instance has its own separate getChoice() method. However, when a method is static, there are no instances of that method, and you can invoke only that one definition of the static method.
+
+static - static members are defined with the static keyword. Means that member is in the class scope not an
+instance scope. Typically items deemed so commonplace that there is no need to create an instance of class
+before invoking member. Commonly found in utility classes. Utility class is a class that does not maintain
+any object level state and is not created with new keyword. Static data is allocated once and shared among all
+objects of the same class.
+
+// Compiler error! WriteLine() is not an object level method!
+Console c = new Console();
+c.WriteLine("I can't be printed...");
+
+// Correct! WriteLine() is a static method.
+Console.WriteLine("Much better! Thanks...");
+
+Can be applied to:
+-Data of a class
+-Methods of a class
+-Properties of a class
+-A constructor
+-The entire class definition
+-In conjunction with C# using keyword
+
+Because static data is shared by all objects of same class, if you were to  change data in any way, then all objects would be affected by the change. 
+
+Static methods used to modify static data. 
+
+Static constructors - if modify static data in a constructor then every creation of an instance of the class will reset the static data. Can define it
+inline but what if static data needed to be known at runtime, such as if it needed to be read from a database or file. Then should use a static 
+constructor. Allows you to safely set values of static data. Ideal for initializing the values of static data when the value is not known at compile time. 
+
+class SavingsAccount
+{
+public double currBalance;
+public static double currInterestRate;
+ 
+public SavingsAccount(double balance)
+{
+currBalance = balance;
+}
+ 
+// A static constructor!
+static SavingsAccount()
+{
+Console.WriteLine("In static ctor!");
+currInterestRate = 0.04;
+}
+...
+
+•	 A given class may define only a single static constructor. In other words, the static
+constructor cannot be overloaded.
+•	 A static constructor does not take an access modifier and cannot take any
+parameters.
+•	 A static constructor executes exactly one time, regardless of how many objects of the
+type are created.
+•	 The runtime invokes the static constructor when it creates an instance of the class or
+before accessing the first static member invoked by the caller.
+•	 The static constructor executes before any instance-level constructors.
+
+Static class - can contain only memebers or field data marked with static keyword. Cannot create an instance. Called a utility class. 
+
+// Static classes can only
+// contain static members!
+static class TimeUtilClass
+{
+public static void PrintTime()
+{ Console.WriteLine(DateTime.Now.ToShortTimeString()); }
+ 
+public static void PrintDate()
+{ Console.WriteLine(DateTime.Today.ToShortDateString()); }
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Static Classes *****\n");
+ 
+// This is just fine.
+TimeUtilClass.PrintDate();
+TimeUtilClass.PrintTime();
+ 
+// Compiler error! Can't create instance of static classes!
+TimeUtilClass u = new TimeUtilClass ();
+ 
+Console.ReadLine();
+}
+
+Now possible to import all static members into code by a special C# using directive. 
+
+// Import the static members of Console and DateTime.
+using static System.Console;
+using static System.DateTime;
+
+So now don't have to prefix the defining class. 
+
+static class TimeUtilClass
+{
+public static void PrintTime()
+{ WriteLine(Now.ToShortTimeString()); }
+ 
+public static void PrintDate()
+{ WriteLine(Today.ToShortDateString()); }
+}
+
+Static properties can also be used to get and set static data:
+
+// A simple savings account class.
+class SavingsAccount
+{
+// Instance-level data.
+public double currBalance;
+ 
+// A static point of data.
+private static double currInterestRate = 0.04;
+ 
+// A static property.
+public static double InterestRate
+{
+get { return currInterestRate; }
+set { currInterestRate = value; }
+}
+...
+}
+
+CONSTANTS
+
+const - declare constant data. Can never change after initial assignment. 
+
+READONLY FIELD DATA
+
+readonly field data - like a constant, it cannot be changed after initial assignment. However, unlike constant, the value assigned to a read-only field can be determined at runtime and therefore can legalyl be assigned within scope of a constructor but nowhere else. 
+
+Can be helpful when don't know the value until runtime. 
+
+class MyMathClass
+{
+// Read-only fields can be assigned in ctors,
+// but nowhere else.
+public readonly double PI;
+ 
+public MyMathClass ()
+{
+PI = 3.14;
+}
+}
+
+Static read-only can be used to make data static and not in object scope. But must use a static constructor if value not known until runtime.
+
+class MyMathClass
+{
+public static readonly double PI;
+ 
+static MyMathClass()
+{ PI = 3.14; }
+}
+
+SEALED
+
+sealed - keyword that prevents inheritance from occurring. Compiler will not allow you to derive from this type. 
+
+// The MiniVan class cannot be extended!
+sealed class MiniVan : Car
+{
+}
+
+Most often makes the best sense when designing a utility class. 

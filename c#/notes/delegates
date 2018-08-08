@@ -1,0 +1,638 @@
+DELEGATES
+
+C# allows creation of reference types using constructs such as classes and interfaces. Reference types allow you to create instancs of objects and use them in special ways to accomplish software goals. Classes allow you to create objects that contained members with attributes and behaviors. Interfaaces allow you to declare a set of attributes and behavior that all objects implementing them would publicly expose. 
+
+New reference type: delegate
+
+delegate - a C# language element that allows you to reference a method. Similar to C/C++ function pointers. Allows developer to have maximum flexibility to implement any functionality at runtime. 
+
+Think about how you use methods right now. You write an algorithm that does its thing by manipulating the values of variables and calling methods directly by name. What if you wanted an algorithm that was very flexible, reusable, and allowed you to implement different functionality as the need arises? Furthermore, let’s say that this was an algorithm that supported some type of data structure that you wanted to have sorted, but you also want to enable this data structure to hold different types. If you don’t know what the types are, how could you decide an appropriate comparison routine? Perhaps you could implement an if/then/else or switch statement to handle well-known types, but this would still be limiting and require overhead to determine the type. Another alternative would be for all the types to implement an interface that declared a common method your algorithm would call, which is actually a nice solution. However, since this lesson is about delegates, we’ll apply a delegate solution, which is quite elegant.
+
+You could solve this problem by passing a delegate to your algorithm and letting the contained method, which the delegate refers to, perform the comparison operation. Such an operation is performed in Listing 14-1.
+
+Delegate Example:
+
+using System;
+
+// this is the delegate declaration
+public delegate int Comparer(object obj1, object obj2);
+
+public class Name
+{
+    public string FirstName = null;
+    public string LastName = null;
+
+    public Name(string first, string last)
+    {
+        FirstName = first;
+        LastName = last;
+    }
+
+    // this is the delegate method handler
+    public static int CompareFirstNames(object name1, object name2)
+    {
+        string n1 = ((Name)name1).FirstName;
+        string n2 = ((Name)name2).FirstName;
+
+        if (String.Compare(n1, n2) > 0)
+        {
+            return 1;
+        }
+        else if (String.Compare(n1, n2) < 0)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public override string ToString()
+    {
+        return FirstName + " " + LastName;
+    }
+}
+
+class SimpleDelegate
+{
+    Name[] names = new Name[5];
+
+    public SimpleDelegate()
+    {
+        names[0] = new Name("Joe", "Mayo");
+        names[1] = new Name("John", "Hancock");
+        names[2] = new Name("Jane", "Doe");
+        names[3] = new Name("John", "Doe");
+        names[4] = new Name("Jack", "Smith");
+    }
+
+    static void Main(string[] args)
+    {
+        SimpleDelegate sd = new SimpleDelegate();
+
+        // this is the delegate instantiation
+        Comparer cmp = new Comparer(Name.CompareFirstNames);
+
+        Console.WriteLine("\nBefore Sort: \n");
+
+        sd.PrintNames();
+
+        // observe the delegate argument
+        sd.Sort(cmp);
+
+        Console.WriteLine("\nAfter Sort: \n");
+
+        sd.PrintNames();
+    }
+
+    // observe  the delegate parameter
+    public void Sort(Comparer compare)
+    {
+        object temp;
+
+        for (int i=0; i < names.Length; i++)
+        {
+            for (int j=i; j < names.Length; j++)
+            {
+                // using delegate "compare" just like
+                // a normal method
+                if ( compare(names[i], names[j]) > 0 )
+                {
+                    temp = names[i];
+                    names[i] = names[j];
+                    names[j] = (Name)temp;
+                }
+            }
+        }
+    }
+
+    public void PrintNames()
+    {
+        Console.WriteLine("Names: \n");
+
+        foreach (Name name in names)
+        {
+            Console.WriteLine(name.ToString());
+        }
+    }
+}
+
+Delegate declarations look somewhat like methods, except they have the delegate modifier, are terminated with a semi-colon (;), and have no implementation. 
+
+public delegate int Comparer(object obj1, object obj2);
+
+This delegate declaration defines the signature of a delegate handler method that this delegate can refer to. The delegate handler method, for the Comparer delegate, can have any name, but must have a first parameter of type object, a second parameter of type object, and return an int type
+
+To use a delegate, you must create an instance of it. The instance is created, similar to a class instance, with a single parameter identifying the appropriate delegate handler method, as shown below.
+
+ Comparer cmp = new Comparer(Name.CompareFirstNames);
+
+The delegate, cmp, is then used as a parameter to the Sort() method, which uses it just like a normal method. Observe the way thedelegate is passed to the Sort() method as a parameter in the code below.
+
+        sd.Sort(cmp);
+
+DELEGATES
+
+Old days, Windows API made frequent use of C-style function pointers to create entities termed callback 
+functions or callbacks. With this approach, Windows developers were able to handle button clicking, mouse 
+moving, menu selecting, and general bidirectional communications between two entities in memory. 
+
+delegates are callbacks accompished in a type-safe and object-oriented manner. 
+
+Maintains three different important pieces of information:
+-The address of the method on which it makes calls
+-The parameters (if any) of this method
+-The return type (if any_ of this method
+
+DEFINING A DELEGATE
+
+Delegates must be defined to match the signature of the method(s) it will point to. 
+
+When C# compiler processes delegate types, it automatically generates a sealed class deriving from 
+System.MulticastDelegate. This class (in conjunction with its base class, System.Delegate) provides necessary 
+infrastructure for the delegate to hold onto a list of methods to be invoked at a later time. 
+
+Three main methods:
+BeginInvoke()
+EndInvoke()
+Invoke()
+
+Invoke() - the key method used to invoke each method maintained by the delegate object in a *synchronous* 
+manner, meaning caler must wait for call to complete before continuing. Called behind the scenes when use the 
+correct C# syntax. 
+
+BeginInvoke(), EndInvoke() - provide ability to cal the current method *asynchronously*, on a separate thread 
+of execution. 
+
+sealed class BinaryOp : System.MulticastDelegate
+{
+public int Invoke(int x, int y);
+public IAsyncResult BeginInvoke(int x, int y,
+AsyncCallback cb, object state);
+public int EndInvoke(IAsyncResult result);
+}
+
+First, notice that the parameters and return type defined for the Invoke() method exactly match the
+definition of the BinaryOp delegate. The initial parameters to BeginInvoke() members (two integers,
+in this case) are also based on the BinaryOp delegate; however, BeginInvoke() will always provide two
+final parameters (of type AsyncCallback and object) that are used to facilitate asynchronous method
+invocations. Finally, the return type of EndInvoke() is identical to the original delegate declaration and 
+will always take as a sole parameter an object implementing the IAsyncResult interface.
+
+out and ref parameters will be called by EndInvoke() as well. 
+
+public delegate string MyOtherDelegate(out bool a, ref bool b, int c);
+
+public sealed class MyOtherDelegate : System.MulticastDelegate
+{
+public string Invoke(out bool a, ref bool b, int c);
+public IAsyncResult BeginInvoke(out bool a, ref bool b, int c,
+AsyncCallback cb, object state);
+public string EndInvoke(out bool a, ref bool b, IAsyncResult result);
+}
+
+SYSTEM.MULTICASTDELEGATE AND SYSTEM.DELEGATE BASE CLASS
+
+public abstract class MulticastDelegate : Delegate
+{
+// Returns the list of methods "pointed to."
+public sealed override Delegate[] GetInvocationList();
+ 
+// Overloaded operators.
+public static bool operator ==(MulticastDelegate d1, MulticastDelegate d2);
+public static bool operator !=(MulticastDelegate d1, MulticastDelegate d2);
+ 
+// Used internally to manage the list of methods maintained by the delegate.
+private IntPtr _invocationCount;
+private object _invocationList;
+}
+
+public abstract class Delegate : ICloneable, ISerializable
+{
+// Methods to interact with the list of functions.
+public static Delegate Combine(params Delegate[] delegates);
+public static Delegate Combine(Delegate a, Delegate b);
+public static Delegate Remove(Delegate source, Delegate value);
+public static Delegate RemoveAll(Delegate source, Delegate value);
+ 
+// Overloaded operators.
+public static bool operator ==(Delegate d1, Delegate d2);
+public static bool operator !=(Delegate d1, Delegate d2);
+ 
+// Properties that expose the delegate target.
+public MethodInfo Method { get; }
+public object Target { get; }
+}
+
+Member					Meaning in Life
+Method 					This property returns a System.Reflection.MethodInfo object that
+						represents details of a static method maintained by the delegate.
+
+Target 					If the method to be called is defined at the object level (rather than a static
+						method), Target returns an object that represents the method maintained by
+						the delegate. If the value returned from Target equals null, the method to be
+						called is a static member.
+
+Combine() 				This static method adds a method to the list maintained by the delegate. In
+						C#, you trigger this method using the overloaded += operator as a shorthand
+						notation.
+
+GetInvocationList() 	This method returns an array of System.Delegate objects, each representing
+						a particular method that may be invoked.
+
+Remove(), RemoveAll() 	These static methods remove a method (or all methods) from the delegate’s
+						invocation list. In C#, the Remove() method can be called indirectly using the
+						overloaded -= operator.
+
+SIMPLE DELEGATE EXAMPLE
+
+namespace SimpleDelegate
+{
+// This delegate can point to any method,
+// taking two integers and returning an integer.
+public delegate int BinaryOp(int x, int y);
+ 
+// This class contains methods BinaryOp will
+// point to.
+public class SimpleMath
+{
+public static int Add(int x, int y)
+{ return x + y; }
+public static int Subtract(int x, int y)
+{ return x - y; }
+}
+ 
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Simple Delegate Example *****\n");
+ 
+// Create a BinaryOp delegate object that
+// "points to" SimpleMath.Add().
+BinaryOp b = new BinaryOp(SimpleMath.Add);
+// Invoke Add() method indirectly using delegate object.
+Console.WriteLine("10 + 10 is {0}", b(10, 10));
+Console.ReadLine();
+}
+}
+}
+
+MORE COMPLEX DELEGATE EXAMPLE
+
+public class Car
+{
+// Internal state data.
+public int CurrentSpeed { get; set; }
+public int MaxSpeed { get; set; } = 100;
+public string PetName { get; set; }
+ 
+// Is the car alive or dead?
+private bool carIsDead;
+ 
+// Class constructors.
+public Car() {}
+public Car(string name, int maxSp, int currSp)
+{
+CurrentSpeed = currSp;
+MaxSpeed = maxSp;
+PetName = name;
+}
+}
+
+public class Car
+{
+...
+// 1) Define a delegate type.
+public delegate void CarEngineHandler(string msgForCaller);
+ 
+// 2) Define a member variable of this delegate.
+private CarEngineHandler listOfHandlers;
+ 
+// 3) Add registration function for the caller.
+public void RegisterWithCarEngine(CarEngineHandler methodToCall)
+{
+listOfHandlers = methodToCall;
+}
+}
+
+// 4) Implement the Accelerate() method to invoke the delegate's
+//
+invocation list under the correct circumstances.
+public void Accelerate(int delta)
+{
+// If this car is "dead," send dead message.
+if (carIsDead)
+{
+if (listOfHandlers != null)
+listOfHandlers("Sorry, this car is dead...");
+}
+else
+{
+CurrentSpeed += delta;
+ 
+// Is this car "almost dead"?
+if (10 == (MaxSpeed - CurrentSpeed)
+&& listOfHandlers != null)
+{
+listOfHandlers("Careful buddy! Gonna blow!");
+}
+if (CurrentSpeed >= MaxSpeed)
+carIsDead = true;
+else
+Console.WriteLine("CurrentSpeed = {0}", CurrentSpeed);
+}
+}
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Delegates as event enablers *****\n");
+ 
+// First, make a Car object.
+Car c1 = new Car("SlugBug", 100, 10);
+// Now, tell the car which method to call
+// when it wants to send us messages.
+c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent));
+ 
+// Speed up (this will trigger the events).
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+Console.ReadLine();
+}
+ 
+// This is the target for incoming events.
+public static void OnCarEngineEvent(string msg)
+{
+Console.WriteLine("\n***** Message From Car Object *****");
+Console.WriteLine("=> {0}", msg);
+Console.WriteLine("***********************************\n");
+}
+}
+
+***** Delegates as event enablers *****
+***** Speeding up *****
+CurrentSpeed = 30
+CurrentSpeed = 50
+CurrentSpeed = 70
+ 
+***** Message From Car Object *****
+=> Careful buddy! Gonna blow!
+***********************************
+CurrentSpeed = 90
+***** Message From Car Object *****
+=> Sorry, this car is dead...
+***********************************
+
+MULTICASTING
+
+.NET delegates have ability to multicast, a delegate object can maintain a list of methods to call rather than
+just a single method. 
+
+Can simply use overloaded += operator. 
+
+public class Car
+{
+// Now with multicasting support!
+// Note we are now using the += operator, not
+// the assignment operator (=).
+public void RegisterWithCarEngine(CarEngineHandler methodToCall)
+{
+listOfHandlers += methodToCall;
+}
+...
+}
+
++= calls static Delegate.Combine() method. 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Delegates as event enablers *****\n");
+ 
+// First, make a Car object.
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Register multiple targets for the notifications.
+c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent));
+c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent2));
+ 
+// Speed up (this will trigger the events).
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+Console.ReadLine();
+}
+// We now have TWO methods that will be called by the Car
+// when sending notifications.
+public static void OnCarEngineEvent(string msg)
+{
+Console.WriteLine("\n***** Message From Car Object *****");
+Console.WriteLine("=> {0}", msg);
+Console.WriteLine("***********************************\n");
+}
+ 
+public static void OnCarEngineEvent2(string msg)
+{
+Console.WriteLine("=> {0}", msg.ToUpper());
+}
+}
+
+REMOVING TARGETS FROM DELEGATE INVOCATION LIST
+
+public class Car
+{
+...
+public void UnRegisterWithCarEngine(CarEngineHandler methodToCall)
+{
+listOfHandlers -= methodToCall;
+}
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Delegates as event enablers *****\n");
+ 
+// First, make a Car object.
+Car c1 = new Car("SlugBug", 100, 10);
+c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent));
+ 
+// This time, hold onto the delegate object,
+// so we can unregister later.
+Car.CarEngineHandler handler2 = new Car.CarEngineHandler(OnCarEngineEvent2);
+c1.RegisterWithCarEngine(handler2);
+// Speed up (this will trigger the events).
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+// Unregister from the second handler.
+c1.UnRegisterWithCarEngine(handler2);
+ 
+// We won't see the "uppercase" message anymore!
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.ReadLine();
+}
+
+METHOD GROUP CONVERSION
+
+Creating instance of delegate variable is straightforward if need to call any of inherited members of the 
+MulticastDelegate or Delegate base. 
+
+In most cases, don't need to hand onto delegate object. Typically just need to use delegate object only to 
+pass in method name as constructor parameters. 
+
+Method Group Conversion - allows you to supply a direct method name rather than a delegate object when calling
+methods that take delegates as arguments. 
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Method Group Conversion *****\n");
+Car c1 = new Car();
+ 
+// Register the simple method name.
+c1.RegisterWithCarEngine(CallMeHere);
+ 
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+// Unregister the simple method name.
+c1.UnRegisterWithCarEngine(CallMeHere);
+ 
+// No more notifications!
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.ReadLine();
+}
+ 
+static void CallMeHere(string msg)
+{
+Console.WriteLine("=> Message from Car: {0}", msg);
+}
+}
+
+Simply specify a method that matches the delegate's expected signature. 
+
+GENERIC DELEGATES
+
+What if want delegate to call any method returning void and receiving a single parameter:
+
+namespace GenericDelegate
+{
+// This generic delegate can represnet any method
+// returning void and taking a single parameter of type T.
+public delegate void MyGenericDelegate<T>(T arg);
+ 
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Generic Delegates *****\n");
+ 
+// Register targets.
+MyGenericDelegate<string> strTarget =
+new MyGenericDelegate<string>(StringTarget);
+strTarget("Some string data");
+ 
+MyGenericDelegate<int> intTarget =
+new MyGenericDelegate<int>(IntTarget);
+intTarget(9);
+Console.ReadLine();
+}
+ 
+static void StringTarget(string arg)
+{
+Console.WriteLine("arg in uppercase is: {0}", arg.ToUpper());
+}
+ 
+static void IntTarget(int arg)
+{
+Console.WriteLine("++arg is: {0}", ++arg);
+}
+}
+}
+
+// Create an instance of MyGenericDelegate<T>
+// with string as the type parameter.
+MyGenericDelegate<string> strTarget =
+new MyGenericDelegate<string>(StringTarget);
+strTarget("Some string data");
+
+THE GENERIC ACTION<> AND FUNC<> DELEGATES
+
+Action<> - defined in System namespaces of mscorlib.dll and System.Core.dll assemblies. Can use this generic 
+delegate to "point to" a method that takes up to 16 arguments and returns void. Because it is generic, you 
+need to specify the underlying type of each parameter. 
+
+// This is a target for the Action<> delegate.
+static void DisplayMessage(string msg, ConsoleColor txtColor, int printCount)
+{
+// Set color of console text.
+ConsoleColor previous = Console.ForegroundColor;
+Console.ForegroundColor = txtColor;
+ 
+for (int i = 0; i < printCount; i++)
+{
+Console.WriteLine(msg);
+}
+ 
+// Restore color.
+Console.ForegroundColor = previous;
+}
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Action and Func *****");
+ 
+// Use the Action<> delegate to point to DisplayMessage.
+Action<string, ConsoleColor, int> actionTarget =
+new Action<string, ConsoleColor, int>(DisplayMessage);
+actionTarget("Action Message!", ConsoleColor.Yellow, 5);
+ 
+Console.ReadLine();
+}
+
+Saves you from having to define a custom delegate type.
+
+Func<> - can point to methods that take up to 16 parameters and a custom return value. The final type 
+parameter is always the return value. 
+
+// Target for the Func<> delegate.
+static int Add(int x, int y)
+{
+return x + y;
+}
+
+static string SumToString(int x, int y)
+{
+return (x + y).ToString();
+}
+
+Func<int, int, int> funcTarget = new Func<int, int, int>(Add);
+int result = funcTarget.Invoke(40, 40);
+Console.WriteLine("40 + 40 = {0}", result);
+ 
+Func<int, int, string> funcTarget2 = new Func<int, int, string>(SumToString);
+string sum = funcTarget2(90, 300);
+Console.WriteLine(sum);
+
+Method Group Conversion - can simplify this syntax
+
+Func<int, int, int> funcTarget = Add;
+int result = funcTarget.Invoke(40, 40);
+Console.WriteLine("40 + 40 = {0}", result);
+ 
+Func<int, int, string> funcTarget2 = SumToString;
+string sum = funcTarget2(90, 300);
+Console.WriteLine(sum);

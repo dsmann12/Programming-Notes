@@ -1,0 +1,159 @@
+TWIN STICKS 2.5D
+
+VERSION CONTROL
+
+git and github
+
+Sourcetree is aGUI program for git.
+
+To use git with unity, go to Editor Settings and set Version Control to Visible Meta Files.
+
+Then create a .gitignore file. 
+
+CROSS PLATFORM INPUT MANAGER
+
+Virtual Control Layer
+
+Touch, Mouse+Keyboard, Gamepad, etc all go to Virtual Control layer which then outputs such to API like GetAxis() and GetButton()
+
+So when changing platforms you don't need to change code. 
+
+Assets > Import Package > CrossPlatformInput
+
+using UnityStandardAssets.CrossPlatformInput
+
+Use CrossPlatformInputManager. to access
+
+Instead of using Input, use CrossPlatformInput. to access button presses, etc.
+
+Inputs are in input settings. 
+
+Gravity is an effect on inputs that add speed and things.
+
+USING ANALOG GAMEPAD
+
+Need to connect controller to pc. 
+
+Gravity is fraction of a second that control takes to "re-center".
+
+If set to 3, 1/3 of a second then. 
+
+Large gravities can cause a rounding error where the 
+
+Gravity and sensitivity only for mouse and keyboard.
+
+Dead - dead zone. How much of input to ignore. 
+
+Snap - holding down both direcions snaps value back to 0. 
+
+USING ROLLER BALL PREFAB
+
+Import characters. RollerBall is a prefab. 
+
+Has a ball script and ball user control script that is cross platform.
+
+Look at script. 
+
+DESIGNING A REPLAY SYSTEM
+
+Deterministic Event Storage Replay
+
+Store all starting state (seeds, AI, etc etc).
+Reproduce all player input.
+Less storage, but simulation must run perfectly. 
+Hard to rewind.
+
+Non Deterministic State Storage
+
+Store entire game state every frame. 
+Larger file sizes, but llows random access.
+Allows rewind easily too
+
+Need class or struct
+
+MyKeyrame:
+float time;
+Vector3 pos;
+Quaternion rot;
+
+Use a circular buffer. 
+
+Can use Time.frameCount % bufSize. 
+
+Time.frameCount tells which frame count in game it is.
+
+CLASS VS STRUCT IN C#
+
+Why noy use Unity's Keyframe struct. Don't need all data in this struct.
+
+Also not use animator as it ssslower and cumbersome.
+
+structs are stored as values and not references. 
+
+Create replay script and attach script to player. 
+
+CREATING A REPLAY SYSTEM
+
+Put script on player. 
+
+Store bufferFrame size in private const int. 
+Also have array of keyframes of buffer size. 
+
+In record mode, want objects to be nonkinematic. In playback, be kinematic. 
+
+Get rigidbody. 
+
+For recording. 
+
+Frame number is Time.frameCount % bufSize
+
+Use a game manager to manage state and decide whether to record or play back
+
+TOUCHSCREEN JOYSTICK CONTROL
+
+Can addd mobile single stick control prefab to use a stick on mobile.
+
+Must also add EventSystem to track button presses. 
+
+Adds a canvas. 
+
+Can add buttons and such.
+
+Can move anchors for canvas elements manually instead of using preset things
+
+building to Android requires certain settings to specify.
+
+LEVEL UNLOCKS IN UNITY
+
+Use PlayerPrefs manager.
+
+PAUSING THE GAME
+
+Time.timeScale - used to slow down game or pause it. 
+
+Should also lower Time.fixedDeltaTime to same amount. Time.fixedDeltaTime is the interva in seconds at which physics and other fixed frame rate updates are performed.
+
+Can write a method. 
+
+update method is still called each frame. Things just don't move. Physics and such. 
+
+READING FROM SECOND STICK
+
+Add new inputs to input manager. RightHoriz and LeftHoriz. Can change type to joystick.
+Also add RightVert, and LeftVert.
+Also can set axis to 3rd axis for the horizontal.
+For vertical axis make it 4th axis.
+
+Attach a script to camera. 
+
+Use LateUpdate for camera. 
+
+Make camera look at player every frame.
+
+transform.LookAt(player.transform) makes camera turn to track player.
+
+Guy uses a "selfie stick" object to lock itself to ball position. Doesn't make it a child of ball because ball is rotating. 
+
+Gives a public float panSpeed. Also a vector3 to determine armRotation. Use EulerAngles. 
+
+To convert back to quaternion use Quaternion.Euler(vector);

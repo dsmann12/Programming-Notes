@@ -1,0 +1,53 @@
+Modules and Namespaces
+
+How to use modules?
+
+Use import statement
+
+import math
+
+math.pi
+
+To import specific function, etc from module
+
+from math import pi, sqrt
+
+math.pi
+math.sqrt
+
+Better because it doesn't load in the entire module. 
+
+If have a module "binky.py" which contains a "def foo()". Thefully qualified name of that foo function is:
+
+binky.foo()
+
+Therefore various Python modules can name their functions and variables whatever they want, and variable names won't conflict -- module1.foo is different from module2.foo.
+
+Each module has its own namespace, variable name-to-object bindings. 
+
+Can import other modules. 
+
+sys modyule contains standard system facilities like argv list and exit() function. With import, can then access the definitoins in the sys module and make them available by their fully qualified name, e.g. sys.exit()
+
+import sys
+sys.exit()
+
+Alternative import syntax:
+
+from sys import argv, exit
+
+Makes argv and exit() available by short names. Recommend fully qualified names for better organization. 
+
+Python Standard Library are collectively many modules and packages which are bundled with a standard installation of the Python interpreter. 
+
+sys - acess to exit(), argv, stdin, stdout
+re - regular expressions
+os - operating system interface, file system
+
+PyPi - Python Package Index. Stores packages for python.
+
+That's what pip comes from. pip3
+
+Search in Github for python, sort by stars, select language as pyhon
+
+awesome-python - lists of packages

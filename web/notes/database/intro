@@ -1,0 +1,52 @@
+DATABASES
+
+Database - a collection of information/data that comes with an interface for interacting with data
+
+SQL - language for interfacing with some databases. Relational databases. Databases are tabular and flat
+
+USERS TABLE
+id | name | age | city
+----------------------
+1  | Tim  |	57  | New York City
+
+COMMENTS TABEL
+id	|	text
+----------------------
+1	|	"lol"
+2	| 	"Come visit Montana!"
+3	| 	"I love puppies!"
+4	|	"Seriously, Montana is great!"
+
+USER/COMMENTS JOIN TABLE
+userId	|	commentId
+-------------------------
+	1	|	3
+	2	|	2
+	2	|	4
+	3	| 	1
+
+Join table - to arrange data from two different tables. 
+
+Not very flexible. If need to add a new field, must add field to all entries and give a NULL or empty file. 
+
+NoSql - not sql. Non-relational. 
+
+MongoDB 
+
+db.dogs.find()
+db.dogs.delete({age: 14}); //delete all dogs aged 14
+
+{
+	name: "Ira",
+	age: 24, 
+	city: Missoula,
+	comments: [
+		{text: "Come visit Montana!"},
+		{text: "Seriously, Montana is great!"}
+	],
+	favColor = "blue"
+}
+
+Can add fields on the fly and not for every entry. 
+
+SQL is often better than No-Sql, but No-Sql is OK in places. 

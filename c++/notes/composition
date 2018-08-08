@@ -1,0 +1,5 @@
+Composition - usually class has regular functions and variables. 
+Class can also have objects of another class as a variable.
+
+Class that contains object fields must use member lists to set their
+values.  

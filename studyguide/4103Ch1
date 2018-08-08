@@ -1,0 +1,372 @@
+Q: What is an operating system?
+A: An OS is a program that manages a computer's hardware. Also provides a basis for application programs and acts as an intermediary between the computer user and the computer hardware. Controls and coordinates user hardware among various apps and users. Purpose is to provide an environment in which a user can execute programs in a convenient and efficient manner.
+
+Q: What are the goals of an OS?
+A: Goals of an OS are to 1. execute programs and make solving user problems easier, 2. Make computer system convenient to use, 3. Use the computer hardware in an efficient manner. 
+
+Q: What are the different types of OSes?
+A: Some OSes designed to be convenient, some designed to be efficient, and many designed to be a combo of both. 1. Mainframe OSes are designed primarily to optimize utilization of hardware. 2. PS OSes support complex games, business applications, and everything in between. 3. Mobile OSes provide an environment in which a user can easily interface with the computer to execute programs. 
+
+Q: What are the parts of a computer system?
+A: 1. Hardware - provides basic computing resources. CPU, memory, I/O devices, graphics cards, storage. 2. OS - controls and coordinates use of hardware among various applications and users. 3. Application programs - define how the system resources are used to solve computer problems of the users: database, web server, mail server, web browser, office apps, video games, iTunes, 4. Users - people, machines, and other computers.
+
+Q: How can one also view OS?
+A: Can also view OS as consisting of hardwarwe, software, and data. OS provides the means for proper use of these resources in operation of computer system. Provides an enironment within which other programs can do useful work
+
+Q: Describe the PC User View?
+A: PCs consist of monitor, keyboard, mouse, and system unit. Designed for one user to monopolize resources. Goal is to maximize work (or play). OS designed mostly for ease of use with some attention paid to performance and non paid to resource utilization. Optimize for single users not multiple. 
+
+Q: Describe mainframe user view?
+A: In mainframe, user sits at a terminal connected to a mainframe or microcomputer. Other users are accessing same computer through other terminals. Users share resources and may exchange information. OS is designed to maximize resource utilization -- to ensure that all available CPU time memory, I/O are used efficiently and that no individual takes more than her fair share. 
+
+Q: Describe Workstation User View
+A: Workstations are connected to networks of other workstations and servers. Users have dedicated resources at their disposal, but they also share resources such as networking and servers, including file, computer, and print servers. OS is designed tocompromise between individual usability and resource utilization. 
+
+Q: Describe mobile user view
+A: Mobile user view is standalone units for individual users. Connected to networks through cellular or other wireless tech. Features touch screens usually, where user interacts with system by pressing and swiping fingers across screen rather than using a physical keyboard and mouse. Resource poor but optimized for usability and good battery life -- user experience (UX). Often include middleware, a set of software frameworks that provide additional services to application developers. Middleware often supports databases, multimiedia, and graphics. 
+
+Q: What are other user views?
+A: Other devices hae little to no user view. Embedded computers in home devices and cars. Designed to run without intervention.
+
+Q: What are two main roles of OS in System view?
+A: Os is program most intimately involved in hardware. It is a resource allocator and a control program -- must control various I/O Devices and user programs?
+
+Q: What does it mean for OS to be a resource allocator?
+A: A resource allocator - a computer system has many resources that may be required to solve a problem. CPU time, memory space, file-storage space, I/O devices. OS manages these resoureces, descides how to allocate resources to specific users and programs among numerous and possibly conflicting requests so that computer system can operate efficiently and fairly. Especially important when many users interact with the same mainframe.
+
+Q: What is a control program?
+A: A control program manages the execution of user programs to prevent errors (reliabliity) and improper use of the copmuters (security). Especially oncerned with operation and control of I/O devices. 
+
+Q: What is Moore's Law?
+A: Moore's Law is 1960s prediction that number of transistors on an integrated circuit would double every 18 months
+
+Q: What is a kernel?
+A: OS Kernel is the one program running at all times on the computer. Can be Big (Windows XP 45M LOC) or Small (Minix is 12K LOC)
+
+Q: What are the two types of programs?
+A: systems programs and application programs
+
+Q: What is a systems program?
+A: A systems program ships with the OS. Associated with OS but not necessarily part of the kernel
+
+Q: What is an application program?
+A: Application programs are all programs not associated with operation of the system
+
+Q: Describe a computer system's organization.
+A: Computer system consists of CPUS, device controllers and BUS, constist of one ore more CPUS and a number of device controllers connected through a common bus that provides access to shared memory. Each device controller is in charge of a specific type of device (disk drives, audio device, video displays). CPU and device controllers execute in parallel, competing for memory cycles. To ensure access to shared memeory, a memory controller synchronizes access to memory. Each device controller has a local buffer. CPU moves data from/to main memory to/from local buffers. I/O is from device to local buffer of controller. Device controller informs CPU that it has finished its operation by causing an interrupt. 
+
+Q: How does a computer system start up?
+A: Bootstrap program - simple initial program run when computer is powered up. Typically stored in computer hardware in read-only memory (ROM) or electrically erasable programmable read-only memory (EEPROM) kown as firmware (software stored in chip). Initializes all aspects of system, from CPU registers to device controllers to memory contents. Must know how to load the OS and how to start executing that system so must locate OS kernel and load it in memory. Once kernel is loaded it can start providing services to system and its users.
+
+Q: What is a system process?
+A: Some services are provided outside the kernel by system programs that are loaded into memory at boot time to become system processes or system daemons that run the entire time kernel is running 
+
+Q: What is an interrupt? How do they work?
+A: An interrupt can come from hardware or software. Signals the occurrence of an event. Hardware might trigger an interrupt at any time by sending a signal to the CPU, usually by way of system bus. Software may trigger an interrupt by executing a special operation called a *system call* (or monitor call). When CPU is interrupted, it  stops what it is doing and immediately transfers execution to a fixed location. Fixed location usually contains the starting address where the service routine for interrupt is located. Interrupt service routine executes. On completion, the CPU resumes the interrupted computation.
+
+Q: What does it mean for OS to be interrupt driven?
+A: 1. OS executes the first process (such as init in Unix), starts other daemons, and waits for some event to occur. 2. Occurrence of an event is signaled by an interrupt from either hardware (DVD drive) or software (trap)
+
+Q: What happens to an interrupted instruction?
+A: Interrupt architecture must save the address of interrupted instruction. More recent architctures store the return address on the system stack. After interrupt is serviced, saved return address is loaded into the program counter and the interrupted computation resumes as though the interupt had not occurred. 
+
+Q: What is the interrupt vector?
+A: Interrupt transfers control to the interrupt system routine generally throug hthe interrupt vector, which contains the addresses of all the service routines. Interrupt vector is array that stores pointers to interrupt routines in low memory (first hundred or so locations). Indexed with a unique device number given with the interrupt request to provide the address of the interrupt service routine for the interrupting device.
+
+Q: What is a trap or exception?
+A: A trap or exception is a software-generated interrupt caused either by an error or a user request that an OS service be performed. 
+
+Q: Describe interrupt handling.
+A: 1. OS preserves state of the CPU by storing registesr and program counter (PC) 2. Interrupt transfers control to the interrupt vector. 3. Interrupt architecture must save the address (PC) of the interrupted instruction. 4. After servicing the interrupt, the state and return address are restored. 
+
+Q: What is a lost interrupt?
+A: Interrupts are disabled while another interrupt is being processed to prevent a lost interrupt. 
+
+Q: Can CPU load instructoins from disk storage?
+A: CPU can load instructions only from memory
+
+Q: What is main memory?
+A: General purpose computers run most of their programs from rewritable memory (also called random-access memory (RAM)). Main memory commonly is implemented in a semiconductor technology called dynamic random-access memory (DRAM). Main memory is ony large storage media that the CPU can access directly. random access, volatile, byte-addressable, fast, small
+
+Q: What is ROM/EEPROM? What are they used for?
+A: ROM cannot be changed so is used for static progras, such as bootstrap program. EEPROM can be changed but not frequently so contained most static programcs. Smartphones use EEPROM to store factory installed programs. 
+
+Q: How is memory accessed and interacted with?
+A: All forms of memory provide an array of bytes. Each byte has its own address. Interaction is achieved through a sequence of load or store instructions to specify memory addresses. load instruction moves a byte or word from main mmory to an internal register within the CPU, whereas store instruction moves content of a register to main memory. Aside from explicit loads, and stores, the CPU autmotically loads instructions from main memory for executions. 1. Feteches instructions from memory and stores that instruction in the instructoin register. Instruction is then decoded and may cause operands to be fetched from memory and stored in some internal register. After instruction on operaands has been executed, the sreult may be stoed back in memory. Memory unit sees only a stream of memory addresses. 
+
+Q: What is secondary storage? What the the two main types?
+A: Secondary storage is an extension of main memory. Main requirement is to be able to hold large quantities of data permanently. block access, nonvolatile, slow, big. Two main types are hard disks and SSDs.
+
+Q: Describe hard disks.
+A: Hard disks are most common. Magnetic disk, which provides storage for both programs and data. Most programs are stored on disk until they are loaded into memory. Many programs (system and application) use the disk as both the source and the destination of their processing. Rigit metal or glass patters covered with magnetic recording material. Disk surface is logically divided into tracks which are subdivided into sectors. Disk controller determines the logical interaction between the device and the computer. 
+
+Q: Describe SSDs.
+A: SSDs are faster than hard disks. Nonvolatile. Several variants and becoming more popular. Flash memory (slower than DRAM but needs no power to retain its contents)
+
+Q: Describe the storage hierarchy. How is it divided?
+A: Storage hierarchy - as move down, cost per bit decreases whereas access time increases. Top 4 levels may be constructed using semiconductor memory. Each storage system provides basic function of storing a datum and holding that datum until it is retrieved at a later time. Volatile: 1. Registers 2. Cache 3. Main memory - NonVolatile: 4.ssd (eletronic disk) 5. magnetic disk 6. optical disk 7. magnetic tapes
+
+Q: What is semiconductor memory?
+A: Top 4 levels of memory hierarhcy may be constructed using semiconductor memory which has become faster and cheaper.
+
+Q: What is caching?
+A: Caching is copying information into faster storage system; main memory can be viewed as a last cache for secondary storage.
+
+Q: Describe device controllers and what they are made up of
+A: A device controller maintains some local buffer storage and a set of special-purpose registers. It is responsible for moving the data between the peripheral devices it controls and its local buffer storage.
+
+Q: What is a device driver?
+A: Typically, OSes have device driver for each device controller which understands the device controller and provides the rest of the OS with a uniform interface to the device. 
+
+Q: Describe I/O Operations
+A: To start an I/O operation, device driver loads the appropriate registers within the device controller. The device controller, in turn, examines the contents of these registers to determine what action to take (such as "read a character from the keyboard"). The controller starts the transfer of data from the device to its local buffer. When complete, the device controller informs the device driver via an interrupt that it has finished its opreation. Device driver then returns control to OS, possibly returning data or a pointer to the data if operatoin was a read. For other operations, the device driver returns status info. Device controller informs CPU (through device driver) that is has finished its operations by causing an interrupt. 
+
+Q: What is differenc ebetween synchronous I/O and asynchronous I/O?
+A: Synchronous I/O - control returns to user program (or other OS code) only upon U/O completion. Wait instruction idles CPU until next interrupt. Asynchronous I/O - control returns to user program without waiting for I/O completion. 
+
+Q: What is direct memory access? What is it useful?
+A: DMA is a form of interrupt-driven I/O fine for moving small amounts of data but can produce high overhead when used for bulk data movement such as disk I/O. To solve this problem, direct memory access(DMA) is used. Too many interrupts slows down the entire system. DMA is used for high speed I/O devices able to transmit info at close to memory speeds. Too many interrupts slows down the entire system. DMA used for high speed I/O devices able to transmit info at close to memory speeds. Device controller transfers blocks of data from buffer storage directly to main memory without CPU intervention. Only one interrupt is generated per block, to tell the device driver the operation hsa completed, rather than one interrupt per byte. While device controller is performing these operations, CPU is available to do other work. Some high end systems use switch rather than bus architecture. On these systems, multiple components can talk to other component concurrently rather than competing for cycles on a shared bus. DMA is even more effective in these cases. 
+
+Q: What is a single-processor system?
+A: A single-processor systems --  until recently, most computer systems used a single processor. On such systems, there is one main CPU capable of executing a general-purpose instructoin set, including instructions from user processes. Have other special-purpose processors that may come in form of device specific processors, such as disk, keyboard, graphics controllers, and mainframes, they may come in the form of more general purpose processors,  such as I/O processors that move data rapidly among the components of the system. These run limited instruction set and do not run user processes. Sometimes managed by OS. Relieves main CPU of overhead of disk scheduling. In other systems, special purpose processors are low-level components built into the hardware. OS cannot communicate with these processors; they do their job autonomously. PC - computer system dedicated to  a single user. I/O devices - keyboards, mice, screens, printers, netowkrs. Device specific processors or controllers. User convenience and responsiveness. No priority on resource utilization. May run severl different types of OSes (Windows, OSX, UNIX, Linux)
+
+Q: What is a multiprocessor system?
+A: Multiprocessor system - known as parallel systems or tightly coupled systems. Grow in use and importance. First appeared prominently on servers and have since migrated to desktop and laptop systems. More than one CPU or processor in close communication. Share the clock, memory, computer bus, and peripheral devices. Multicore chips -- more than one computing core on a single processor. Fault tolerance and graceful degradation is a hot research topic.  
+
+Q: What are the advantages of a parallel system?
+A: 1. Increased throughput - work can be done in parallel. Expect to get more work done in less time. 2. Economy of scale - cost less than multiple single-processor systems b/c they share peripherals, mass storage, and power supplies. 3. Increased readability - jobs can fall over to the survived processors
+
+Q: What is a multicore chip?
+A: A multicore chip has more than one computing core on a single processor. Recent trend is to include multiple cores on a single chip, called multicore. Can be more efficient than multiple chips with single cored because on chip communication is faster than between chip communication. Multicore chips use significantly less power than multiple single-core chips. Each core has its own register set as well as its own local cache. Other designs may include a shared cache or a combination of local and shared caches. Appear to OS as N standard processors. Puts pressure on developers to make use of multiple cores.
+
+Q: What is graceful degradation?
+A: Graceful degradation is ability to continue providing service proportional to level of surviving hardware. 
+
+Q: What is fault tolerance?
+A: Fault tolerance - can suffer a failure of any single component and still continue operation. Require mechanism for failure to be detected, diagnosed, and if possible corrected.
+
+Q: What is symmetric multiprocessing?
+A: Symmetric multiprocessing (SMP) - each processor runs an identical copy of the OS. Each processor performs all tasks within the OS. SMP means that all processor are peers, no boss-worker relationship exists. Each has its own registers and cache. However, all share main memory. I/O must be carefully controlled to ensure that data reach the appropriate processor. Since CPUs are separate, one may be sitting idle while another is overloaded, resulting in inefficiencies. Inefficiencies can be avoided i fthe processors share certain data structures. A multiprocessors system of this form will allow processes and resources -- such as memory -- to be shared dynamically among the various processors and can lower the variance among the processors. Almost all modern OSes use SMP (Windows, OSX, Linux). 
+
+Q: What is asymmetric multiprocessing?
+A: Asymmetric multiprocessing - each processor is assigned a specific task. Master processor schedules and allocates work to slave processors. Boss processor controls the system. Others either look to the boss for instruction or have predefined tasks .Boss processor schedules and allocates work to the worker processors.
+
+Q: What is UMA? What is NUMA?
+A: Multiprocessing can cause system to change its memory access model from uniform memory access (UMA) to non-uniform memory access (NUMA). UMA is when access to any RAM from any CPU takes same amount of time. With NUMA, some parts of memory may take longer to access than other parts, creating a performance penalty. Penalty can be minimized through resource management. 
+
+Q: What is a blade server?
+A: Blade servers - Multiple processor boards, I/O boards, and networking boards are placed in same chassis. Difference between these and traditional multiprocessor systems is that each blade-processor board boots independently and runs its own OS. Some blade-server boards are multiprocessor as well, which blurs lines between types of computers. In essence, these servers consist of multiple independent multiprocessor systems. 
+
+Q: What is a clustered system?
+A: Clustered systems - multiprocesssor system which gathers together multiple CPUs. They are composed of two or more individual systems (or nodes) joined together. Considered *loosely coupled*. Each node may be a single processor system or a multicore system. Clustered systems share storage and are closely linked via a LAN or faster interconnect. 
+
+Q: How do clustered systems usually share storage?
+A: Clustered systems usually share storage via a storage area network (SAN)
+
+Q: What is asymmetric clustering?
+A: Asymmetric clustering is one way of providing high availability to clustered system. Has one machine in hot-standby mode while others is running the apps. Hot-standby host does nothing but monitor active server. If server fails, the hot standby host becomes the active server. 
+
+Q: What is symmetric clustering?
+A: Symmetric clustering is one way of providing high availability to clustered system. Has multiple nodes running applications, monitoring each other. More eficient as it uses all of the available hardware. However, it does require that more than one app be available to run. 
+
+Q: What is high availability in clustered systems?
+A: High availability provided by clustered systems to survive failures. Service continues even if one ore more systems in cluster fail. Provided by either asymmetric clustering or symmetric clustering. Generally obtained by adding a level of redundancy in the system. A layer of cluster software runs on the cluster nodes. Each node can monitor one or more of the others (over LAN). If monitored machine fails, monitoring machine can take ownership of its storage and restart the applications that were running. Users see only a brief interruption of service. 
+
+Q: What is high performance computing?
+A: Some clusters are for High performance computing (HPC). Such systems can supply significantly greater computational power thn single-processor or even SMP systems because they can run an application concurrently on all computers in the cluster. Applications must be written to use parallelization (take advantage of cluster), which divides a program into separate components that run in parallel on individual computers in the cluster. Typically, these apps are designed so that once each computing node in cluster has solved its portion of problem, the results from all the nodes are combined into a final solution.
+
+Q: How do clustered systems allow multiple hosts to access same data on shared storage. 
+A: Parallel clusters allow multiple hosts to access the same data on shared storage. Usually require the use of special version of software and special releases of apps because most OSes lack support for simultaneous data access by multiple hosts. For each machine to have full access to all data in database, system must also supply access control and locking to ensure no conflicting operations occur. Functions, known as distibuted lock manager (DLM) is included in some cluster technology. 
+
+Q: Why are SANs useful to cluster tech?
+A: Cluster tech is changing rapidly. Some cluster products support dozens of systems in a cluster as well as clustered nodes that are separated by miles. SANs elp make tihs possible. Allow many systems to attach to a pool of storage. If apps and their data are stored on the SAN, then cluster software can assign the app to run on any host that is attached to the SAN. If host fails than any other host can take over. In database cluster, dozens of host can share same database, greatly increasing performance and reliability. 
+
+Q: What is multiprogramming?
+A: Multiprogramming is one of most important aspects of OSes. Needed for efficiency. Improvement over sequential execution. Single user cannot keep CPU and I/O device busy at all times. Increases CPU utilization byt organizing jobs (code and data) so CPU always has one to execute. A subset of total jobs in system is kept in memory, buffering simultaneously. Jobs are initially kept on the disk in the *job pool*. Pool consists of all processes residing on disk awaiting allocation of main memory. Set of jobs in memory can be subset of jobs in job pool. One job selected and run via job scheduling. When it has to wait (for I/O for example), OS switches to another job. And so on and so on. In non-multiprogrammed system, CPU would sit idle. As long as at least one job needs to execute, CPU is never idle. Multiprogrammed systems provide an environment in which the various system resources (for example, CPU, memory, and peripheral devices) are utilized effectively, but they do not provide for user interaction with computer system. 
+
+Q: What is time sharing?
+A: Time sharing (multitasking) is a logical extension of multiprogramming in which CPU switches jobs so frequently that users can interact with each job while it is running, creating interactive computing. CPU executes multiple jobs by switching among them, but the switches occur so frequently tht the users can interact with each program while it is running. Requires an interactive system, which provides direct communication between the user and the system. User gives instructions to the OS or to a program directly using an input device such as keyboard, mouse, touch pad, or touch screen, and waits 
+
+Q: What should response time of time sharing system be?
+A: Response time shoud be < 1 second or reasonable. 
+
+Q: How does a time sharing system achieve a reasonable response time?
+A: Goal is sometimes accomplished through swapping and virtual memory
+
+Q: What is swapping in a time sharing system?
+A: Swapping is whereby processes are swapped in and out of main memory to the disk. If all processes don't fit in memory, swapping moves them in and out of main memory to the disk to run. Ensures reasonable response time.
+
+Q: What is virtual memory in a time sharing system?
+A: More common method for ensuring resonable response time is virtual memory, a technique that allows the execution of a process that is not completely in memory. Enables users to run programs that are lrger than actual physical memory. Further abstracts main memory into a large uniform array of storage seprating logical memory as viewed by the user from physical memory. Frees programmers from concern over memory-storage limitations. Virtual memory allows execution of processes not completely in memory. Ensuring reasonable response time. Enables users to run programs that are larger than actual physical memory. Also abstracts main memory into a large, uniform array of storage, separating logical memory as viewed by user from physical meomry. Frees programmers from concern over memory-storage limitations.
+
+Q: Describe a process in a time sharing system?
+A: Each user has at least one program executing in memory (process - program loaded into memory and executing). When a process executes, typically executes for only a short time before it either finishes or needs to perform I/O. I/O may be interactive; that is output goes to a display for the user and input comes from a user keyboard, mouse, or other device. Bounded by people speed. Rather than let CPU sit idle, OS will rapidly switch CPU to program of some other user. 
+
+Q: What is use of CPU scheduling in time shared system?
+A: If several jobs ready to berun at same time -> CPU scheduling and multiprocessing used by OS to provides each user with a small portion of time-shared computer. Requires that several jobs be kept simultaneously in memory. If several jobs ready to be brought into memory and there is not enough room for all, then system must choose among them.
+
+Q: What is use of job scheduling in time shared system?
+A: If several jobs ready to be brought into memory and there is not enough room for all in memory, then system must choose among them. Job scheduling. Os selects a job from job pool and loads it into memory for execution. System must choose which job will run first if several are ready to run at same time -> CPU scheduling. 
+
+Q: What is importance of an interactive computer system in time sharing system?
+A: Time sharing system requires an interactive computer system, which provides direct communication between the user and the system. User gives instructions to OS or to a program directly using an input devices such as a keyboard, mouse, touch pad, or touch ascreen and waits for immediate results on an output device. 
+
+Q: What is benefit of time sharing system?
+A: Time sharing system allows many users to share computer simultaneously since each action or command tends to be short, only a little CPU time is needed for each user, giving impression that system is dedicated to his/her use. 
+
+Q: What is importance of file system in time sharing system?
+A: Time sharing system must also provide a file system. File system resides on a collection of disks, hence disk management must be provided. Also provides a system for protected resources from inappropriate use. To ensure orderly execution, system must provide mechanisms for job synchronizatoin and communication, and it may ensure that jobs do not get stuck in deadlock, forever waiting for one another. 
+
+Q: What does it mean for an OS to be interrupt-driven?
+A: OS sits quietly, waiting for something to happen if nothing is going on (no processes to execute, no I/O devices to service, and no users to whom to respond. 1. Hardware interrupt generated by one of hardware devices. 2. Software interrupt (exception or trap) 2.1. Software error (division by 0, invalid memory access) 2.2 Request for OS serice (int 0x80) 2.3 Other process problems include infinite loop, processes modifying each other or the OS. For each interrupt, separate segments o fcode in OS determine what action should be taken. Interrupt service routine is provided to deal with interrupt. 
+
+Q: What must be ensured when dealing with interrupts in OS?
+A: Must make sure that an error in a user program could cause programs only for the one program running. Not affect other programs in the multiprogrammed system. Without protection against these sorts of errors, either computer must execute only one process at a time or all output must be suspect. Properly designed OS must ensure than an incorrect (or malicious) program cannot cause other programs to execute incorrectly. 
+
+Q: What is dual-mode?
+A: Dual mode allows OS to protect itself and other system components. Must be able to distinguish between OS code and user-defined code to ensure proper execution of the OS. At very least, two modes are needed. 1. User mode and kernel mode (supervisor, system, or privleged mode)i
+
+Q: How is dual mode used? 
+A: Mode bit provided by hardware. kernel(0) or user(1). Enables to distinguish when system is running user or kernel code (task that is executed by OS or one that is executed on behalf of the user). When system is acting on behalf of user app, system is in user mode. Hoewver, when user app requests a service from OS (via a system call), the system must transition from user to kernel mode to fulfill the request. 
+
+Q: How does dual mode pertain to boot?
+A: At boot, hardware starts in kernel mode. OS is then loaded and starts user apps in user mode. When a trap or interrupt occurs, hardware switches from user mode to kernel mode (changes mode bit to 0). Whenever OS gains control, switched to kernel mode. Always switches to user mode before passing control to user program.
+
+Q: How does dual mode protect system?
+A: Dual mode protects OS from errant users and errant uses from one another. Some instructions are privileged, only executable in kernel mode. Hardware does not executed instructoin if in user mode, but rather treats it as illegal and traps it to OS. Instruction to siwtch to kernel mode is a priviliged instruction. Others include I/O control, timer management, and interrupt management. 
+
+Q: How is mode changed in dual mode?
+A: System call changes mode to kernel, return from call resets it to user. 
+
+Q: How common is multi-mode operations support?
+A: Increasingly, CPUs support multi-mode operations. (Virtual machines)
+
+Q: What is a virtual machine manager (VMM)?
+A: VMM mode for guest VMs. For CPUs that support irtualization. Have separate mode to indicate when the VMM and virtualization management software is in control of system. VMM is virtualization management software and can gain control of system. VMM has more priveges than user processes but fewer than kernel. Needs that level to create and manage virtual machines, changing the CPU state to do so
+
+Q: How do Intel 64 family of CPUs deal with privelege levels and virtualization?
+A: Intel 64 family of CPUs supports four privilege levels and supports virtualization but does not have a separate mode for virtualization
+
+Q: Describe lifecycle of instruction execution.
+A: 1. Initial control resides in OS where instructions are executed in kernel mode.
+ 2. When control is given to a user app, the mode is set to user mode. 3. Eventually control is switched back to OS via an interrupt, a trap, or a system call.
+
+Q: What are system calls and how do they work?
+A: System calls provide means for a user program to ask OS to perform tasks reserved for OS on the user program's behalf. Usually takes form of a trap to a specific location in the interrupt vector. Can be executed by a generic trap instruction, although some systems have specific syscall instructions. System call treated by hardware as a software interrupt. Control passes through interrupt vector to a service routine in OS and mode bit is set to kernel mode. Kernel examines the interrupting instruction to determine what system call has occurred; a parameter indicates what type of servie th user program is requesting. Additional info needed for the request may be passed in registers on the stack, or in memory (pointer to meomry locations passed in registers). kernel verifies that the parameters are correct and legal, executes the request, and returns control to the instruction following system call.
+
+Q: What is a problem with lack of hardware supported dual mode?
+A: Lack of hardware supported dual mode could allow user program to run awry and wipe data including entire OS
+
+Q: How does dual mode detect errors?
+A: Once hardware protection in place, it detects erors that violate modes. Errors are normally handled by OS. If user program fails in some way -- such as by making attempt either to to execute an illegal instruction or to access memory that is not in user's address space -- then hardware traps to the OS. Trap transfers control through interrupt vector to the OS, just as interrup tdoes. When program error occurs, the OS must terminate the program abnormally. Handled by same code as user-requested abnormal termination. Appropriate error message is given and memory of the program may be dumped. memory dump usually written to a file so that usre or programmer can examine it. 
+
+Q: What is a timer?
+A: A timer is a mechanism to prevent loops/process hogging resources. Must ensure OS maintains control over CPU. Cannot allow a user program to get stuck in loop or fail to call system servics and never return control to OS. Timer is set to interrupt computer after some time period. Should set up before scheduling process to regain control or terminate program that exceeds allotted time. Instructions that modify content of timer are privileged. When timer triggers interrupt, OS may treat interrupt as fatal error or may give program more time.  
+
+Q: What are two types of timers?
+A: Fixed timer or variable timer
+
+Q: How is variable timer implemented?
+A: Variable timer generally implemented by a fixed clock rate and a counter. Keep a counter that is decremented by physical clock. OS sets the counter (privileged instruction). Every time a lock ticks, counter is decremented. When counter reaches 0, it genreates an interrupt.
+
+Q: What is a process?
+A: A process is a program in execution. Program does nothing unless its instruction are executed by a CPU. Program is a passive entity. Process is an active entity. Can be considered a job or time-shared program.
+
+Q: What does a process need to accomplish its task?
+A: Process needs to use resources to accomplish its task. 1. CPU time, memory, I/O devices, files. 2. Resource given to the process when it is created or allocated to it while it is running. 3. Initialization data (input) (e.g. openin ga file needs a file name) may be passed along. When process termiantes, OS will reclaim any reusable resources. 
+
+Q: How does single-threaded processes execute instructions?
+A: A single threaded process has one program counter specifying location of next instruction to execute. Process executes instructions sequentially, one at a time, until completion. At any time, one instruction at most is executedon behalf of the process. Thus, although two processes may be associated with the same program, they are considere two separate execution sequences. 
+
+Q: How does a multi-threaded process execute instructions?
+A: Multi-threaded process has multiple program counters each pointing to next instruction to execute or a given thread. One pc per thread. 
+
+Q: What is OS responsible for in connection with process management?
+A: 1. Scheduling processes and threads on the CPUs. 2. Creating and deleting both user and system processes. 3. Suspending and resuming processes. 4. Providing mechanisms for process synchronization. 5. Providing mechanisms for process communication
+
+Q: What is main memory?
+A: Main memory is central to the operation of a modern computer system. Is a large array of bytes, rangin in size from hundreds to thousants to billions. Each byte has its own address. Is a respository of quickly accessible data shared by the CPU and I/O devices. 
+
+Q: What is the relationship between main memory and the CPU?
+A: Main memory is only large storage device that CPU is able to address and access directly. CPU reads in structions from main memory during the instruction-fetch cycle and both read and writes data from main emrmoy during the data-fetch cycle (on von Neumann architecture). 
+
+Q: How CPU access data from disk? Execute a program?
+A: To access data from disk, data must first be transferred to main memory by CPU generated I/O calls. To execute a program, all or poart of the instructions must be in memory
+
+Q: How does program access data it needs?
+A: All or part of data that is needed by program must be in memory, in absolute addresses. As program executes, it accesses data and instructions by generating these absolute addresses. Eventually program terminates. Its memory space is declared available and the next program can be loaded and extracted.
+
+Q: What is memory management?
+A: Memory management determines what is in memory and wwhen. To optimize CPU utilization and computer's response to users, general-purpose computers must keep several programs in memory, creating need for memory management. 
+
+Q: Describe memory management activities
+A: 1. Track which parts of memory are currently being used and by whom 2. Deciding which processes (or parts there of) and data to move into and out of memory 3. Allocating and deallocating memory space as needed
+
+Q: What is use of file management in OS
+A: OS provides uniform, logical view of information storage: 1. Abstract physical properties of its storage devices to define logical storage unit -- file 2. Each medium is controlled by a device (ie. disk drive, tape drive. 2.1. Vary properities including access speed, capacity, data transfer rate, access method (sequential or random). OS maps files onto physical media and accesses these files via storage devices.
+
+Q: What is file-system management?
+A: File management one of the most visible components of an OS. Computers store information on several different types of physical media (magnetic disks, optical disks, magnetic tape). Each has own characteristics and physical organization. Each medium is controlled by a device, such as a sdisk drive or tape drive, that also has its own unique characteristics. Properties include : access speed, capacity, data-transfer rate, and access method (sequential or random)
+
+Q: What is a file?
+A: A file is a collection of related information defined by its creator. Files represent programs (both source and object forms) and data. Data files may be numeric, alphabetic, aphanumeric, or binary. May be free form or fomatted rigidly. Usually organized into directories.
+
+Q: What is access control?
+A: Access control on most systems to determine who can access what and how user may access it (read, write, execute, etc).
+
+Q: Describe OS activities:
+A: 1. Creating and deleting files and directories. 2. Supporting primitives to manipulate files and directories. 3. Mapping files onto secondary storage. 4. Backup files onto stable (non-volatile) storage media
+
+Q: What is mass storage?
+A: Usually disks used to store data that does not fit in main memory or must be kept fo rlong period of time. Large and persistent data. 1. Proper management of disk storage is of central importance. 2. Most use disks as principal storage medium for programs and data. Most programs stored on disk until loaded into memory. Use disk as source and destination of their processing.
+
+Q: What is OS responsible for in connection with disk management?
+A: 1. Free space management 2. Storage allocation 3. Disk scheduling
+
+Q: What is tertiary storage?
+A: Teritiary storage include optical storage and platters, magnetic tape drives, and their tapes. Media (tapes and optical platters) vary between WORM (write once, read many times) and RW (read-write) formats. Not curcial to system performance but must be managed. Some OSes take on this task, while others leae it to app programs.
+
+Q: What is OS responsible for in regard to tertiary storage?
+A: Mounting and unmounting media in devices, allocating and freeing devices for exclusive use by processes, and migrating data from secondary to tertiary storage.
+
+Q: What is caching?
+A: Caching is holding critical data in fast, expensive storage. Important principle performed at many levels in a computer (in hardware, OS, software). Information in use copied from slower to faster storage temporarily. Most systems have one ore more high speed data caches in memory hierarchy. 
+
+Q: How does OS access data with caching?
+A: Faster storage (cache) checked first to determine if data is there: 1. If so, info used directly from cache (fast), 2. If not, data copied to cache and used there under assumption it will be needed again.
+
+Q: What are basic properties of cache?
+A: Cache smaller than storage being cached. Has limited size. Therefore: 1. Cache management is important design problem. 2. Cache size and replacement policy is crucial to performance. Careful management can result in greatly increased performance. 
+
+Q: How does cache management work depending on hardware or softare?
+A: Movement of information between levels of a storage hierarchy may be either explicit or implicit, despending on the hardware design and the controlling OS software, Example, data trnsfer from cache to CPU and registers is usually a hardware functoin with no OS intervention. In contrast, transfer of data from diskto memory is usually controlled by OS. 
+
+Q: What is cache consistency?
+A: 1. Data simultaneously stored in more than one level to be consistent. 2. The copy of A appears in several places: on the magnetic disk, in main memory, in the cache and in an internal registers. 
+
+Q: What is cache coherency?
+A: Update of a copy of A needs to be in all caches where A resides (in a multiprocessor system with all CPUs having a local cache). In multitasking environments, measures must be done to ensure competing processes select most recently updates version of A. Usually a hardware issue (handled below OS level). 
+
+Q: Explain complexity of cache coherency in distributed environment?
+A: Systems with multiple computers. Several copies (or replicas) of same file can be kept on different computers. Since various replicas may be accessed and updated concurrently, some distributed systems ensure that, when a replica is updated in one place, all other replicas are brought up to date as soon as possible. 
+
+Q: What are probably the fastest cache?
+A: Hardware caches are probably the fastest cache. Utilized by hardware not OS.
+
+Q: What is the purpose of the I/O subsystem?
+A: One purpose of OS is to hide peculiarities of hardware devices from the user -- only driver needs to know specific device details. In UNIX, peculiarities of I/O devices hidden from bulk of OS by I/O Subsystem. 
+
+Q: What is the I/O subsystem?
+A: The I/O subsystem is responsible for many things. Consists of several components: 1. Memory management of I/O 1.1: Buffering (storing data temporarily while it is being transferred) 1.2. Caching (storing parts of data in faster stroage for performance) 1.3. Spooling (the overlapping of output of one job with input of other job) 2. A general device-driver interface. 3. Drivers for specific hardware devices
+
+Q: Should access to data in a system be open?
+A: Access to data must be regulated if a computer system has multiple users and allows the concurrent execution of multiple processes.
+
+Q: What is protection?
+A: Protection is any mechanism for controlling access of processes or users to resources defined by the OS. Mechanism must provide means to specify the controls to be imposed and to enforce the controls. Provides a means to distinguish between authorized and unauthorized users. System can have adequate protection but still be prone to failure an allow inappropriate access
+
+Q: What is security?
+A: Security is defense of the system against internal and external attacks. Huge range, including denial-of-service, worms, viruses, identity theft, theft of service (unauthorized use of system). Prevention of some of these considered an OS function while other systems leave it to policy or additional software
+
+Q: How do systems distinguish among users to authorize access?
+A: Systems use User Identities (User IDs, Security IDs(SID) in windows) include name and associated number, one per user. User ID then associated with all files, process of that user to determine access control. Group Identifier (group ID) allows ste of users to b edefined and controls managed, then also associated with each process, file. Privilege escalation allows user to change effective ID with more rights. Allows user to gain extra permissions for an activity. On UNIX, setuid attribute on a program causes that program to urn with user ID of owner of file. Process runs with this effective UID until it turns off the extra privileges or terminates.

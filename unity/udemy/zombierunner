@@ -1,0 +1,332 @@
+ZOMBIE RUNNER
+
+3D players, enemies, pathfinding
+
+UNITY 5.1 FEATURES
+
+networking features, hdr, 
+
+CREATING A TERRAIN
+
+Create 3DObject > Terrain
+
+Can give it its own layout. 
+
+Uses flythrough mode.
+
+Right click mouse button 
+
+A - left
+D right
+w - foward
+s- backward
+e -up
+-q -down
+shift - go faster
+
+Can change terrain resolution in its settings. 
+
+Paint texture allows you to paint environment
+
+Get environment asset pack from unity store. 
+
+Assets > Import Package > Environment
+
+Can add a texture by clicking edit textures.
+
+Can choose between albedo and normal map.
+
+Use albedo to add ground texture to plane. 
+
+Can add multiple textures to the list. 
+
+Then paint on there
+
+Opacity lends to how quickly a texture is painted depending on target strength.
+
+Low opacity gives a brush like effect where you must continually brush in. 
+
+Normal maps give textures a 3d look. 
+
+Can raise and lower terrain. 
+
+Paint height lets tou lower terrain. Give it a new minium height. 
+
+Allows you to dig into terrain to give it a dug feel.
+
+usually add hills along edge of terrain to give illusion of continuity.
+
+FIRST PERSON CONTROLLER
+
+Import standard assets. 
+
+Assets > Import Package > Characters
+
+Import all of them. Even cross platform input. 
+
+Use FirstPersonController > Prefabs
+
+FPSController
+
+Slope limit effects how much character can run up. 
+
+Also has settings for head bob, etc. 
+
+Disadvantage is using someone else's code. 
+
+PLACING TREES AND DETAILS
+
+Literally a setting in terrain.
+
+Place Trees
+
+Edit Trees. Use prefabs from environment standard assets. 
+
+Use brush size, use tree density. Can randomize tree height. Can choose color variation. And start painting trees. 
+
+Takes a little while to compute it. 
+
+Can mass place. Swlect how many you want to add.
+
+Dotted pattern in brush settings. For painting grass.
+
+In paint details. Click edit details and add grasstexture.
+
+Add grass texture.
+
+Billboard means grass always faces you. weird effect.
+
+Should be close to see grass. Otherwise turn up draw distance in settings. 
+
+ADDING A WATER TABLE
+
+Water table is a height in the terrain below which there is water. 
+
+Create water hazards and put mud at bottom of water.
+
+To find out how big to make water table, multiple height and width of terrain by sqrt of 2.
+
+Basically makes water whereever land is low enough. 
+
+Doesn't look like you are underwater. 
+
+Water script you can chooes whether reflective or refractive. Refractive shows inside of water. 
+
+In WaterProDaytime shader you can mess with wave scale, reflection distortion and refracction distrotion. 
+
+AWESOMEIFYING SCENE LIGHTING
+
+Get in position in game. 
+
+CTRL_SHIFT-P to pause game. 
+
+Go to GameObject and align view to selected (camera). 
+
+Can assign sun to Lighting in Window > Lighting
+
+Can add fog. Make exponential or density 0.02. 
+
+Can add lens flare. 
+
+Assets > Import Package > Effects
+
+Import all because don't know dependencies. 
+
+Add lens flar eto directional light. Change brightness to make bigger or smaller. Can change type of flare. 
+
+This doesn't show in the game view.
+
+You need flare layer on the camera components. 
+
+Can mess with lighting scene to get what you want. 
+
+SETTING UP NAVMESH
+
+Standard Assets > Characters > Third Person Characters > Prefabs
+
+AIThirdPersonController
+
+Adds a character called ethan.
+
+Needs a navmesh to navigate through world. 
+
+Nav Mesh Agent.
+
+Can add player to target of AI Character Control script. 
+
+Needs a nav mesh. 
+
+Nav mesh is a way for AI to understand world around it to navigate through it. 
+
+Click terrain Go to Window > Navigation
+
+Can leave all settings as they are for a moment
+
+Need to bake mesh before run game and then put baked mesh into game. 
+
+Can jump, drop, or go through portal with advanced settingsl. 
+
+Can adjust navmesh settings like slope too. 
+
+if zombie always jumping, change its ground check distance. Change for ai to come to you. 
+
+SCALING YOUR CHARACTERS
+
+Using reference cube and setting eye height. 
+
+Move characters close to check them. 
+
+Scale character accordingly. Move camera to make it right.
+
+Also will need to scale trees. Maybe just replace them.
+
+SETUP PLAYER SPAWN POINTS
+
+Just use empty game objects.
+
+USING INPUT MAPPING
+
+Edit > Project Settings > Input
+
+Can change amount of inputs. 
+
+If it has a negative, give descriptive negative. Otherwise don't. 
+
+Essentially adding buttons by adding things to inputs. Can refer to these inputs in code by their names. 
+
+Script for zoom.
+
+Add public Camera and float for FOV. Camera is "eyes". Eyes script. 
+
+Can zoom by changing FOV. 
+
+Positive button in Input details what button is that input.
+
+Also can "call helicopter" 
+
+ADDING HELICOPTER SOUND
+
+3D sounds
+
+In start pack from beginning of section. Cannot use it for commercial purposes. 
+
+Mess with scale so that helicopter is correct.
+
+Add with Helicopter script to listen for call heli keypress. 
+
+Can record your own by getting audacity. Don't use source forge. 
+
+If you use an MP3 file in commercial game you have to pay for a license. WTF. 
+
+Save as .ogg file. 
+
+Make helicopter sound right with 3D so it gets louder as it gets closer and etc. 
+
+Add audio source to helicopter. 
+
+Push clip into audio source via script. Can use public AudioClip variable. 
+
+To be 3D change spatial blend to 100% 3D. 
+
+Minimum distance and max distance can matter. 
+
+RIGGED MECHANIM ANIMATION
+
+Has an avatar in the animator. 
+
+In avatar there is a configure avatar button.
+
+This is rigging tool.
+
+Can mess with skeleton. There is hierarchy of bones. Very important they are arranged properly. 
+
+Outside is by skin renderer. 
+
+Muscles tab. Allows you to change range of motion.
+
+Skinned mesh render helps distort mesh when arms or legs move. Good for clothing or skin. 
+
+Not needed for a robot or something. 
+
+Hierarchy of transforms defines rotations, coordinates, etc. 
+
+EXPLORING HUMANOID ANIMATION
+
+Overview how ethan is animated.
+Retargeting animations
+Blend trees
+Inverse Kinematics
+
+Look in Ethan's third person animator controller. 
+
+Grounding has sub state machine.
+
+Can preview animations.
+
+Blend tree means a bunch of animation states. X and Y positions are positions on graphs. Also speed animations play.
+
+Can move forward or turn parameter. Correlation with sticks on controller. 
+
+A way of combining animations. Let's unity do blending. 
+
+Can click avatar and choose unity model and can basically put same animation of any human or person.
+
+Inverse Kinematics
+
+Normally when you animate, you move forward in hierarchy..
+
+Forward movement ais like moving from shoulder. 
+
+Inverse Kinematics is when you want movement to be calculated from lowest part of hierarchy (like feet) such as when walking. 
+
+Ethan's animatoin is augmented by third person character script. 
+
+SIMPLE DAY NIGHT CYCLE
+
+Just take directional light and rotate on x axis. 
+
+Usually use 60 for timescale for day night cycle
+
+float angleThisFrame = Time.deltaTime/360 * minutesPerSecond;
+
+transform.RotateAround(transofmr.position, Vector3.forward, angleThisFrame);
+
+SEARCHING FOR CLEAR AREA
+
+Make box collider in child object of player. Make it a certain size. 
+
+20 x 50
+
+Can create new prefab. Then drag another prefab to it to copy values.
+
+USING SEND MESSAGE UPWARD
+
+Just calling the method in one class from another script. 
+
+SendMessageUpwards("OnFindClearArea");
+
+Looks in every ancestor object of a script and looks for a method with the specified name. 
+
+INNER VOICE TO GUIDE PLAYER
+
+Must check that time since startup is greater than 10 seconds
+
+Time.realTimeSinceStartup > 10f
+
+Otherwise, it won't detect trees and will think a collision didn't occur. 
+
+Can mess with audio sources priorities.
+
+2D for audio you want to be heard everywhere. Like inner voice.
+
+USING BROADCAST MESSAGE
+
+BroadCastMessage() sends down the hierarchy. Almost like a SendMessageDownwards() method. Sends to a lot of different things.
+
+SendMessage() calls method on all components of this game object. 
+
+Allows you to make an architecture to have game objects act in some way. Like all to play sound.
+
+Radio System holds player and helicoter and has its own script with methods to be called. Broadcasts mesage to lower children.
+
+

@@ -1,0 +1,194 @@
+Q: What is a map?
+A: A map is an ADT designed to efficiently store and retrieve values based on upon a uniquely identifying search key for each. Stores entries (key, value pairs) Keys must be unique. 
+
+Q: What are maps also known as?
+A: Maps are also known as associative arrays because the entry's key serves somewhat like an index into the map in that it assists map in efficiently locating associated entry. However, key need not be numeric and does not directly designate a position within the structure. 
+
+Q: What a common applications of a map?
+A: DNS system maps host name (URL) to IP address. Social media uses nonnumeric username as key that can be efficiently mapped to particular user's associated information. Customer base may be stored as a map, with customer's account number as key. Computer graphics system may map color name to triple of numbers that describes color's RGB values
+
+Q: What is the map ADT?
+A: size() returns number of entries in map. isEmpty() returns whether map is empty. get(k) returns value v associated with key k, if such an entry exists. Otherwise returns null. put(k, v) if M does not have an entry with key equal to k, then adds entry (k, v) to M and returns null; else replaces with v the existing value of entry with key equal to k and returns old value. remove(k) reomves from map the entry with key equal to k and returns its value. Returns null if no such entry. keySet() returns an iterable collection containing all keys stored in map. values() returns an iterable collection of all values of entries stored in map (with repetition if multiple keys map to same value. entrySet() returns an iterable collection off all entries in map. 
+
+Q: Where are the Kava Map and Entry objects?
+A: java.util.Map and java.util.Map.Entry
+
+Q: How do you implement a simple unsorted map?
+A: Use ArrayList to store entries in arbitrary order. Implement a method to find a key in list if it exists and return index or -1 if not found. Remove() function should not use array list remove but instead should place the last entry at the hold of the list and remove last instead. 
+
+Q: What is the efficiency of a simple unsorted map?
+A: Each fundamental method takes O(n) 
+
+Q: What is a hash table?
+A: A hash table is one of the most efficient data structures for implementing a map and most used in practice. Uses lookup tables and hash functions
+
+Q: What is a lookup table? 
+A: Consider restricted setting in which a map with n entries uses keys that are known to be integers in a range from 0 to N-1 for some N >= n. Store value associated with key k at index k of the table. Use an array. Get, put, and remove can be implemented in O(1) in worst case. 
+
+Q: What is a hash function?
+A: Maps do not require keys to be integers. Hash funtion is used to map genreal keys to corresponding indices in the lookup table. Ideally, keys will be well distributed in range from 0 to N-1 but in practice there may be two or more distinct keys that get mapps to same index. Goal of a has function, h, is to map each key k to an integer in range 0-N-1 where N is capacity of the bucket array for a hash table. Store entry (k,v) in bucket A[h(k)]. Should be simple and easy to compute. 
+
+Q: what is a bucket array?
+A: A bucket array is an array is an array inwhich each specific index specified by hash function may manage a collection of entries. Index may hold more than one entry. 
+
+Q: What is a collision?
+A: A collision occurs when two differernt entries mapped to same bucket in A (because they have the same hash value). Ways to deal with them, but best strategy to to try to avoid them. Hash function is considered good if it maps the keys in our maps so as to sufficiently minimize collisions. 
+
+Q: What two portions does a hash function h(k) consist of?
+A: 1. A hash code that maps a key k to an integer. 2. A compression function that maps the hash code to an integer within a range of indices [0, N-1]
+
+Q: Why should the hash function be separated into two different components?
+A: The hash function should be divided into two components because the hash code portion of the computation is independent of a specific hash table size. Allows development of a general hash code for each object that can be used for a hash table of any size. Only compression depends upon table size. Particularly convenient because underlying bucket array for a hash table may be dynamically resized depending on number of entries currently stored in map. 
+
+Q: What is a hash code?
+A: An integer computed from an arbitrary key k from map. Need not be in range [0, N-1] and may even be negative. Should avoid collisions as much as possible. 
+
+Q: What are the different types of hash code?
+A: Bit representation as an Integer, polynomial hash codes, cyclic-shift hash codes, java chash codes
+
+Q: Describe using the bit representation as an Integer for hash codes?
+A: For any data type X that is represented using as many bitis as integer hash codes, we can simply take as hash code for X an integer interpretetion of its bits. Java relies on 32-bit hash codes so base types byte, short, int, and char can create good hash code by casting value to int. For float base type, can convert to an integer using call to Float.flotaToIntBits(x). For type whose bit representation is longer than desired hash code (long or double), above won't work. Can use higher or lower order 32 bits but this will cause collision if these are where differences occur for many keys. Better approach is to combine in some way the high-orer and low-order portions to form a 32-bit hash code. Simple implementation is to add two components as 32 bit numbers ignoring overflow or take the XOR of the two complements. These approaches of combining components can be extended to any object x whose binary representation can be viewed as an n-tuple (x0, x1,...,xn-1) or 32 bit integers by forming hash code for x as the sum from 0 to n-1 of each integer x or as the XOR among all elements x. (x0 XOR x1 XOR ... XOR xn-1)
+
+Q: Where do summation and XOR hash codes fail?
+A: Summations and XOR hash codes fail for character strings or other variable-length objects that can be viewed as tuples o fthe corm (x0, x1, ..., xn-1) where the order of the x's is significant. 
+
+Q: Why do summations fail with strings? What is an alternative?
+A: Summations fail with strings because "stops" would collide with "tops" etc. Alternative is to set a nonzero constanc a =/= 0and use a hash code that has value: x0a^n-1 + x1a^n-2 + ... xn-2a + xn-1. Polynomial that takes components of an object x as its coeficients.
+
+Q: What is horner's rule?
+A: Polynomial hash code can be computer by (xn-1+ a(xn-1 + a(xn-3 + ... + a(x1 + ax0))...)).
+
+Q: What should you be wary of with polynomial hash codes? How should it be handled?
+A: Value will preiodically overflow the bits used for an integer. Should try to use a constant a so that it has some nonzero, low-order bits which will serve to preserve some of the information. 
+
+Q: What are some good choices for a when working with character strings that are english word?
+A: 33, 37, 39, and 41. Proven in experiments. 
+
+Q: Describe cyclic-shift hash code?
+A: Cyclic-shift hash codes are a variant of the polynomial hash code that replaces multiplication by a with a cyclic shift of a partial sum by a certain number of bits. A 5-bit cyclic shift is achieved by taking the leftmost five bits and placing those on the rightmost side of the representation. 
+
+Q: How do you implement cyclic-shift hash codes?
+A: Can implement a cyclic-shift hash codes through careful use of bitwise shift operators. h = (h << 5) | (h >>> 27); h+=(int)s.charAt(i);
+
+Q: What fine-tuning is required for cyclic-shift hash codes?
+A: Must choose amount to shift for each new character to minimize collisions. 
+
+Q: How do hash codes work in Java?
+A: Has codes are integral part of Java. Object class (ancestor of all object types) includes a default hashCode() method that returns a 32-bit integer of type int, which serves as an object's hash code. Often just an integer representation derived from object's memory address. 
+
+Q: What needs to be checked when using default hash code method in Java.
+A: For hashing schemes to be reliable, imperative that any two objects that have equal keys should have equal hash codes. 
+
+Q: Desribe the implementation of a robust hash code for a singly linked list?
+A: public int hashCode() { int h = 0; for (Node walk=head; walk!=null; walk.getNext()) { h ^= walk.getElement().hashCode(); h = (h << 5) | (h >>> 27); } return h; }
+
+Q: What is a compression function?
+A: Integer hash code may be negative or may exceed the capacity of the bucket array. Compression function maps hash code into range [0, N-1]. Second action of overall hash function. A good function minimizes collisions given a set of distinct hash codes. 
+
+Q: What is the division method?
+A: The division method is a simple compression function which maps an integer i to (i mod N) where N, the size of the bucket array, is a fixed positive integer. If N is prime, then compression functions helps spread out distribution of hashed values. Otherwise, graeter risk patterns in distribution will be repeated causing collision. 
+
+Q: What defines a well made hash function?
+A: If a hash function is defined well, then it should ensure the probability of two different keys getting hashed to the same bucket is 1/N. 
+
+Q: What is the weakness of choosing N to be a prime numbre using the division method?
+A: Choosing a prime number for the division method is weakened if there is a repeated pattern of hash codes of the form pN+q for several ps. Then there will still be collisions. 
+
+Q: What is the MAD Method?
+A: The MAD (Multiply-Add-and-Divide) method is a more sophisticated compression function, which helps eliminate repeated patterns in a set of integer keys. Maps an integer i to [(ai + b) mod p] mod N, where N is the size of the bucket array, p is a prime number larger than N, and a and b are integers chosen at random from the interval [0, p-1] with a > 0
+
+Q: What is useful about the MAD method?
+A: The MAD method helps eliminate repeated patterns in set of hash codes and get closer to a probablity of collisions 1/N. 
+
+Q: What is the main idea of a hash table?
+A: The main idea of a hash table is to take a bucket array, A, and a hash function, h, and use them to implement a map by storing each entry (k, v) in the "bucket" A[h(k)]. 
+
+Q: What is a collision?
+A: A collision is the existence of two distinct keys, k1 and k2 such that h(k1) = h(k2). 
+
+Q: What is the problem with collisions?
+A: Existence of collisions prevents us from simply inserting a new entry (k, v) directly into the bucket A[h(k)]. Also complicates procedure for performing insertion, search, and deletion operations.
+
+Q: Describe separate chaining?
+A: Separate chaining is a simple and efficient way for dealing with collisions by having each bucket A[j] store its own secondary container holding all entries (k, v) such that h(k) = j. Natural choice for secondary container is a small map instance implemented using an unordered list. 
+
+Q: What is worst case for separate chaining?
+A: In worst case, operations on an individual bucket take time proportional to size of bucket. Assuming good hash function for n entries in bucket array of size N, the expected size of a bucket is n/N. Therefore, if given a good hash function, the core map operations wun in O[n/N]). Ration lambda = n/N is load factor of hash table. should be bounded by a small constanct, preferably bewlow 1. As long as load factor is O(1) the core operations on hash table run in O(!)
+
+Q: What is the load factor of a hash table?
+A: The load factor is the ratio lambda = n/N.
+
+Q: What is the disadvantage of separate chaining?
+A: Separate chaining's disadvantage is that it requires the use of an auxiliary data structure to hold entries with colliding keys. 
+
+Q: What is open addressing?
+A: If space is at a premium, can use alternative approach of storing each entry directly in a table slot. Approach saves space because no auxiliary structures are employed, but requires more complexity to properly handle collisions. Several variants of this approach, called open addressing. Requires that load factor is always at most 1 and that entries are stored directly in cells of bucket array itself. 
+
+Q: What is linear probing?
+A: Linear probing is a simple method for collision handling with open addressing. If try to insert an entry (k, v) into a bucket A[j] that is already occupied, then we try A[(j+1) mod N etc until find an empty bucket that can accept the new entry. This strategy requires changing implementation for searching for an existing key. To locate an entry, must examine all consecutive slots from A[h(k)] until find an entry with equal key or find an empty bucket
+
+Q: How to delete with linera probing?
+A: Cannot simply remove a found entry from its slow or else will break the probing algorithm. Instead, replace deleted entry with special defunct sentinel object. Must then change search function to skip over cells containing sentinel. Also, put() should remember a defunct location since this is valid place to put a new entry (k, v) is no existing entry is found beyond it.
+
+Q: What is major disadvantage of linear probing?
+A: Linear probing's major disadvantage is that it tends to cluster the entries of a map into contiguous runs, which may overlap (especially if more than half of the cells in the hash table are occupied). Cause searches to slow down. 
+
+Q: What is quadratic probing?
+A: Another open addressing strategy, quadratic probing iteratively tries the buckets A[h(k) + f(i)) mod N ], for i = 0, 1, 2..., where f(i) = i^2, until finding an empty bucket. Avoids kinds of clustering patterns that occur with linear probing and complicates removal operations. Also creates its own kind of clustering called secondary clustering. 
+
+Q: What is secondary clustering?
+A: Clustering where the set of filled array cells still has a nonuniform pattern, even if we assume that the original hash codes are distributed uniformly. When N is prime and bucket is less than half full, the quadratic probing strategy is guaranteed to find an empty slot. Otherwise, guarantee is not valid.
+
+Q: What is double hasing?
+A: Doubly hasing is an open addressing strategy that does not cause clustering of the kind produced by linear probing or quadratic probing. Choose a secondary hash function, h' and if h mps some key k to a bucket A[h(k)] that is already occupied, then iteratively try buckets A[h(k) + f(i)) mod N] next, for i = 1, 2, 3,..., where f(i) = i . h'(k). Secondary hash function cannot evaluate to zero: common choice is h'(k) = q - (k mod q) for some prime q < N. N should also be prime. 
+
+Q: What is random approach to avoid clustering with open addressing?
+A: Can iteratively try buckets A[h(k) + f(i) mod N] where f(i) is based on a psuedorandom number generator, providing a repeatable but somewhat arbitrary sequence of subsequent probes that depend upon bits of original hash code. 
+
+Q: What is the importance of load factors?
+A: Load factor lambda = n/N should be kept below 1 for many hash algorithms. With separte chaining, as lambda gets very close to 1 the probability of a collision greatly increases. Adds overhead since we must revert to linear time, list based methods in buckets that have collisions.  Should maintain load factor less than 0,9 for has hash tables with separate chaining. Java's implementation uses separate chaining with lambda < 0.75. With open addressing, sd load factor grows beyond 0.5 and starts approaching 1, clusters of entries in bucket array start to grow as well. Experiments suggest maintaining load factor < 0.5 for open addressing shceme with liear probing and only a bit higher for other open addressing schemes.
+
+Q: What is one way of dealing with a load factor that goes beyond a certain threshold?
+A: It is common to resize the table (to regain specified load factor) and reinsert objects into new table. Must reapply a new compression function that takes into consideration the size of the new table. Good requirement for new array's size to be a prime number approximately doubly previous size. Therefor cost of rehashing all entries in table can be amortized against time used to insert them in first place. 
+
+Q: Describe the efficiency of hash tables?
+A: If hash function is good, can expect entries to be uniformly distributed in the N cells o fthe bucket array. Thus to store n entries, the expected number of keys in a bucket would be [n/N], which is O(1) if n is O(N). Cost of periodic rehashing can be accounted for separately, leading to an additional O(1) amortized cost for put and remove. In worst case, a poor hash function could map every entry to the same bucket, resulting in linera time performance for core map operations wih separate chaining, or with an open addresing model in which the scondary sequence of probes depends only on the hash code. 
+
+Q: What are the abstract methods of a HashMap?
+A: createTable() - method should create an initially empty tanle having size equal to a designated capacity instance variable. bucketGet(h, k) - method should mimic semantics ofpublic get method but for a key k that is known to hash to bucket h. bucketPut(h, k, v) = method should mimic semantics of public put method but for a key k that is known to hash to bucket h. bucketRemove(h, k) - method should mimic semantics of public remove,, but ffor a key k known to hash to bucket h. entrySet() - standard method iterates through all entries of the map. Do not delegate this on per-bucket basis because "buckets" in open addressing are not inherently dijoint, Also provides a hash compression function using a ranomized MAD method and support for automatically resizing the underlying hash table when load factor reaches a certain threshold. hashValue() method relies on an original key's hash code, as returned by its hashCode() method, followed by MAD compression based on a prime number and the scale and shift parameters that are randomly chosen by the constructor. To manage load factor, class declares a protected member, n, which should equal the current number of entries in the map; however it mus trely on subclasses to update this field from within bucketPut and bucketRemove. If load factor goes beyond 0.5, request a bigger table using createTable() method and reinsert all entries into new table. 
+
+Q: What is bootstrapping?
+A: Using a simpler solution to a problem to create a new more advanced solution. Such as using a simple unsorte table map to store entries in a bucket. Advantage is that it's easy to delegate responsibilities for top-level map operations to the appropriate bucket. 
+
+Q: Implement a separate chaining hash map.
+A: check code
+
+Q: Implement a linear probing hash map.
+A: Check code
+
+Q: What is an exact search?
+A: Searching for an entry based on the exact representation of a key?
+
+Q: What is a sorted map?
+A: A sorted map is an extension of the regular map ADT that includes all standard map methods plus: firstEntry() - retuns entry with smallest key value (or null if empty), lastEntry() = returns entry with largest key value (or null if map is empty), ceilingEntry(k) - returns the entry with the least key value greater than or equal to k (or null, if no such entry exists). floorEntry(k) - returns entry with greatest key value less than or equal to k (or null if no such entry exists). lowerEntry(k) - returns entry with greatest key value strictly less than k (or null if no such entry exists), higherEntry(k) - returns entry with least key value strictly greater than k (or nul if no such entry exists). subMap(k1, k2) - returns an ieteration of all entries with key greater than or equal to k1 but strictly less than k2. 
+
+Q: What is sorted map interface in Java.
+A: java.util.NavigableMap intergace which extends simpler java.util.SortedMap interface. 
+
+Q: What is a sorted search table?
+A: An array list A that stores a map's entries in increasing order of their keys. Has space requirement of O(n). Primary advantage is that it allows us to use binary search algorithm for variety of efficient operations.
+
+Q: Implement a sorted talbe map.
+A: Check code. 
+
+Q: Describe the analysis of a sorted table map?
+A: size is O(1), get is O(logn), put its O(n); O(logn) if map has entry with given key
+
+Q: When are sorted tables best used?
+A: Sorted tables are best used in situations where can expect many searches but relatively few updates. 
+
+Q: What is a skip list?
+A: A skip list is a data structure for efficiently realizing the sorted map ADT. Provide a clever compromise to efficiently support search and update operations. Skip list s for a map M consists of a series of lists {s0, s1, ..., sh}. Each list Si stores a subset of the entries of M sorted by increasing keys, plus entries with two sential keys denoted -inifinity and +infinity where -infinity is smaller than every possible key that can be inserted in M and +infinity is larger than every possible key that can be inserted in M. Also, lists in S satisfy following: 1. List s0 contains every entry of the map M (plus sentinels -infinity and +infinity). 2. For i=1,...,h-1, list Si contains (in addition to sentinels) a randomly generated subset of the entries in list Si-1. List Sh contiains only sentienls. h is height of skip list. 
+
+Q: Where to find skip lists in java
+A: java.util.ConcurrentSkipListMap class 

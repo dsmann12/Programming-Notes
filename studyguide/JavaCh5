@@ -1,0 +1,57 @@
+Q: What is a stack?
+A: A stack is a collection of objects that are inserted and removed according to the LIFO principle (last in, first out)
+
+Q: What are the methods of a stack
+A: push(e) inserts element e to be top of the stack. pop() removes and returns top element from stack. Error if empty. size() returns number of elements in the stack. isEmpty() returns a Boolean indicating if the stack is empty. top() returns the top element in the stack, w/o removing it. Error if empty
+
+Q: What are two kinds of implementations of arrays?
+A: Array based and linked-list based
+
+Q: What is the disadvantage of an array-based stack?
+A: It must have a fixed upper bound. Wastes memory if upper bound is too large and inflexible if array needs to be bigg
+
+Q: How is the linked list version structured?
+A: Top should be at the head snice we can insert/delete there in constant time.
+
+Q: Why is the linked list implementation of stack better?
+A: The linked list implementation is more flexible in size than array based
+
+Q: Implement an array stack.
+A: Check code
+
+Q: Implement a linked list stack.
+A: Check code
+
+Q: What is a queue?
+A: A queue is a collection of objects that are inserted and removed according to FIFO. Enter he rear, leave out the front. 
+
+Q: What are the methods of a queue?
+A: enqueue(e) insert element e at rear of queue. dequeue() remove and return object at the front of queue. Error if empty. size() return number of objects in the queue. isEmpty() - return a Boolean value that indicates whether queue is empty. front() return but do not remove object at front of the queue. Error if empty
+
+Q: Where is the interface in Java for a queue
+A: Java.util.Queue
+
+Q: What are the different implementations of a queue?
+A: Array based and linked list based
+
+Q: How is an array based queue structured?
+A: Having to move objects after dequeue would hurt efficiency. Use two variables, f(front) and r(rear) with f being the index of the first object and r being the index of the next available spot. Trouble if we add and dequeue N objects with N being capacity of the array. Must use modulo (f+1) mod N when dequeue and (r+1) mod N when enqueue. Size equals (N - f + r) mod N, Array must not have more than N-1 objects or breaks isEmpty()
+
+Q: Implement an array-based queue
+A: Check code
+
+Q: Implement a linked list queue
+A: Check code
+
+Q: What is a deque?
+A: Deque is a queue where objects can be added and removed from the front and rear of the queue.
+
+Q: What are the methods of a deque?
+A: addFirst(e) inserts a new element e at head of deque. addLast(e) inserts a new element e at the rear of the deque. removeFirst() removes object at head of deque. Error if empty. removeLast() remove object at rear of deque. Error if empty. getFirst() returns the first object of the deque. Error if empty. getLast() returns the last object of the dequeu. Error if empty. size() returns the number of objects in the queue. isEmpty() returns Boolean value stating whether deque is empty
+
+Q: How to implement a deque?
+A: Implement a deque with a doubly linked list
+
+Q: Implement a deque
+A: Check code
+

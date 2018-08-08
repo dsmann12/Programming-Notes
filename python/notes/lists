@@ -1,0 +1,159 @@
+Lists
+
+Built-in list type. List literals are written within square brackets [].
+
+Work similarly to strings - use len() and [] to accesss data
+
+colors = ['red', 'blue', 'green']
+
+print colors[0]
+print colors[1]
+
+print len(colors) #3
+
+Assignment with = does not make copy but instead makes variable assigned array a pointer to array
+
+Empty list is just empty pair of brackets[]
+
++ can be used to append lists
+
+[1,2] + [3,4] #yields [1, 2, 3, 4]
+
+* repeats lists
+
+[1, 2] * 2
+[1, 2, 1, 2]
+
+Can also hold different types
+
+my list = ['string', 23, 1.2, 'o']
+
+For and IN
+
+for and in constructs useful with lists.
+
+for - for var in list
+
+Wasy way to look at each element in list. Do not add or remove from list during iteration.
+
+squares = [1, 4, 9, 16]
+sum = 0
+
+for num in squares:
+	sum += num
+print sum
+
+in - value in collection
+
+in on its own is easy way to test if an element appears in a list (or other collection. Tests if value is in the collection. True if so, false otherwise
+
+list = ['curly', 'larry', 'moe']
+if 'curly' in list:
+	print 'yay'
+
+Can be used on a string
+
+for ch is s: print ch #prints all characters in a string
+
+Range
+
+range(n) - yields numbers 0, 1, ..., n-1
+range(a,b) - returns a, a+1, ..., b-1 up to but not including last number
+
+Combination of for-loop and range() allow builing of traditional numeric for loop
+
+for i in range(10):
+	print i
+
+xrange() - variant which avoids cost of building the whole list for performance seneitive cases
+#xrange() deprecated in Python 3
+
+While Loop - Python has standard while loop and break and continue statements work as in C++ and Java. While loop good for having control of iteration amount
+
+whlie i < len(a):
+	print a[i]
+	i += 3
+
+List Methods:
+
+list.append(elem) - adds single element to end of list. Does not return new list, just modifies original
+list.insert(index, elem) - insert element at viven index, shifting elements right
+list.extend(list2) - adds elements in list2 to end of list. Similar to using + or += on lists
+list.index(elem) - seraches for given element from start of list and returns its index. Throws a Value error if element does not appear. (use in to check without a ValueError)
+
+list.remove(elem) - searches for first instance of given element and removes it (throws ValueError if not present)
+list.sort() - sorts list in place (does not return it)
+list.pop(index) - removes and returns element at given index. Returns rightmost element if index is omitted (roughly opposite of append()).
+list.reverse() - reverse list in place. 
+
+Notice, these all methods of a list object, while len() is function that takes list or string as argument. 
+
+List Build Up
+
+Common to start with empty list then append or extend to add elements
+
+list = []
+list.append('a')
+list.appen('b')
+
+List Slices
+
+Slices also work on lists just as with strings and can be usde to change subparts.
+
+  list = ['a', 'b', 'c', 'd']
+  print list[1:-1]   ## ['b', 'c']
+  list[0:2] = 'z'    ## replace ['a', 'b'] with ['z']
+  print list         ## ['z', 'c', 'd']
+
+Can check if element is in a list
+'z' in list
+True
+'a' in list
+False
+
+
+del list[0] -> delete element from list
+del list ->delete whole list
+
+sorted(list, reverse=True)
+
+LIST COMPREHENSION
+
+first_col = [row[0] for row in matrix]
+
+More advanced feature which is nice for some cases. Compact way to write an expression that expands to a whole list. Essentially a one line for loop built in brackets. 
+
+Suppose have whole list [1, 2, 3]. Can use list comprehension to compute a list of their squares
+
+  nums = [1, 2, 3, 4]
+
+  squares = [ n * n for n in nums ]   ## [1, 4, 9, 16]
+
+lst = [x**2 for x in range(0, 11)]
+
+[ expr for var in list] - expr is evaluated once for each element to gives values for new list
+
+Example: return list of strings chaning string from other list to uppercase and appending '!!!'
+  strs = ['hello', 'and', 'goodbye']
+
+  shouting = [ s.upper() + '!!!' for s in strs ]
+  ## ['HELLO!!!', 'AND!!!', 'GOODBYE!!!']
+
+Can add an if test to right of for loop to narrow result. If test is evaluated for each element, including only elements where tets is true
+
+  ## Select values <= 2
+  nums = [2, 8, 1, 6]
+  small = [ n for n in nums if n <= 2 ]  ## [2, 1]
+
+  ## Select fruits containing 'a', change to upper case
+  fruits = ['apple', 'cherry', 'bannana', 'lemon']
+  afruits = [ s.upper() for s in fruits if 'a' in s ]
+  ## ['APPLE', 'BANNANA']
+
+
+Can have nested list comprehensions
+
+# x**4 from range(11). (x**2)**2
+lst = [ x**2 for x in [x**2 for x in range(11)]]
+
+

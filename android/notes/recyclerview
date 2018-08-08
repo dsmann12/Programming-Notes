@@ -1,0 +1,177 @@
+RECYCLER VIEW
+
+A list view containing a different list item that is made up a series of views for each list image and text block.
+
+Code has to create, layout, and populate all off screen views, and all images need to be loaded into memory.
+
+For large lists, this is impractical. For each item, we'd have to implement interactions, like click handlers. 
+
+Also, can cause app to run out of memory. 
+
+RecyclerView is the fix. 
+
+Rather than creating list items as we scroll (which could cause glitches and performance issues), some are kept in queue (recycling bin) for reuse. When about to scroll, the queue returns on of these items to UI. When it scrolls off list, it goes back to queue. Also deals with fast flings, animations, etc. 
+
+Almost every part is modular. 
+
+Has Adapter that is used to provide RecyclerView with new views when needed. Adapter is also used to bind data from some data source to the views. Adapter sends views to RecyclerView in object called a ViewHolder. ViewHolder contains a reference to the root view object for the item. Should use it to cache the viewobjects represented in the layout to make updating less costly. So findViewByID is called only when new item is created. 
+
+LayoutManager tells RecyclerView how to layout those views. Also animations for item insertion and removal 
+
+ListView is older framework for displaying list of data. Outdated now. 
+
+VIEWHOLDERS
+
+Used t ocache view objects that you're going to be populating with data or images. When RecyclerView is first being populated, you call findViewByID for each view that will be showing data from the adapter. 
+
+Search can be expensive. Especially if have a hierarchy of views in a list item. Best to do it once and cache views in a view holder. So can access them later without having to look them up later. 
+
+class NumberViewHolder extends RecyclerView.ViewHolder {
+	TextView listItemNumberView;
+
+	public NumberViewHolder(View itemView) {
+		super(itemView);
+		listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);
+	}
+
+	void bind(int listIndex) { listItemNumberView.setText(String.valueOf(listIndex)); }
+}
+
+RECYCLER VIEW
+
+To use recycler view must add dependency to build.gradle file. Then need to sync project.
+
+Create a new list item layout in the res/layout folder. 
+
+number_list_item.xml
+
+Give framelayout and a textview inside it. 
+
+DP and SP. 
+
+Density Independent Pixel -> First android phones were 160dpi. 1dp = 1px in those units. Not px = dp * (dpi/160)
+
+Scale Independent Pixel -> work like DP but scale based on user preferencs like text size. Good for accessibility.
+
+ADAPTERS
+
+Adapter connects RecyclerView to a data source. Called by RecyclerView to create new items in form of ViewHolders, also populates or binds these items with data and returns information about the data such as how many items there are in a given data source. Data can come from Arraylist or JSON of network request or any other data source you can model.
+
+Must override three models:
+onCreateViewHolder -> called when RecyclerView instantiates a new ViewHolder instance
+onBindViewHolder -> called when RecyclerView wants to populate the view with data from model
+getItemCount -> returns number of items in data source
+
+When RecyclerView is being laid out and drawn it will first ask Adapter for for number of items it will be displaying. May ask multiple times so this should be a fast operation.
+
+RecyclerView will then ask adapter to create ViewHolder objects and inflate individual items views from corresponding XML by calling onCreateViewHolder. Will create as many as necessary. Either all or to fill and scroll the screen, whichever is fewer. onCreateViewHolder is responsible from creating the views, either from inflating item views from XML or creating them in code. Then returns ViewHolder object associated with this view.
+
+After each ViewHolder is created, RecyclerView will call onBindViewHolder to populate each item with data. When scroll, RecyclerView will reuse those ViewHolders asking adapter to bind new data to them. 
+
+Adapter has parameterized type that tells what type of ViewHolder is being used
+
+public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHolder> {
+	@Override
+	public NumberViewHolder onCreateVidewHolder(ViewGroup viewGroup, int viewType) {
+		Context context = viewGroup.getContext();
+		int layoutIdForListItem = R.layout.number_list_item;
+		LayoutInflater inflater = LayoutInflater.from(context);
+		boolean shouldAttachToParentImmediately = falase;
+
+		View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately); // takes in id of layout in xml and inflates these into ViewGroups and Views in java code. 
+		NumberViewHolder viewHolder = new NumberViewHolder(view);
+	
+		return viewHolder;
+	}
+
+	@Override
+	public void onBindViewHolder(NumberViewHolder holder, int position) {
+		Log.d(TAG, "#" + position);
+		holder.bind(position);
+	}
+
+	@Override
+	public int getItemCount() {
+		return mNumberItems;
+	}
+}
+
+RECYCLERVIEW LAYOUT MANAGER
+
+Whereas ViewHolder determines how individual entry is displayed, the layout manager determines how the collection of items is displayed. 
+
+Key part of way recycling works. Determines when to recycle item views that are no longer visible to the user. 
+
+3 implementations of layout manager
+1. LinearLayoutManager -> scroll vertically or horizontally
+2. GridLayoutManager -> arrange items in grid that can scroll vertically or horizontally
+3. StaggeredGridLayoutManager -> offset grid of items. Good for views with content of varying dimensions. 
+
+Can extend form LayoutManager to create your own
+
+RECYCLERVIEW IMPLEMENTATION
+
+Should create fields for adapter and RecyclerView.
+
+Then in OnCreate(), define these fields by using findViewByID to get RecyclerView
+
+mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
+
+LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+mNumbersList.setLayoutManager(layoutManager);
+
+mNumbersList.setHasFixedSize(true); // allows RecyclerView to do some optimizations on UI. Mainly allowing it to avoid invalidating whole layout when adapter contents change
+
+mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
+
+mNumbersList.setAdapter(mAdapter); // set adapter for recyclerview
+
+RESPONDING TO ITEM CLICKS
+
+Makes it easy to handle clicks on items. Doesn't have click listeners. 
+
+Need to make changes to Green Adapter.
+
+Add an interface that will define listener.
+
+public interface ListItemClickListener {
+	void onListItemClick(int clickedItemIndex);
+}
+
+Next add a member variable to GreenAdapter to store a reference to a LitItemClickListener. To initialize it, must modify the GreenAdapter constructor. 
+
+Now that Adapter has access to a listener, need to pass listener to the ViewHolder so that view can invoke it. Change NumberViewHolder to implement OnClickListener
+
+Therefore must override onClick(View view) method.
+
+@Override
+public void onClick(View view) {
+	int clickedPosition - getAdapterPosition();
+	mOnClickListener.onListItemClick(clickedPosition);
+}
+
+Lastly, in GreenAdapter, call setClickListener in constructor of ViewHolder
+
+public NumberViewHolder(View itemView) {
+	...
+	itemView.setOnClickListener(this);
+}
+
+Now, have MainActivity implement Adapter click listener
+
+Also change Adapter constructor to pass in MainActivity this. 
+
+public class MainActivity extends AppCompatActivity
+	implements GreenAdapter.ListItemClickListener {
+
+	@Overide
+	public void onListItemClick(int clickedItemIndex) {
+		if (mToast != null) {
+			mToast.cancel();
+		}
+
+		String toastMessage = "Item #" + clickedItemIndex + " clicked.";
+		mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
+		mToast.show();
+	}
+}

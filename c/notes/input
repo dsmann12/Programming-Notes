@@ -1,0 +1,13 @@
+Getting input:
+
+Must create variable to store input value. 
+
+char name[20]; //Name shouldn't have more than 20 chars
+int age;
+
+printf("Enter your name: \n");
+scanf("%s", name); //store %s string in varaible name
+printf("What is your age?\n");
+scanf("%d", &age); //For basic type variables (non-pointers), must use & to get address of variable
+
+scanf -- allows formatted input to be read

@@ -1,0 +1,31 @@
+Deconstructor (Destructor) 
+
+Special kind of class member function that is executed when an object of that class is destroyed.
+
+Deconstructor is called (if it exists) when object goes out of scope normally or a dynamically allocated object is explicitly deleted using the delete keyword. Called to do any necessary cleanup. 
+
+For simple classes (those that just initialize values of normal member variables), a destructor is not neede dbecause C++ will automatically clean up memory. However, if class is holding any resources (e.g. dynamic memory, or a file or database handle), or if you need to do any kind of maintenance before object is destroyed, the destructor is perfect place to do so.
+
+~<ClassName>
+
+Class Sally {
+	public:
+		Sally();
+		~Sally();
+}
+
+Can never have parameters and can never have return value. 
+
+Destroys objects. Objects automatically destroyed when program that
+creates them ends
+
+Destructors (like constructors) have specific naming rules:
+1. Destructor must have same name as class preceded by a tilde (~).
+2. Destructor cannot take arguments
+3. Destructor has no return type/
+
+Derived classes are destroyed before base class
+
+Warning about exit() -- 
+
+If use exit() function, program will terminate and no destructors will be called. 

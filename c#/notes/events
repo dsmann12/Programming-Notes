@@ -1,0 +1,363 @@
+EVENTS
+
+Traditional Console applications operate by waiting for a user to press a key or type a command and press the Enter key. Then they perform some pre-defined operation and either quit or return to the original prompt that they started from. This works, but is inflexible in that everything is hard-wired and follows a rigid path of execution.
+
+In stark contrast, modern GUI programs operate on an event-based model. That is, some event in the system occurs and interested modules are notified so they can react appropriately. 
+
+With Windows Forms, there is not a polling mechanism taking up resources and you don’t have to code a loop that sits waiting for input. It is all built into the system with events.
+
+A C# event is a class member that is activated whenever the event it was designed for occurs. Anyone interested in the event can register and be notified as soon as the event fires. At the time an event fires, registered methods will be invoked.
+
+Events work hand in hand with delegates to provide a program's functionality. 
+
+Starts with class that declares an event. Any class, including same class that event is declared in, may register one of its methods for the event. Occurs through a delegate, which specifies the signature of the method that is registered for the event. Delegate may be one of the pre-defined .Net delegates or one declared by developer. Whatever is appropriate, you assign delegate to event which effectively registers method that will be called when event fires. 
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+// custom delegate
+public delegate void Startdelegate();
+
+class Eventdemo : Form
+{
+    // custom event
+    public event Startdelegate StartEvent;
+
+    public Eventdemo()
+    {
+        Button clickMe = new Button();
+
+        clickMe.Parent = this;
+        clickMe.Text = "Click Me";
+        clickMe.Location = new Point(
+            (ClientSize.Width - clickMe.Width) /2,
+            (ClientSize.Height - clickMe.Height)/2);
+
+        // an EventHandler delegate is assigned
+        // to the button's Click event
+        clickMe.Click += new EventHandler(OnClickMeClicked);
+
+        // our custom "Startdelegate" delegate is assigned
+        // to our custom "StartEvent" event.
+        StartEvent += new Startdelegate(OnStartEvent);
+
+        // fire our custom event
+        StartEvent();
+    }
+
+    // this method is called when the "clickMe" button is pressed
+    public void OnClickMeClicked(object sender, EventArgs ea)
+    {
+        MessageBox.Show("You Clicked My Button!");
+    }
+
+    // this method is called when the "StartEvent" Event is fired
+    public void OnStartEvent()
+    {
+        MessageBox.Show("I Just Started!");
+    }
+
+    static void Main(string[] args)
+    {
+        Application.Run(new Eventdemo());
+    }
+}
+
+
+Note: If you’re using Visual Studio or another IDE, remember to add references to System.Drawing.dll and System.Windows.Forms.dll before compiling Listing 14.2 or just add the code to a Windows Forms project. Teaching the operation of Visual Studio or other IDE’s is out-of-scope for this tutorial.
+
+EVENTS
+
+Working with delegates in raw can entail creation of boilerplate code (defining delegates, declaring necessary
+member variables, and creating custom registration and unregistration methods to preserve encapsulation). 
+
+Moreoverm if you do not define class's delegate member as private, the caller will have direct access to 
+delegate objects. Could resassign the variable to a new delegate object (effecitvely deleting the current list
+of functions to call), and worse, the caller would be able to directly invoke the delegate's invocation list. 
+
+Breaks encapsulation making code harder to maintain and opening application to possible security risks. 
+
+C# event KEYWORD
+
+event - don't have to build custom methods to add or remove methods to a delegate's invocation list. Compiler 
+automatically provides registration and unregistration methods as well as any necessary member variables for 
+your delegate types. Thses delegate member variables are always private and therefore not directly exposed to 
+object firing the event. Simplifies how custom class sends out notifications to external objects. 
+
+1. Define a delegate type or reuse an existing one that will hold the list of methods to be called when event 
+is fired. 
+
+2. Declare an event (using event keyword) 
+
+EXAMPLE
+
+public class Car
+{
+// This delegate works in conjunction with the
+// Car's events.
+public delegate void CarEngineHandler(string msg);
+ 
+// This car can send these events.
+public event CarEngineHandler Exploded;
+public event CarEngineHandler AboutToBlow;
+...
+}
+
+Sending event to caller is as simple as specifying the event by name along with any required parameters:
+
+public void Accelerate(int delta)
+{
+// If the car is dead, fire Exploded event.
+if (carIsDead)
+{
+if (Exploded != null)
+Exploded("Sorry, this car is dead...");
+}
+else
+{
+CurrentSpeed += delta;
+// Almost dead?
+if (10 == MaxSpeed - CurrentSpeed
+&& AboutToBlow != null)
+{
+AboutToBlow("Careful buddy! Gonna blow!");
+}
+ 
+// Still OK!
+if (CurrentSpeed >= MaxSpeed)
+carIsDead = true;
+else
+Console.WriteLine("CurrentSpeed = {0}", CurrentSpeed);
+}
+}
+
+EVENTS UNDER THE HOOD
+
+When compiler processes event keyword, it generates two hidden methods, one haveing an add_ prefix and other 
+having a remove_ prefix. Each prefix followed by name of event. 
+
+.method public hidebysig specialname instance void
+add_AboutToBlow(class CarEvents.Car/CarEngineHandler 'value') cil managed
+{
+...
+call class [mscorlib]System.Delegate
+[mscorlib]System.Delegate::Combine(
+class [mscorlib]System.Delegate, class [mscorlib]System.Delegate)
+...
+}
+
+.method public hidebysig specialname instance void
+remove_AboutToBlow(class CarEvents.Car/CarEngineHandler 'value')
+cil managed
+{
+...
+call class [mscorlib]System.Delegate
+[mscorlib]System.Delegate::Remove(
+class [mscorlib]System.Delegate, class [mscorlib]System.Delegate)
+...
+}
+
+Finally, the CIL code representing event itself makes use of .addon and .removeon directives to map the names 
+of the correct add_XXX() and remove_XXX() method to invoke. 
+
+.event CarEvents.Car/EngineHandler AboutToBlow
+{
+.addon instance void CarEvents.Car::add_AboutToBlow
+(class CarEvents.Car/CarEngineHandler)
+ 
+.removeon instance void CarEvents.Car::remove_AboutToBlow
+(class CarEvents.Car/CarEngineHandler)
+}
+
+LISTENING TO INCOMING EVENTS
+
+C# events simplify act of registering caller-side event handlers. 
+
+Rather than having to specify custom helper methods, the caller simply uses the += and -= operators directly (
+which triggers the correct add_XXX() or remove_XXX() methods in background). 
+
+// NameOfObject.NameOfEvent += new RelatedDelegate(functionToCall);
+//
+Car.CarEngineHandler d = new Car.CarEngineHandler(CarExplodedEventHandler);
+myCar.Exploded += d;
+
+To remove:
+
+// NameOfObject.NameOfEvent -= new RelatedDelegate(functionToCall);
+//
+myCar.Exploded -= d;
+
+Example:
+
+class Program
+{
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Events *****\n");
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Register event handlers.
+c1.AboutToBlow += new Car.CarEngineHandler(CarIsAlmostDoomed);
+c1.AboutToBlow += new Car.CarEngineHandler(CarAboutToBlow);
+ 
+Car.CarEngineHandler d = new Car.CarEngineHandler(CarExploded);
+c1.Exploded += d;
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+// Remove CarExploded method
+// from invocation list.
+c1.Exploded -= d;
+ 
+Console.WriteLine("\n***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+Console.ReadLine();
+}
+ 
+public static void CarAboutToBlow(string msg)
+{ Console.WriteLine(msg); }
+ 
+public static void CarIsAlmostDoomed(string msg)
+{ Console.WriteLine("=> Critical Message from Car: {0}", msg); }
+ 
+public static void CarExploded(string msg)
+{ Console.WriteLine(msg); }
+}
+
+METHOD GROUP CONVERSION
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Fun with Events *****\n");
+Car c1 = new Car("SlugBug", 100, 10);
+// Register event handlers.
+c1.AboutToBlow += CarIsAlmostDoomed;
+c1.AboutToBlow += CarAboutToBlow;
+c1.Exploded += CarExploded;
+ 
+Console.WriteLine("***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+c1.Exploded -= CarExploded;
+ 
+Console.WriteLine("\n***** Speeding up *****");
+for (int i = 0; i < 6; i++)
+c1.Accelerate(20);
+ 
+Console.ReadLine();
+}
+
+CLEANING UP USING C# 6.0 NULL CONDITIONAL OPERATOR
+
+Notice, before fired an event to any listener you made sure to check for null. Important given that if nobody 
+is listeningfor event but you fire it anyway, you will receive a null reference exception at runtime. 
+
+? - null conditional operator, essentially performs this sort of check automatically. 
+
+When using this new simplified syntax, you must manually call Invoke() method of underlying delegate. 
+
+// If the car is dead, fire Exploded event.
+if (carIsDead)
+{
+if (Exploded != null)
+Exploded("Sorry, this car is dead...");
+}
+
+Can be rewritten as:
+
+// If the car is dead, fire Exploded event.
+if (carIsDead)
+{
+Exploded?.Invoke("Sorry, this car is dead...");
+}
+
+CREATING CUSTOM EVENT ARGUMENTS
+
+Event -> first parameter of underlying delegate is a System.Object, while second is a descendant of 
+System.EventArgs. System.Object argument represents a reference to the object that sent the event, while the 
+second parameter represents information regarding the event at hand. 
+
+public class EventArgs
+{
+public static readonly EventArgs Empty;
+public EventArgs();
+}
+
+For simple events, can pass an instance of EventArgs directly. However, when want to pass along custom data, 
+you should build a suitable class deriving from EventArgs
+
+public class CarEventArgs : EventArgs
+{
+public readonly string msg;
+public CarEventArgs(string message)
+{
+msg = message;
+}
+}
+
+public class Car
+{
+public delegate void CarEngineHandler(object sender, CarEventArgs e);
+...
+}
+
+public void Accelerate(int delta)
+{
+// If the car is dead, fire Exploded event.
+if (carIsDead)
+{
+Exploded?.Invoke(this, new CarEventArgs("Sorry, this car is dead..."));
+}
+...
+}
+
+public static void CarAboutToBlow(object sender, CarEventArgs e)
+{
+Console.WriteLine("{0} says: {1}", sender, e.msg);
+}
+
+To interact with object, must cast:
+
+public static void CarAboutToBlow(object sender, CarEventArgs e)
+{
+// Just to be safe, perform a
+// runtime check before casting.
+if (sender is Car)
+{
+Car c = (Car)sender;
+Console.WriteLine("Critical Message from {0}: {1}", c.PetName, e.msg);
+}
+}
+
+GENERIC EVENTHANDLER<T> DELEGATE
+
+EventHandler<T> -> T is custom EventArgs type. 
+
+public class Car
+{
+public event EventHandler<CarEventArgs> Exploded;
+public event EventHandler<CarEventArgs> AboutToBlow;
+...
+}
+
+Main() method could then use EventHandler<CarEventArgs> anywhere previously specified CarEventHandler:
+
+static void Main(string[] args)
+{
+Console.WriteLine("***** Prim and Proper Events *****\n");
+ 
+// Make a car as usual.
+Car c1 = new Car("SlugBug", 100, 10);
+ 
+// Register event handlers.
+c1.AboutToBlow += CarIsAlmostDoomed;
+c1.AboutToBlow += CarAboutToBlow;
+ 
+EventHandler<CarEventArgs> d = new EventHandler<CarEventArgs>(CarExploded);
+c1.Exploded += d;
+...
+}

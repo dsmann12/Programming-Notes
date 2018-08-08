@@ -1,0 +1,45 @@
+NUMBERS
+
+Integers and Floating point. 
+
+Floating point can also be 4E2 = (4 * 10 ^ 2)
+
+In Python 2, it is integer division by default. In Python 3, it is true division.
+
+In 2, just specify floating pont to do real division. Or cast numbers to be a float.
+
+float(3)/2
+1.5
+
+3/2
+1 // python 2
+
+3/2
+1.5 // python 3
+
+__future__ => module to import python 3 capailities into Python 2
+
+from __future__ import division
+
+3/2
+1.5
+
+** - exponentiation operator
+
+2**3 = 8
+5**2 = 25
+
+4**0.5 = 2 // square root
+
+Order of operations
+2 + 10 * 10 + 3 = 105
+
+Can use parentheses as well. 
+
+Assignment is simple
+
+a = 5
+
+Names of objects cannot start with a number, have spaces, or use certain symbols. Best practice that names are lowercase
+
+

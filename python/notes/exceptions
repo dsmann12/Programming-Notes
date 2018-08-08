@@ -1,0 +1,69 @@
+EXCEPTIONS
+
+Exception represents a runtime error that halts the normal execution at a particular line and transfers control to error handling code.
+
+Exceptions are type of error and descrption is known as an Exception. Even if a statement or expression is syntactically correct, it may cause an error when an attepmt is made to execute it. Error detected during execution are called runtime exceptions and are not unconditionally fatal. 
+
+Might be that variable used in program does not hava value (ValueError), or a file open operation error because file does not exist (IOError). 
+
+Without error handling code, runtime exception halts program with an error message. 
+
+Can add "try/except" structure to code to handle exceptions:
+
+  try:
+    ## Either of these two lines could throw an IOError, say
+    ## if the file does not exist or the read() encounters a low level error.
+    f = open(filename, 'rU')
+    text = f.read()
+    f.close()
+  except IOError:
+    ## Control jumps directly to here if any of the above lines throws IOError.
+    sys.stderr.write('problem reading:' + filename)
+  ## In any case, the code then continues with the line after the try/except
+
+Can get a pointer to exception object itself with syntax "except IOError, e: .. (e points to exceptoin object)"
+
+Can create Except blocks for each specific exception
+
+try:
+	statements
+except ExceptionI:
+	Exception1 block
+except ExceptionII:
+	ExceptionII block
+else:
+	If no exception, run this block
+finally:
+	Do this no matter what
+
+try:
+	f = open('nonexistantfile', 'r')
+	f.write('test write this')
+except:
+	print('Error writing to file!')
+else:
+	print('File write was a success')
+
+
+try:
+	f = open('nonexistantfile', 'r')
+	f.write('test write this')
+except:
+	print('Error writing to file!')
+finally:
+	print('Always execute this line')
+
+def askint():
+	while True:
+		try:
+			val = int(raw_input('Plesae enter an integer: '))
+		except:
+			print('Not an integer')
+			continue
+		else:
+			print('That is an integer')
+			break
+		finally:
+			print('Finally block executed')
+		
+	print val

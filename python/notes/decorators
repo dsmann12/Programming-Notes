@@ -1,0 +1,122 @@
+DECORATORS
+
+Can be thought of as functions which modify the functionality of another function. Help make code shorter and more 'Pythonic'.
+
+Run into them more when working with web frameworks like Django and Flask
+
+Start by building up from functions. 
+
+locals() -> returns dictionary of local variables
+globals() -> returns dictoinary of global variables
+
+s = 'This is a global variable'
+print globals()['s'] # 'This is a variable'
+
+Everything in Python is an object, including functions. 
+
+def hello(name='David'):
+	return 'Hello ' + name
+
+hello()
+# 'Hello David'
+
+Can assign variable to a function
+
+greet = hello
+
+del hello # deletes hello
+
+But greet() will still work
+
+greet()
+# 'Hello David'
+
+Functions Within Functions
+
+def hello(name='David'):
+	print('The hello() function has been executed')
+	
+	def greet():
+		return '\tThis is inside the greet() function'
+
+	def welcome():
+		return '\tThis is inside the welcome() function'
+	
+	print(greet())
+	print(welcome())
+	print('Now we are back inside the hello() function')
+
+Trying to call welcome() outside the hello() function will not work. 
+
+welcome()
+# ERROR
+
+Now redo function to return inner functions
+
+def hello(name='David'):
+	
+	def greet():
+		return '\tThis is inside the greet() function'
+
+	def welcome():
+		return '\tThis is inside the welcome() function'
+	
+	if name == 'David':
+		return greet
+	else:
+		return welcome
+
+x = hello()
+
+x # function __main__.greet
+
+print(x) # prints '\tThis is inside the greet() function'
+
+FUNCTIONS AS ARGUMENTS
+
+Like map, functions can be passed as arguments
+
+def hello():
+	return 'Hi David!'
+
+def other(func):
+	print('Other code goes here')
+	print func()
+
+other(hello)
+
+# 'Other code goes here'
+# 'Hi David'
+
+DECORATORS
+
+def new_decorator(func):
+	def wrap_func():
+		print('Code here, before executing the func')
+		func()
+		print('Code here will execute after the func')
+	
+	return wrap_func
+
+def func_needs_decorator():
+	print('This function needs a decorator')
+	
+func_needs_decorator = new_decorator(func_needs_decorator)
+
+func_needs_decorator()
+# 'Code here, before executing the func
+# 'This functoin needs a decorator'
+# 'Code will execute after the func'
+
+Essentially decorators wrap functions to modify their behavior.
+
+@ - decorator symbol. By decorating a function, we are passing it to decorator
+
+@new_decorator
+def func_needs_decorator():
+	print 'This function needs a decorator'
+# 'Code here, before executing the func
+# 'This functoin needs a decorator'
+# 'Code will execute after the func'
+
+

@@ -1,0 +1,42 @@
+Two primary ways to access files:
+1. File descriptors
+2. File streams
+
+File descriptors use a set of low-level I/O functions. 
+
+Filestreams are a higher level form of buffered I/O that is built on lower-level functions. 
+
+Filestream functions may be considered easier to program. File descriptors are more direct. 
+
+File descriptor is a number that is used to reference open files.
+
+Four common functions that use file decsriptors:
+
+open()
+close()
+read()
+write()
+
+All return -1 on error. 
+
+open() - opens a file for reading and/or writing and returns a file descriptor. Returned file descriptor is just an int value, but is unique among open files. File descriptor is passed as an argument to the other functions lke a pointer to the opened file. Arguments are a pointer to filename to open and a series of predefined flags that specify access mode. 
+
+close() - file descriptor the only argument. 
+
+read() and write() function's arguments are file descriptor, pointer to data to read or write, and number of bytes to read or write from that location. 
+
+perror(*char message); -print message to error
+
+File Permissions
+
+Bit flags defined in sys/stat.h
+
+S_IRUSR - give file read permission for user (owner)
+S_IWUSR - give file write permission for user (owner)
+S_IXUSR - give file execute permission for user (owner)
+S_IRGRP - give file read permission for group
+S_IWGRP
+S_IXGRP
+S_IROTH - give read permission for other (anyone)
+S_IWOTH
+S_IXOTH

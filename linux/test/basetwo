@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#create files from 0-100 called with prefix exp
+#exp0, exp1, exp2, exp3, etc
+for num in {0..64}
+do
+	#if num < 10, add 0 before num
+	if [ $num -lt 10 ]
+	then
+		filename=exp0"$num"
+	else
+		filename=exp"$num"
+	fi
+
+	#for each file, write string:
+	#"Two raised to the #numVar is (2^#numVar): 2**#numVar
+	touch $filename
+	echo "Writing to file: $filename" 
+	echo "Two raised to the $num power is " $(python -c "print (pow(2, $num))")  > $filename
+done
+
+#create one shell script that takes a single argument and raises two to its power. 
+
+

@@ -1,0 +1,170 @@
+DISPLAY TECHNOLOGIES
+
+How Monitors Work 
+
+Pixel - core of displays. Made from Liquid Crystal Displays (LCD). Composed of three pieces, called *elements*, of LCD. With LCD, if give electricity, can see through it, if turn it off, can't see through it. Take advantage of this to make pixel. Take LCD panel and put it over Red, green, and blue filters. Behind filters is a backlight, CCFL (flourescent light). Adjust amount of electricity over blue, red, or green filters and make any color. For red, just turn electricity off in blue and gree filter, etc. Cold Cathode Flourescent Lamp (CCFL). 
+
+Need LCD panels made up of millions of pixels. Larger the number of pixels the finer the resolutoin and larger the screen. 
+
+Take AC power in to AC adapter. Converted into DC power. DC power runs out to all circuitry and lights up pixels. 
+
+Native resolution - total number of pixels. 
+
+Two CCFLs, one running across top and other across bottom. Need AC power. 
+
+Inverter - convert DC power to AC. For CCFL. One of problems with LCDs. 
+
+PLASMA AND DLP DISPLAYS
+
+Light-Emitting Diodes (LED) - used instead of CCFL in LCD monitor as backlight. Have longer light and brighter image in general but maybe not quite as warm as a CCFL image. 
+
+Plasma Display - three flourescent bulbs of red, blue, or green each. When give certain gases and electrical charge, they ionize and then glow. Advantages over LEDs. If turn bulbs off, it is black and much blacker black compared to LEDs. Screen burn in was an old problem. Nature of tiny florescent lights can give a screen door affect. Can see wires charging on and off if get too close. Also use more power. 
+
+DLP - Digital Light Processing - Microscopic mirrors. Each can be controlled individually through mesh of wires allowing them to tilt back and forth. Shine image itself on DLP and as mirrors flash on and off, will get image. To get color, do same thing but add color wheel. Wheel spins and light turns on and picks correct color. For fancier stuff, get three mirror sets and take prism to split image into red, green, and blue components. So each DLP chip controls red green or blue. Kind of projector technology. Flashing light against mirrors to shoot image back. Used in read-projection TVs but really great in projectors. Downside is need a really bright lightbulb. 
+
+CONNECTORS
+
+Two video standards only used for video. HDMI and DisplayPort transcend concept.
+
+VGA and DVI. 
+
+Long time ago, video cards had to plug into CRT monitors. CRT monitors were analog devices but data was digital. 
+
+CPU populate VRAM with image it wanted to put on monitor. RAM Dat scanned VRAM and took information to create an analog signal to send to CRTs. 
+
+VGA Video Graphics Adapter - analog cable. VCSA connector. Was dominant. Output on 15pins in 3 rows (DV) to push out video. 
+
+LCD flat panels - digital signals. 
+
+Digital has benefits, no RAM dat needed anymore. Information populated to VRAM can be sent straight to monitor. 
+
+DVI Digital Visual Interface - been around for almost 20 years. No need for RAM Dat. Came out before LCDs were common. 
+
+Cards would have both VGA and DVI. Or use DVI to VGA adapter. DVI designed for backward compatibility with VGA connectors.
+
+DVI-I (DVI digital and Analog) - Single link - two 9 hold squares and then 4 holes with line through. Extremely common. Connectors for digital or analog. Good for flexibility.
+
+DVI-D (DVI Digital_ single link - dash and then two 9 hole squares.
+ 
+DVI-A (DVI Analog) - 4 holes with dash but then only 8 hole and then 4 holes. 
+
+DVI starts to have problems once you go to resolutions beyond 1080p. Dual Link DVI was created to get beyond that. 
+
+DVI-I Dual Link - 4 pins and dash then 24 pins. 
+
+DVI-D Dual Link - dash and then 24 pins.
+
+OTHER VIDEO CONNECTIONS
+
+Original Dedicated, Computer Only, and Hybrid
+
+Composite Connector - old school video connection. Always comes with yellow cable and invariably going to have stereo conncetivity too, red and whtie RC jack carrying only audio information. Oldest and worst. NTSC signals. 
+
+S-Video Connector - 6pin DIN connector. EU standard designed for EU TV. Doesn't use NTSC (NA uses). EU uses PAL. 
+
+Component Connctor - RGB. Three distinct colors. RGB. Usually color coded connectors. All pre-date PCs. 
+
+Not great at higher resolutions. 
+
+Sony/Philips Digital Interconnect Format S/PDIF - audio only. Powerful. Coaxial cable or optical connections. 
+
+DisplayPort - not quire as popular as HDMI. Apple supported. Audio, video, and even data connections. 
+
+High Definition Multimedia Interface (HDMI) - Audio and video. Standard and mini. Just size difference. 
+
+Video Over Ethernet - very expensive. Can cost 1000s of dollars. Huge advantage in distance. Connections can go very long. 
+
+GRAPHICS CARDS
+
+Drivers updates often.
+
+Refernce drivers - designed for GPU not particular video card. May not have extra tools designde for specific card. 
+
+Right click to get to special settings. Catalyst or GeFORCE Control Panel.
+
+PROJECTORS
+
+Resolution - amount of pixels in rectangular display. 
+
+Lumens - brightness. Measures in hundreds in old days. Measured in thousands today. 1100 lumens a safe standard. Affects price. 
+
+Throw - Image gets smaller as project goes forward, larger as it goes back. Some designed for short throws, small room but still want big image. 
+
+Projects just plug in like a mintor. 
+
+Bulbs - Ca nbe relatively inexpensive but can run into multiple hundreds of dollars. High tech bulbs. Extremely bright and hot. 
+
+MULTIPLE MONITORS
+
+I know how to do this.
+
+TROUBLESHOOTING
+
+VGA MODE 
+
+Low resolution mode. Maybe accidentally set resolution wrong or have a driver problem. 
+
+Go to device manager, check if error, reinstall driver if so. 
+
+NO IMAGE ON SCREEN
+
+Might be basic problem. Is monitor turned on? Is connection right? Is computer on? Trying to push video mode monitor can't handle?
+
+Often have to go to low resolution mode. 
+
+Sometimes monitor is dead. 
+
+Sometimes graphics card. 
+
+OVERHEAT
+
+If screen goes blank and comes back and maybe does same thing later. Probably overheat/shutdown issue. 
+
+DEAD PIXELS
+
+Means pixel is not getting any signal. Many LCD monitor manufacturers do not guarantee against dead pixels. Say they will repalce for certain amount of dead pixels.
+
+Stuck pixel - means can be any color and stuck in that color. 
+
+No real repair. Have to replace panel or monitor. 
+
+ARTIFACTS
+
+Weird glitches that appear on part of screen. 
+
+Check connections. Upgrade or replace drivers. Overheating. Video RAM problems maybe, can go bad. 
+
+No problem possibly. 
+
+COLOR PATTERNS INCORRECT
+
+Monitor not set up correctly. Monitor settings. Changes to brightness, hue, contrast, etc. 
+
+Check connections. 
+
+DIM/FlICKERING IMAGE
+
+Dim image - probably means monitor brightness is low. With LCD panelsm CCFLS, LEDs, or inverter has problem and gone out so image is dark with no backlight. Need to replace devices or monitor.
+
+Flickering image - more CRT issue. 
+
+DISTORTED IMAGE/GEOMETRY
+
+Distorted image - don't really happen in LCD world.
+
+Overscan - big LCDs TVs as monitors. With certain images, TVs may make screen bigger than physical display. So edges will but cut off. Go into on screen display and mess with overscan.
+
+Projectors - image could be shifting off. Projectors can be worked with to fix distortions.
+
+BURN IN
+
+Something that is permanently burned into monitor. Can see image even on new image. Used screen saves or turned TVs off to avoid. Not much a problem now. 
+Transient Image Persistence - ghost image. Looks like burn in but repairable. 
+
+OVERSIZED IMAGES AND ICONS
+
+Likely low resolution mode. 
+
+Windows can change DPI settings or resolution. 
+
+ 

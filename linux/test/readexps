@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#read a specified exp file based on argument provided
+
+if [ $# -lt 1 ]
+then
+	echo "No arguments provided!"
+else
+	filename="exp$1"
+	if [ -f $filename ]
+	then
+		cat $filename
+		cat $filename | grep [0-9]*$ | awk '{print $8}'
+	fi
+fi

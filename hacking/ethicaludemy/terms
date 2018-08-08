@@ -1,0 +1,41 @@
+White Hat/Grey Hat/Black Hate
+
+White Hat - people who use hacking abilities within bounds of law. 
+
+Grey Hat - people bordering line between legal and illegal
+
+Black Hat - people who use hacking outside bounds of law.v 
+
+Footprinting - information gathering. Reconassaince work. Figuring out ID of server, which ports are open, etc. Not just digital world. Investigating physical space as well. 
+
+DoS - denial of service. Relatively easy to implement. Perform more requests than server can handle. So server begins dropping requests. Stops people from accessing websites. Server has too many users than it can handle. Single user. 
+
+DDoS - Distributed Denial of Service. Multiple users. Multiple machines making multiple requests. Difficult to fight off. Need a good firewall. Even a physical firewall. Not difficult to do attack, but difficult to do necessary preparation. Must infect and get zombie computers to do work. 
+
+RAT - remote administratoin tools. Infect other computers and enslave them. 
+
+FUD - fully undetectable. Cannot be detected by anti-virus. Specifically, not labeled as malicious by anti-virus programs. Very valuable tool.
+
+Root Kit - tool installed on OS that hides running processes from system itself. Tasks manager requests info from kernel. Kernel responds it has this and process running but root kit redirects those requests to iteself to hide processes. 
+
+Fishing - Applying some sore of bait, and then pulling. Like email. https usually means its the protected correct website. 
+
+SQL Injections - simply passing SQL queries to HTTP requests. If not properly formatted by php code on server side can present serious problem. Big concern for web developers. 
+
+VPN - virtual private network. Ways of anonymizing oneself. Route all traffic through VPN provider allowing traffic to be heavily encrypted. Websites actually receiving requests from VPN. Only way to get information is to get from VPN provider. d
+
+Proxy - less reliable way of staying anonymous. Sox5 proxies? Can route connection through several proxies. Doesn't always work. Most free proxies are not very fast so routing connection would slow it. Paid proxies leave a digital footprint. 
+
+Tor - free, open source. Must faster than proxies. Ability to tor-ify applications. Route traffic through certain routes and using certain routers and devices on internet for packets and connection to go through. Ways of detection but highly unlikely to happen. 99.9% of time will be almost anonymous. Tor browser allows access to darkweb. .onion websites. Not indexed by search engines. Cannot be accessed from regular internet browser. Unless have internet connection configured ina certain way. 
+
+VPS - virtual private servers. Can be viewed as security layer. Allows only programs and users on physical machine to acceess virtual machine where virtual server is. 
+
+Key Loggers - tools used to steal credentials. Also used to extract information. Can configure one to send all keystrokes and send them to FTP server. Modern ones have hundreds of options. Can take control of camera, etc.
+
+BE CAREFUL WHERE DOWNLOAD TOOLS. DO NOT DOWNLOAD CLOSED SOURCE BINARY FILE. COULD INFECT COMPUTER. 
+
+Terminal - interface for user to control OS. Linux terminal very powerful. Terminal tools typically more powerful. And terminal has less dependencies than GUI. Also hacking tools often made for terminals.
+
+Firewall - in Linux, configured to IPTable commands. Powerful firewall. Won't have most options for Windows. Open Source. Many options. Can configure it in many ways. Forward connections via ports, forbid certain protocols on certain ports or for certain IP addresses. 
+
+Reverse Shells - hundreds if not thousands of reverse shells out there. Depends on framework or environment want to infect. Program with which will infect another device and tht program opens connection from that device to you. Differenty types and much configuration needed. Often need to break into router first.  

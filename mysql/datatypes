@@ -1,0 +1,21 @@
+DATA TYPES
+
+Each column has a data type
+
+Can be slightly different in different sql environments. 
+
+CHAR and VARCHAR
+
+VARCHAR(4) - 4 is max length. Only takes up as much space as needed. 
+
+CHAR(4) - fixed length of 4. So will have spaces for every character missing
+
+DATETIME
+
+TIMESTAMP
+
+INT
+
+DECIMAL
+
+Different subtypes. Check documentation.

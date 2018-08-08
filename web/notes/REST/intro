@@ -1,0 +1,40 @@
+RESTful Routes
+
+app.get(/campgrounds)
+app.get(/campgrounds/new)
+app.post(/campgrounds)
+
+RESTful Routes
+
+name	url				verb		desc
+======================================
+INDEX	/dogs			GET			Display a list of all dog
+NEW		/dogs/new		GET			Displays form to make a new dog
+CREATE	/dogs			POST		Add new dog to database
+SHOW	/dogs/:id		GET			Shows info about one dog
+EDIT	/dogs/:id/edit	GET			Show edit form for one dog
+UPDATE	/dogs/:id		PUT			Update a particular dog, then redirect somewhere
+DESTROY	/dogs/:id		DELETE		Delete a particular dog, then redirect somewhere
+
+Representational State Transfer 
+
+REST - a mapping between HTTP routes and CRUD. Pattern for defining routes
+
+CREATE
+READ	/allBlogs
+UPDATE	/updateBlod/:id
+DESTROY	/destroyBlog/:id
+SHOW
+EDIT
+INDEX
+NEW
+
+Nested Routes are possible. 
+
+If the new structure is connected to another, then it should be nested in that other structure's 
+route path. 
+
+Comments to Campgrounds
+
+NEW		campgrounds/:id/comments/new		GET
+CREATE	campgrounds/:id/comments			POST

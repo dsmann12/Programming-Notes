@@ -1,0 +1,65 @@
+DIRECTIVES
+
+Directives - instructions in the DOM. Components are a kind of directive. Angular adds components to selected templates. 
+
+<p appTurnGreen>Receives a green background!</p>
+
+@Directive({
+	selector: '[appTurnGreen]'
+})
+
+export class appTurnGreen {
+
+}
+
+@ngif - built in directive
+
+<p *ngIf="serverCreated">Server was created, server name is {{ serverName }}</p>
+
+//have serverCreated field initialzed to false, and changed to true after onCreateServer called
+
+Can have an else. Use a local reference (#noServer). 
+
+<p *ngIf="serverCreated; else noServer">Server was created, server name is {{ serverName }}</p>
+<ng-template #noServer>
+	<p>No server was created!</p>
+</ng-template>
+
+Structural directives -> ngIf. Add or remove elements to the html page. 
+
+Attribute directives - don't add or remove elements. Only change elements. 
+
+server html
+
+<p [ngStyle]="{backgroundColor: getColor()}">{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}</p>
+
+ngStyle - dynamically update style of element
+
+ngClass - dynamically add or remove CSS classes. 
+
+<p 
+	[ngStyle]="{backgroundColor: getColor()}"
+	[ngClass]="{online: serverStatus === 'online'}">
+	{{ 'Server' }} with ID {{ serverId }} is {{ getServerStatus() }}
+</p>
+
+Can also use a method. Adds the class online to that element only if condition is true. 
+
+ngFor - 
+
+servers.component.ts
+
+ServersComponent {
+	servers = ['Testserver', 'Testserver2'];
+
+	onCreateServer() {
+		servers.push(this.serverName);
+	}
+}
+
+servers.component.html 
+
+...
+<app-server *ngFor="let server of servers"></app-server> //loops through all elements in servers arraya
+
+*ngFor="let logItem of log; let i = index" //can use i for index 

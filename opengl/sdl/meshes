@@ -1,0 +1,20 @@
+MESHES
+
+Act of taking 3D data and sending it to GPU for it to draw.
+
+Create a Vertex class in mesh.h. Vertex represents data to be sent to GPU. 
+
+Best to make things as close to format OpenGL expects as possible and only add things later since this takes more processing.
+
+OpenGL expects data like this:
+3 points (x, y, z coorindate between -1 and +1). Vertex is one of those three points. 
+
+Use OpenGL math library have vec3 type. glm::vec3
+
+Make GLuint m_vertexArrayObject as private member of Mesh class. GL usines GLuint to refer to data on GPU. This was only officially included in OpenGL 3.0, though was somewhat supported in older versions of OpenGL like 2.1. 
+
+also GLuint m_vertexArrayBuffers[NUM_BUFFERS];
+
+Use enum for this constant NUM_BUFFERS. See code.
+
+Then add unsigned int m_drawCount. Tells opengl how much of this vertex array to draw.

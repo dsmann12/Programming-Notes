@@ -1,0 +1,95 @@
+NAMESPACES
+
+using System;
+
+namespaces - designed to help organize programs and assist in avoiding name clashes. In many cases, classes craeted may have same name as those in .Net Framework Library or a third party library. Namespaces help avoid that. Not required to correspond to any directory or file name though programmer may do so. 
+
+// Namespace Declaration
+using System;
+
+// The C# Station Namespace
+namespace csharp_station 
+{
+    // Program start class
+    class NamespaceCSS 
+    {
+        // Main begins program execution.
+        public static void Main() 
+        {
+            // Write to console
+            Console.WriteLine("This is the new C# Station Namespace."); 
+        }
+    }
+}
+
+Namespaces can be nested:
+
+// Namespace Declaration
+using System;
+
+// The C# Station Tutorial Namespace
+namespace csharp_station 
+{
+    namespace tutorial 
+    {
+        // Program start class
+        class NamespaceCSS 
+        {
+            // Main begins program execution.
+            public static void Main() 
+            {
+                // Write to console
+                Console.WriteLine("This is the new C# Station Tutorial Namespace.");
+            }
+        }
+    }
+}
+
+// Namespace Declaration
+using System;
+
+// The C# Station Tutorial Namespace
+namespace csharp_station.tutorial 
+{
+    // Program start class
+    class NamespaceCSS 
+    {
+        // Main begins program execution.
+        public static void Main() 
+        {
+            // Write to console
+            Console.WriteLine("This is the new C# Station Tutorial Namespace."); 
+        }
+    }
+}
+
+Calling members of namespaces:
+
+// Program start class
+    class NamespaceCalling 
+    {
+        // Main begins program execution.
+        public static void Main() 
+        {
+            // Write to console
+            tutorial.myExample1.myPrint1(); 
+            tutorial.myExample2.myPrint2(); 
+        }
+    }
+
+Every namespace member of same type must have a unique name. 
+
+Use using to avoid having to type fully qualified name for namespace. 
+
+Alias - giving a namespace another name to use in code.
+
+using csTut = csharp_station.tutorial
+
+csTut.exampleMethod();
+
+Namespaces can hold:
+-Classes
+-Structures
+-Interfaces
+-Enumerations
+-Delegates
