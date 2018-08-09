@@ -1,0 +1,283 @@
+CODE FIRST WORKFLOW
+
+WITH NEW DATABASE
+
+Install ENtity Framework
+
+Go to Package Manager Console
+
+Create shortcut. Tools > Options > Keyboard 
+
+Use packagemanager to find command. THen choose shortcut keys.
+
+install-package EntityFramework -Version:6.1.3
+
+Will install latest framework. Unless specified. 
+
+Use IList to have many relationships. Basically if class has a set or list property whose type is another class for database, this will create a many relationship.
+
+Then make class for context
+
+using SYstem.Data.Entity;
+
+public class PlutoContext : DbContext {
+	public DbSet<Course> Courses { get; set; }
+	public DbSet<Author> Authors { get; set; }
+	public DbSet<Tag> Tags { get; set; }
+
+	public PlutoContext()
+		: base("name=DefaultConnection")
+	{}
+}
+
+Next must specify connection string.
+
+Go to App.config or Web.config
+
+Add connectionStrings sections
+
+<connectionsString>
+	<add name="DefaultConnection" connectionString="data source=.\SQLEXPRESS; initial catalog=PlutoCodeFirst; integrated security=SSPI" providerName="System.Data.SqlClient"/>
+</connectionsString>
+
+Now in package manager, enable migrations
+
+enable-migrations
+
+THen add migration.
+
+add-migration InitialModel
+
+Can then look at migration file in Migrations folder to see what code is generated. 
+
+Will create intermediate tables for many to many relationships. Primary key will be composite key from both entities' keys. Also handles cascading deletes. 
+
+Then go to package manager console
+
+update-database
+
+CODE FIRST WITH EXISTING DATABASE
+
+BUild code vfirst model using existing database. Then use code first workflow for any subsequent changes. May change model using code and then use migrations to bring database up to date. 
+
+Add ADO.NET Entity Data Model to project. 
+
+Selecty Code First From Database. THen Select database connection string.
+
+Bring in every table you want except _MigrationHistory
+
+Will use an ICollection instead of IList. IList allows indexing. 
+
+Also virtual keyword used for lazy loading.
+
+Also adds an overidden method call OnModelCreating to create tables. 
+
+MIGRATIONS
+
+Often need to change model. 
+
+enable-migrations
+add-migration InitialModel
+
+WIll try to create tables. But already have these tables. 
+
+Must use switch called --ignore changed
+
+add-migration InitialModel -IgnoreChanges -Force
+
+Will generate an empty migration. 
+
+Can only have one pending migration so must update database.
+
+Update-Database
+
+Should always work on small changes and small migrations. 
+
+ADDING A NEW CLASS
+
+Must override conventions to set a property to ID that is not named ID.
+
+Need to add class to DbContext. By making a new DbSet of the new class.
+
+add-migration 
+
+Can used Model Centric name or Database Centric name. Database entry might be better
+
+add-migration Add[CLASSTABLENAME]Table
+add-migration AddCategoriesTable
+add-migration AddCategoriesTable -Force
+
+Sql() -> method to write any SQL to database. Can be used to populate a table with data
+
+Sql("INSERT INTO CAtegories VALUES (1, 'Web Development')");
+
+MODIFYING AN EXISTING CLASS
+
+Adding a new property, etc. 
+
+Add migration. Then update database. 
+
+What about changing the name of something?
+
+Create new migration. 
+
+However, new migration will complete drop data from table with old name. 
+
+Instead rename column yourself.
+
+RenameColumn("dbo.Courses", "Title", "Name");
+
+Or use Sql().
+Sql("UPDATE Courses SET Name = Title");
+
+Also should update Down() method to that if need to regress to older database, no data will be lost. 
+Deleting a column. Easy cause it just gets rid of column
+
+DELETING AN EXISTING CLASS
+
+Migration may delete foreign keys in tables when certain properties are deleted such as properties made from other classes.
+
+Also need to delete class code and the DbSet in the DbContext. 
+
+If want to preserve data from table being dropped, create table in migration. 
+
+CreateTable()...
+
+Sql("INSERT INTO _Categories (Name) SELECT Name FROM Categories");
+Then drop table. 
+
+Do reverse in the Down() method.
+
+RECOVERING FROM MISTAKES
+
+To recover, need to create another migration. Cannot change history. Like git. 
+
+DON'T DELETE MIGRATION
+
+Instead change model, and create migration
+
+DOWNGRADING A DATABASE
+
+Option 1: Using a blank database
+Can checkout older database version
+Change db name in connection string
+Run update database
+
+Option 2: Update an existing database
+Update-Database -TargetMigration:[MIGRATION NAME]
+
+Entity sees it must revert Migration G,H to gget to Migration F. It does this. 
+
+Update database to get to latest version. 
+
+Look in Migrations_History
+
+update-database -TargetMigration:MigrationName
+
+SEEDING DATABASE
+
+Configuration.cs -> used to supply configuration for migrations. 
+
+Can set automatic migrations. But this feature is not supported anymore. 
+
+If want to move Migrations folder somewhere you must tell Configuration.cs.
+
+Seed() -> method to initialize database. Use for development database not production. 
+
+Should use Sql for reference data. With migrations and updating database. 
+
+Can use AddOrUpdate() on DbSet to insert data into table in seed method.
+
+OVERRIDING CODE FIRST CONVENTIONS
+
+Data Annotations and Fluent? API
+
+OVERRINDING CONVENTIONS
+
+By convention, Entity makes string data nullable because strings are nullable in C#.
+
+Use attributes to specify required data.
+
+Using System.ComponentModel.DataAnnotations.Schema
+
+[Required]
+public string Description { get; set; }
+
+In FLuent API, go to DbContext. And look in OnModelCreating() method that is overriden. 
+
+modelBuilder.Entity<Course>()
+	.Property(t => t.Description)  // t for type
+	.IsRequired()
+
+DATA ANNOTATIONS
+
+Entity assumes name of tables is plural form of class names. What if you want to use a specific name. Use data annotation.
+
+Also assumes data is in dbo schema. Specify different one with annotation
+
+[Table("tbl_Course", Schema = "catalog")]
+public class Course
+
+Also assumes names of columns is same as name of property of classes. 
+
+[Column("sName", TypeName = "varchar")]
+public string Name { get; set; }
+
+Also assumed class property named ID or ClassNameID then it is Primary Key.
+
+[Key]
+[DatabaseGenerated(DatabaseGenereatedOption.None)]
+public string ISBN {get; set;}
+
+DatabaseGeneratedOption.None, .Identity, and .Computed. None means values are not generated, identity means it is an identity column that is generated, and computed means that key is computed from other values in databse. 
+
+Composite Keys
+
+public class OrderItem 
+{
+	[Key]
+	[Column(Order = 1)]
+	public int OrderId { get; set; }
+	
+	[Key]
+	[Column(Order = 2)]
+	public int ORderItemId { get; set; }
+}
+
+Need key attribute and specify column order.
+
+A column can be nullable. If want it not to be nullable specify this with
+
+[Required]
+public string Name { get; set; }
+
+Also can handle lengths of strings
+
+[MaxLength(255)]
+public string Name { get; set; }
+
+Index 
+
+[Index]
+public int AuthorId { get; set; }
+[Index(IsUnique = true)]
+public int AuthorId { get; set; }
+
+If index contains multiple columns, need to do multiple properties
+
+[Index("IX_AuthorStudentsCount", 1)]
+public int AuthorId { get; set; }
+[Index("IX_AuthorsStudentsCounts". 2]
+public int StudentsCount { get; set; }
+
+Foreign Keys
+
+Add foreign key model with desired name. Need to link them so entity uses a navigation property and doens't create a new column in table.
+
+public class Course
+{
+	[ForeignKey("Author")]
+	public int AuthorId { get; set; }
+	// or can [ForeignKey("AuthorId")]
+	public Author Author { get; set; }
+}
