@@ -1,0 +1,47 @@
+Crate is a package of Rust code. 
+
+Cargo project being built is binary crate, which is an executable.
+
+The rand crate is a library crate, which contains code intended to be used in other programs. 
+
+Before we can write code that uses rand, need to modify the Cargo.toml file to include the rand crate as a dependency. 
+
+[dependencies]
+
+rand = "0.3.14"
+
+Dependencies section is where you tell Cargo wihch external crates project depends on and which versions of those crates are required. 
+
+Cargo understand Semantic Versioning, which is standard for writing version numbers. 0.3.14 is shorthand for ^0.3.14 which means any version that has a public API compatible with version 0.13.14.
+
+Now have an external dependency. Cargo fetches the latest versions of everything from the registry, which is a copy of data from https://crates.io/
+
+Crates.io is where Rust ecosystem posts open source projects
+
+After updating the registry, Cargo checks the [dependencies] section and downloads any crates it doesn't already have. In this case, although only listed rand as dependency it also grabbed libc. Becauase rand depends on libc. 
+
+After downloading crates, Rust compiles them and then ompiles the project with the dependencies available. 
+
+Cargo only builds from changes. Does not re-compile code that hasn't changed. 
+
+Cargo has mechanism that ensures you can rebuild the same artifact every time you or anyone else builds your code. Cargo will only use versions of dependencies specified until indicated otherwise. 
+
+What if rand 0.3.15 comes out with important bug fix that breaks your code?
+
+Cargo.lock fixes this. Created first time run cargo build. 
+
+When first build, Cargo figures out all the versions of the dependencies that fit the criteria and then writes them to the Cargo.lock file. When build project in the future, Cargo will see that Cargo.lock exists and use versions specified there rather than doing all the work of figuring out versions again. 
+
+When you do want to update a crate, use update
+
+cargo update
+
+In this case, Cargo only looks for versions between 0.3.0 and 0.4.0. 
+
+If 0.3.15 and 0.4.0 comes out, Cargo only upgrades to 0.3.15. 
+
+Have to specify in Cargo.toml file if want to go higher. 
+
+Can also read documentation for crates
+
+cargo doc --open -> will build documentationprovided by dependencies locally and open in browser

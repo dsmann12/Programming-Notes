@@ -1,0 +1,124 @@
+LINEAR REGRESSION
+
+Ch 2, 3 of ISL
+
+Galton. Studied heights of sons compared to heights of fathers. Found that man's son tended to be roughly as tall as his father. Galton's breakgthrough was that son's height tended to be closer to the overall average height of all people. 
+
+Shaq's son will probably be tall but Shaq is such an anomaly that there is a good chance his son will not be as tall as he is. 
+
+Phenomenon is called regression, value regresses (difts toward) the mean. 
+
+When calculating a regression line, trying to draw a line that is as close to every dot as possible. 
+For classic linear regression, or "Least Squares Method", you only measure closeness in the "up and down" direction. 
+
+Goal in to minimize the vertical distance between all data points and the line. In determining the best line, we are attempting to minimize the distance between all points and their distance to our line. 
+
+Lots of different ways (sum of squared error, sum or absolute errors, etc) but all methods havea general goal of minimizing this distance. 
+
+Least Squares Method - minimizing the sum of squares of the residuals. 
+
+The resididuals for an observations is the difference between the observation (the y-value) and the fitted line. 
+
+SciKit Learn 0.18 -> train_test_split is now imported from model_selection instead of cross_validation. 
+
+from sklearn.model_selection import train_test_split
+
+LINEAR REGRESSION WITH PYTHON
+
+Start off by working with housing data set to create model to predict housing prices based on existing features
+
+Will begin working with artifical datasets. 
+
+Later will use messier data sets
+
+Each row represents house. Holds price it sold and its address. Other columns have statistics for city or area that house is located in. 
+
+df.info -> gives total number of columns, entries, and what type of objects are in data frame
+
+df.describe -> get quick account of some statistical data for each column (max, mean, median, etc)
+
+Won't work for string value
+
+df.columns -> list of column names 
+
+Can get df from df using column names for map
+
+X = df[['Avg. Area Income', 'Avg. Area House Age', etc]]
+y = df['Price']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=101)
+
+Random state is optional number that ensures specific set of random split on data. train_test split will split data randomly. 
+
+from sklearn.linear_model import LinearRegression
+
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+Can get intercept
+
+print(lm.intercept_)
+
+Can also get coefficients. Relate to each feature in data set
+
+lm.coef_
+
+// create coefficient data frame
+cdf = pd.DataFrame(lm.coef_, X_train.columns, columns=['Coeff'])
+
+Has coefficient for each feature. Read book to understand.
+
+Basically. means that if we hold all other features fixed, a 1 unit increase in avg. area income, is associated with an increase of $21 in price. Etc for each feature. 
+
+Can grab real boston data set
+
+from sklearn.datasets import load_boston
+
+boston = load_boston()
+
+boston.keys()
+
+// Essentially is dictionary with lots of information
+
+Grab predictions from model using test set
+
+Want to pass in features that model hasn't seen before
+
+predictions = lm.predict(X_test)
+
+predictions -> array of predictions
+
+Want to know how far off predictions are from the actual values stored in y_test
+
+Can do scatter plot to visualize this
+
+plt.scatter(y_test, predictions)
+
+Looks good if it is mostly a straight line. 
+
+Can check residuals are well
+
+Residuals are difference between actual values and predicted values
+
+sns.displot((y_test-predictions))
+
+Want a normal distribution (like a bell curve). Otherwise, a linear regression model may not be the best choice
+
+3 common evaluation methods
+1. Mean Absolute Error (MAE) -> mean of absolute value of the errors
+2. Mean Squared Error (MSE) -> mean of the squared errors
+3. Root Mean Squared Error (RMSE) is square root of the mean of the squared errors
+
+MAE easiest to understand beacuse it's the average error
+MSE more popular. Because MSE punished larger errors, which is useful
+RMSE is even more popular than MSE because RMSE is interpretable in the y unites
+
+All these are loss functions, because want to minimize them
+
+from sklearn import metrics
+
+metrics.mean_absolute_error(y_test, predictions) -> MAE
+metrics.mean_squared_error(y_test, predictions) -> MSE
+np.sqrt(metrics.mean_squared_error) -> RMSE
+
+

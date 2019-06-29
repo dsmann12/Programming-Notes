@@ -248,7 +248,7 @@ Filters, Unclikc actors only. ALso collapse all.
 
 Can explore inheritance tree. 
 
-Pawn is base kind of Actor. 
+Pawn is base kind of Actor. You can possess a pawn. 
 
 Details -> Add Component -> Add New C++ Component
 
@@ -282,6 +282,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };
 
+UCLASS -> tells unreal header tool how to work with the class. A lot of it in Unreal
+
 BeingPlay() -> to put code that runs onces ata start of the gamr
 
 TickComponent -> to put code that runs every frame
@@ -291,6 +293,10 @@ CopyRight Notice Description
 Unreal -> Settings -> Project Settings -> Company Name, Copyright Notice
 
 Ticks run every frame. Things that tick run every frame.
+
+Constructor initializes boolean to say that an object ticks
+
+PrimaryComponentTick.bCanEverTick = true;
 
 // called when the game starts
 void UPositionReport::BeginPlay()
@@ -306,6 +312,8 @@ void UPositionReport::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+Super calls used to run the methods for the super classes first. So that a derived class does not forget to behave like ancestor is supposed to behave. 
+
 BUILDS
 
 Build runs from Binaries
@@ -316,6 +324,8 @@ Unreal build systems made to build to either xcode or vs (sln). Target.cs, *.Bui
 
 These files generate xcode or vs files depending on Windows or Mac.
 
+This is the Unreal build system. The .build.cs, etc
+
 LOG
 
 Use UE_LOG to print to the Output Console.
@@ -323,6 +333,8 @@ Use UE_LOG to print to the Output Console.
 UE_LOG(LogTemp, Warning, TEXT("Position Report reporting for duty!");
 
 Warning -> determines color of text in log
+
+Macros and Unreal Header Directive is basically same thing
 
 Macros and Decorators happen before compilation. Kind of a black box. 
 
@@ -356,7 +368,9 @@ UE_LOG(LogTemp. Warning, TEXT("Position report for %s"), *ObjectName);
 
 UNREAL 4.17 INCLUDE WHAT YOU USE
 
-For converting projects before 4.17 to new version.
+For converting projects before 4.17 to new version.o
+
+#include "GameFramework/Actor.h"
 
 IWYU
 
@@ -373,6 +387,8 @@ Then <GameName> Editor.Target.cs
 bUseUnityBuild = false;
 bUsePCHFiles = false;
 
+shows errors that may have previously been hidden
+
 Do not have monolithic header like Engine.h from Game .h file
 
 To find headers
@@ -387,9 +403,15 @@ All the way at the bottom, get the header. If part of path called Classes or Pub
 
 Need to include what is needed. 
 
+#include "COreMInimal.h"
+
+For limited core modules
+
 TRANSFORMATIONS
 
-FVector -> 
+FVector -> stores three points in space. x, y, z. 
+
+Transform also shown in details pane.
 
 FString ObjectName = GetOwner()->GetName();
 FString ObjectPos = GetOwner()->GetTransform().GetLocation().ToString();

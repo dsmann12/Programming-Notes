@@ -1,0 +1,102 @@
+INTRO
+
+Want to make image small so can manipulate individual pixels. 40 x 40 used in example.
+
+Then zoom. Can click zoom command and drag mouse. 
+
+CHANGING SETTINGS FOR PIXEL ART
+
+Go to preferences
+
+Image Interpolation > Nearest Neighbor (preserve hard edges). Makes it so no anti aliasing occurs. Hard edges remain. 
+
+Use pencil in brush tool. Gives hard, fine line. 
+
+Change size of brush to 1px.
+
+Put eraser in pencil mode. Set size to 1px. 
+
+Fill -> fills in colors matching color
+Gradient -> creates gradient between two colors. 
+
+HOTKEYS
+
+V -> grab and move
+M -> marquee tool. Make selection
+Ctrl-Z -> Undo
+Ctl-Alt-Z -> COntinue undoing steps
+L -> Lasso tool
+B -> Brush/Pencil tool
+E -> Eraser tool
+G -> Fill/Gradient tool
+
+LAYERS
+
+Go to layer. Bottom right there are icons to add layers. 
+
+CTRL-J -> copy layer
+
+Relabel layers to keep organized
+
+Can also make folders for layer.
+
+Select layers. Hold shift. Then go to folder icon to put in folder. 
+
+CTRL-G -> put layers in folder
+
+Can change layer type. Overlay, vivid light. CHanges how it interacts with other layers.
+
+Opacity -> can edit. 
+
+SHAPES IN ARTWORK
+
+Art comes down to shape. 
+
+Only have so many pixels to convey to viewer what an object is. 
+
+Everything can be broken down into basic shapes. 
+
+When creating diagonal lines, want to make sure there are even spaces between each step. 
+
+Marquee. Grab and hold alt. Cpoies. 
+
+CTRL-T -> right click. Then can flip the selection.
+
+VALUE AND CONTRAST
+
+Value - the light or darkness of a color. Goes from white to dark. 
+
+High contrast is important.
+
+Breaks up different elements of image and adds details.
+
+Shadow value -> darkest
+
+highlight -> lights up design
+
+bounce light -> light being bounced from other surfaces
+
+Outlines -> good for pixel art for defning.o
+
+Only outline inside lines and corners. Do not do inverted corner. When corner points back toward object. Otherwise line is thick.
+
+Can change opacity to lighten outline.
+
+LEARNING COLOR THEORY
+
+Color theory very important in creating artwork. 
+
+Can create contrast
+
+What colors look good togethers. Colors across from each other. 
+
+Color wheel divided into warm and cool.
+
+Want warm and cool mostly. 
+
+Shadows can be a cooler color where outliness are warmer colors. 
+
+INSPIRATION
+
+Google images and pinterest can provide inspiration.
+

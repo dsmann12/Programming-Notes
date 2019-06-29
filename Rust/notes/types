@@ -1,6 +1,10 @@
 PRIMITIVE TYPES
 
+Statically typed, it must know types of all variables at compile time. Compiler can infer type based on value and how we use it. When type is ambiguous, annotations must be used. 
+
 Number of built in types. Rust is structured in such a way that the standard library also provides a number of useful types built on top of these ones, but these are most primitive.
+
+Scalar type represents single value. 
 
 BOOLEANS
 
@@ -38,18 +42,23 @@ i8
 i16
 i32
 i64
+i128
 u8
 u16
 u32
 u64
-isize
-usize
+u128
+isize (architecture specific)
+usize (architecture specific)
 f32
 f64
 
 Signed and Unsigned - u and i
 u32
 i32
+
+Integer overflow is not allowed. An error will be shown by the compiler in debug mode. 
+The program will panic in release mode. If you want overflow, there is a Wrapping type. 
 
 Fixed-Size Types
 Hve specific number of bits in representation
@@ -58,6 +67,25 @@ i64 - 64 bits
 
 Floating Point Types
 f32 and f64 - correspond to IEEE-754
+Default is f64
+
+All number literals except byte literal allow a type suffix such as 57u8.
+
+Also allow _ as visual separator.
+
+1_000_000 -> 1 million
+
+Decimal		98_222
+Hex			0xFF
+Octal		0077
+Binary		0b1111_0000
+Byte (u8)	b'A'
+
+Char type
+
+Represents UTF-8 values. 
+
+let c = 'z';
 
 ARRAYS
 
@@ -124,7 +152,7 @@ Tuples are heterogenous, can consist of multiple types.
 
 In systems programming languages, strings are a bit more complex that in other languages. For now, read &str as a string slice. 
 
-Can assign one tuple into another, if they have same contained types and *arity*. Tuples have same arity when they have same length.
+Can assign one tuple into another, if they have same contained types and *parity*. Tuples have same arity when they have same length.
 
 let mut x = (1, 2); // x: (i32, i32)
 let y = (2, 3); // y: (i32, i32)
@@ -161,6 +189,10 @@ let z = tuple.2;
 println!("x is {}", x);
 
 Like array indexing, it starts at zero, but unlike array indexing, it uses a ., rather than []s.
+
+let tup: (i32, f64, u8) = (500, 6.4, 1);
+let (x, y, z) = tup;
+println!("The value of y is: {}", y);
 
 FUNCTIONS
 

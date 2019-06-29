@@ -1,0 +1,367 @@
+OWNERSHIP 
+
+Ownership is Rust's most unique feature. Enables Rust to make memory safety guarantees without needing a garbage collector. 
+
+Related ideas are borrowing, slices, and rust memory map.
+
+Memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. Does not slow down execution. 
+
+Whether value is on stack or heap affects how it the language behaves and why certain decisions have to be made. 
+
+Keeping track of what parts of code are using what data on the heap, minimizing the amount of duplicate data on the heap, and cleaning up unused data on the heap so you don't run out of space are all problems that ownership addresses. 
+
+Ownership Rules
+
+- Each value in Rust has a variable that's called its owner
+- There can only be one owner at a time
+- When owner goes out of scope, the object is dropped. 
+
+When variable comes into scope, it is valid.
+Variable remains valid until it goes out of scope. 
+
+String Type
+
+Basic data types are stored on the stack. Want to see one that is stored on heap.
+
+String is different from string literals. They are hardcoded and immutable. Strings are allocated on the heap. Able to store an amount of text unknown at compile time. 
+
+Can create a String from a string literal
+
+let s = String::from("hello");
+
+String can be mutated
+
+let mut s = String::from("hello");
+
+s.push_str(", world!"); // push_str() appends a literal to a string
+println!("{}", s);
+
+Why can String be mutated but literals cannot? Because two types deal with memory differently. 
+
+Memory and Allocation
+
+String literals are known at compile time and hardcoded into the final executable. Can be fast and efficient because string literals are immutable. 
+
+With String type, it is mutable, and in order to support mutable, growable piece of text, we need to allocate an amount of memory on the heap unkown at compile time. 
+
+Means:
+
+- The memory must be requested from the OS at runtime
+- Need a way of returning this memory to OS when done with it
+
+String::from() -> implementation requests memory it needs. 
+
+Every allocate must be paired with free because must keep track of memory outselves in lanaguages like C.
+
+In Rust, memory is automatically returned once variable goes out of scope. 
+
+When variable goes out of scope, Rust calls spcial function, drop, that author of String type put code to return memory. Rust calls drop after closing bracket. 
+
+RAII -> resource aquisition is initialization. 
+
+Move, Copy, Etc
+
+let x = 5; let y = x; 
+
+Value 5 stored in x, value copied and stored at y. 
+
+Because they are simple values with known, fixed size. Pushed onto stack.
+
+let s1 = String::from("hello");
+let s2 = s1;
+
+String made up of three parts: pointer to memory that holds String, length, and capacity.
+
+s2 copies that pointer, length, and capacity from s1. So heap memory is not copied. Both pointers point to same memory location.
+
+This is a problem. Rust calls drop when variable goes out of scope, both two variables both point to same heap location. 
+
+This is double free error, a memory safety bug. Freeing memory twice and lead to memory corruption which leads to security vulnerabilities. 
+
+To ensure memory safety, Rust invalidates s1.
+
+println!("{}, world!", s1); // ERROR
+
+Move -> like shallow copy, but Rust invalidates earlier variable. s1 moved to s2. 
+
+Rust will never automatically create a "deep" copy of data. Any automatic copying can be assumed to be inexpensive in terms of runtime performance. 
+
+Clone
+
+If do want to deep copy data, use clone command. 
+
+let s1 = String::from("hello");
+let s2 = s1.clone();
+
+println!("s1 = {}, s2 = {}", s1, s2);
+
+Indicates expensive operation is happening. 
+
+Copy
+
+What about stack only copy?
+
+let x = 5;
+let y = x;
+
+Doesn't this cause problem because it copies but does not call clone. x is still valid and not moved to y.
+
+Reason is that types such as integers whose size is known at compile time are stored on the stack so copies are quick to make. SO no difference between deep and shallow copy. 
+
+Rust has special annotation called the Copy trait that can place on types like integers that are stored on the stack. 
+
+If type has Copy trait, an older variable is still usable after assignment. 
+
+Rust will not allow annotate a type with Copy trait if the type, or any of its parts, has implemented the Drop trait. Will get compile time error. 
+
+Any group of simple scalar values can be Copy, and nothing that requires allocation or is some form of resource is Copy. 
+
+integers, booleans, characters, floating points, typles, if they contain types that are also Copy. 
+
+Ownership and Functions
+
+Semantics for passing a value to a function are similar to those for assigned a value to a variable. Will move or copy. 
+
+fn main() {
+    let s = String::from("hello");  // s comes into scope
+
+    takes_ownership(s);             // s's value moves into the function...
+                                    // ... and so is no longer valid here
+
+    let x = 5;                      // x comes into scope
+
+    makes_copy(x);                  // x would move into the function,
+                                    // but i32 is Copy, so it’s okay to still
+                                    // use x afterward
+
+} // Here, x goes out of scope, then s. But because s's value was moved, nothing
+  // special happens.
+
+fn takes_ownership(some_string: String) { // some_string comes into scope
+    println!("{}", some_string);
+} // Here, some_string goes out of scope and `drop` is called. The backing
+  // memory is freed.
+
+fn makes_copy(some_integer: i32) { // some_integer comes into scope
+    println!("{}", some_integer);
+} // Here, some_integer goes out of scope. Nothing special happens.
+
+If try to use s after call to takes_ownership, Rust will throw a compile time error. 
+
+Return Values and Scope
+
+Returning vlues can transfer 
+
+fn main() {
+    let s1 = gives_ownership();         // gives_ownership moves its return
+                                        // value into s1
+
+    let s2 = String::from("hello");     // s2 comes into scope
+
+    let s3 = takes_and_gives_back(s2);  // s2 is moved into
+                                        // takes_and_gives_back, which also
+                                        // moves its return value into s3
+} // Here, s3 goes out of scope and is dropped. s2 goes out of scope but was
+  // moved, so nothing happens. s1 goes out of scope and is dropped.
+
+fn gives_ownership() -> String {             // gives_ownership will move its
+                                             // return value into the function
+                                             // that calls it
+
+    let some_string = String::from("hello"); // some_string comes into scope
+
+    some_string                              // some_string is returned and
+                                             // moves out to the calling
+                                             // function
+}
+
+// takes_and_gives_back will take a String and return one
+fn takes_and_gives_back(a_string: String) -> String { // a_string comes into
+                                                      // scope
+
+    a_string  // a_string is returned and moves out to the calling function
+}
+
+Ownwership variable follows the same pattern: assigning a value to another variable moves it. WHen variable that includes data on the heap goes out of scope, the value will be cleaned up by the drop unless data has been moved to be owned by another variable. 
+
+Taking ownership and then returning ownership with every function is tedios. 
+
+Want to let a function use a value but not take ownership. 
+
+Possible to return multiple values using a tuple.
+
+fn main() {
+    let s1 = String::from("hello");
+
+    let (s2, len) = calculate_length(s1);
+
+    println!("The length of '{}' is {}.", s2, len);
+}
+
+fn calculate_length(s: String) -> (String, usize) {
+    let length = s.len(); // len() returns the length of a String
+
+    (s, length)
+}
+
+
+This is tedious
+
+Better to use references
+
+References and Borrowing
+
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+
+Notices no tuple in declaration or return statement. Also note pass &s1 and declare type &String
+
+& denotes references and references allow variable values to be used without taking ownership.
+
+Reference has a name and a pointer that points to the location of the referenced variable's pointer member. 
+
+The opposite of referencing is dereferencing which is done with * operator. 
+
+Reference refers to a value. When reference goes out of scope, it is made invalid, but because reference does not own variable, the variable value in memory is not dropped. 
+
+
+#![allow(unused_variables)]
+fn main() {
+fn calculate_length(s: &String) -> usize { // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope. But because it does not have ownership of what
+  // it refers to, nothing happens.
+}
+
+References as function parameters is called borrowing.
+
+References are immutable by default. Trying  to change value will cause error.
+
+Must use mutable reference
+
+Mutable References
+
+fn main() {
+    let mut s = String::from("hello");
+
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+
+Mutable reference must refer to a mutable variable. 
+
+RESTRICTION: Can only have one mutable reference to a particular piece of data in a particular scope
+
+let mut s = String::from("hello");
+
+let r1 = &mut s;
+let r2 = &mut s;
+
+println!("{}, {}", r1, r2);
+
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> src/main.rs:5:10
+  |
+4 | let r1 = &mut s;
+  |          ------ first mutable borrow occurs here
+5 | let r2 = &mut s;
+  |          ^^^^^^ second mutable borrow occurs here
+6 | println!("{}, {}", r1, r2);
+  |                    -- borrow later used here
+
+This will fail. 
+
+Restriction helps prevent data races. 
+
+Data race is similiar to a race condition and happens when:
+-two or more pointers access the same data at the same time
+-at least one of the pointers is being used to write data
+-there is no mechanism being used to synchronize access to the data
+
+Can create new scope to have multiple references to same data. Just cannot be simultaneous or in same scope
+
+
+#![allow(unused_variables)]
+fn main() {
+let mut s = String::from("hello");
+
+{
+    let r1 = &mut s;
+
+} // r1 goes out of scope here, so we can make a new reference with no problems.
+
+let r2 = &mut s;
+}
+
+Also cannot have mutable reference to data if an immutable reference to same data exists:
+
+let mut s = String::from("hello");
+
+let r1 = &s; // no problem
+let r2 = &s; // no problem
+let r3 = &mut s; // BIG PROBLEM
+
+println!("{}, {}, and {}", r1, r2, r3);
+
+This causes an error
+
+Dangling References
+
+Dangling pointer -> a pointer that references a memory location that may have been given to someone else by freeing memory but preserving some pointer to that memory
+
+Compiler ensures that if have a reference to some data, that the data will not go out of scope before the reference does 
+
+fn main() {
+    let reference_to_nothing = dangle();
+}
+
+fn dangle() -> &String {
+    let s = String::from("hello");
+
+    &s
+}
+
+This is an error because s goes out of scope but returns reference to s. 
+
+Rules of references:
+-At any given time you can either have one mutable reference to data or any number of immutable references
+-References must always be valid
+
+Slices
+
+Slices also do not have ownership.
+
+Slices allow you to reference a contiguous sequence of elements in a collection rather than the whole collection.
+
+Function to return first word in string. If no whitespace, then whole string must be first word. 
+
+Could return index to last character in word
+
+#![allow(unused_variables)]
+fn main() {
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+}
+
+Converts string to an array of bytes with as_bytes(). Create iterator over array with .iter(). .iter() returns each element of collection and .enumerate wraps element in tuple where first element of tuple is the index and sexond is the data. 

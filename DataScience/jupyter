@@ -1,0 +1,31 @@
+JUPYTER
+
+jupyter-notebook -> used to open notesbooks.
+
+Or jupyter notebook?
+
+.ipynb file type for note book files .
+
+Opens directory where you run command in browser. 
+
+Under New can pick environment. Python 3 should be default. 
+
+Code cell . Can type python into cell and run it. Will show output below cell.
+
+Shows [out] if it is showing output that was not specified. 
+
+Can press shift+enter to run cell. 
+
+Alt+enter runs and inputs a new cell below. 
+
+When cell is run, its In[] number is incremented to show order of execution. 
+
+CTRL+S to save. 
+
+Can download jupyner notebook files as many different types of files. 
+
+If have a while loop and notebook is running forwever, go to Kernel -> Restart. 
+
+Kernel is instance of python running. Shown with a In[*] 
+
+Also supports markdown formatting. 

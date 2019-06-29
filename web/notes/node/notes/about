@@ -1,0 +1,45 @@
+BACKGROUND 
+
+V8 Javascript Engine
+
+Node is written in c++. It is a c++ program. 
+V8 is written in C++. V8 converts js to machine code. 
+
+ECMAScript - the standard javascript is based on. js was first. Many engines so needed a standard. 
+
+Javascript engines convert js into assembly. Should follow ECMASCript. 
+
+V8 has code for each type of assembly implementation. Whether x86, arm, etc. 
+
+V8 added features to javascript. Can run standalone or can be embedded into a c++ app. 
+
+Can therefore use hooks to add features to js using v8. Can essentially give a js interface to run c++. 
+
+Can write a feature in c++ and implement how to call the feature. Basically give it a string name to map to the function. 
+
+Clients and Servers
+
+Clients make requests, servers make responses. Web server -> client is browser, server is web server. HTTP the standard for communication. 
+
+Browsers are standardized to use js. 
+
+To manage a server in js, it needs a better way to organize its code into reusable pieces. es6 has better ways. 
+Also needs a way to deal with files.
+Needs a way to deal with databses.
+Needs abilityu to communicate over the internet
+Needs ability to accept requestw and send responses in the stndard format
+A way to deal with work that takes a long time
+
+C++ Core
+
+Joyent created node and are still involved in development. 
+
+Dependences -> v8. uv, http_parser, zlib, etc
+
+JavaScript Core
+
+lib_uv -> javascript files that are wrappers to c++ code. 
+
+When you "use" a library, it is wrapping to c++ features. 
+
+Some are not wrappers and are just javascript utilities.  

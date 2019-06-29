@@ -34,3 +34,121 @@ catch(...) { //handles all exceptions. Catch seen most often
 
 Can also pass in objects to be caught. Inheriting from exception 
 classes. Default messaging, etc. 
+
+Naive -> use a try-block to catch the exception, write an error message, and then terminate the program". Too crude for most nontrivial systems.
+
+One of the fundamental prcinples of programming is that if we acquire a resource, we must -- somehow, directly or indirectly -- return it to hwatever part of the system manages that resources.
+
+Examples of resource are:
+-Memory
+-Locks
+-File handles
+-Thread handles
+-Sockets
+-Windows
+
+Resource -> eomthing that is acquired and must be given back (released) or reclaimed by some resource manager. Simplest example is free-store memory that we acquire using new and return to free store using delete. 
+
+Owner/handle -> an object, such as a vector, that isresponsible for releasing a resource for which it is responsible. 
+
+POTENTIAL RESOURCE MANAGEMENT PROBLEMS
+
+void suspicious(int s, int x)
+{
+int* p = new int[s];
+// . . .
+delete[] p;
+}
+
+What if in ... p poninted to another object. What if in ... return before calling delete. What if exception occurs in ... and never get to delete. 
+
+void suspicious(int s, int x)
+{
+int* p = new int[s];
+vector<int> v;
+// . . .
+try {
+// me ssy code
+// acquire me moryif (x) p[x] = v.a t(x);
+// . . .
+} ca tch (. . .) {
+// catch e ve ry e xce ption
+delete[] p;
+// re le ase me mory
+throw;
+// re -throw the e xce ption
+}
+// . . .
+delete[] p;
+// re le ase me mory
+}
+
+Solution is ugly and doesn't generalize well. 
+
+new can fail to find free-store memory to allocate and will throw bad_alloc
+
+We'd need many try blocks and repetetive code. Ugly and hard to maintain
+
+RAII - Resource acquisition is initialization
+
+void f(vector<int>& v, int s)
+{
+vector<int> p(s);
+vector<int> q(s);
+// . . .
+}
+
+This is better. Resource is acquired by a constructor and released by the matching destructor. Solved this particular exception problem when we sovled memory leak problems for vectors. Solution is general; applies to all kinds of resources; acquire a resource in the constructor and for some object that manages it, and rlease it again in the matching destructor. 
+
+Examples of resources best dealt with this way include:
+
+database locks, sockets, I/O buffers (iostreams do it for you). 
+
+Since p and q are not pointers we can't assign to them, a return statement will not prevent invocation of destructors and neighter will throwing an exception. 
+
+When thread of executions leaves a scope, the destructors for every fully constructed object and subobject are invoked. An object is considered constructed when its constructor completes. 
+
+GUARANTEES
+
+What about when we can't keep vector within a single scope (ands its subscopes)?
+
+vector<int>* ma ke_vec()
+// make a fille d ve ctor
+{
+vector<int>* p = new vector<int>; // we allocate on fre e store
+// . . . fill the ve ctor with data; this may throw an e xce ption . . .
+return p;
+}
+
+Exception could be thrown while filling vector. 
+
+Can add try block to deal with possibilty of throw. 
+
+vector<int>* ma ke_vec()
+// make a fille d ve ctor
+{
+vector<int>* p = new vector<int>; // we allocate on fre e store
+try {
+// fill the ve ctor with data; this may throw an e xce ption
+return p;
+}
+ca tch (. . .) {
+delete p;
+// do our local cle anup
+throw;
+// re -throw to allow our calle r to de al with the fact
+// that make _ve c() couldn’t do what was
+// re quire d of it
+}}
+
+Illustrates very common style of error handling: it tries to do its job and if it can't, it cleans up any local resources and indicates failure by throwing an exception. 
+
+Here exception thrown is one that some other function threw. Simply rethrown using throw. 
+
+Simple and effective way to dealing with errors and can be used systematically. 
+
+-Basic guarantee -> Purpose of try...catch is to ensure that code either succeeds or throws an exception without having leaked any resources. All code that is part ofa  program that we expect to recover from an exception throw should provide the basic guarantee.All STL code provides basic guarantee.
+
+-Strong guarantee -> In addition to basic guarantee, function also ensures that ll observable values (all values not local to the function) are the same after failure as they were when we called the function. Ideal when we write a function: either function succeeded at doing everything it was asked to do or else nothing happened except that an exception was thrown.
+
+-The no-throw guarantee: Unless we could do simple operations without any risk of failing and throwing an exception, we would not be able to write code to meet the basic guarantee and the strong guarantee. Essentially all built-in C++ facilities provide the no-throw guarantee. They simple can't throw. To avoid throwing, avoid throw itself, new, and dynamic_cast of reference types. 

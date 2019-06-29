@@ -1,0 +1,38 @@
+reinterpret_cast
+Uninitialized variables
+nullptr/deleting
+virtual destructors
+recursive destructor calls
+naked new calls
+static_cast, const-cast?
+Reference
+Copy constructors, Copy Assignments
+vector(const vector&), vector& vector::operator=(const vector& a);
+Move Constructors, Move Assignments
+initializer_list<T>
+std::copy()
+Shallow copy, Deep copy
+Move constructors, Move Assignments
+vector(vector&& a); vector& operator=(vector&&)
+rvalue reference
+Move and const values. Why use move?
+When to use destructor, copy/move constructor/assignment
+Explicit constructors
+Array as parameter. Value or reference?
+Name of array. Assignment?
+How templates actually work. With compiler. 
+Inheritance assignment. Pointers/refs vs values. What about containers?
+When to use array<> vs vector<>
+[] vs at()
+allocators
+Naive exception handling vs robust
+owner/handle
+bad_alloc
+RAII
+Basic guarantee, strong guarantee, no-throw guarantee
+Undefined operations and catching exceptions
+unique_ptr
+shared_ptr
+RAII for objects
+uninitialized_copy
+std::swap()

@@ -1,0 +1,132 @@
+MACHINE LEARNING
+
+Book: Introduction to Statistical Learning with R - Gareth James
+
+INTRO
+
+Read Ch 1 and 2 to get background on machine learning
+
+Machine Learning - method of data analysis that automates analytical model building. Using algorithms that iteratively learn from data, machine learning allows computers to find hidden insights without being explicitly programmed where to look. 
+
+Used for fraud detection, search results, financial modeling, etc. 
+
+Process:
+Data Acquisition
+Loop (While not satisfied with model):
+	Data Cleaning
+	Model Training and Building
+	Model Testing
+	Test Data
+end
+Model Deployment
+
+Three main types of algorithms:
+1. Supervised Learning
+2. Unsupervised Learning
+3. Reinforcement Learning
+
+Supervised Learning - have labeled data and tring to predict a label based off of known features
+
+Learning algorithm receives a set of inputs along with corresponding correct outputs, and algorithm learns by comparing its actual output with correct outputs to find errors. Then modifies the model accordingly. 
+
+Methods like classification. regression, prediction, and gradient boosting. Supervised learning uses patterns to predict the values of the label on additional unlabled data
+
+Commonly used in applications where historical data predicts likely future events.
+
+Unsupervised learning - have unlabled data and trying to group together similar data points based off of features. 
+
+Used against data that has no historical labels. System is not told the "right answer". Algorithm must figure out what is being shown. Goal is to explore data and find some structure within data. 
+
+Or can find main attributes that separate customer segments from each other. 
+
+Popular techniques include self-organizing maps, nearest-neighbor mapping, k-means clustering, and singular value decomposition. 
+
+ALgorithms also used to segment text topics, recommend items, and identify data outliers. 
+
+Reinforcement Learning - alogirhtm learns to perform an action from experience
+
+Often used for robotics, gaming, and navigation. Algorithm discovers through trial and error which actions yield the greatest rewards. 
+
+Has three primary components:
+1. agent - learner or decision maker
+2. environment - everything agent interacts with
+3. actions - what the agent can do.
+
+Objective is for agent to choose actions that maximize the expected reward over a given amount of time. Agent will reach goal much faster by following good policy. Goal is to learn best policy.
+
+USING PYTHON
+
+Using Scikit Learn package. Most popular machine learning package for python and has lots of built in algorithms. 
+
+conda install scikit-learn
+pip install scikit-learn
+
+Basic Structure
+
+Gonna split cleaned data into test set and training set. Train model with training set and test it against test set. 
+
+Every algorithm in scikit-learn is exposed via an "Estimator"
+
+Import model:
+
+from sklearn.[family] import [Model]
+
+from sklearn.linear_model import LinearRegression
+
+Next step is to instantiate that model (or Estimator).
+
+Estimator parameters: all parameters of an estimator can be set when it is instantiated, and have suitable default values. Can use shift+tab to check possible parameters in Jupyter notebook
+
+model = LinearREgression(normalize=True)
+print(model) -> shows default parameters
+
+Once have model creted with parameters, time to fit model to data. 
+
+Should splt data into training set and test set
+
+import numpy as np
+from sklearn.cross_validation import train_test_split
+X, y = np.arange(10).reshape((5,2)), range(5)
+X
+list(y)
+
+# test size is percentage of train
+X_train, X_test, y_train, y_test = train_test_splot(X, y, test_size=0.3)
+
+When split, can train/fit model on training data
+
+model.fit() - method for training/fitting
+// X is data, y are labels
+model.fit(X_train, y_train)
+
+For unsupervised models, only pass data, no labels
+model.fit(X)
+
+Get predicted values 
+
+// predict with text data
+model.predict(X_test)
+
+Can evaluate model by comparing predictions to correct values. Evaluation method depends on what sort of machine learning algorithm we are using (e.g. Regression, Classification, Clustering, etc)
+
+Also for supervised estimator classification problems, can predict probability that a new observation has each categorical label. The label with highest probability is returned by model.predict()
+
+model.predict_proba()
+
+For classification or regression problems have score method between 0 and 1. 
+
+model.score()
+
+In unsupervised estimators, can use model.predict() to predict labels in clustering algorithms
+
+In unsupervised estimators, have model.transform() which transforms new data into the new basis. Accepts one argument and returns new representation of data based on unsupervised model. 
+
+model.transform()
+
+In unsupervised estimators, some can implement a fit and a transform on same input data
+
+model.fit_transform()
+
+How to choose algorithm? Sci-kit learn has cheat sheet.
+
+Google sci-kit learn cheat sheet

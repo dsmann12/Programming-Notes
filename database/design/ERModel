@@ -1,0 +1,90 @@
+DESIGN - ER Model
+
+Entity-Relation Model -> provides a graphic conceptual design that represents the schema. 
+
+Should indicate the functional requirements of the enterprise. 
+
+Transactions -> operations performed on data
+
+Process of moving from an abstract data model to the implementation of the database proceeds in two final design phases:
+1. Logical design phase -> designer maps the high level conceptual schema onto the implementation data model of the database system that will be used. Typically, the relationap data model. 
+2. Physical design phase -> uses database schema to specify physical features of datbase. Including form of file organization and choice of index structures. 
+
+Changse to logical schema are usually harder to carry out, since they may affect a number of queries and updates scattered across application code. 
+
+Entity -> any such distinctly identifiable item.
+
+Avoid two pitfalls:
+1. Redundancy
+2. Incompleteness
+
+There could also be many designs to pick from that will work. But must pick the one that works best for use cases. Is sale of a product an entity or a relation?
+
+ER Model -> developed to faciliate database design by allowing specification of an enterprise schema that represents the overall logical structure of the database. 
+
+Employs three concepts:
+1. Entity sets
+2. Relationship sets
+3. Attributes
+
+Entity -> like an object. A thing in real world that is distinguishable from other things. Has a set of properties, and the values for some set of properties may uniquely identify an entity.
+
+Entity Sset -> set of entities of the same type that share the same properties or attributes. 
+
+Extension -> of entity st refers to the actual collection of entities belonging to the entity set. So set of actual instructors in univerisity forms the extension of the entity set instructor. Similar to difference between relation and relation instance. 
+
+Entities are represented by a set of attributes
+
+Attributes -> descriptive properties posessed by each member of an entity set. 
+
+Relationship -> an association among several entities. Relationship advisor associates instructor with student specifying that instructor is an advisor to that student. 
+
+Relationship Set -> a set of relationships of the same type. Formally, it is a mathematical relatino on n >= 2 (possibly nondistinct) entity sets. If E1, E2, ..., En are entity sets, then a relationship set R is a subset of {(e1, e2, ..., en) | e1 E= E1, e2 E= E2,...,en E= En } where E= means is a member of set and where (e1, e2, ..., en) is a relationship.
+
+Can define realtionship set takes to denote association between a student and courses sections in which that student is enrolled. 
+
+Participation -> association between entity sets. Entity sets E1, E2, ..., En participate in relationship set R. 
+
+Relationship Instance -> in an ER schema represents an association between the named entities in the real-world enterprise that is being modeled. 
+
+Role -> function that an entity plays in a relationship. 
+
+Recursive relationship set -> when the same entity set participates in a relationship set mor ethan once in different roles. Explicit role names are necessary to specify how an entity participates in a relationship instance. Example is prerequisites that use pairs of courses from Course entity to represent prereq (C1, C2), meaning C1 required to take C2.
+
+Descriptive attributes ->  Consider Advisor relationship set, with entity sets Instructor and Student. We could associate the attribute date with that relationship to specify the data when an isntructor became the advisor of a student. 
+
+A relationship isntance in a given relationship set must be uniquely identifiable from its participating entities without using the descriptive attributes. So, usine the student and instructor to identify realtionship should only result in one value for descriptive attributes. If need more, than need to store that attribute as a multivalue attribute.
+
+Binary relationship set -> one that involves two entity sets. Most are binary. 
+
+Attributes
+
+Domain -> the set of permitted values of an attribute. Or value set. Formally, an attribute of an entity set is a function that maps from the entity set into a domain. 
+
+Many types of attributes:
+1. Simple -> has not been divided into subparts
+2. Composite -> can be divided into subparts. Like name to first name, last name, etc. 
+3. Single-values -> has one value. 
+4. Multivalues -> attribute has a set of values for a specific entity. Denoted by []
+5. Derived -> the value can be derived fomr values of other related attributes or entities. Not stored but computed when needed. 
+
+CONSTRAINTS
+
+Mapping cardinalities
+
+One-to-One
+One-to-Many
+Many-to-One
+Many-to-Many
+
+Participation Constraints
+
+Participation of an entity set E in a relationship set R is said to be total if every entity in E participates in at least one relationship in R. 
+
+If only some entities in E participate in relationships in R, the participation of entity set E in relationship R is said to be partial
+
+Keys
+
+Must have way to specify how entities within a given set are distinguished. Differences must be expressed in terms of their attributes.
+
+

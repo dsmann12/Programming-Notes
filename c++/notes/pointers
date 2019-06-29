@@ -275,7 +275,8 @@ Similar for references:
 void rota te(Sha pe& s, int n);
 Sha pe& r = c;
 rota te(r,55);
-// rotate s n de gre e srota te(*p,65);
+// rotate s n de gre e s
+rota te(*p,65);
 rota te(c,75);
 
 Example: Lists
@@ -301,3 +302,127 @@ THE this POINTER
 In every member function, the identifier this is a pointer that points to the object for which the member function was called. The implicit parameter. 
 
 this is immutable. 
+
+UNIQUE_PTR
+
+Must use RAII, that is provide an object to hold that vector<int> so that it can delte the vector if an exception occurs. 
+
+In <memory>, the STL provides a unique_ptr for that. 
+
+vector<int>* ma ke_vec()
+// make a fille d ve ctor
+{
+unique_ptr<vector<int>> p {new vector<int>}; // allocate on fre e store
+// . . . fill the ve ctor with data; this may throw an e xce ption . . .
+return p.relea se();
+// re turn the pointe r he ld by p
+}
+
+A unique_ptr is an object that holds a pointer. Can use -> and * on unique_ptr exactly like with built-in pointer. However, unique_ptr owns the object pointed to; when unite_ptr is detroyed, it deltes the object it points to. 
+
+That means if an exception is thrown while vector<int> is being filled, or if we return prematurely from the function, the vector<int> is properly destroyed. 
+
+The p.release() extracts the contained pointer from p so it can be returned. ALso makes p hold nullptr so that destorying p as is done by return does not destroy anything. 
+
+This function is fine except it still returns a pointer, so someone must still remember to delete.  
+
+Returning a unique_ptr will solve that. 
+
+unique_ptr<vector<int>> ma ke_vec()
+// make a fille d ve ctor
+{
+unique_ptr<vector<int>> p {new vector<int>}; // allocate on fre e store
+// . . . fill the ve ctor with data; this may throw an e xce ption . . .
+return p;
+}
+
+unique_ptr very much like ordinary pointer, but it has one significant restriction: you cannot assign one unique_ptr to another to get two unique_ptrs to the same object.. 
+
+That must be or confusion could arise about which unique_ptr owned the pointer to obejct and had to delte it. 
+
+void no_good()
+{
+unique_ptr<X> p { new X };
+unique_ptr<X> q {p};
+// e rror: fortunate ly
+// . . .
+} // he re p and q both de le te the X
+
+If want to have "smart" pointer that both guarantees deletion and can be copied, use a shared_ptr. More heavyweight solution that involves a use count to ensure that the last copy destoryed destroys the object referred to. 
+
+RETURN BY MOVING
+
+Who deletes a pointer to the free store returned from a function? Are we sure that apointer to an object on the free store is properly deleted in case of an exception? 
+
+Solved this problem by adding move operations to the class. Move constructor and assignment to get ownership of elements out of function. 
+
+RAII FOR VECTOR
+
+Even smart pointers can be a bit ad hoc. 
+
+How can we be sure that we have spotted all pointers that require protection? How can we be sure that we have released all pointers to objects that hsould not be destroyed at end of scope? 
+
+void vector<T ,A>::reserve(int newa lloc)
+{
+if (newa lloc<=spa ce) return;
+// ne ve r de cre ase allocation
+T * p = a lloc.a lloca te(newa lloc); // allocate ne w space
+for (int i=0; i<sz; ++i) a lloc.construct(&p[i],elem[i]);
+// copy
+for (int i=0; i<sz; ++i) a lloc.destroy(&elem[i]);
+// de stroy
+a lloc.dea lloca te(elem,spa ce);
+// de allocate old space
+elem = p;
+spa ce = newa lloc;
+}
+
+Not that copy operation for an old element, alloc.construct(&p[i], elem[i]) might throw an exception. SO p is example ofa problem. 
+
+Better solution is to step back adn realze memory for a vector is a resource; that is, we can define a class vector_base to represent the fundamental concept we have been using this hwole time). 
+
+templa te<typena me T , typena me A>
+struct vector_ba se {
+A a lloc;
+// allocator
+T * elem;
+// start of allocation
+int sz;
+// numbe r of e le me nts
+int spa ce;
+// amount of allocate d space
+vector_ba se(const A& a , int n)
+: a lloc{a }, elem{a lloc.a lloca te(n)}, sz{n}, spa ce{n}{ }
+~vector_ba se() { a lloc.dea lloca te(elem,spa ce); }
+};
+
+vector_base deals with memory rather than typed objects. The vector implementation can use that to hold objects of the desired elment type. 
+
+Vector is simply a convenient interface to vector_base:
+
+templa te<typena me T , typena me A = a lloca tor<T >>
+cla ss vector : priva te vector_ba se<T ,A> {
+public:
+// . . .
+};
+
+Can then rewrite reserve() to something simpler and more correctL
+
+templa te<typena me T , typena me A>
+void vector<T ,A>::reserve(int newa lloc)
+{
+if (newa lloc<=this–>spa ce) return;
+// ne ve r de cre ase allocation
+vector_ba se<T ,A> b(this–>a lloc,newa lloc); // allocate ne w space
+uninitia lized_copy(b.elem,&b.elem[this–>sz],this–>elem); // copy
+for (int i=0; i<this–>sz; ++i)
+this–>a lloc.destroy(&this–>elem[i]);
+// de stroy old
+swa p<vector_ba se<T ,A>>(*this,b);
+// swap re pre se ntations
+
+Use the STL function uninitialized_copy to construct copies of elements from b because it correctly handles throws from an element copy constructor and because calling a function is simpler that writing a loop. 
+
+When exit reserve(), the old allocation is automatically freed by vector_base's destructor if copy operation succeeded. If instead that exit is caued by copy operation throwing an exception, the new allocation is freed. 
+
+swap() -> is STD algorithm that exchanges the value of two obejcts. 

@@ -1,0 +1,182 @@
+NUMPY
+
+Python data analysis library. 
+
+NumPy - linear algebra library for Python. So important is that almost all libraries in PyData ecosystem rely on NumPy. Very fast and has bindings to C libraries. 
+
+conda install numpy
+pip install numpy
+
+ARRAYS
+
+NumPy arrays are either vectors or matrices. Verctors are 1-d arrays and matrices are 2D. Matrix can still have only one row or one column. 
+
+Can create NumPy array from Python list.
+
+my_list = [1, 2, 3];
+
+arr = np.array(my_list); => returns numpy array
+
+->array([1, 2, 3])
+
+my_mat = [[1, 2, 3], [4, 5, 6], [6, 7, 8]];
+
+np.array(my_mat)
+
+-> array([[1,2,3],
+		  [4,5,6],
+		  [7,8,9]])
+
+Two sets of brackets in beginning indicate two dimensional array
+
+Can also create arrays simpler and faster with built in numpy operations
+
+Create an array from a range
+
+np.arange(0, 10)
+
+->array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+np.arange(0, 11, 2)
+->array([0, 2, 4, 6, 8, 10])
+
+Create an array of values initialize to zero
+
+np.zeros(3)
+->array([0., 0., 0.])
+
+np.zeroes((5,5)) -> creates 5x5 matrix. First number is rows, second is columns
+np.zeroes((2,3))
+
+Can create an array of values initialized to one
+
+np.ones(4)
+np.ones((2, 3))
+
+Can create evenly spaced numbers over specified interval
+Takes number of points and generates equal spaces intervals from start to stop
+
+np.linspace(0, 5, 10) -> 10 evenly spaced points from 0 to 5. One dimensional. 
+
+Can create identity matrix
+
+np.eye(4); -> 4x4 matrix with diagonals as ones. Must be square. 
+
+Can create array of random numbers
+
+np.random.rand(5) -> one dimensional array of rand numebrs from 0 to 1
+np.random.rand(5,5) -> two dimensional array
+
+Return from normal distribution or gaussian distribution. Not uniform from 0 to 1 but normal distrbution centerd around 0
+np.random.randn(2)
+np.random.randn(4,4);
+
+Return random integers from low to high number
+
+np.random.randint(1, 100) -> random integer from 1 to 99
+np.random.randint(1, 100, 10) -> 10 random integers from 1 to 99a 
+
+Can reshape array
+arr = np.arange(0, 25);
+arr.reshape(5,5) -> must correlate to size. Needs 25 elements here.
+
+Finding max or min values
+arr.max(); -> max value of array
+arr.min() -> min value of array
+arr.argmax() -> index of max value
+arr.argmin() -> index of min value
+
+Get shape of vector
+arr.shape
+
+Get data type of array
+arr.dtype
+
+Can import modules 
+from numpy.random import randint
+
+randint(2, 10)
+
+INDEXING
+
+import numpy as np
+
+arr = np.arange(0, 10);
+
+// pick one element
+arr[0] -> first element
+arr[5:] -> slice from 6th element to end
+arr[:6] -> slice from beginning up to sixth index (5th element)
+
+NumPy arrays differ from python list by ability to broadcast. 
+arr[0:5] = 100 -> broadcast value 100 to all indices specified
+
+Slices hold references to locations in array
+
+slice_of_arr = arr[0:6]
+slice_of_arr[:] = 99; // now values in original array are 99
+
+To copy, must specify copy
+
+arr_copy = arr.copy()
+
+Get elements from an array
+arr_2d = np.array([5,10,15], [20,25,30], [35,40,45])
+arr_2d[1][1] -> 25
+arr_23[1,1] -> 25
+
+// Grab sections of data
+arr[:2. 1:] -> array([[10, 15], [25, 30]])
+arr[:2] -> array([[5,10,15], 
+				  [20,25,30]])
+
+
+arr > 5 -> get array of boolean values. Each element is checked for condition and bool result is stored in correlating index
+
+Can use bool area to conditionally select elements from sources array
+
+bool_arr = arr > 5
+arr[bool_arr]
+
+arr[arr < 3] -> return all elements less than 3. 
+
+arr_2d = np.arange(50).reshape(5,10)
+arr_2d = [2, 3:5]
+
+OPERATIONS
+
+Array with Array operations
+Arrays with Scalar operations
+Universal array functions 
+
+import numpy as np
+arr = np.arange(0, 11) -> array from 0 to 10
+
+Perform Array with Array operations using math operations
+
+arr + arr -> array added to itself (doubles essentially)
+arr - arr -> array subtracted from itself (made to 0s)
+arr * arr
+
+Can do same on scalars. Basically broadcasts number to operation on each element
+
+arr + 100 -> adds 100 to every element
+arr * 100
+arr - 100
+
+Cannot divide by 0 on python.
+
+Won't get error in NumPy. It will issue a waring and give nan if try it. 
+
+To raise to power
+arr ** 2
+arr ** arr
+
+np.sqrt(arr) -> sqrt of every element
+np.exp(arr)
+np.max(arr)
+arr.max()
+
+np.sin(arr)
+np.log(arr) -> -inf is answer and will give warning
+

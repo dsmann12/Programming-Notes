@@ -70,7 +70,7 @@ void LinkedList<E>::addLast(const E &e) {
 template <typename E>
 void LinkedList<E>::removeFront() {
 	if(empty()) {
-		std::cout << "List is empty!\n";
+		std::cerr << "List is empty!\n";
 		return;
 	}
 		
@@ -111,7 +111,7 @@ bool LinkedList<E>::empty() const {
 template <typename E>
 void LinkedList<E>::print() const {
 	if(empty()) {
-		std::cout << "List is empty!\n";
+		std::cerr << "List is empty!\n";
 		return;
 	}
 		

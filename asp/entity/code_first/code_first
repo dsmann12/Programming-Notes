@@ -181,12 +181,32 @@ Configuration.cs -> used to supply configuration for migrations.
 Can set automatic migrations. But this feature is not supported anymore. 
 
 If want to move Migrations folder somewhere you must tell Configuration.cs.
+Have this->MigrationsAssembly, MigrationsDirectory, and MigrationsNamespace if you need to change them.
 
 Seed() -> method to initialize database. Use for development database not production. 
 
 Should use Sql for reference data. With migrations and updating database. 
 
 Can use AddOrUpdate() on DbSet to insert data into table in seed method.
+
+context.Products.AddOrUpdate(
+	p => p.Name,		// Indicates what property to use to identify entity record
+	new Person { FirstName = "David", LastName = "Scheuermann" },
+	new Person { FirstName = "Bradley", LastName = "Scheuermann"}
+)
+
+or 
+
+context.Products.AddOrUpdate<Product>(
+	new Product() {
+		Upc = "001929201",
+		Name = "Product Name"
+	}
+)
+
+
+
+Will run every time you run Update-Database
 
 OVERRIDING CODE FIRST CONVENTIONS
 
@@ -281,3 +301,167 @@ public class Course
 	// or can [ForeignKey("AuthorId")]
 	public Author Author { get; set; }
 }
+
+Weakness: Magic strings used in annotations. 
+
+Also no way to override names of intermediate tables for many to many relationships
+
+FLUENT API
+
+Need to override OnModelCreating in DbContext. Use Entity method on modelBuilder.
+
+protected override void OnModelCreating(DbModelBuilder modelBuilder)
+{
+	modelBuilder.Entity<Course>()
+		.ToTable("tbl_course"); // changing name
+}
+
+Every action is based off a call to what is returned by Entity<>()
+
+Table Names
+.ToTable("tbl_course"); // changing name
+
+Change Table Schema
+.ToTable("tbl_course", "catalog");
+
+Primary Keys
+.HasKey(t => t.ISBN)
+Lambda expression. t is short for type. 
+
+Composite Keys
+.HasKey(t => new { t.OrderId, t.OrderItemId });
+
+Column Names
+.Property(t => t.Name) // gets property
+.HasColunName("sName") // changes name of property in table
+
+Column Types
+.Property(t => t.Name)
+.HasColumnType("varchar")
+
+Column ORders
+.Property(t => t.Name)
+.HasColumnOrder(2)
+
+Database Generated
+.Property(t => t.ISBN)
+.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+Nulls
+.Property(t => t.Name)
+.IsRequired();
+
+String Length
+.Property(t => t.Name)
+.HasMaxLength(255);
+
+.Property(t => t.Name)
+.IsMaxLength() // sets to nvarchar(MAX)
+
+FLUENT API RELATIONSHIPS
+
+Superior to data annotations. 
+
+HasMany() 		// many relationship
+HasRequired()	// one relationship
+HasOptional()	// 0 or 1 relationship
+
+For reverse direction:
+WithMany()		
+WithRequired()
+WithOptional()
+
+Start with the first and then configure other type with the corresponding second.
+
+Author has many courses but course has only one author
+
+One to Many
+
+modelBuilder.Entity<Author>()
+	.HasMany(a => a.Courses) // a short for author. Specifies courses is a navigation property
+	.WithRequired(c => c.Author) // Course author navigation property to author
+	.HasForeignKey(c => c.AuthorId) / optionally specify name of FK. To override FK name. 
+
+These references will be automatically updated if renamed in code. Because it corresponds to names of properties. 
+
+Many to many
+
+modelBuilder.Entity<Course>()
+	.HasMany(c => c.Tags)
+	.WithMany(c => t.Courses)
+	.Map(m => m.ToTable("CourseTags")
+
+Entity can infer this many to many relationship and don't need to do this explicitly unless you want to change default configuration, like name of intermediate tables
+
+Zero to 0/1
+modelBuilder.Entity<Course>()
+	.HasOptional(c => c.Caption)
+	.WIthRequired(c => c.Course)
+
+One to One
+
+If a entity requires another entity (cannot exist without it), then it may have a certain type of relationship. The one entity may be the principal and the entity that needs it is the dependent.
+
+modelBuilder.Entity<Course>()
+	.HasRequired(c => c.Cover)
+	.WithRequiredPrincipal(c => c.Course) 
+
+This clarifies which entity is the parent. Tells Entity it must create parent record first before child record. 
+
+modelBuilder.Entity<Cover>()
+	.HasRequired(c => c.Course)
+	.WithRequiredDependent(c => c.Cover) 
+
+At end of OnModelCreating, call the base method?
+base.OnModelCreating(modelBuilder);
+
+CAn also turn off cascade delete
+
+.WillCascadeOnDelete(false);
+
+ADVANCED CONFIGURATIONS
+
+Cannot change FK of intermediate tables in ways previous shown. Because intermediate tables do not have domain classes. They are only in relational model.
+
+modelBuilder.Entity<Course>
+	.HasMany(c => c.Tags)
+	.WIthMany(t => t.Courses)
+	.Map(m => 
+		{
+			m.ToTable("CourseTags");
+			m.MapLeftKey("CourseId");
+			m.MapRightKey("TagId");
+		}
+	);
+
+ORGANIZING FLUENT API CONFIGURATIONS
+
+What if working on large complex model. May be too many configurations in the the OnModelCreating method. 
+
+Instead, create configuration classes and do configurations in there. 
+
+Create new folder called EntityCOnfigurations. Add new class. [Entity]Configuration
+
+using SYstem.Data.Entity.ModelConfiguration
+
+public class CourseConfiguration : EntityTypeConfiguration<Course>
+{
+	public CourseConfiguration()
+	{
+		// move configuration here.
+		instead of ModelBuilder, just use Property method
+		Property(c -> c.Name)
+			.IsRequired()
+			.HasMaxLength(255);
+
+		// similarly just remote the first . and access the methods/properties directly.
+	}
+}
+
+Then can do your own organizations. Like table configurations first, then primary keys, then FKs, then property configurations sorted alphabetically. 
+
+Back in DbContext.OnModelCreating, add code to replace configurations
+
+modelBuilder.Configurations.Add(new CourseConfiguration());
+
+

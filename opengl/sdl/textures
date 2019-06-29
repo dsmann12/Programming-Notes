@@ -1,0 +1,76 @@
+TEXTURES
+
+You need some way to load the textures. Not covered in these tutorials. 
+
+Uses a texture loader. STBImage. Can be statically linked and simple. Just need header and c files.
+
+On GitHub.
+
+Use stb_image.h and stb_image.c. 
+
+Create new class for loading textures in.
+
+Only one thing the texture class really needs to do. A bind function. It will set OpenGL up to start using whatever texture you're binding. 
+
+Uses an unsinged int called unit because you could bind many textures at once. This is just a way to distinguish which texture you're binding (1, 2, 3, ..., etc). 
+
+Also GLuint m_texture; // refers to handle OpenGL gives to refer to texture. 
+
+That really completes texture class. 
+
+In implementation code, what you do depends on what texture loader you're using. 
+
+First load texture with stbi_load(filename, width, height, numComponents, numrequiredcomponents)
+
+Then, remember OpenGL uses buffers. So need to use buffers.
+
+You can have one pixel border automatically added to texture. Although if it is, you need to add 2 to both width and height to account for border. 
+
+However, texture will not show up if shader is overriding it. Fragment shader that determines what pixel is drawn to screen so a simple shader will override any textures. 
+
+Use texture2D()
+
+gl_FragColor = texture2D(unit, 
+
+OpenGL does all coordinates for textures by range of -1, 0, and 1. So x and y go from -1 to 1. But still need to know what coordiantes are. 
+
+Want a uniform variable. Variable in GlSL that is updated by CPU. CPU and GPU have access to it. Can write to it from CPU. Can maybe read. GPU can read from it.
+
+uniform sampler2D diffuse;
+
+gl_FragColor = texture2D(diffuse, 0.0, 0.0);
+
+Want to read pixels in some meaningful way. 
+
+That is texture mapping. 
+
+Specify some location on texture for each vertex and say to interpolate between these two points and draw the specified pixture. 
+
+Need to change mesh.
+
+Add property:
+
+glm::vec2 textCoord; // position on texture mapping to vertex
+
+Add TEXCOORD_VB to enum because we will have a buffer to texture coordinates.
+
+This means we have to change all of how we bind data in mesh because now data will not be in correct positions. We have pos, then textCoord
+
+Can use a vector. 
+
+Convert vertex data into lists of positions, list of texture coordinates. 
+
+SO you don't have to do anything with offsets.
+
+Check code
+
+In fs shader, varying variable can be shared among shaders.
+So can set texCoord0 varying variable to value and then in fragment shader use that value.
+
+Also, when OpenGL reads this value it will interpolate it correctly.
+
+Still one more thing needed.
+
+In shader.cpp, need to bind attribute location.
+
+bindAttribLocation used because shader doesn't know about mapping in GLSL shader. Maps it to attribute in mesh. 

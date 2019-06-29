@@ -1,0 +1,58 @@
+PANDAS
+
+Pandas -> open source library built on NumPy. Allows for fast analysis and data cleaning and preparation. Excels in performance and productivity. Has built in visualization features. Can work with dat from a wide variety of sources
+
+Call Python's version of Excel or R data frames
+
+Installing
+
+conda install pandas
+pip install pandas
+
+Series
+DataFrames
+Missing Data
+GroupBy
+Merging, Joining, and Concatenating
+Operations
+Data Input Output
+
+SERIES
+
+Series is built on top a numpy array. Series has access labels. Can be index by label. 
+
+labels = ['a', 'b', 'c']
+my_data = [10, 20, 30]
+arr = np.array(my_data)
+d = {'a':10, 'b':20, 'c':30}
+
+lists, numpy array, and dictionary
+
+Series takes many parameters. data and index most important
+pd.Series(data = my_data)
+0	10
+1	20
+2	30 
+dtype: int64
+
+pd.Series(data = my_data, index = labels)
+a	10
+b	20
+c	30
+dtype: int64
+
+pd.Series(arr) -> also works
+pd.Series(d) -> takes keys of dictionary as indices
+
+ser1 = pd.Series(d)
+
+ser1['a'] -> 10
+ser1[0] -> 10
+
+ser2 = pd.Series(d)
+
+ser1 + ser2 -> will match operation based on index. Puts NaN where can't find match
+
+DATAFRAMES
+
+

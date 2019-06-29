@@ -208,7 +208,7 @@ bool DoublyLinkedList<E>::empty() const {
 template <typename E>
 void DoublyLinkedList<E>::print() const {
 	if(empty()) {
-		std::cout << "List is empty!\n";
+		std::cerr << "List is empty!\n";
 		return;
 	}
 	

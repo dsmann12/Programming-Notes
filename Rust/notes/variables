@@ -95,3 +95,35 @@ let x = x; // `x` is now immutable and is bound to `7`.
 let y = 4;
 let y = "I can also be bound to text!"; // `y` is now of a different type.
 
+Shadowing different than marking variable as mut, cause we'll geta compile time error if accidentally try to reassign to this variable without using let. Using let, can perform a few transformations on a value but have variable be immutable after those transformatino have been completed. 
+
+Because we are essentially creating a new variable when use let keywrod again, we can change type of the value but reuse the same name. 
+
+let spaces = "    ";
+let spaces = spaces.len();
+
+Does not work with mut
+
+let mut spaces = "    ";
+spaces = spaces.len(); // does not work
+
+CONSTANT
+
+Different than immutable. Regular variables can be declared mutable. Constants nver can. 
+
+Use const keyword. 
+
+Type must be annotated. 
+
+const MAX_POINTS: u32 = 100_000
+
+Constants can only be set to a constant expression, not to result of a fcuntion or any other value that could only be computed at runtime. 
+
+STATEMENTS vs EXPRESSIONS
+
+Expressions return values, statements do not.
+
+let y = 6; // statement. Does not return value
+let z = (let a = 5); // not valid. Does not return value
+
+

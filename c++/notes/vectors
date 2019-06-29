@@ -76,8 +76,6 @@ copy( lst.begin(),lst.end(),elem); // initialize (using std::copy(); §B.5.2)
 
 Use STL copy algorithm. Copies a sequence of elements specified by its first two arguments (here beginning and end of initializer_list) to a sequence of elements starting with its third argument (here vector's elements starting at elem).
 
-Note how () used for an element count and {} used for element lists. 
-
 vector v1 = {1,2,3};
 vector v2(3);
 // thre e e le me nts 1.0, 2.0, 3.0
@@ -94,6 +92,8 @@ vector v11 = {1,2,3};
 vector v12 {1,2,3};
 // thre e e le me nts 1.0, 2.0, 3.0
 // thre e e le me nts 1.0, 2.0, 3.0
+
+Note how () used for an element count and {} used for element lists. 
 
 COPY CONSTRUCTORS
 
@@ -118,7 +118,7 @@ vector v2 = v;
 
 Definition will initialize v2 by a call of vector's copy constructor with v as its argument. Now two vectors are independent. 
 
-Could equally hae said
+Could equally have said
 
 vector v2(v);
 
@@ -371,7 +371,7 @@ Leak detectors are professional tools to find such problems.
 
 ACCESS TO VECTOR ELEMENTS
 
-Overlard operator[] and have it return a reference value so that it works on right and left sides.
+Overload operator[] and have it return a reference value so that it works on right and left sides.
 
 For const version, must provide a const member operator[] overload. 
 
@@ -470,3 +470,124 @@ Don't access through a deleted pointer
 Best fix is to use new and delete in constructors and destructors or use a container such as Vector_ref to handle deletes
 
 Don;t return a pointer to a local variable. 
+
+reserve AND capacity
+
+vector::reserve() -> used to add space for new elements
+
+void vector::reserve(int newa lloc)
+{
+if (newa lloc<=spa ce) return;
+double* p = new double[newa lloc];
+for (int i=0; i<sz; ++i) p[i] = elem[i];
+delete[] elem;
+elem = p;
+spa ce = newa lloc;
+}
+
+int vector::ca pa city() const { return spa ce; }
+
+v.capacity() - v.size() is number of elements we can push_back to v without causing reallocation. 
+
+resize()
+
+Has to handle several cases:
+-new size is larger than the old allocation
+-new size is larger than the old size, but smaller than or equal to the old allocation
+-new size is equal to the old size
+-new size is smaller than the old size
+
+void vector::resize(int newsize)
+// make the ve ctor have ne wsize e le me nts
+// initialize e ach ne w e le me nt with the de fault value 0.0
+{
+reserve(newsize);
+for (int i=sz; i<newsize; ++i) elem[i] = 0;
+// initialize ne w e le me nts
+sz = newsize;
+}
+
+Reserve does hard work of dealing with memory. Loop initializes new elements. 
+
+push_back
+
+Give reserve(), push_back() is quite simple. 
+
+void vector::push_ba ck(double d)
+// incre ase ve ctor size by one ; initialize the ne w e le me nt with d
+{
+if (spa ce==0)
+reserve(8);
+// start with space for 8 e le me nts
+else if (sz==spa ce)
+reserve(2*spa ce); // ge t more space
+elem[sz] = d;
+// add d at e nd
+++sz;
+// incre ase the size (sz is the numbe r of e le me nts)
+}
+
+If we have no spare space, we double the size of the allocation. That's the strategy used by most implementations of the standard library ector. 
+
+ASSIGNMENT
+
+After v1=v2, vector v1 is copy of v2
+
+v1 only copies elements of v2. Does not copy spare space. 
+
+Simplest implementation of that:
+-Allocate memory for a copy
+-Copy the elements
+-Delete the old allocation
+-Set the sz, elem, and space to new values
+
+vector& vector::opera tor=(const vector& a )
+// like copy constructor, but we must de al with old e le me nts
+{
+double* p = new double[a .sz];
+// allocate ne w space
+for (int i = 0; i<a .sz; ++i) p[i] = a .elem[i]; // copy e le me nts
+delete[] elem;
+// de allocate old space
+spa ce = sz = a .sz;
+// se t ne w size
+elem = p;
+// se t ne w e le me nts
+return *this;
+// re turn se lf-re fe re nce
+}
+
+By convention, an assignment operator returns a reference to the object assigned to. Notation for that is *this. 
+
+Lots of redundant allocation and deallocation. 
+
+What if vector we assign to has more lements than one we assign? What if vector we assign to has same number of elements as the vector we assign.?
+
+In either case, can just copy elements in to space already available in target vector. 
+
+vector& vector::opera tor=(const vector& a )
+{
+if (this==&a ) return *this;
+// se lf-assignme nt, no work ne e de d
+if (a .sz<=spa ce) {
+// e nough space , no ne e d for ne w allocation
+for (int i = 0; i<a .sz; ++i) elem[i] = a .elem[i];
+// copy e le me nts
+sz = a .sz;
+return *this;
+}
+double* p = new double[a .sz];
+// allocate ne w space
+for (int i = 0; i<a .sz; ++i) p[i] = a .elem[i];
+// copy e le me nts
+delete[] elem;
+// de allocate old space
+spa ce = sz = a .sz;
+// se t ne w size
+elem = p;
+// se t ne w e le me nts
+return *this;
+// re turn a se lf-re fe re nce
+}
+
+

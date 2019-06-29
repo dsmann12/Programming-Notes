@@ -8,3 +8,14 @@
 /home/david/Dropbox/test/c#/code/Test/obj/Debug/netcoreapp2.0/Test.AssemblyInfo.cs
 /home/david/Dropbox/test/c#/code/Test/obj/Debug/netcoreapp2.0/Test.dll
 /home/david/Dropbox/test/c#/code/Test/obj/Debug/netcoreapp2.0/Test.pdb
+/home/david/Documents/Programming/c#/code/Test/bin/Debug/netcoreapp2.0/Test.deps.json
+/home/david/Documents/Programming/c#/code/Test/bin/Debug/netcoreapp2.0/Test.runtimeconfig.json
+/home/david/Documents/Programming/c#/code/Test/bin/Debug/netcoreapp2.0/Test.runtimeconfig.dev.json
+/home/david/Documents/Programming/c#/code/Test/bin/Debug/netcoreapp2.0/Test.dll
+/home/david/Documents/Programming/c#/code/Test/bin/Debug/netcoreapp2.0/Test.pdb
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.csprojAssemblyReference.cache
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.csproj.CoreCompileInputs.cache
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.AssemblyInfoInputs.cache
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.AssemblyInfo.cs
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.dll
+/home/david/Documents/Programming/c#/code/Test/obj/Debug/netcoreapp2.0/Test.pdb

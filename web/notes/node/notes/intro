@@ -1,5 +1,9 @@
 INTRO
 
+Versions of NodeJS are weird. io.JS. Joyent did not like how often node was updated. People who wanted it updated more moved to io.js. And called in version 1.0, 2.0, 3.0, etc.
+
+Then they combined the node (0.12.7) with io.js and got node 4.0
+
 Node ia s JavaScript runtime built on Chrome's V8 JavaScript engine. Compiles JS to machine code. Assembly? Makes it fast. V8 written in C++. 
 
 Just like what runs in Chrome's console window
@@ -14,11 +18,367 @@ Node.js uses an event-driven, non-blocking I/O model that makes it lightweight a
 
 Asynchronous functionality. 
 
+FIRST CLASS FUNCTIONS
+
+Everything you can do with other types, you can do with functions. PAss them around, set variables equal to them, put them in arrays, etc.
+
+Functions has be assigned to variables and passed to other functions. 
+
+Function expression -> assign a functioto a variable. Results in a value. 
+
+function greet() {
+	console.log('Hi, david');
+}
+
+var greetMe = function(fn) {
+	fn();
+}
+
+greetMe(greet);
+
+Can write functions on the fly.
+
+greetMe(function () {
+	console.log('in side function');
+});
+
 REQUIRE
 
-Modules are units of functionality. Like little libraries. 
+Modules are units of functionality. Like little libraries. Self contained. Existence does not impact other code.
+
+Node implements Commonjs modules - an agreed upon standard for how code modules should be structured.  
 
 require lets you load modules. 
+
+Node has variables built in for each time it is run. 
+
+_dirname - directory name
+_filename - filename of file being run
+exports - object
+module - object
+require - function
+this - object. Always available. 
+
+Objects and Object Literals
+
+Name,value pairs - a name maps to a value. Value may be other name/value pairs
+
+In js, an object is just a collection of name/value pairs. Object sits in memory and points to other types of opjects:
+a primitive 'property', a n Object property, or a function. 
+
+Object literal - take sequence of name/value pairs, separate it by commas, and separate scope by braces. Can make an object
+
+var person = {
+	firstname: 'David',
+	lastname: 'Scheuermann',
+	greet: function() {
+			console.log('Hello, ' + this.firstname);
+	}
+};
+
+person.greet();
+
+Can also access properties with brackets.
+
+person['firstname']
+
+Prototypal Inheritance and Functoin Constructors
+
+Inheritance is when one object gets access to properties and methods of another object. 
+
+Obj has some property. Access using ".". obj.property
+
+Obj also points to its prototype. And can access those properties and methods from that prototype. 
+
+Prototype might point to its own prototype. 
+
+prot1.prop1
+prot2.prop2
+
+obj.prop1 
+obj.prop2
+
+class keyword is new way to create objects.
+
+Function constructors are normal functiosn used to construct objects. The this variable points to a new empty object and that object is returned from functioned automatically. 
+
+function Person(firstname, lastname) {
+	this.lastname = lastname;
+	this.firstname = firstname;
+}
+
+var john = new Person('John', 'Doe');
+
+john.firstname
+
+Can add to prototype
+
+Person.prototype.greet = function() {
+	console.log('Hello, ' + this.firstname);
+};
+
+This method is now available to all objects created from this Person constructor. 
+
+var jane = new Person('Jane', 'Doe');
+jane.greet();
+
+By Reference and By Value
+
+JS passes scalar, primitive variables by value, and objects by reference. 
+
+IIFE - Immiately Invoked Function Expressions. Create function and then call it immediately. 
+
+Use parentheses to wrap around function to run it
+
+(function() {
+	var firstname = 'John';
+	console.log(firstname);
+}());
+
+Can wrap code in IIFE to ensure that scope is contained. 
+
+Modules
+
+require is javascript function. Found in file called module.js (a node source file). This is wrapper that returns what is returned by "real" require function.
+
+require is function that you pass a path to.
+
+Module.prototype.requirea = function(path)
+
+Every module you create is an object that inherits from module prototype. Calls load to load path. 
+
+Creatse Module object. Has children, exports, filename, id, loaded, parent, etc. 
+
+Figures out whether a js file or not. If not a js file, include the extension. 
+
+Then creates wrapper function. 
+
+What stops node from adding to or changing what you have written. Nothing. It wraps what you have written around other code. 
+
+Code is wrapped in side an IIFE function. 
+
+NativeModule.wrap = function(script) {
+	return NativeModule.wrapper[0] + script + NativeModule.wrapper[1];
+};
+
+NativeModule.wrapper = [
+	'(function (exports, require, module, __filename, __dirname) { ',
+	'\n});'
+];
+
+Everything wrapped in node is run inside this function expression. 
+
+When function is invoked:
+
+var args = [self.exports, require, self, filename, dirname];
+
+// apply is like calling
+compiledWrapper.apply(self.exports, arg);
+
+Then returns module.exports, which is what you set in module file. 
+
+So runs the script, and returns module.exports. Script is wrapped in function expression that expects 5 parameters. 
+
+JSON
+
+Javascript Object Notation - a standard for structuring data that is inspired by javascript object literals. JS engines built to understand it. 
+
+{
+	fistname: "David".
+	address: {
+				street: "1st",
+			 },
+}
+
+Require
+
+require('greet') -> looks for file greet.js, then looks for folder greet and file index.js inside of it
+
+Can make different greet functions for different languages in two different files.
+
+english.js 
+
+var greet = function() {
+	console.log("Hello");
+}
+
+module.exports = greet;
+
+spanish.js
+
+var greet = function() {
+	console.log("Hola");
+}
+
+module.exports = greet;
+
+Then, in index.js can get both of these and return both in exports as object
+
+var english = require('./english');
+var spanish = require('./spanish');
+
+module.exports = {
+	english: english,
+	spanish: spanish,
+}
+
+Then in app.js
+
+var greet = require('./greet'); // gets index.js in greet folder
+
+greet.english();
+greet.spanish();
+
+Can also require json data
+
+greetings.json
+
+{
+	"en": "Hello",
+	"es": "Hola',
+}
+
+// gets object from json file
+var greetings = require('./greetings.json');
+
+MODULE PATTERNS
+
+Already seen how objects can be exported. 
+
+var greet1 = require('./greet1');
+
+greet1();
+
+Or can add onto module itself
+
+greet2
+
+module.exports.greet = function() {
+	console.log('Hello from greet2');
+}
+
+app.js
+
+var greet2 = require('./greet2');
+
+greet2.greet();
+
+Can create object with properties as export
+
+greet3
+
+function Greetr() {
+	this.greeting = "Hello world!";
+	this.greet = function() {
+		console.log(this.greeting);
+	}
+}
+
+module.exports = new Greetr();
+
+app.js
+
+var greet3 = require('./greet3');
+
+greet3.greet();
+
+TIP: This is can causea slip up.
+
+If you try to require same file, node will return cached exports object. So will return reference to earlier object. 
+
+Does not create a new object with each require. 
+
+This occurs across different files as well. 
+
+Can also assign exports to a constructor. So can require it and then create new object.
+
+greet4.js
+
+var Greet4 = function() {
+	this.greeting = "Hello world!!";
+	this.greet = function() {
+		console.log(this.greeting);
+	}
+}
+
+module.exports = Greet4;
+
+app.js
+
+var Greet4 = require('./greet4');
+var grt = new Greet4();
+
+grt.greet();
+
+Another extremely popular pattern in js.
+
+greet5.js
+
+var greeting = 'Hello world!!!!!';
+
+function greet() P
+	console.log(greeting);
+}
+
+// revealing module pattern
+// only expost greet function. 
+module.exports = {
+	greet: greet
+}
+
+Revealign module pattern - expose only properties and methods you want via a returned object.
+
+EXPORTS VS MODULE.EXPORTS
+
+When code runs in node, it is wrapped in function expression. 
+
+first parameter is exports but run with module.exports. 
+
+In js, when reference set equal to a value, then its reference changes and changes to a value.
+
+exports = function() {
+	console.log('hello');
+}
+
+This makes exports point to a value and not change value of old reference. Now variable has new memory location. 
+
+Can add functionality, however. 
+
+Mutation. 
+
+module.exports.greet = function() {
+	console.log('Hello');
+}
+
+REQUIRING NATIVE CORE MODULES
+
+Ultimately in require, it asks if you are trying to require a native module. Checks after checking cache. 
+
+Native modules are modules given with node installation. Found in API documentation. 
+
+os, http, console, etc. Some are global like Console. Utilities is not global and needs to be required. 
+
+var util = require('util');
+var name = 'David';
+var greeting = util.format('Hello, %s', name);
+util.log(greeting);
+
+This is why you should specify ./ if using a custom module. 
+
+MODULES AND ES6
+
+ES6 has modules built in. Will see more es6 modules than node. 
+
+New syntax is very powerful.
+
+greet.js
+export function greet() {
+	console.log('Hello');
+}
+
+app,js
+import * as greetr from 'greet';
+greetr.greet();
 
 Some things built in js. 
 
@@ -60,6 +420,46 @@ yarg -> for parsing. Validating input. Formatted input. Etc. i
 Can add options for each command too in a n object.
 
 filter -> useful function
+
+OBJECTS
+
+Name-value pairs in javascript
+
+var person = {
+	firstName: 'David',
+	lastName: 'Scheuermann',
+	
+	greet: function() {
+		console.log(`Hi {this.firstName}`);
+	},
+};
+
+person.greet();
+console.log(person['firstName']);
+
+Prototypal inheritance -> Every object points to another object's prototype which has access to that object's properties. 
+
+prop2 is property of prototype
+obj.prop2 -> valid
+
+Constructors
+
+function Person(firstName, lastName) {
+	this.firstName = firstName;
+	this.lastName = lastName;
+}
+
+// any object created by Person constructor
+// will add function to prototype
+// makes it available to all objects created using
+// function constructor
+Person.prototype.greet = function() {
+	console.log(`Hello ${this.firstName}`);
+}
+
+var John = new Person('John', 'Doe');
+
+console.log(john.__proto__);
 
 DEBUG
 

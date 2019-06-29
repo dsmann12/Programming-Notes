@@ -1,0 +1,33 @@
+DATA SCIENCE
+
+Popular Python Data Science Libraries
+
+NumPy
+SciPy
+Pandas
+Seaborn
+SciKit-Learn
+MatplotLib
+Plotly
+PySpark
+
+Jupyter notesbook and anaconda. Used. 
+
+SETTING UP ENVIRONMENT
+
+Install Python with Anaconda
+Download zip of notebooks for course
+
+anaconda is distribution of Python. Includes lots of libraries and tools used in course and its own virtual environment system. Essentially an "all-in-one" install that is very popular in data science and machine learning. 
+
+Jupyter - development environment where can write code, display images, and write markdown notes. Most popular IDE in data science for exploring and analyzing data. 
+
+Download anaconda from website. 
+
+Anaconda has anaconda prompt and anconda navigator. Different. Navigator is GUI. 
+
+Comes with Jupyter lab, Jupyter notebook, spider, qt console, and more. 
+
+Anaconda will add itself to path in .bashrc. Move this code to .zshrc if using zsh. 
+
+Run jupyter-notebook to open a jupyter notebook. 

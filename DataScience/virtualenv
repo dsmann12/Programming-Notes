@@ -1,0 +1,42 @@
+VIRTUAL ENVIRONMENTS
+
+Allow you to set up virtual installations of Python and libraries on computer. 
+
+Can have multiple versions of Python or libraries and easily activate or deactive these environments. 
+
+May want to program in different versions of library. 
+May want to make sure library installations are in correct location. 
+
+virtualenv library for python. 
+
+anaconda has built-in virtual environment manager really easy. 
+
+Check anaconda docs to see it. 
+
+Create An Environment
+
+conda create --name newenvironment <base-package>
+
+base package used to iniitalize environment. 
+
+To activate environment
+
+activate newenvironment
+
+To install in environment. Activate environment then do:
+
+conda install <package>
+
+To deactivate:
+
+deactivate
+
+To list environments
+
+conda info --envs
+
+root is root installation of python. 
+
+Can specify versions
+
+conda create --name python3env python=3.5 numpy

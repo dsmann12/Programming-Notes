@@ -101,6 +101,8 @@ fn add_one(x: i32) -> i32 {
 
 With a semicolon, function would return () instead. 
 
+In Rust, return value of function is synonymous with value fo final expression in block of function.
+
 EARLY RETURNS
 
 return keyword can be used for early returns. 

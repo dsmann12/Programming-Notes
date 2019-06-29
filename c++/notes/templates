@@ -90,4 +90,410 @@ class David<char> {
 			}
 };
 
+TEMPLATE
 
+Tempalte is a mechanism that allows a programmer to use types as parameters for a class or a function. Compiler then generates a specific class or function when we later provide specific types as arguments. 
+
+template<typename T>
+
+// an almost re al ve ctor of Ts:
+templa te<typena me T >
+cla ss vector {
+// re ad “for all type s T” (just like in math)
+int sz;
+// the size
+T * elem;
+// a pointe r to the e le me nts
+int spa ce;
+// size + fre e space
+public:
+vector() : sz{0}, elem{nullptr}, spa ce{0} { }
+explicit vector(int s) :sz{s}, elem{new T [s]}, spa ce{s}
+{
+for (int i=0; i<sz; ++i) elem[i]=0;
+// e le me nts are initialize d
+}
+vector(const vector&);
+vector& opera tor=(const vector&); // copy constructor
+// copy assignme nt
+vector(vector&&);
+vector& opera tor=(vector&&); // move constructor
+// move assignme nt
+~vector() { delete[] elem; } // de structor
+T & opera tor[](int n) { return elem[n]; }
+// acce ss: re turn re fe re nce
+const T & opera tor[](int n) const { return elem[n]; }
+int size() const { return sz; }
+int ca pa city() const { return spa ce; } // the curre nt size
+void resize(int newsize);
+void push_ba ck(const T & d);
+void reserve(int newa lloc); // growth
+};
+
+Somtimes class template is called a type generator. 
+
+Specializatino or tempalte instantiation is the process of generating types (classes) from a class template given template arguments. 
+
+In simple cases, instantiation is pretty simple. In most general and advanced cases, template instantiation is horrendously complicated. 
+
+That complexity is in the domain of the compiler writer, not template user. 
+
+Template instantiation teakes place at compile or link time, not run time. 
+
+template <class T> -> mean the smae thing. 
+
+Templates are basis for generic programming in C++. 
+
+Generic programming -> writing code that works with a variety of types presented as arguments, as long as those argument types meet specific syntactic and semantic requirements. 
+
+For example, elements must be of a type that we can copy (by copy construction or assignment) and there are also templates that require arithmetic operations on their arguments. 
+
+Class tempalte -> when what we parameterize is a class. Parameterized type/class. 
+Function template  -> parameterized function. 
+
+Generic programming sometimes called algorihtm oriented programming. Design focus is more on algorithms than data types they use. 
+
+Parametric polymorphism -> form of generic programming relying on explicit template paramters. 
+
+Ad hoc polymorphism -> polymorphism ogtten from class hierarchies and virtual functions. This style is object oriented programming.
+
+Both polymorphim is that each style relies on the programmer to present many version of a concept by a single interface. 
+
+CONCEPTS
+
+Templates are not perfect.
+
+The main problem with templates is that the flexibility and performance come at the cost of poor separation between the "inside of a template" (its definition) and its interface (its declaration). 
+
+Manifests itself in poor error diagnostics -- often terrible error messages. 
+
+When compling a use of a template, the compiler "looks into" the template and also into the template arguments. It does so to get the information to generate optimal code. 
+
+To have all that information available, current compilers tend to require that a template must be fully defined wherever it is used. That includes all its member funcinos and all template functions called from those.
+
+Consequently, tempalte writers tend to place template definitions in header files. 
+
+In C++14, can place set of requirements on a template argument (concept).
+
+Set of requirements can be defined by Element. 
+
+templa te<typena me T >
+requires Element<T >()
+cla ss vector {
+// . . .
+};
+
+Concept is really a type predicate. Compiler type evaluated (constexpr) function that returns true if the type argument (T) has properties required by the concept (Element) and false if not. 
+
+Short hand notation:
+
+templa te<Element T >
+cla ss vector {
+// . . .
+};
+
+Otherwise, specify requirements in names and in comments. 
+
+Will use many concepts in the future.
+
+• Element<E>(): E can be an element in a container.
+• Container<C>(): C can hold Elements and be accessed as a [begin():end()) sequence.
+• Forward_iterator<For>(): For can be used to traverse a sequence [b:e) (like a linked list, a
+vector, or an array).
+• Input_iterator<In>(): In can be used to read a sequence [b:e) once only (like an input stream).
+• Output_iterator<Out>(): A sequence can be output using Out.
+• Random_access_iterator<Ran>(): Ran can be used to read and write a sequence [b:e)
+repeatedly and supports subscripting using [ ].
+• Allocator<A>(): A can be used to acquire and release memory (like the free store).
+• Equal_comparable<T>(): We can compare two Ts for equality using == to get a Boolean
+result.
+• Equal_comparable<T,U>(): We can compare a T to a U for equality using == to get a
+Boolean result.
+• Predicate<P,T>(): We can call P with an argument of type T to get a Boolean result.
+• Binary_predicate<P,T>(): We can call P with two arguments of type T to get a Boolean
+result.
+• Binary_predicate<P,T,U>(): We can call P with arguments of types T and U to get a Boolean
+result.
+• Less_comparable<L,T>(): We can use L to compare two Ts for less than using < to get a
+Boolean result.
+• Less_comparable<L,T,U>(): We can use L to compare a T to a U for less than using < to get
+a Boolean result.
+• Binary_operation<B,T,U>(): We can use B to do an operation on two Ts.
+• Binary_operation<B,T,U>(): We can use B to do an operation on a T and a U.
+• Number<N>(): N behaves like a number, supporting +, -, *, and /.
+
+There are ways ot using tempaltes to express inheritance but they are beyond the scope of this book
+
+"D is a B" does not imply "C<D> is a C<B>" for an arbitrary template C. 
+
+templa te<typena me T , int N> struct a rra y {
+T elem[N];
+// hold e le me nts in me mbe r array
+// re ly on the de fault constructors, de structor, and assignme nt
+T & opera tor[] (int n);
+// acce ss: re turn re fe re nce
+const T & opera tor[] (int n) const;
+T * da ta () { return elem; }
+// conve rsion to T*
+const T * da ta () const { return elem; }
+int size() const { return N; }
+};
+
+a rra y<int,256> gb;
+// 256 inte ge rs
+a rra y<double,6> a d = { 0.0, 1.1, 2.2, 3.3, 4.4, 5.5 };
+const int ma x = 1024;
+void some_fct(int n)
+{
+a rra y<cha r,ma x> loc;
+a rra y<cha r,n> oops;
+// e rror: the value of n not known to compile r
+// . . .
+a rra y<cha r,ma x> loc2 = loc; // make backup copy
+// . . .
+loc = loc2;
+// re store
+// . . .
+}
+
+Array is very simple but good when need efficiency such as in crucial systems components or when the free store cannot be used such as in embedded systems or safety-critical programs. 
+
+Arrays:
+-don't know their own size,
+-convert to pointers at slightest provacation
+-don't copy properly
+-arrray<> doesn't have these problems. 
+
+For class template, you specigy the tempalte arguments when you create an object of some specific class. 
+
+a rra y<cha r,1024> buf;
+a rra y<double,10> b2;
+// for buf, T is char and N is 1024
+// for b2, T is double and N is 10
+
+For function template, compiler usually deduces the template arguments from the function arguments. 
+
+templa te<cla ss T , int N> void fill(a rra y<T ,N>& b, const T & va l)
+{
+for (int i = 0; i<N; ++i) b[i] = va l;
+}
+void f()
+{
+fill(buf,'x');
+fill(b2,0.0);
+// for fill(), T is char and N is 1024
+// be cause that’s what buf has
+// for fill(), T is double and N is 10
+// be cause that’s what b2 has
+}
+
+Don't have to be specfic with templates. Compiler figures it out. 
+
+GENERALIZING VECTOR
+
+With double, we made assumptions that are true for doubles but not true for all types we'd like to use as vector element types:
+-How to handle vector<X> where X doesn't have a default value.
+-How to ensure elements are destroyed when you are done with them
+
+Can handle types without a default by giving user option to specify value to be used when need a default value. 
+
+templa te<typena me T > void vector<T >::resize(int newsize, T def = T ());
+
+That is use T() as default value unless user says otherwise. 
+
+vector<double> v1;
+v1.resize(100);
+v1.resize(200, 0.0);
+v1.resize(300, 1.0);
+struct No_defa ult {
+No_defa ult(int);
+// . . .
+};
+// add 100 copie s of double (), that is, 0.0
+// add 100 copie s of 0.0 — me ntioning 0.0 is re dundant
+// add 100 copie s of 1.0
+// the only constructor for No_de fault
+vector<No_defa ult> v2(10); // e rror: trie s to make 10 No_de fault()s
+vector<No_defa ult> v3;
+v3.resize(100, No_defa ult(2));
+// add 100 copie s of No_de fault(2)
+v3.resize(200);
+// e rror: trie s to add 100 No_de fault()s
+
+Destructor problem is harder to address. Need to deal with something awkward:
+- data structure consisting of some initialized data and some uninitialized data. So far have gone a long way to avoid uninitialized data and the programming errors that usually accompany it. 
+
+Need a way of getting and manipulating uninitialized storage. STL provides a class allocator, which provides uninitialized memory. 
+
+SImplified version:
+
+templa te<typena me T > cla ss a lloca tor {
+public:
+// . . .
+T * a lloca te(int n);
+// allocate space for n obje cts of type T
+void dea lloca te(T * p, int n);
+// de allocate n obje cts of type T starting at pvoid construct(T * p, const T & v);
+void destroy(T * p);
+// construct a T with the value v in p
+// de stroy the T in p
+};
+
+Allows us to:
+-Allocate memory of a size suitable to hold an object of type T without initializing
+-Construct an object of type T in uninitialized space
+-Destory an object of type T thus returning its space to the uninitialized state
+-Deallocate uninitialized space of a size suitable fro an object of type T. 
+
+Allocator is exactly what is needed for implementing vector<T>::reserve(). 
+
+Start by giving vector an allocator parameter:
+
+templa te<typena me T , typena me A = a lloca tor<T >> cla ss vector {
+A a lloc;
+// use allocate to handle me mory for e le me nts
+// . . .
+};
+
+Must see how a vector can deal with uninitialized memory and present properly constructed objects to its users. 
+
+Only code affected is vector member functions that directly deal with memory, such as vector<T>::reserve()
+
+templa te<typena me T , typena me A>
+void vector<T ,A>::reserve(int newa lloc)
+{
+if (newa lloc<=spa ce) return;
+// ne ve r de cre ase allocation
+T * p = a lloc.a lloca te(newa lloc);
+// allocate ne w space
+for (int i=0; i<sz; ++i) a lloc.construct(&p[i],elem[i]);
+// copy
+for (int i=0; i<sz; ++i) a lloc.destroy(&elem[i]);
+// de stroy
+a lloc.dea lloca te(elem,spa ce);
+// de allocate old space
+elem = p;
+spa ce = newa lloc;
+}
+
+We move an element to the new space by constructing a copy in uninitialized space and then destorying the original. Can't use assignment because for types such as string, assingment assumes that the target area has been initialized. 
+
+Given reserver(), vector<T, A>::push_back() is simple:
+
+templa te<typena me T , typena me A>
+void vector<T ,A>::push_ba ck(const T & va l)
+{
+if (spa ce==0) reserve(8);
+// start with space for 8 e le me nts
+else if (sz==spa ce) reserve(2*spa ce);
+// ge t more spacea lloc.construct(&elem[sz],va l);
+++sz;
+// add val at e nd
+// incre ase the size
+}
+
+Similarly, vector<T,A>::reseize() is simple:
+
+templa te<typena me T , typena me A>
+void vector<T ,A>::resize(int newsize, T va l = T ())
+{
+reserve(newsize);
+for (int i=sz; i<newsize; ++i) a lloc.construct(&elem[i],va l); // construct
+for (int i = newsize; i<sz; ++i) a lloc.destroy(&elem[i]);
+// de stroy
+sz = newsize;
+}
+
+Messing with allocators is advanced and tricky. 
+
+EXCEPTIONS AND RANGE CHECKING
+
+Simplest approach is to add a checked access operation called at():
+
+struct out_of_ra nge { /* . . . */ }; // class use d to re port range acce ss e rrors
+templa te<typena me T , typena me A = a lloca tor<T >> cla ss vector {
+// . . .
+T & a t(int n);
+// che cke d acce ssconst T & a t(int n) const;
+// che cke d acce ss
+T & opera tor[](int n);
+const T & opera tor[](int n) const;
+// . . .
+// unche cke d acce ss
+// unche cke d acce ss
+};
+templa te<typena me T , typena me A > T & vector<T ,A>::a t(int n)
+{
+if (n<0 || sz<=n) throw out_of_ra nge();
+return elem[n];
+}
+templa te<typena me T , typena me A > T & vector<T ,A>::opera tor[](int n)
+// as be fore
+{
+return elem[n];
+}
+
+Give that, could wriet:
+
+void print_some(vector<int>& v)
+{
+int i = –1;
+while(cin>>i && i!=–1)
+try {
+cout << "v[" << i << "]==" << v.a t(i) << "\n";
+}
+ca tch(out_of_ra nge) {
+cout << "ba d index: " << i << "\n";
+}
+}
+
+Why not use this in [].
+
+STL provides checked at() and unchecked operator[]() shown here. 
+
+4 arguments:
+1. Compatibility: People have been using unchecked subscripting since long before C++ had exceptions. 
+2. Efficiency: You can builda checked-access oeprator on top of an optimally fast unchecked-access operator, but you cannot build an optimally fast access operator on top of a checked-access operator
+3. Constraints: In some environments, exceptions are unacceptable.
+4. Optional checking: Standard doesn't actually say that you can're range check vector, so if you want checking use an implementation that checks. 
+
+Efficiency -> range checking can be a burden in extreme cases, such as buffers for network interfaces and matrices in high-performance scientific computations.
+
+However, cost of range checking is rarely a concern in kind of ordinary cm,puting. 
+
+MACROS
+
+Most STL programs like vector where [] is unchecked but have a checked at(). 
+
+So where did std::out_of_range exception come from?
+
+Made a debug class called Vecotr that inherited from vector<T>. Operator[] checked and threw Range_error to make offending index available for debugging. 
+
+struct Ra nge_error : out_of_ra nge { // e nhance d ve ctor range e rror re porting
+int index;
+Ra nge_error(int i) :out_of_ra nge("Ra nge error"), index(i) { }
+};
+templa te<typena me T > struct Vector : public std::vector<T > {
+using size_type = typena me std::vector<T >::size_type;
+using vector<T >::vector;
+// use ve ctor<T>’s constructors (§20.5)
+T & opera tor[](size_type i)
+// rathe r than re turn at(i);
+{
+if (i<0||this–>size()<=i) throw Ra nge_error(i);
+return std::vector<T >::opera tor[](i);
+}
+const T & opera tor[](size_type i) const
+{
+if (i<0||this–>size()<=i) throw Ra nge_error(i);
+return std::vector<T >::opera tor[](i);
+}
+};
+
+The first using introduces a
+convenient synonym for std::vector’s size_type; see §20.5. The second using gives us all of
+vector’s constructors for Vecto
+
+In std_lib_facilities, w use nasty trick (MACRO substitution) of redefining vector to mean Vector:
+
+#define vector Vector 

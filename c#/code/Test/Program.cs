@@ -18,7 +18,7 @@ namespace Test
                 Console.WriteLine(c);
             }
 
-			return new String(arr);
+			return new String(arr) 
 		}
 
         static void Main(string[] args)
