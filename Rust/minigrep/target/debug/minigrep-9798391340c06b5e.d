@@ -1,0 +1,1 @@
+/home/david/Documents/Programming/Rust/minigrep/target/debug/minigrep-9798391340c06b5e: /home/david/Documents/Programming/Rust/minigrep/src/lib.rs /home/david/Documents/Programming/Rust/minigrep/src/main.rs

@@ -1,0 +1,32 @@
+CHAPTER 2 RELATIONAL DATABASES
+
+Relational model is primary model for commercial data processing applications. 
+
+STRUCTURE OF RELATIONAL DATAVSES
+
+Relational database consists of a collection of tables, each of which is assigned a unique name. 
+
+In general, a row in a table represents a relationsihp among a set of values. Since a table is a collection of such relationships, there is a close correspondence between the concept of a table and the mathematical concept of a relation, from which the relational data model takes its name.
+
+A tuple is a sequence (list) of values. 
+
+A relationship between n values in represented mathematically by an n-type of values. 
+
+Relation -> table. 
+Tuple -> row
+
+Relation instance - a specific instance of a relation. 
+
+For each attribute of a relation, there is  aset of permitted values, called the domain of that attribute. 
+
+For all relations r, the domains of all attributes of r be atomic. Domain is atomic if elements of the domain are considered to be indivisible units. 
+
+Phone number that can be divided into parts is not atomic. 
+
+DATABASE SCHEMA
+
+Database schema is logical design of the database. 
+
+Database instance is snapshot of database at a given time. 
+
+Relation schema consists of a list of attribtues and their corresponding domains. 

@@ -87,6 +87,9 @@ OBJECT.CREATE AND PROTOTYPES
 
 Prototypal inheritance - every object has prototypes and obj can object those properties directly. 
 
+Object has access to any of properties and methods as all of its prototypes
+
+// an object
 var person = {
 	firstname: '',
 	lastname: '',
@@ -95,7 +98,10 @@ var person = {
 	}
 }
 
-var john = OBject.create(person);
+// create object with person prototype
+var john = Object.create(person);
+// overwrite prototype properties. Properties are on john object now. Will not look in prototype
+// for firstname and lastname properties
 john.firstname = 'John';
 john.lastname = 'Doe';
 
@@ -109,6 +115,8 @@ jane.greet();
 Simple and clear way of setting up objects to inherit.
 
 Each object prortypes to person but has firstname and lastname that hide prototype. 
+
+INHERTING FROM EVENT EMITTER
 
 Within util.js there is method inherits that takes constructor for object, and constructor of properties you want to add.
 
@@ -124,6 +132,7 @@ function Greetr() {
 Any object created by greetr should also have event emitter properties
 util.inherits(Greetr, EventEmitter);
 
+// add function to prototype. Prototype's prototype is EventEmitter so has access to emit
 Greetr.prototype.greet = function() {
 	console.log(this.greeting);
 	this.emit('greet');
@@ -135,10 +144,13 @@ greeter1.on('greet', function() {
 	console.log('someone greeted');
 });
 
+// writes greeting and then logs that someone greeted
 greeter1.greet();
+
 
 Want if want to pass data to all listeneres. 
 Greetr.prototype.greet = function(data) {
+	console.log(this.greeting + ': ' + data);
 	this.emit('greet', data);
 }
 
@@ -147,6 +159,135 @@ greeter1.on('greet', function(data) {
 }
 	
 
-greeter1.greet();
+greeter1.greet('Tony');
 
+NODE, ES6, AND TEMPLATE LITERALS
 
+ES6 - ECMAScript 2015. Newish version of JS. Latest version of Node has latest version of v8. Latest version of v8 has better support for ES6. Some users may use older browsers that do not have ES6 support. 
+
+babeljs.io -> converts ES6 into older JS. Good in browsers when need to support older browser. 
+
+May need jsconfig.json file in project folder. 
+
+{
+	"compilerOptions": {
+		"target": "ES6",
+	}
+}
+
+Template literal - a way to concatenate JS in ES6. 
+
+var name = 'David'
+var greet = 'Hello' + name;
+var greet2 = `Hello ${name}`
+
+.CALL AND .APPLY
+
+var obj = {
+	name: 'David',
+	greet: function() {
+		console.log(`Hello ${this.name}`);
+	}
+}
+
+obj.greet();
+
+// invokes function
+obj.greet.call();
+
+Can pass a variable. Whatever you pass, this is what the "this" keyword will refer to
+
+// writes 'Hello dsmann'
+obj.greet.call({name: 'dsmann'});
+
+// does the same
+obj.greet.apply({name: 'dsmann'});
+
+Only difference is that to pass parameters to the functions, you use a comma separated values for call and an array of values for apply. 
+
+// writes 'Hello dsmann'
+obj.greet.call({name: 'dsmann'}, value1, value2);
+
+// does the same
+obj.greet.apply({name: 'dsmann'}, [value1, value2]);
+
+INHERITING FROM EVENT EMITTER PT 2
+
+One scenario not covered. Inside object constructor, can add new properties to top level object. 
+
+What if EventEmitter adds properties directly to new object, not necessarily prototype. Well we wouldn't be including those.
+
+function Greetr() {
+	// calls event emitter constructor and passes the current object as this. This makes the
+	// current object the this context during the constructor. So any top level properties
+	// will be added directly to this object. This refers to the new object being created
+	// by Greetr() constructor
+	EventEmitter.call(this);
+	// this simply adds greeting property to this object
+	this.greeting = 'Hello world!';
+}
+
+This is like a super constructor
+
+Can also use apply()
+
+This is because inherits only attaches what is on prototypes of constructors. Only properties that should be available to all objects
+
+ES6 CLASSES
+
+Are just syntactic sugar
+
+'use string'; // JS engine becomes pickier about what it will let you do. Sometimes have to opt in to features
+
+class Person {
+	constructor(firstname, lastname) {
+		this.firstname = firstname;
+		this.lastname = lastname;
+	}
+
+	greet() {
+		console.log('Hello ' + firstname + ' ' + lastname);
+	}
+}
+
+Still have Person object and constructor that works in new
+
+All other methods are added to prototype of object
+
+This is different from other languages like Java, C++. 
+
+INHERITING FROM EVENT EMITTER PT 3
+
+Previously created Greetr constructor with using .call on EventEmitter constructor within to attach all properties to object
+
+Can do similarly with ES6
+
+class Greetr extends EventEmitter {
+	constructor() {
+		super();
+		this.greeting = 'Hello world!';
+	}
+
+	greet(data) {
+		console.log(`${this.greeting} : ${data}`);
+		this.emit('greet', data);
+	}
+}
+
+extends makes EventEmitter a prototype and uses super() to call its constructor on this new obejct.
+
+Can use this in module too.
+
+module.exports = class Greetr extends EventEmitter {
+	constructor() {
+		super();
+		this.greeting = 'Hello world!';
+	}
+
+	greet(data) {
+		console.log(`${this.greeting} : ${data}`);
+		this.emit('greet', data);
+	}
+}
+
+var greetr = require('./greetr');

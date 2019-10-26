@@ -1,0 +1,173 @@
+CHAPTER 1 - Introduction
+
+Database management system (DBMS) - collection of iterrelated data and a set of programs to access that data. Collection of data is the database. Primary goal is to store and retrieve database data efficiently and conveniently. 
+
+Management involves both defining structures for storage of information and providing mechanisms for manipulation of information. 
+
+Before DBMSs, enterprises often use file-processing systems where files were manipulated by various applications to update and store data. Often had data redudancy and inconsistency leading to higher storage and access cost. Difficult to access data. Data is iolated. Difficult to change data constraints and maintain data integrity. Also must ensure atomicity, must ensure that when money is taken from one account it is deposited in the other or that nothing happens. Hard to concurrently access data. Security constraints are more difficult. 
+
+Data Abstraction
+
+Developers hide complexity of database systems from users with abstraction
+
+1. Physical Level - lowest level of abstraction describes how data is actually stored.
+2. Logical level - describes what data are stroed in databse and what relationships exist among that data. Logical level does not need to be aware of physical level structure.
+3. View level - highest level of abstraction. Describes only part of the entire database. Users only need to access part of the database. 
+
+Instance - collection of information stored in database at a particular moment
+
+Schema - overall design of the database. Changed infrequently. 
+
+Physical schema - describes database design at physical level.
+Logical schema - describes database design at logical level. 
+subschemas - several schemas at view level that describe different views
+
+Logical schema is most important is regard to effect on application rograms. 
+
+Physical data independence - applications that do not rely on physical schema
+
+Data Models
+
+Data model - a collection of conceptual tools for describing data, data relationships, data semantics, and consistency constraints. Provides a way to describe the design of a database at physical, logical, and view levels. 
+
+4 categories:
+
+1. Relational Model - Uses a collection of tables to represent both data and relationships among those data. Each table has multiple columns and each column has a unique name. Yables are also known as relations. This is a records based model. Database is structured in fixed-format records of several types. Most widely used data model. 
+
+2. Entity-Relationship Model - E-R data model uses a collection of basic objects, called entities, and relationships among these objects. An entity is a thing in the real world that is distinguishable form other objects. Widely used in database design
+
+3. Object-Based Model - OOP. Extension of E-R model with notions of encapsulation, methds (functions) and object identity. 
+
+4. Semistructured data model - Permits the specification of data wher individual data items of the same type may have different sets of attributes. Constrast to other models where every data item of a particular type must ahve the same set of attributes.  XML (Extensible Markup Language). 
+
+Database Languages
+
+A DBMS provides a data-definition langage (DDL) to specify the database schema and a data-manipulation language (DML) to express database queries and updates. Both are part of a single database language, like SQL.
+
+Data-manipulation language (DML)
+-Retrieval of information
+-Insertion of information
+-Deletion of information
+-Modification of information
+
+Procedural DMLs required a user to specify what data are needed and how to get those data
+
+Declarative DMLs (nonprocedural) require a user to specify what data are needed without specifying how to get those data
+
+Query - statement requesting retrieval of information. Portion of DML that involves information retrieval is called a query language. 
+
+Data-definition language (DDL)
+
+DBMS provides a data-definition language (DDL) to specify a database schema by a set of definitions and specify properties of data. 
+
+Data-storage and definition language is a special type of DDL that specify the storage structure and access methods used by the databsae system. Define implementation details of teh databse schemas, which are usually hidden from users. 
+
+Consistency constraints - data values stored in databse must satisfy certain rules. 
+
+Domain Contraints - domain of possible values must be associated with every attribute (integer, character, dat, etc). This is a constraint on vaues it can take. Tested by the system whenever a new data item is entered into the database. 
+
+Referential Integrity - ensure that a value that appears in one relation for a given set of attributes also appears in a certain set of attributes in another relation. Normal procedure is to reject the action that causes a violation
+
+Assertions - Any condition that the database must always satisfy. System tests assertion for validity. If assertion is valid, then any future modification to the database is allowed only if it does not cause that assertion to be violated. 
+
+Authorization - differentiatie among the users as far as the type of access they are permitted on various data values in the database. Read authorization, insert authorization, update authorization, delete authorization. 
+
+DDL gets some input and generations some output. The output is the *data dictionary* which contains metadata, data about data. Data dictionary is a speial table that can only be accessed and updated by the databse system itself (not a regular user). Database systems consults the data dictionary before reading or modifying actual data. 
+
+RELATIONAL DATABASES
+
+Based on relational model. Uses a collectino of tables to represent both data and relationships among those data. Includes a DML and a DDL. 
+
+Each table has multiple columns and each column has a unique name. 
+
+Records-based model - database is structured in fixed-format records of several types. Each table contains records of a particular ype. Each record type defines a fixed number of fields, or attributes. Columns of the table corrrespond to attributes of the record type. 
+
+Watch for duplicated data. 
+
+DML
+
+SQL is nonprocedural. Query taks as input several tables (possible only one) and always returns a single table. 
+
+select intructure.name
+from instructor
+where instructor.dept_name = 'History'
+
+Query may involve information from more than one table
+
+select instructor.ID, department.dept_name
+from isntructor, department
+where instructor.dept_name = department._dept_name and department.budget > 95000
+
+DDL
+
+SQL provides rich DDL that allows one to define tables, integrity constraints, assertions, etc
+
+create table department
+	(dept_name char(20),
+	building char(15),
+	budget numeric(12,2))
+
+SQL not as powerful as univeral turing machine.
+
+Application programs are programs that are used to interact with a database. 
+
+TO access database, DML statements need to be executed from the host language:
+1. Provide an API that can be used to send DML and DDL statements to database and retrieve results. The Open Database Connectivity (ODBC) standard for use with teh C language is a commonly used API. The Java Database Connectivity (JDBC) standard provides corresponding features for Java
+2. By extending the host language syntax to embed DML calls within the host langauge program. Usually a special character prefaces DML calls and a preprocessor, called the DML precompiler, converts the DML statemetns to normal procedure calls in the host language
+
+DATABASE DESIGN
+
+Database systems are designed to manage large bodies of information. 
+
+Database design mainly involves the design of the database schema. Design of a complete database applicatino environment that meets needs of the enterprise being modeled requires attention to a broader ste of issues. 
+
+A high level data model provides the database designer with a conceptual framework in whcih to specify the data requirements of the database users, and how the dtabase will be structured to fulfill these requiredments. 
+
+Initial phase is thus to characterize fully the data needs of the prospective database users. Outcome is a specification of user requirements. 
+
+Conceptual-design phase: 
+Next, designer chooses a data model and by applying concepts of the chosen data model, translates these requirements into a conceptual schema of the database. Provides detailed overview of the enterprise. Focus is describing the data and their relationships.
+
+In relational model, conceptual design involves decisions on what attributes we want to capture in database and how to group these attributes to form various tables. How is a CS problem. 
+
+Two principal ways:
+1. use entity-relationship (ER) model
+2. Employ a set of algorithms (normalization) that takes as input the set of all attributes and generates a set of tables
+
+Logical design phase:
+The designer maps the high level conceptual schema onto the implementation data model of the database system that will be used.
+
+Physical-design phase:
+Designer uses resulting system-specific database schema to specify the physical features of the database. These include form of file organization and internal storage structures. 
+
+ER Model
+
+Entity-Relationship Model (ER Model) uses a collection of basic objects, called entities, and relationships among these objects. 
+
+Entity is a "thing" in the real world that is distinguishable from other objects. Entities are described in a database by a set of attributes. Each record of an entity set must have a unique ID.
+
+Relationship is an association among several entities. A member relationsihp associated an instructor with her department. The set of all entities of the same type and the set of all relationsihps of the same type are termed an entity set and relationship set respectively. 
+
+ER diagram can be used to represent the overal logical structure (schema) of a database. 
+
+UML (Unified Modeling Language) is one way to represent an ER Model. 
+
+ER Model represents certain constraints to which the contents of a database must conform.
+
+Mapping cardinalities express the number of entities to which another entity can be associated via a relationship set. 
+
+Normalization
+
+Goal of normalization is to generate a set of relation schemas that allows us to store information without unnecessary redundancy, yet also allows us to retrieve information easily. 
+
+Approach is to design schemas that are in an appropriate normal form. 
+
+To determine whether a relation schema is in one of the desirable normal forms, we need additional information about the real world enterprise. Most common approach is to use functional dependencies. 
+
+What can go wrong in bad database design?
+
+-Repeated information
+-Inability to represent certain information
+
+An extensive theory of normalization has been developed that helps formally define whata database designs are undesirable.
+
