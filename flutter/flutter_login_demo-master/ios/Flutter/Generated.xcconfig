@@ -1,0 +1,7 @@
+// This is a generated file; do not edit or check into version control.
+FLUTTER_ROOT=/home/david/.local/lib/flutter
+FLUTTER_APPLICATION_PATH=/home/david/Documents/Projects/Mobile/flutter/flutter_login_demo-master
+FLUTTER_TARGET=lib/main.dart
+FLUTTER_BUILD_DIR=build
+SYMROOT=${SOURCE_ROOT}/../build/ios
+FLUTTER_FRAMEWORK_DIR=/home/david/.local/lib/flutter/bin/cache/artifacts/engine/ios

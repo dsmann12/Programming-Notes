@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1009567111679",
+    "firebase_url": "https://impact-a0ce9.firebaseio.com",
+    "project_id": "impact-a0ce9",
+    "storage_bucket": "impact-a0ce9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009567111679:android:1de785e5341ded0f3defca",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009567111679-0v9smul3le7hgkijs37g11bkma0ash2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA40K3hPZMQx3voc-79IOFSTtOZrsTWvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009567111679-0v9smul3le7hgkijs37g11bkma0ash2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
